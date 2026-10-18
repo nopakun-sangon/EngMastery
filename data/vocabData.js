@@ -1,4 +1,4 @@
-/**
+/**ป
  * EngMastery: Zero to Pro - Complete Oxford 3000™ & Specialization Vocabulary Database
  * Categorized by: Oxford 3000™ (CEFR A1-B2 American English Core), Workplace & Business, Tech & DevOps, and Phrasal Verbs & Idioms
  * Schema: Future-proof standard JSON / JavaScript Object array
