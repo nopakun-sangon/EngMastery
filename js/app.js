@@ -463,30 +463,6 @@ class EngMasteryApp {
             }).join("")}
           </div>
         </div>
-
-        <!-- Future-Proof Data Management Card (Backup / Restore) -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="space-y-1 text-center sm:text-left">
-            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 justify-center sm:justify-start">
-              <span>💾 สำรองและกู้คืนข้อมูลการเรียน (Backup / Restore JSON)</span>
-            </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">
-              บันทึกคะแนนสะสม ประวัติการทำข้อสอบ และบทเรียนที่สำเร็จเก็บไว้เป็นไฟล์ JSON หรือนำเข้าข้อมูลเดิมได้ตลอดเวลา
-            </p>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <button onclick="window.storageManager.exportBackupJSON()"
-              class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              <span>ดาวน์โหลด Backup (.json)</span>
-            </button>
-            <label class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"/></svg>
-              <span>กู้คืนข้อมูล (Restore)</span>
-              <input type="file" accept=".json" class="hidden" onchange="window.app.handleRestoreFile(event)">
-            </label>
-          </div>
-        </div>
       </div>
     `;
   }
@@ -1405,43 +1381,6 @@ class EngMasteryApp {
                 <button onclick="window.app.updateAvatarEmoji('${emoji}')" class="text-sm p-1 hover:scale-125 transition-transform">${emoji}</button>
               `).join("")}
             </div>
-          </div>
-        </div>
-
-        <!-- Future-Proof Backup & Restore Section -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">จัดการข้อมูลและการสำรองไฟล์ (Data Management)</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              นำข้อมูลการเรียนของคุณออกไปจัดเก็บ หรือนำเข้าจากเครื่องอื่นได้โดยข้อมูลไม่สูญหาย
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <button onclick="window.storageManager.exportBackupJSON()"
-              class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 bg-slate-50 dark:bg-slate-800/40 text-left space-y-1 transition-all">
-              <span class="font-bold text-xs text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                <span>Export Backup (JSON)</span>
-              </span>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400">ดาวน์โหลดคะแนนและประวัติทั้งหมดเก็บไว้</p>
-            </button>
-
-            <label class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 bg-slate-50 dark:bg-slate-800/40 text-left space-y-1 transition-all cursor-pointer">
-              <span class="font-bold text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"/></svg>
-                <span>Import Restore (JSON)</span>
-              </span>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400">เลือกไฟล์ .json เพื่อกู้คืนความคืบหน้า</p>
-              <input type="file" accept=".json" class="hidden" onchange="window.app.handleRestoreFile(event)">
-            </label>
-          </div>
-
-          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-            <button onclick="window.app.confirmResetAll()"
-              class="text-xs text-red-500 hover:underline">
-              รีเซ็ตล้างข้อมูลทั้งหมด (Reset Data)
-            </button>
           </div>
         </div>
       </div>
