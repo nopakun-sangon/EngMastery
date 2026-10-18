@@ -1506,12 +1506,12 @@ class EngMasteryApp {
             <div>
               <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">ความคืบหน้าการจดจำคำศัพท์</div>
               <div class="text-sm font-bold text-slate-900 dark:text-white">
-                จำได้แล้ว <span class="text-indigo-600 dark:text-indigo-400 font-black">${learnedCount}</span> / ${totalVocabs} คำ (${progressPercent}%)
+                จำได้แล้ว <span id="vocab-learned-count" class="text-indigo-600 dark:text-indigo-400 font-black">${learnedCount}</span> / ${totalVocabs} คำ (${progressPercent}%)
               </div>
             </div>
           </div>
           <div class="w-full sm:w-48 bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
-            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+            <div id="vocab-progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
           </div>
         </div>
 
@@ -1520,15 +1520,16 @@ class EngMasteryApp {
           <!-- Search Input -->
           <div class="relative">
             <input type="text"
+              id="vocab-search-input"
               placeholder="ค้นหาคำศัพท์ ความหมายภาษาไทย หรือตัวอย่างประโยค..."
-              value="${this.vocabSearch.replace(/"/g, '&quot;')}"
+              value="${(this.vocabSearch || '').replace(/"/g, '&quot;')}"
               oninput="window.app.searchVocab(this.value)"
               class="w-full pl-10 pr-24 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
             />
             <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            ${this.vocabSearch ? `
-              <button onclick="window.app.searchVocab('')" class="absolute right-3 top-2.5 px-2 py-0.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg">✕ ล้างคำค้น</button>
-            ` : ''}
+            <button id="vocab-clear-search-btn"
+              onclick="window.app.clearVocabSearch()"
+              class="absolute right-3 top-2.5 px-2 py-0.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg ${this.vocabSearch ? '' : 'hidden'}">✕ ล้างคำค้น</button>
           </div>
 
           <!-- Category Filter Pills -->
@@ -1854,18 +1855,28 @@ class EngMasteryApp {
   loadMoreVocab() {
     window.soundFx.playClick();
     this.browseVisibleCount += 24;
-    const container = document.getElementById("main-content-view");
-    if (container && this.currentView === "vocabulary") {
-      this.renderVocabularyView(container);
+    const contentArea = document.getElementById("vocab-content-area");
+    if (contentArea) {
+      this.renderVocabContentArea();
+    } else {
+      const container = document.getElementById("main-content-view");
+      if (container && this.currentView === "vocabulary") {
+        this.renderVocabularyView(container);
+      }
     }
   }
 
   loadAllVocab() {
     window.soundFx.playClick();
     this.browseVisibleCount = 9999;
-    const container = document.getElementById("main-content-view");
-    if (container && this.currentView === "vocabulary") {
-      this.renderVocabularyView(container);
+    const contentArea = document.getElementById("vocab-content-area");
+    if (contentArea) {
+      this.renderVocabContentArea();
+    } else {
+      const container = document.getElementById("main-content-view");
+      if (container && this.currentView === "vocabulary") {
+        this.renderVocabularyView(container);
+      }
     }
   }
 
@@ -1906,15 +1917,50 @@ class EngMasteryApp {
     }
   }
 
+  renderVocabContentArea() {
+    const contentArea = document.getElementById("vocab-content-area");
+    if (!contentArea) return;
+    const vocabs = window.vocabData || [];
+    const filtered = this.getFilteredVocabList(vocabs);
+    contentArea.innerHTML = this.vocabMode === 'flashcard' 
+      ? this.renderFlashcardMode(filtered) 
+      : this.renderBrowseVocabMode(filtered);
+  }
+
   searchVocab(query) {
     this.vocabSearch = query;
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
     this.browseVisibleCount = 24;
-    const container = document.getElementById("main-content-view");
-    if (container && this.currentView === "vocabulary") {
-      this.renderVocabularyView(container);
+
+    const clearBtn = document.getElementById("vocab-clear-search-btn");
+    if (clearBtn) {
+      if (query && query.trim()) {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
     }
+
+    const contentArea = document.getElementById("vocab-content-area");
+    if (contentArea) {
+      this.renderVocabContentArea();
+    } else {
+      const container = document.getElementById("main-content-view");
+      if (container && this.currentView === "vocabulary") {
+        this.renderVocabularyView(container);
+      }
+    }
+  }
+
+  clearVocabSearch() {
+    this.vocabSearch = "";
+    const inputEl = document.getElementById("vocab-search-input");
+    if (inputEl) {
+      inputEl.value = "";
+      inputEl.focus();
+    }
+    this.searchVocab("");
   }
 
   resetVocabFilters() {
@@ -1949,10 +1995,7 @@ class EngMasteryApp {
       window.soundFx.playClick();
       this.currentFlashcardIndex += 1;
       this.isCardFlipped = false;
-      const container = document.getElementById("main-content-view");
-      if (container && this.currentView === "vocabulary") {
-        this.renderVocabularyView(container);
-      }
+      this.renderVocabContentArea();
     }
   }
 
@@ -1961,10 +2004,7 @@ class EngMasteryApp {
       window.soundFx.playClick();
       this.currentFlashcardIndex -= 1;
       this.isCardFlipped = false;
-      const container = document.getElementById("main-content-view");
-      if (container && this.currentView === "vocabulary") {
-        this.renderVocabularyView(container);
-      }
+      this.renderVocabContentArea();
     }
   }
 
@@ -1979,10 +2019,7 @@ class EngMasteryApp {
     } while (nextIndex === this.currentFlashcardIndex && filtered.length > 1);
     this.currentFlashcardIndex = nextIndex;
     this.isCardFlipped = false;
-    const container = document.getElementById("main-content-view");
-    if (container && this.currentView === "vocabulary") {
-      this.renderVocabularyView(container);
-    }
+    this.renderVocabContentArea();
   }
 
   markVocabLearned(vocabId) {
@@ -1995,10 +2032,18 @@ class EngMasteryApp {
       window.soundFx.playCorrect();
       this.renderHeaderStats();
       this.showToast("+5 XP! จำคำศัพท์ได้แล้ว เก่งมาก 🎉", "success");
-      const container = document.getElementById("main-content-view");
-      if (container && this.currentView === "vocabulary") {
-        this.renderVocabularyView(container);
-      }
+
+      const vocabs = window.vocabData || [];
+      const totalVocabs = vocabs.length;
+      const learnedCount = [...this.reviewedVocabIds].filter(id => vocabs.some(v => v.id === id)).length;
+      const progressPercent = totalVocabs > 0 ? Math.round((learnedCount / totalVocabs) * 100) : 0;
+
+      const countEl = document.getElementById("vocab-learned-count");
+      const barEl = document.getElementById("vocab-progress-bar");
+      if (countEl) countEl.textContent = learnedCount;
+      if (barEl) barEl.style.width = `${progressPercent}%`;
+
+      this.renderVocabContentArea();
     }
   }
 
