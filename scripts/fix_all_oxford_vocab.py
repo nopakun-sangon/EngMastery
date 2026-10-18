@@ -1806,3 +1806,4 @@ with open('data/vocabData.js', 'w', encoding='utf-8') as f:
     f.write(file_content)
 
 print("Successfully wrote updated data/vocabData.js!")
+
