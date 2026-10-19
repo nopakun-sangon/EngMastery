@@ -59,6 +59,8 @@ class EngMasteryApp {
       this.readingFontSize = "base";
       this.readingQuizAnswers = {};
       this.readingQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_reading_quizzes") || "{}");
+      this.onlineVocabCache = JSON.parse(localStorage.getItem("engmastery_online_vocab_cache") || "{}");
+      this.vocabIndex = null;
     } catch (e) {
       this.reviewedVocabIds = new Set();
       this.articleQuizAnswers = {};
@@ -83,6 +85,8 @@ class EngMasteryApp {
       this.readingFontSize = "base";
       this.readingQuizAnswers = {};
       this.readingQuizSubmitted = {};
+      this.onlineVocabCache = {};
+      this.vocabIndex = null;
     }
 
     this.init();
@@ -93,6 +97,13 @@ class EngMasteryApp {
     this.setupNavigation();
     this.renderHeaderStats();
     this.renderView(this.currentView);
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          this.closeReadingWordPopup();
+        }
+      });
+    }
   }
 
   // --- Dark / Light Theme Toggle ---
@@ -2607,12 +2618,16 @@ class EngMasteryApp {
 
         <!-- Main Reading Paragraphs Content -->
         <div class="space-y-4">
+          <div class="flex items-center gap-2 px-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold">
+            <span>💡</span>
+            <span>แตะหรือคลิกที่คำศัพท์ใดก็ได้ในบทความเพื่อดูคำแปล สัทอักษร IPA และฟังเสียงอ่าน</span>
+          </div>
           ${article.paragraphs.map(p => `
             <div id="reading-para-${p.id}"
               class="reading-paragraph-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm transition-all space-y-3">
               <div class="flex items-start justify-between gap-3">
-                <p class="${fontClasses} font-serif text-slate-800 dark:text-slate-100">
-                  ${p.en}
+                <p class="${fontClasses} font-serif text-slate-800 dark:text-slate-100 leading-relaxed">
+                  ${this.formatClickableReadingText(p.en, p.th)}
                 </p>
                 <button onclick="window.app.playReadingParagraphTts('${p.id}', '${p.en.replace(/'/g, "\\'")}')"
                   class="p-2 rounded-xl text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-all shrink-0 active:scale-95"
@@ -2959,6 +2974,340 @@ class EngMasteryApp {
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  // =========================================================================
+  // INTERACTIVE WORD TAP & POPUP DICTIONARY (HYBRID LOCAL + GOOGLE TRANSLATE)
+  // =========================================================================
+  getVocabIndex() {
+    if (this.vocabIndex) return this.vocabIndex;
+    const map = new Map();
+    const list = window.vocabData || [];
+    for (const v of list) {
+      if (v.word) {
+        map.set(v.word.toLowerCase(), v);
+      }
+    }
+    this.vocabIndex = map;
+    return map;
+  }
+
+  lemmatizeWord(word) {
+    if (!word) return "";
+    word = word.toLowerCase().trim();
+    const map = this.getVocabIndex();
+    if (map.has(word)) return word;
+
+    const irregulars = {
+      went: 'go', came: 'come', saw: 'see', seen: 'see', bought: 'buy', took: 'take',
+      taken: 'take', got: 'get', ate: 'eat', eaten: 'eat', wrote: 'write', written: 'write',
+      ran: 'run', fell: 'fall', fallen: 'fall', felt: 'feel', met: 'meet', found: 'find',
+      told: 'tell', spoke: 'speak', spoken: 'speak', drove: 'drive', driven: 'drive',
+      left: 'leave', lost: 'lose', gave: 'give', given: 'give', became: 'become',
+      knew: 'know', known: 'know', thought: 'think', brought: 'bring', taught: 'teach',
+      caught: 'catch', sold: 'sell', spent: 'spend', began: 'begin', begun: 'begin',
+      paid: 'pay', stood: 'stand', understood: 'understand', slept: 'sleep', heard: 'hear',
+      swam: 'swim', drank: 'drink', drunk: 'drink', wore: 'wear', worn: 'wear',
+      broke: 'break', broken: 'break', better: 'good', best: 'good', worse: 'bad', worst: 'bad'
+    };
+    if (irregulars[word] && map.has(irregulars[word])) return irregulars[word];
+
+    // Possessive
+    if (word.endsWith("'s") || word.endsWith("’s")) {
+      const base = word.slice(0, -2);
+      if (map.has(base)) return base;
+    }
+
+    // -ies -> -y (countries -> country, stories -> story)
+    if (word.endsWith("ies")) {
+      const base = word.slice(0, -3) + "y";
+      if (map.has(base)) return base;
+    }
+
+    // -ied -> -y (hurried -> hurry)
+    if (word.endsWith("ied")) {
+      const base = word.slice(0, -3) + "y";
+      if (map.has(base)) return base;
+    }
+
+    // -ed
+    if (word.endsWith("ed")) {
+      const base1 = word.slice(0, -1); // arrived -> arrive, closed -> close
+      if (map.has(base1)) return base1;
+      const base2 = word.slice(0, -2); // talked -> talk, examined -> examine
+      if (map.has(base2)) return base2;
+      // double consonant (stopped -> stop, planned -> plan)
+      if (word.length > 4 && word[word.length - 3] === word[word.length - 4]) {
+        const base3 = word.slice(0, -3);
+        if (map.has(base3)) return base3;
+      }
+    }
+
+    // -ing
+    if (word.endsWith("ing")) {
+      const base1 = word.slice(0, -3) + "e"; // driving -> drive
+      if (map.has(base1)) return base1;
+      const base2 = word.slice(0, -3); // jumping -> jump
+      if (map.has(base2)) return base2;
+      // double consonant (running -> run, swimming -> swim)
+      if (word.length > 5 && word[word.length - 4] === word[word.length - 5]) {
+        const base3 = word.slice(0, -4);
+        if (map.has(base3)) return base3;
+      }
+    }
+
+    // -es
+    if (word.endsWith("es")) {
+      const base1 = word.slice(0, -2); // boxes -> box
+      if (map.has(base1)) return base1;
+      const base2 = word.slice(0, -1); // tastes -> taste
+      if (map.has(base2)) return base2;
+    }
+
+    // -s
+    if (word.endsWith("s")) {
+      const base = word.slice(0, -1);
+      if (map.has(base)) return base;
+    }
+
+    return word;
+  }
+
+  async lookupReadingWord(rawWord, sentenceEn = "", sentenceTh = "") {
+    const cleanWord = (rawWord || "").replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
+    if (!cleanWord) return null;
+
+    const map = this.getVocabIndex();
+    const lemma = this.lemmatizeWord(cleanWord);
+
+    // 1. Check local Oxford 3000 / Tech vocabulary database (100% Offline)
+    if (map.has(lemma)) {
+      const v = map.get(lemma);
+      return {
+        word: v.word,
+        ipa: v.ipa || "",
+        pos: v.pos || "word",
+        th: v.th || "",
+        definition: v.definition || "",
+        exampleEn: v.exampleEn || sentenceEn || "",
+        exampleTh: v.exampleTh || sentenceTh || "",
+        source: "local"
+      };
+    }
+
+    // 2. Check cached online translations
+    if (this.onlineVocabCache && this.onlineVocabCache[cleanWord]) {
+      return {
+        word: cleanWord,
+        ipa: "",
+        pos: "vocabulary",
+        th: this.onlineVocabCache[cleanWord],
+        definition: "คำแปลจากระบบแปลภาษา (Google Translate)",
+        exampleEn: sentenceEn || "",
+        exampleTh: sentenceTh || "",
+        source: "online"
+      };
+    }
+
+    // 3. Fallback to Google Translate API
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encodeURIComponent(cleanWord)}`;
+      const resp = await fetch(url);
+      if (resp.ok) {
+        const data = await resp.json();
+        const translated = (data && data[0] && data[0][0] && data[0][0][0]) || cleanWord;
+        this.onlineVocabCache[cleanWord] = translated;
+        try {
+          localStorage.setItem("engmastery_online_vocab_cache", JSON.stringify(this.onlineVocabCache));
+        } catch (e) {}
+        return {
+          word: cleanWord,
+          ipa: "",
+          pos: "vocabulary",
+          th: translated,
+          definition: "คำแปลจากระบบแปลภาษา (Google Translate)",
+          exampleEn: sentenceEn || "",
+          exampleTh: sentenceTh || "",
+          source: "online"
+        };
+      }
+    } catch (err) {
+      console.warn("Online translation fallback failed:", err);
+    }
+
+    // 4. Offline fallback if word is outside 3,000 database and no connection
+    return {
+      word: cleanWord,
+      ipa: "",
+      pos: "word",
+      th: "คำศัพท์นี้นอกฐานข้อมูลหลัก (กรุณาเชื่อมต่ออินเทอร์เน็ตเพื่อดูคำแปลสด)",
+      definition: "This term is outside the local 3,000 core vocabulary database.",
+      exampleEn: sentenceEn || "",
+      exampleTh: sentenceTh || "",
+      source: "offline"
+    };
+  }
+
+  formatClickableReadingText(enText, thText = "") {
+    if (!enText) return "";
+    const safeTh = (thText || "").replace(/['"\\`]/g, " ").trim();
+    const sentences = enText.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [enText];
+
+    return sentences.map(sent => {
+      const safeSent = sent.replace(/['"\\`]/g, " ").trim();
+      const tokens = sent.split(/([a-zA-Z0-9]+(?:['’][a-zA-Z0-9]+)?)/g);
+      return tokens.map(token => {
+        if (/[a-zA-Z0-9]/.test(token)) {
+          const clean = token.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
+          const escapedClean = clean.replace(/'/g, "\\'");
+          return `<span class="reading-word-token" onclick="window.app.handleReadingWordClick(event, '${escapedClean}', '${safeSent.replace(/'/g, "\\'")}', '${safeTh.replace(/'/g, "\\'")}')" title="กดเพื่อดูคำแปล">${token}</span>`;
+        }
+        return token;
+      }).join("");
+    }).join("");
+  }
+
+  async handleReadingWordClick(event, rawWord, sentenceEn, sentenceTh) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    const cleanWord = (rawWord || "").replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
+    if (!cleanWord) return;
+
+    window.soundFx.playClick();
+    this.openReadingWordModalLoading(cleanWord);
+    const entry = await this.lookupReadingWord(cleanWord, sentenceEn, sentenceTh);
+    this.renderReadingWordModalContent(entry);
+  }
+
+  openReadingWordModalLoading(word) {
+    const modal = document.getElementById("reading-word-modal");
+    const card = document.getElementById("reading-word-modal-card");
+    if (!modal || !card) return;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    card.innerHTML = `
+      <div class="py-8 flex flex-col items-center justify-center space-y-3">
+        <div class="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs text-slate-400 font-medium">กำลังค้นหาคำแปล "${word}"...</p>
+      </div>
+    `;
+  }
+
+  renderReadingWordModalContent(entry) {
+    const modal = document.getElementById("reading-word-modal");
+    const card = document.getElementById("reading-word-modal-card");
+    if (!modal || !card || !entry) return;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    card.innerHTML = `
+      <div class="space-y-4">
+        <!-- Top Bar: Word, IPA, POS and Audio Speaker Button + Close -->
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-baseline flex-wrap gap-2">
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              ${entry.word}
+            </h3>
+            ${entry.ipa ? `
+              <span class="text-sm sm:text-base font-mono text-slate-400 font-normal">
+                ${entry.ipa}
+              </span>
+            ` : ''}
+            ${entry.pos ? `
+              <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                ${entry.pos}
+              </span>
+            ` : ''}
+          </div>
+
+          <div class="flex items-center gap-1">
+            <button onclick="window.speechEngine.speak('${entry.word.replace(/'/g, "\\'")}')"
+              class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+              title="ฟังเสียงอ่านคำศัพท์ (Pronounce)">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-4.72 4.72H2.5A1.5 1.5 0 001 9.19v1.62c0 .83.67 1.5 1.5 1.5h1.5l4.72 4.72A.75.75 0 0010 16.5V3.5zm3.78 3.22a.75.75 0 011.06 0 6.5 6.5 0 010 9.19.75.75 0 01-1.06-1.06 5 5 0 000-7.07.75.75 0 010-1.06z"/></svg>
+            </button>
+            <button onclick="window.app.closeReadingWordPopup()"
+              class="w-9 h-9 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-sm font-bold transition-all ml-1"
+              title="ปิดหน้าต่าง (Esc)">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Divider Line -->
+        <div class="border-b border-slate-100 dark:border-slate-800/80"></div>
+
+        <!-- Thai Meaning (Prominent Bold Purple/Indigo Text) -->
+        <div>
+          <div class="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400 leading-snug tracking-tight">
+            ${entry.th}
+          </div>
+          ${entry.definition ? `
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed mt-2.5">
+              ${entry.definition}
+            </p>
+          ` : ''}
+        </div>
+
+        <!-- Example Sentence Card (if present) -->
+        ${entry.exampleEn ? `
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 space-y-2">
+            <div class="flex items-start justify-between gap-3">
+              <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 font-serif leading-relaxed italic">
+                "${entry.exampleEn}"
+              </p>
+              <button onclick="window.speechEngine.speak('${entry.exampleEn.replace(/'/g, "\\'")}')"
+                class="w-7 h-7 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 flex items-center justify-center shrink-0 active:scale-95 transition-all"
+                title="ฟังเสียงตัวอย่างประโยค">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-4.72 4.72H2.5A1.5 1.5 0 001 9.19v1.62c0 .83.67 1.5 1.5 1.5h1.5l4.72 4.72A.75.75 0 0010 16.5V3.5zm3.78 3.22a.75.75 0 011.06 0 6.5 6.5 0 010 9.19.75.75 0 01-1.06-1.06 5 5 0 000-7.07.75.75 0 010-1.06z"/></svg>
+              </button>
+            </div>
+            ${entry.exampleTh ? `
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
+                ${entry.exampleTh}
+              </p>
+            ` : ''}
+          </div>
+        ` : ''}
+
+        <!-- Bottom Action Bar & Attribution -->
+        <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-100 dark:border-slate-800/80">
+          <span class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
+            ${entry.source === 'local' ? `
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>พจนานุกรม Oxford ในระบบ (100% Offline)</span>
+            ` : `
+              <span class="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+              <span>แปลผ่าน Google Translate</span>
+            `}
+          </span>
+
+          <div class="flex items-center gap-2">
+            <button onclick="window.speechEngine.speak('${entry.word.replace(/'/g, "\\'")}')"
+              class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold transition-all flex items-center gap-1 active:scale-95">
+              <span>🔊 ฟังอีกครั้ง</span>
+            </button>
+            <button onclick="window.app.closeReadingWordPopup()"
+              class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all shadow-sm active:scale-95">
+              ปิด
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  closeReadingWordPopup() {
+    const modal = document.getElementById("reading-word-modal");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
     }
   }
 

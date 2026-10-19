@@ -270,6 +270,15 @@
   </div>
 
   <!-- ========================================================================= -->
+  <!-- WORD DEFINITION POPUP MODAL (READING LAB & GLOBAL VOCAB LOOKUP) -->
+  <!-- ========================================================================= -->
+  <div id="reading-word-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm transition-opacity" onclick="if(event.target === this) window.app.closeReadingWordPopup()" role="dialog" aria-modal="true">
+    <div id="reading-word-modal-card" class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl relative space-y-4 popup-scale-in">
+      <!-- Injected dynamically via showReadingWordPopup -->
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- MODULAR SCRIPTS LOADED IN DEPENDENCY ORDER -->
   <!-- ========================================================================= -->
   <!-- Modular Course Lessons by Folder (6 CEFR Levels) -->
