@@ -3945,6 +3945,7 @@ class EngMasteryApp {
           ${topic.id === 'mc-12-tenses-complete' ? this.renderComplete12TensesDetail(topic) : ''}
           ${topic.id === 'mc-paired-tenses' ? this.renderPairedTensesDetail(topic) : ''}
           ${topic.id === 'mc-grammar-pitfalls' ? this.renderPitfallsDetail(topic) : ''}
+          ${!['mc-12-tenses-complete', 'mc-paired-tenses', 'mc-grammar-pitfalls'].includes(topic.id) ? this.renderGenericMasterclassDetail(topic) : ''}
         </div>
 
         <!-- Interactive Knowledge Check (Quiz 5 ข้อ) -->
@@ -3978,6 +3979,207 @@ class EngMasteryApp {
     });
 
     return html;
+  }
+
+  formatInlineContent(str) {
+    if (!str) return "";
+    let s = str;
+    // Code badge
+    s = s.replace(/`([^`]+)`/g, `<code class="px-2 py-0.5 mx-0.5 rounded-lg text-xs font-mono font-black text-orange-600 dark:text-orange-400 bg-orange-100/80 dark:bg-orange-950/70 border border-orange-200 dark:border-orange-800/80 shadow-xs">$1</code>`);
+    // Bold
+    s = s.replace(/\*\*(.*?)\*\*/g, `<strong class="text-slate-900 dark:text-white font-bold">$1</strong>`);
+    // Italic
+    s = s.replace(/\*([^*]+)\*/g, `<em class="text-indigo-600 dark:text-indigo-400 font-medium not-italic">$1</em>`);
+    return s;
+  }
+
+  formatMarkdownContent(text) {
+    if (!text) return "";
+
+    const lines = text.split("\n");
+    const result = [];
+    let inTable = false;
+    let tableLines = [];
+
+    const flushTable = () => {
+      if (tableLines.length === 0) return;
+      const rows = tableLines.filter(l => !l.trim().match(/^\|(\s*:?-+:?\s*\|)+$/));
+      if (rows.length === 0) return;
+
+      let html = `<div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 my-4 shadow-sm bg-white dark:bg-slate-900">\n`;
+      html += `  <table class="w-full text-left border-collapse min-w-[550px] text-xs sm:text-sm">\n`;
+
+      const headerCols = rows[0].split("|").map(c => c.trim()).filter((c, i, a) => i > 0 && i < a.length - 1);
+      html += `    <thead>\n      <tr class="bg-indigo-50/80 dark:bg-indigo-950/60 border-b border-slate-200 dark:border-slate-800 text-indigo-950 dark:text-indigo-200 font-bold">\n`;
+      headerCols.forEach(col => {
+        html += `        <th class="p-3.5">${this.formatInlineContent(col)}</th>\n`;
+      });
+      html += `      </tr>\n    </thead>\n    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">\n`;
+
+      for (let r = 1; r < rows.length; r++) {
+        const cols = rows[r].split("|").map(c => c.trim()).filter((c, i, a) => i > 0 && i < a.length - 1);
+        html += `      <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">\n`;
+        cols.forEach(col => {
+          html += `        <td class="p-3.5 align-top text-slate-700 dark:text-slate-300">${this.formatInlineContent(col)}</td>\n`;
+        });
+        html += `      </tr>\n`;
+      }
+
+      html += `    </tbody>\n  </table>\n</div>`;
+      result.push(html);
+      tableLines = [];
+      inTable = false;
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+        inTable = true;
+        tableLines.push(trimmed);
+        continue;
+      } else if (inTable) {
+        flushTable();
+      }
+
+      if (!trimmed) continue;
+
+      if (trimmed === "---") {
+        result.push(`<hr class="my-6 border-slate-200 dark:border-slate-800" />`);
+        continue;
+      }
+
+      if (trimmed.startsWith("### ")) {
+        result.push(`<h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-6 mb-2 flex items-center gap-2">${this.formatInlineContent(trimmed.slice(4))}</h3>`);
+        continue;
+      }
+
+      if (trimmed.startsWith("#### ")) {
+        result.push(`<h4 class="text-sm sm:text-base font-black text-indigo-600 dark:text-indigo-400 mt-4 mb-2 flex items-center gap-1.5">${this.formatInlineContent(trimmed.slice(5))}</h4>`);
+        continue;
+      }
+
+      // Formula block: line that starts and ends with backtick and contains formula elements
+      if (/^`[^`]+\+[^`]+`$/.test(trimmed)) {
+        const rawFormula = trimmed.replace(/^`|`$/g, "");
+        result.push(`
+          <div class="my-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-indigo-500/10 border border-orange-200 dark:border-orange-800/80 font-mono font-black text-center text-orange-600 dark:text-orange-400 text-xs sm:text-sm shadow-xs">
+            ${rawFormula}
+          </div>
+        `);
+        continue;
+      }
+
+      // Category badges: • **หมวด A:...** or • **หมวด B:...**
+      const catMatch = trimmed.match(/^[•\-]?\s*\*\*หมวด\s*([AB]):\s*([^(*]+)(?:\(([^)]+)\))?\*\*:?/i);
+      if (catMatch) {
+        const code = catMatch[1].toUpperCase();
+        const thTitle = catMatch[2].trim();
+        const enTitle = catMatch[3] ? catMatch[3].trim() : "";
+        const isA = code === "A";
+        result.push(`
+          <div class="mt-4 mb-2 flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-lg text-xs font-black ${isA ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800" : "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"}">
+              ${isA ? "☕" : "🚀"} หมวด ${code}
+            </span>
+            <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">${thTitle} ${enTitle ? `(${enTitle})` : ""}</span>
+          </div>
+        `);
+        continue;
+      }
+
+      // Example sentence with English quote and Thai translation:
+      // Examples: - *"Where do you live?"* (คุณอาศัยอยู่ที่ไหน?)
+      //          • *"Who approved this pull request?"* (ใครเป็นคนอนุมัติ PR นี้?)
+      const quoteMatch = trimmed.match(/^[•\-]?\s*(?:(?:ตัวอย่าง|•)?\s*(?:Daily Life|DevOps)?:?\s*)?\*\"([^\"]+)\"\*\s*\(([^)]+)\)$/i);
+      if (quoteMatch) {
+        const enText = quoteMatch[1];
+        const thText = quoteMatch[2];
+        const escapedEn = enText.replace(/'/g, "\\'");
+        result.push(`
+          <div class="my-2 p-3 sm:p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-800 flex items-start justify-between gap-3 group hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
+            <div class="space-y-0.5 min-w-0">
+              <div class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white tracking-wide">"${enText}"</div>
+              <div class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">${thText}</div>
+            </div>
+            <button type="button" onclick="window.speechEngine.speak('${escapedEn}')" class="shrink-0 p-1.5 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:scale-110 active:scale-95 transition-all" title="ฟังการออกเสียง">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+            </button>
+          </div>
+        `);
+        continue;
+      }
+
+      // Callout alert box for ⚠️ or 💡
+      if (trimmed.startsWith("⚠️") || trimmed.startsWith("💡")) {
+        const isWarn = trimmed.startsWith("⚠️");
+        result.push(`
+          <div class="my-3 p-3.5 sm:p-4 rounded-2xl ${isWarn ? "bg-amber-50/70 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200" : "bg-indigo-50/70 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-900/50 text-indigo-950 dark:text-indigo-200"} border text-xs sm:text-sm leading-relaxed">
+            ${this.formatInlineContent(trimmed)}
+          </div>
+        `);
+        continue;
+      }
+
+      // List item
+      if (trimmed.match(/^(\d+\.|[•\-])\s+/)) {
+        result.push(`<div class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed my-1 pl-2 border-l-2 border-indigo-200 dark:border-indigo-800">${this.formatInlineContent(trimmed)}</div>`);
+        continue;
+      }
+
+      // Regular paragraph
+      result.push(`<p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed my-1.5">${this.formatInlineContent(trimmed)}</p>`);
+    }
+
+    if (inTable) flushTable();
+    return result.join("\n");
+  }
+
+  renderGenericMasterclassDetail(topic) {
+    if (!topic.sections || topic.sections.length === 0) return "";
+
+    return `
+      <div class="space-y-8">
+        ${topic.sections.map((sec, secIdx) => `
+          <div class="p-5 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <span class="px-2.5 py-1 rounded-full text-xs font-black bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/80">
+                ตอนที่ ${secIdx + 1}
+              </span>
+              <h2 class="text-base sm:text-xl font-black text-slate-900 dark:text-white leading-snug">
+                ${sec.heading}
+              </h2>
+            </div>
+
+            <div class="space-y-3">
+              ${this.formatMarkdownContent(sec.content)}
+            </div>
+
+            ${sec.keyPhrases && sec.keyPhrases.length > 0 ? `
+              <div class="mt-4 p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-2">
+                <span class="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                  <span>⚡ สรุปประโยคสำคัญประจำตอน (Key Takeaways)</span>
+                </span>
+                <div class="space-y-2 pt-1">
+                  ${sec.keyPhrases.map(kp => `
+                    <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-900/60 flex items-start justify-between gap-2 text-xs">
+                      <div>
+                        <strong class="text-indigo-900 dark:text-indigo-200 font-bold block sm:inline">${kp.en}</strong>
+                        <span class="text-slate-500 dark:text-slate-400 block sm:inline sm:ml-2">${kp.th}</span>
+                      </div>
+                      <button onclick="window.speechEngine.speak('${kp.en.replace(/'/g, "\\'")}')" class="shrink-0 p-1 text-indigo-600 dark:text-indigo-400 hover:scale-110 active:scale-95 transition-all" title="ฟังการออกเสียง">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                      </button>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `).join("")}
+      </div>
+    `;
   }
 
   renderComplete12TensesDetail(topic) {
@@ -4448,6 +4650,20 @@ class EngMasteryApp {
         phrases.push(tr.right);
       });
     }
+    if (topic.sections) {
+      topic.sections.forEach(sec => {
+        if (sec.keyPhrases) {
+          sec.keyPhrases.forEach(kp => phrases.push(kp.en));
+        }
+        const quotes = sec.content.match(/\*\"([^\"]+)\"\*/g);
+        if (quotes) {
+          quotes.forEach(q => {
+            const clean = q.replace(/\*\"|\"\*/g, "").trim();
+            if (clean && !phrases.includes(clean)) phrases.push(clean);
+          });
+        }
+      });
+    }
 
     const fullSpeechText = phrases.join(". ");
     this.isReadingAloud = true;
@@ -4462,7 +4678,8 @@ class EngMasteryApp {
   }
 
   renderMasterclassQuiz(topic, answers, quizResult) {
-    const questions = topic.quizQuestions || [];
+    const questions = topic.quizQuestions || topic.quiz || [];
+    const passThreshold = Math.max(1, Math.ceil(questions.length * 0.8));
 
     return `
       <div class="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-6">
@@ -4471,13 +4688,13 @@ class EngMasteryApp {
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold">
               <span>🎯 Masterclass Certification Quiz</span>
               <span>•</span>
-              <span>5 ข้อ</span>
+              <span>${questions.length} ข้อ</span>
             </div>
             <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1">
               แบบทดสอบประเมินผลความชำนาญ
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400">
-              ตอบถูก 4 ใน 5 ข้อขึ้นไป เพื่อผ่านและรับโบนัส +50 XP
+              ตอบถูกอย่างน้อย ${passThreshold} ใน ${questions.length} ข้อขึ้นไป เพื่อผ่านและรับโบนัส +50 XP
             </p>
           </div>
           <span class="text-sm font-black text-amber-500">+50 XP</span>
@@ -4616,10 +4833,10 @@ class EngMasteryApp {
     if (!topic) return;
 
     const answers = this.masterclassQuizAnswers[topicId] || {};
-    const questions = topic.quizQuestions || [];
+    const questions = topic.quizQuestions || topic.quiz || [];
 
     if (Object.keys(answers).length < questions.length) {
-      alert("กรุณาตอบคำถามให้ครบทั้ง 5 ข้อก่อนส่งคำตอบครับ");
+      alert(`กรุณาตอบคำถามให้ครบทั้ง ${questions.length} ข้อก่อนส่งคำตอบครับ`);
       return;
     }
 
@@ -4631,7 +4848,8 @@ class EngMasteryApp {
     });
 
     const percent = Math.round((score / questions.length) * 100);
-    const passed = score >= 4;
+    const passThreshold = Math.max(1, Math.ceil(questions.length * 0.8));
+    const passed = score >= passThreshold;
 
     const prevSubmission = this.masterclassQuizSubmitted[topicId];
     const alreadyEarned = prevSubmission && prevSubmission.passed;
@@ -4658,7 +4876,7 @@ class EngMasteryApp {
       }
     } else {
       window.soundFx.playIncorrect();
-      this.showToast(`ได้คะแนน ${score}/${questions.length} ข้อ ต้องตอบถูกอย่างน้อย 4 ข้อเพื่อผ่านนะ`, "error");
+      this.showToast(`ได้คะแนน ${score}/${questions.length} ข้อ ต้องตอบถูกอย่างน้อย ${passThreshold} ข้อเพื่อผ่านนะ`, "error");
     }
 
     const container = document.getElementById("main-content-view");
