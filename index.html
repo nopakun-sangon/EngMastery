@@ -48,29 +48,29 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200 w-full max-w-full overflow-x-hidden">
 
   <!-- ========================================================================= -->
   <!-- TOP NAVIGATION HEADER -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors w-full max-w-full overflow-hidden">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-4 w-full min-w-0">
       
       <!-- Brand Logo -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0 min-w-0">
         <!-- Mobile Drawer Toggle -->
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl" aria-label="Open navigation menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <button id="mobile-menu-btn" class="md:hidden p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl shrink-0" aria-label="Open navigation menu">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
 
-        <a href="#" onclick="window.app.navigateTo('dashboard'); return false;" class="flex items-center gap-2 sm:gap-2.5 group">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-lg sm:text-xl shadow-md group-hover:scale-105 transition-transform">
+        <a href="#" onclick="window.app.navigateTo('dashboard'); return false;" class="flex items-center gap-1.5 sm:gap-2.5 group shrink-0">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform shrink-0">
             ⚡
           </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="font-black text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">EngMastery</span>
-              <span class="px-1.5 py-0.2 rounded bg-indigo-600 text-white font-black text-[9px] sm:text-[10px] uppercase tracking-wider">PRO</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <span class="font-black text-sm sm:text-lg tracking-tight text-slate-900 dark:text-white truncate">EngMastery</span>
+              <span class="px-1 sm:px-1.5 py-0.2 rounded bg-indigo-600 text-white font-black text-[8px] sm:text-[10px] uppercase tracking-wider shrink-0">PRO</span>
             </div>
             <p class="text-[10px] text-slate-400 font-medium hidden sm:block">Zero to Pro (CEFR Track)</p>
           </div>
@@ -78,32 +78,32 @@
       </div>
 
       <!-- Quick Stats & Settings Bar -->
-      <div class="flex items-center gap-1.5 sm:gap-3">
+      <div class="flex items-center gap-1 sm:gap-2.5 shrink-0">
         
         <!-- Streak Tracker -->
-        <div class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40 text-amber-600 dark:text-amber-400 text-xs font-bold" title="Daily Streak Active">
+        <div class="flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40 text-amber-600 dark:text-amber-400 text-[11px] sm:text-xs font-bold shrink-0" title="Daily Streak Active">
           <span>🔥</span>
           <span id="header-streak-count">1</span>
         </div>
 
-        <!-- Total XP -->
-        <div class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold" title="Total Experience Points">
+        <!-- Total XP (hidden on narrow screens < 380px to prevent overflow) -->
+        <div class="hidden min-[380px]:flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-[11px] sm:text-xs font-bold shrink-0" title="Total Experience Points">
           <span>✨</span>
           <span id="header-xp-count">0 XP</span>
         </div>
 
         <!-- Divider -->
-        <div class="h-5 w-px bg-slate-200 dark:bg-slate-800"></div>
+        <div class="hidden min-[380px]:block h-4 sm:h-5 w-px bg-slate-200 dark:bg-slate-800 shrink-0"></div>
 
         <!-- Dark / Light Theme Toggle -->
-        <button id="theme-toggle-btn" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="สลับโหมดมืด/สว่าง (Toggle Theme)">
+        <button id="theme-toggle-btn" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all shrink-0" title="สลับโหมดมืด/สว่าง (Toggle Theme)">
           <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
           <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
 
         <!-- User Profile Pill -->
-        <button onclick="window.app.navigateTo('profile')" class="flex items-center gap-1.5 sm:gap-2 pl-1 pr-1.5 sm:pr-2.5 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
-          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow">
+        <button onclick="window.app.navigateTo('profile')" class="flex items-center gap-1.5 pl-1 pr-1.5 sm:pr-2.5 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700 shrink-0">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow shrink-0">
             <span id="header-avatar">🚀</span>
           </div>
           <span class="text-xs font-bold text-slate-700 dark:text-slate-200 hidden sm:inline" id="header-user-name">Pro Learner</span>
@@ -115,7 +115,7 @@
   <!-- ========================================================================= -->
   <!-- MAIN APP CONTAINER (SIDEBAR + VIEWPORT) -->
   <!-- ========================================================================= -->
-  <div class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex gap-4 md:gap-6 lg:gap-8">
+  <div class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex gap-4 md:gap-6 lg:gap-8 min-w-0 overflow-x-hidden">
     
     <!-- Sidebar Navigation: Compact Icon Rail on Tablet (md:w-20), Full Width on Desktop (lg:w-64) -->
     <aside class="hidden md:block md:w-20 lg:w-64 shrink-0 space-y-6">
@@ -182,34 +182,34 @@
   <!-- ========================================================================= -->
   <!-- MOBILE BOTTOM NAVIGATION BAR -->
   <!-- ========================================================================= -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-1 pt-1.5 pb-[max(0.4rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-lg">
-    <button data-bottom-nav="dashboard" onclick="window.app.navigateTo('dashboard')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-indigo-600 dark:text-indigo-400 font-bold active:scale-95" aria-label="หน้าแรก">
-      <div class="w-6 h-6 flex items-center justify-center">
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-0.5 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] flex items-center justify-between shadow-lg w-full max-w-full overflow-hidden box-border">
+    <button data-bottom-nav="dashboard" onclick="window.app.navigateTo('dashboard')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-indigo-600 dark:text-indigo-400 font-bold active:scale-95 shrink" aria-label="หน้าแรก">
+      <div class="w-5 h-5 flex items-center justify-center shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
       </div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">หน้าแรก</span>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">หน้าแรก</span>
     </button>
-    <button data-bottom-nav="level-detail" onclick="window.app.navigateTo('level-detail')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95" aria-label="บทเรียน">
-      <div class="w-6 h-6 flex items-center justify-center">
+    <button data-bottom-nav="level-detail" onclick="window.app.navigateTo('level-detail')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="บทเรียน">
+      <div class="w-5 h-5 flex items-center justify-center shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
       </div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">บทเรียน</span>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">บทเรียน</span>
     </button>
-    <button data-bottom-nav="vocabulary" onclick="window.app.navigateTo('vocabulary')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95" aria-label="คำศัพท์">
-      <div class="w-6 h-6 flex items-center justify-center text-base">🎲</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">คำศัพท์</span>
+    <button data-bottom-nav="vocabulary" onclick="window.app.navigateTo('vocabulary')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="คำศัพท์">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🎲</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">คำศัพท์</span>
     </button>
-    <button data-bottom-nav="articles" onclick="window.app.navigateTo('articles')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95" aria-label="บทความ">
-      <div class="w-6 h-6 flex items-center justify-center text-base">📚</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">บทความ</span>
+    <button data-bottom-nav="articles" onclick="window.app.navigateTo('articles')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="บทความ">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">📚</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">บทความ</span>
     </button>
-    <button data-bottom-nav="masterclass" onclick="window.app.navigateTo('masterclass')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95" aria-label="ติวเข้ม">
-      <div class="w-6 h-6 flex items-center justify-center text-base">🎯</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">ติวเข้ม</span>
+    <button data-bottom-nav="masterclass" onclick="window.app.navigateTo('masterclass')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="ติวเข้ม">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🎯</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">ติวเข้ม</span>
     </button>
-    <button data-bottom-nav="sentence-builder" onclick="window.app.navigateTo('sentence-builder')" class="flex-1 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95" aria-label="แต่งประโยค">
-      <div class="w-6 h-6 flex items-center justify-center text-base">🧩</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full">แต่งประโยค</span>
+    <button data-bottom-nav="sentence-builder" onclick="window.app.navigateTo('sentence-builder')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="แต่งประโยค">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🧩</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">แต่งประโยค</span>
     </button>
   </nav>
 
