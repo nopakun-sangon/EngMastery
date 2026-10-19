@@ -8,7 +8,7 @@
 class EngMasteryApp {
   constructor() {
     this.currentView = "dashboard";
-    this.activeLevelId = "level-1-survivor";
+    this.activeLevelId = null;
     this.activeTabByLevel = {
       "level-1-survivor": "grammar",
       "level-2-storyteller": "grammar",
@@ -203,8 +203,8 @@ class EngMasteryApp {
       }
     });
 
-    if (params.levelId) {
-      this.activeLevelId = params.levelId;
+    if (viewName === "level-detail") {
+      this.activeLevelId = params.levelId !== undefined ? params.levelId : null;
     }
     if (viewName === "reading-lab") {
       this.activeReadingArticleId = params.articleId !== undefined ? params.articleId : null;
@@ -551,25 +551,214 @@ class EngMasteryApp {
   }
 
   // =========================================================================
-  // VIEW 2: LEVEL DETAIL (4 TABS ARCHITECTURE)
+  // VIEW 2: LEVEL DIRECTORY (BLOG LISTING) & LEVEL DETAIL (4 TABS ARCHITECTURE)
   // =========================================================================
-  renderLevelDetailView(container, levelId) {
-    const courses = window.courseData || [];
-    const course = courses.find(c => c.id === levelId) || courses[0];
-    this.activeLevelId = course.id;
-
-    const currentTab = this.activeTabByLevel[course.id] || "grammar";
+  renderLevelListing(container, courses) {
+    this.activeLevelId = null;
+    const state = window.storageManager.state;
+    const completedCount = courses.filter(c => (state.completedLevels || []).includes(c.id)).length;
+    const progressPercent = courses.length ? Math.round((completedCount / courses.length) * 100) : 0;
+    const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto">
-        <!-- Level Navigation Bar -->
+      <div class="space-y-8 animate-fadeIn max-w-5xl mx-auto pb-12">
+        <!-- Hero Blog Header -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
+          <div class="relative z-10 space-y-4 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
+              <span>🌟 CEFR Standardized Roadmap</span>
+              <span class="text-indigo-400">•</span>
+              <span>A1 ➔ C2 Zero to Pro</span>
+            </div>
+            
+            <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+              ห้องเรียน 6 ระดับมาตรฐานสากล (CEFR Level Mastery)
+            </h1>
+            
+            <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+              หลักสูตรภาษาอังกฤษที่ออกแบบอย่างเป็นระบบตามกรอบสากล CEFR แต่ละระดับร้อยเรียงผ่าน 4 เสาหลักการเรียนรู้: 
+              <span class="font-bold text-amber-300">1. Core Grammar</span> (ไวยากรณ์หัวใจหลัก), 
+              <span class="font-bold text-amber-300">2. Chunks & Vocab</span> (สำนวนคำศัพท์ติดปาก), 
+              <span class="font-bold text-amber-300">3. Chat Dialogue</span> (บทสนทนาการทำงานจริง) และ 
+              <span class="font-bold text-amber-300">4. Action Drill & Quiz</span> (ซ้อมพูดและแบบทดสอบ 5 ข้อ)
+            </p>
+
+            <!-- Learning Progress Tracker -->
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
+              <div class="flex-1 bg-white/10 p-3 rounded-2xl border border-white/10 backdrop-blur-xs">
+                <div class="flex items-center justify-between mb-1.5 font-bold">
+                  <span class="text-indigo-200">ความคืบหน้าการเรียนรวม</span>
+                  <span class="text-amber-300">${completedCount} / ${courses.length} ระดับ (${progressPercent}%)</span>
+                </div>
+                <div class="w-full bg-black/30 rounded-full h-2.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-indigo-200">XP สะสม</div>
+                  <div class="text-base font-black text-amber-300">${totalXP} XP</div>
+                </div>
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-indigo-200">เป้าหมาย</div>
+                  <div class="text-base font-black text-emerald-300">C2 Mastery</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative background glow -->
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- 6 Levels Blog Grid -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>📖 เลือกระดับบทเรียนที่ต้องการเรียน</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold">${courses.length} ระดับ</span>
+            </h2>
+            <button onclick="window.app.navigateTo('dashboard')" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400">
+              กลับ Dashboard ➔
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            ${courses.map((course, idx) => {
+              const isCompleted = state.completedLevels.includes(course.id);
+              const quizRecord = state.quizHistory[course.id];
+
+              return `
+                <div onclick="window.app.navigateTo('level-detail', { levelId: '${course.id}' })"
+                  class="bg-white dark:bg-slate-900 border ${
+                    isCompleted ? "border-emerald-300 dark:border-emerald-800" : "border-slate-200 dark:border-slate-800"
+                  } rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-4 group cursor-pointer relative overflow-hidden">
+                  
+                  ${isCompleted ? `
+                    <div class="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
+                      <div class="bg-emerald-500 text-white text-[9px] font-black uppercase py-0.5 w-24 text-center transform rotate-45 translate-x-5 translate-y-3 shadow-xs">
+                        PASSED
+                      </div>
+                    </div>
+                  ` : ''}
+
+                  <div>
+                    <!-- Card Top Header -->
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider ${course.badgeColor.bg} ${course.badgeColor.text} border ${course.badgeColor.border}">
+                        ${course.level}
+                      </span>
+                      ${isCompleted ? `
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                          <span>ผ่านแล้ว (${quizRecord ? quizRecord.bestPercent : 100}%)</span>
+                        </span>
+                      ` : `
+                        <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                          ${course.estimatedTime}
+                        </span>
+                      `}
+                    </div>
+
+                    <!-- Level Title & Subtitle -->
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                      ${course.levelTitle}
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">
+                      ${course.levelSub}
+                    </p>
+
+                    <!-- 4 Learning Pillars Mini Breakdown -->
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400">
+                      <div class="flex items-center gap-1.5">
+                        <span>📑</span>
+                        <span class="font-semibold text-slate-700 dark:text-slate-300 truncate">${course.coreGrammar ? course.coreGrammar.title : 'Core Grammar'}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span>💬</span>
+                        <span class="truncate">${course.chunksAndVocab ? course.chunksAndVocab.title : 'Chunks & Vocab'}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span>📱</span>
+                        <span class="truncate">${course.realLifeDialogue ? course.realLifeDialogue.scenario : 'Workplace Chat Dialogue'}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span>🎯</span>
+                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">Action Drill & ควิซ 5 ข้อ</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card Footer Action -->
+                  <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-500 flex items-center gap-1">
+                      <span>✨</span>
+                      <span>+${course.xpReward} XP</span>
+                    </span>
+                    <button onclick="event.stopPropagation(); window.app.navigateTo('level-detail', { levelId: '${course.id}' })"
+                      class="px-4 py-2 ${
+                        isCompleted
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100'
+                          : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                      } font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 active:scale-95">
+                      <span>${isCompleted ? "ทบทวนบทเรียน" : "เข้าเรียนบทนี้"}</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderLevelDetailView(container, levelId) {
+    const courses = window.courseData || [];
+    if (!levelId) {
+      this.renderLevelListing(container, courses);
+      return;
+    }
+
+    const course = courses.find(c => c.id === levelId);
+    if (!course) {
+      this.renderLevelListing(container, courses);
+      return;
+    }
+
+    this.activeLevelId = course.id;
+    const currentTab = this.activeTabByLevel[course.id] || "grammar";
+
+    const courseIndex = courses.findIndex(c => c.id === course.id);
+    const prevCourse = courseIndex > 0 ? courses[courseIndex - 1] : null;
+    const nextCourse = courseIndex < courses.length - 1 ? courses[courseIndex + 1] : null;
+
+    container.innerHTML = `
+      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+        <!-- Level Navigation Bar & Breadcrumbs -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-          <button onclick="window.app.navigateTo('dashboard')"
+          <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
             class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>กลับสู่หน้าแรก (Dashboard)</span>
+            <span>กลับสู่หน้ารวมห้องเรียน 6 ระดับ (All Levels Hub)</span>
           </button>
           <div class="flex items-center gap-2">
+            ${prevCourse ? `
+              <button onclick="window.app.navigateTo('level-detail', { levelId: '${prevCourse.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ระดับก่อนหน้า: ${prevCourse.levelTitle}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextCourse ? `
+              <button onclick="window.app.navigateTo('level-detail', { levelId: '${nextCourse.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ระดับถัดไป: ${nextCourse.levelTitle}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
             <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase ${course.badgeColor.bg} ${course.badgeColor.text} border ${course.badgeColor.border}">
               CEFR ${course.level}
             </span>
@@ -625,6 +814,48 @@ class EngMasteryApp {
         <!-- Tab Content Viewport -->
         <div id="level-tab-content-area">
           ${this.renderActiveTabContent(course, currentTab)}
+        </div>
+
+        <!-- Unified Previous / Next Level Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevCourse ? `
+            <button onclick="window.app.navigateTo('level-detail', { levelId: '${prevCourse.id}' })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span class="group-hover:-translate-x-1 transition-transform">⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">ระดับก่อนหน้า (${prevCourse.level})</div>
+                <div class="truncate max-w-[200px]">${prevCourse.levelTitle}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวมห้องเรียน 6 ระดับ (Blog)</span>
+            </button>
+          `}
+
+          <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>📚 หน้ารวมทุกระดับ (${courseIndex + 1}/${courses.length})</span>
+          </button>
+
+          ${nextCourse ? `
+            <button onclick="window.app.navigateTo('level-detail', { levelId: '${nextCourse.id}' })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">ระดับถัดไป (${nextCourse.level})</div>
+                <div class="truncate max-w-[200px]">${nextCourse.levelTitle}</div>
+              </div>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบ 6 ระดับแล้ว! (กลับสู่หน้ารวม)</span>
+              <span>➔</span>
+            </button>
+          `}
         </div>
       </div>
     `;
@@ -2475,6 +2706,11 @@ class EngMasteryApp {
   }
 
   renderReadingArticleDetail(container, article) {
+    const articles = this.getReadingList();
+    const artIndex = articles.findIndex(a => a.id === article.id);
+    const prevArt = artIndex > 0 ? articles[artIndex - 1] : null;
+    const nextArt = artIndex < articles.length - 1 ? articles[artIndex + 1] : null;
+
     const quizRecord = this.readingQuizSubmitted[article.id];
     const isPassed = quizRecord && quizRecord.passed;
     const currentRate = this.readingTtsRate || 1.0;
@@ -2500,6 +2736,20 @@ class EngMasteryApp {
           </button>
           
           <div class="flex items-center gap-2">
+            ${prevArt ? `
+              <button onclick="window.app.navigateTo('reading-lab', { articleId: '${prevArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="เรื่องก่อนหน้า: ${prevArt.title}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextArt ? `
+              <button onclick="window.app.navigateTo('reading-lab', { articleId: '${nextArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="เรื่องถัดไป: ${nextArt.title}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
             <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
               ${article.levelBadge}
             </span>
@@ -2756,6 +3006,48 @@ class EngMasteryApp {
               กลับไปหน้ารวมบทความ
             </button>
           </div>
+        </div>
+
+        <!-- Unified Previous / Next Reading Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevArt ? `
+            <button onclick="window.app.navigateTo('reading-lab', { articleId: '${prevArt.id}' })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span class="group-hover:-translate-x-1 transition-transform">⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">เรื่องก่อนหน้า (${prevArt.levelBadge || 'Reading'})</div>
+                <div class="truncate max-w-[200px]">${prevArt.title}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('reading-lab')"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวมบทความฝึกอ่าน</span>
+            </button>
+          `}
+
+          <button onclick="window.app.navigateTo('reading-lab')"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>📖 หน้ารวมบทความ (${artIndex + 1}/${articles.length})</span>
+          </button>
+
+          ${nextArt ? `
+            <button onclick="window.app.navigateTo('reading-lab', { articleId: '${nextArt.id}' })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">เรื่องถัดไป (${nextArt.levelBadge || 'Reading'})</div>
+                <div class="truncate max-w-[200px]">${nextArt.title}</div>
+              </div>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('reading-lab')"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบทุกบทความแล้ว! (กลับสู่หน้ารวม)</span>
+              <span>➔</span>
+            </button>
+          `}
         </div>
       </div>
     `;
@@ -3405,11 +3697,16 @@ class EngMasteryApp {
   }
 
   renderArticleDetail(container, article) {
+    const articles = window.articlesData || [];
+    const artIndex = articles.findIndex(a => a.id === article.id);
+    const prevArt = artIndex > 0 ? articles[artIndex - 1] : null;
+    const nextArt = artIndex < articles.length - 1 ? articles[artIndex + 1] : null;
+
     const quizAnswers = this.articleQuizAnswers[article.id] || {};
     const quizResult = this.articleQuizSubmitted[article.id] || null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-3xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-3xl mx-auto pb-12">
         <!-- Back Navigation & Header -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('articles', { articleId: null })"
@@ -3418,6 +3715,20 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมบทความ</span>
           </button>
           <div class="flex items-center gap-2">
+            ${prevArt ? `
+              <button onclick="window.app.navigateTo('articles', { articleId: '${prevArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="บทความก่อนหน้า: ${prevArt.title}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextArt ? `
+              <button onclick="window.app.navigateTo('articles', { articleId: '${nextArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="บทความถัดไป: ${nextArt.title}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
             <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
               ${article.readTime}
             </span>
@@ -3638,6 +3949,48 @@ class EngMasteryApp {
               </button>
             `}
           </div>
+        </div>
+
+        <!-- Unified Previous / Next Article Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevArt ? `
+            <button onclick="window.app.navigateTo('articles', { articleId: '${prevArt.id}' })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span class="group-hover:-translate-x-1 transition-transform">⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">บทความก่อนหน้า</div>
+                <div class="truncate max-w-[200px]">${prevArt.title}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('articles', { articleId: null })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวมคลังบทความ</span>
+            </button>
+          `}
+
+          <button onclick="window.app.navigateTo('articles', { articleId: null })"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>📚 หน้ารวมบทความ (${artIndex + 1}/${articles.length})</span>
+          </button>
+
+          ${nextArt ? `
+            <button onclick="window.app.navigateTo('articles', { articleId: '${nextArt.id}' })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">บทความถัดไป</div>
+                <div class="truncate max-w-[200px]">${nextArt.title}</div>
+              </div>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('articles', { articleId: null })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบทุกบทความแล้ว! (กลับสู่หน้ารวม)</span>
+              <span>➔</span>
+            </button>
+          `}
         </div>
       </div>
     `;
@@ -3877,11 +4230,16 @@ class EngMasteryApp {
   }
 
   renderMasterclassDetail(container, topic) {
+    const masterclasses = window.masterclassData || [];
+    const mcIndex = masterclasses.findIndex(m => m.id === topic.id);
+    const prevMc = mcIndex > 0 ? masterclasses[mcIndex - 1] : null;
+    const nextMc = mcIndex < masterclasses.length - 1 ? masterclasses[mcIndex + 1] : null;
+
     const answers = this.masterclassQuizAnswers[topic.id] || {};
     const quizResult = this.masterclassQuizSubmitted[topic.id] || null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-12">
         <!-- Back Navigation & Top Bar -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
@@ -3890,6 +4248,20 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมห้องติวเข้ม (Masterclass Hub)</span>
           </button>
           <div class="flex items-center gap-2">
+            ${prevMc ? `
+              <button onclick="window.app.navigateTo('masterclass', { masterclassId: '${prevMc.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ตอนก่อนหน้า: ${prevMc.title}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextMc ? `
+              <button onclick="window.app.navigateTo('masterclass', { masterclassId: '${nextMc.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ตอนถัดไป: ${nextMc.title}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
             <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
               ${topic.readTime}
             </span>
@@ -3980,42 +4352,47 @@ class EngMasteryApp {
         <!-- Interactive Knowledge Check (Quiz 5 ข้อ) -->
         ${this.renderMasterclassQuiz(topic, answers, quizResult)}
 
-        <!-- WH Series Next / Prev Navigation -->
-        ${topic.id.startsWith('mc-wh-part-') ? `
-          <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            ${topic.id === 'mc-wh-part-2' ? `
-              <button onclick="window.app.switchMasterclass('mc-wh-part-1')"
-                class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center gap-1.5 transition-colors">
-                <span>⬅ ตอนก่อนหน้า: Part 1/3 (Who, What, Where, When)</span>
-              </button>
-            ` : topic.id === 'mc-wh-part-3' ? `
-              <button onclick="window.app.switchMasterclass('mc-wh-part-2')"
-                class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center gap-1.5 transition-colors">
-                <span>⬅ ตอนก่อนหน้า: Part 2/3 (Why, Which, How)</span>
-              </button>
-            ` : `<div></div>`}
+        <!-- Unified Previous / Next Masterclass Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevMc ? `
+            <button onclick="window.app.navigateTo('masterclass', { masterclassId: '${prevMc.id}' })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span class="group-hover:-translate-x-1 transition-transform">⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">ตอนก่อนหน้า</div>
+                <div class="truncate max-w-[200px]">${prevMc.title}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวม Masterclass Hub</span>
+            </button>
+          `}
 
-            ${topic.id === 'mc-wh-part-1' ? `
-              <button onclick="window.app.switchMasterclass('mc-wh-part-2')"
-                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
-                <span>ตอนถัดไป: Part 2/3 (Why, Which, How)</span>
-                <span>➔</span>
-              </button>
-            ` : topic.id === 'mc-wh-part-2' ? `
-              <button onclick="window.app.switchMasterclass('mc-wh-part-3')"
-                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
-                <span>ตอนถัดไป: Part 3/3 (Indirect Questions)</span>
-                <span>➔</span>
-              </button>
-            ` : `
-              <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
-                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
-                <span>✓ พิชิตครบทั้ง 3 ตอน (กลับสู่ Masterclass Hub)</span>
-                <span>➔</span>
-              </button>
-            `}
-          </div>
-        ` : ''}
+          <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>🎯 หน้ารวมติวเข้ม (${mcIndex + 1}/${masterclasses.length})</span>
+          </button>
+
+          ${nextMc ? `
+            <button onclick="window.app.navigateTo('masterclass', { masterclassId: '${nextMc.id}' })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">ตอนถัดไป</div>
+                <div class="truncate max-w-[200px]">${nextMc.title}</div>
+              </div>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบทุกบทเรียนติวเข้มแล้ว! (กลับสู่ Hub)</span>
+              <span>➔</span>
+            </button>
+          `}
+        </div>
       </div>
     `;
   }
@@ -5093,6 +5470,11 @@ class EngMasteryApp {
   }
 
   renderSentenceBuilderDetail(container, topic) {
+    const topics = window.sentenceBuilderData || [];
+    const topicIndex = topics.findIndex(t => t.id === topic.id);
+    const prevTopic = topicIndex > 0 ? topics[topicIndex - 1] : null;
+    const nextTopic = topicIndex < topics.length - 1 ? topics[topicIndex + 1] : null;
+
     const drills = topic.drills || [];
     const currentDrillIdx = this.sentenceDrillIndex[topic.id] || 0;
     const activeDrill = drills[currentDrillIdx] || drills[0];
@@ -5106,15 +5488,31 @@ class EngMasteryApp {
       <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-12">
         
         <!-- Breadcrumb & Back Button -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('sentence-builder')"
                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold transition-all">
             <span>←</span>
             <span>กลับไปหน้ารวมหัวข้อฝึกแต่งประโยค</span>
           </button>
-          <span class="px-3 py-1 rounded-full text-xs font-black bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
-            บทที่ ${topic.chapterNo} จาก 10
-          </span>
+          <div class="flex items-center gap-2">
+            ${prevTopic ? `
+              <button onclick="window.app.navigateTo('sentence-builder', { topicId: '${prevTopic.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="หัวข้อก่อนหน้า: ${prevTopic.title}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextTopic ? `
+              <button onclick="window.app.navigateTo('sentence-builder', { topicId: '${nextTopic.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="หัวข้อถัดไป: ${nextTopic.title}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
+            <span class="px-3 py-1 rounded-full text-xs font-black bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              บทที่ ${topic.chapterNo || (topicIndex + 1)} จาก ${topics.length || 10}
+            </span>
+          </div>
         </div>
 
         <!-- Article Blog Header -->
@@ -5249,6 +5647,47 @@ class EngMasteryApp {
           ${this.renderSentenceBuilderWorkshop(topic, activeDrill, currentDrillIdx)}
         </div>
 
+        <!-- Unified Previous / Next Sentence Topic Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevTopic ? `
+            <button onclick="window.app.navigateTo('sentence-builder', { topicId: '${prevTopic.id}' })"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span class="group-hover:-translate-x-1 transition-transform">⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">หัวข้อก่อนหน้า (บทที่ ${prevTopic.chapterNo || topicIndex})</div>
+                <div class="truncate max-w-[200px]">${prevTopic.title}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('sentence-builder')"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวมฝึกแต่งประโยค</span>
+            </button>
+          `}
+
+          <button onclick="window.app.navigateTo('sentence-builder')"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>🧩 หน้ารวมฝึกแต่งประโยค (${topicIndex + 1}/${topics.length})</span>
+          </button>
+
+          ${nextTopic ? `
+            <button onclick="window.app.navigateTo('sentence-builder', { topicId: '${nextTopic.id}' })"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">หัวข้อถัดไป (บทที่ ${nextTopic.chapterNo || topicIndex + 2})</div>
+                <div class="truncate max-w-[200px]">${nextTopic.title}</div>
+              </div>
+              <span class="group-hover:translate-x-1 transition-transform">➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.navigateTo('sentence-builder')"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบทุกบทเรียนแต่งประโยคแล้ว! (กลับสู่หน้ารวม)</span>
+              <span>➔</span>
+            </button>
+          `}
+        </div>
       </div>
     `;
   }

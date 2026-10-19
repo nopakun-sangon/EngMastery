@@ -57,6 +57,10 @@ class StorageManager {
     return this.getDefaultState();
   }
 
+  getState() {
+    return this.state;
+  }
+
   save() {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
