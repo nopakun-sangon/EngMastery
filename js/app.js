@@ -46,6 +46,7 @@ class EngMasteryApp {
     this.activeGrammarTopicId = "questions";
     this.activeGrammarUnitId = null;
     this.grammarAccordionOpen = { "questions": true };
+    this.mobileGrammarDrawerOpen = false;
 
     // Load persisted progress from localStorage
     try {
@@ -1197,10 +1198,98 @@ class EngMasteryApp {
     const isCurrentUnitDone = activeUnit ? this.completedGrammarUnits.has(activeUnit.id) : false;
     const currentQuizRecord = activeUnit ? this.grammarQuizSubmitted[activeUnit.id] : null;
 
+    // Reusable Accordion List HTML generator (for both Desktop Column and Mobile Slide-over Drawer)
+    const renderAccordionItems = () => {
+      return syllabus.map((topic, topicIdx) => {
+        const isOpen = !!this.grammarAccordionOpen[topic.id];
+        const topicUnits = topic.units || [];
+        const doneCount = topicUnits.filter(u => this.completedGrammarUnits.has(u.id)).length;
+        const isTopicAllDone = topicUnits.length > 0 && doneCount === topicUnits.length;
+        const isTopicActive = topic.id === activeTopic.id;
+
+        return `
+          <div class="rounded-2xl border transition-all duration-200 overflow-hidden ${
+            isTopicActive
+              ? 'border-indigo-400/80 dark:border-indigo-600 bg-white dark:bg-slate-900 shadow-md ring-1 ring-indigo-500/20'
+              : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
+          }">
+            <!-- Accordion Topic Header Button -->
+            <button onclick="window.app.toggleGrammarAccordion('${topic.id}')"
+              class="w-full p-3 sm:p-3.5 flex items-center justify-between text-left gap-2.5 transition-colors group">
+              <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span class="text-lg sm:text-xl shrink-0 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform">
+                  ${topic.icon || '📘'}
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-black text-indigo-500">#${topicIdx + 1}</span>
+                    <h3 class="text-xs font-black text-slate-900 dark:text-white truncate">
+                      ${topic.title}
+                    </h3>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    ${topic.titleTh || ''}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  isTopicAllDone
+                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                }">
+                  ${doneCount}/${topicUnits.length}
+                </span>
+                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+
+            <!-- Units List in Drawer -->
+            ${isOpen ? `
+              <div class="px-2 pb-2.5 pt-0.5 space-y-1 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/30">
+                ${topicUnits.map((u, uIdx) => {
+                  const isUnitActive = activeUnit && u.id === activeUnit.id;
+                  const isUnitDone = this.completedGrammarUnits.has(u.id);
+
+                  return `
+                    <button onclick="window.app.selectGrammarUnit('${topic.id}', '${u.id}')"
+                      class="w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between gap-2.5 ${
+                        isUnitActive
+                          ? 'bg-indigo-600 text-white font-bold shadow-sm shadow-indigo-600/30'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
+                      }">
+                      <div class="flex items-center gap-2 min-w-0">
+                        <span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] ${
+                          isUnitDone
+                            ? (isUnitActive ? 'bg-white text-indigo-600 font-black' : 'bg-emerald-500 text-white font-black')
+                            : (isUnitActive ? 'border border-white/60 text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-400')
+                        }">
+                          ${isUnitDone ? '✓' : (uIdx + 1)}
+                        </span>
+                        <span class="line-clamp-2 leading-tight">${u.title}</span>
+                      </div>
+                      ${isUnitDone ? `
+                        <span class="text-[10px] font-bold ${isUnitActive ? 'text-indigo-200' : 'text-emerald-500'} shrink-0 ml-1">
+                          ผ่าน
+                        </span>
+                      ` : ''}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    };
+
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-16">
+      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-28 sm:pb-20">
         <!-- Return Navigation Bar -->
-        <div class="flex items-center justify-between pb-1">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-1">
           <button onclick="window.app.enterLessonsTrack('hub')"
             class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -1213,27 +1302,27 @@ class EngMasteryApp {
         </div>
 
         <!-- Hero Header with Track Switcher -->
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
+        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-5 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
             <!-- Track Switcher Pills -->
-            <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
+            <div class="inline-flex flex-wrap p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
               <button onclick="window.app.switchLessonsTrack('grammar')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
-                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ)</span>
+                class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-1.5">
+                <span>📘 คอร์สไวยากรณ์ (15 หัวข้อ)</span>
               </button>
               <button onclick="window.app.switchLessonsTrack('core')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
-                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
+                class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-1.5">
+                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR)</span>
               </button>
             </div>
 
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
               <span>📚 Complete Grammar Syllabus</span>
               <span class="text-indigo-400">•</span>
               <span>15 หมวดหมู่หลัก ครอบคลุมทุกโครงสร้าง</span>
             </div>
 
-            <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+            <h1 class="text-xl sm:text-3xl font-black tracking-tight text-white leading-tight">
               คอร์สไวยากรณ์ภาษาอังกฤษ (Grammar Mastery Course)
             </h1>
 
@@ -1243,8 +1332,8 @@ class EngMasteryApp {
             </p>
 
             <!-- Learning Progress Tracker -->
-            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
-              <div class="flex-1 bg-white/10 p-3.5 rounded-2xl border border-white/10 backdrop-blur-xs">
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs">
+              <div class="flex-1 bg-white/10 p-3 sm:p-3.5 rounded-2xl border border-white/10 backdrop-blur-xs">
                 <div class="flex items-center justify-between mb-1.5 font-bold">
                   <span class="text-indigo-200">ความคืบหน้าคอร์สไวยากรณ์</span>
                   <span class="text-amber-300">${completedUnits} / ${totalUnits} บทย่อย (${progressPercent}%)</span>
@@ -1253,14 +1342,14 @@ class EngMasteryApp {
                   <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
                 </div>
               </div>
-              <div class="flex items-center gap-3">
-                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 text-center">
                   <div class="text-[10px] text-indigo-200">หมวดหมู่</div>
-                  <div class="text-base font-black text-white">15 หัวข้อ</div>
+                  <div class="text-sm sm:text-base font-black text-white">15 หัวข้อ</div>
                 </div>
-                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 text-center">
                   <div class="text-[10px] text-indigo-200">XP สะสม</div>
-                  <div class="text-base font-black text-amber-300">${totalXP} XP</div>
+                  <div class="text-sm sm:text-base font-black text-amber-300">${totalXP} XP</div>
                 </div>
               </div>
             </div>
@@ -1270,11 +1359,33 @@ class EngMasteryApp {
           <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         </div>
 
-        <!-- Main Workspace: Left Syllabus Accordion + Right Content Reader -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- MOBILE / TABLET QUICK SYLLABUS TRIGGER BAR (Hidden on xl screens) -->
+        <div class="xl:hidden flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-16 z-20">
+          <button onclick="window.app.toggleMobileGrammarDrawer(true)" class="flex items-center gap-2.5 text-left min-w-0 flex-1 group">
+            <span class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-base shrink-0 group-hover:scale-105 transition-transform">📑</span>
+            <div class="min-w-0 flex-1">
+              <div class="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span>สารบัญ 15 หมวดหมู่</span>
+                <span class="text-slate-400 font-normal">• แตะเพื่อเลือกบท</span>
+              </div>
+              <div class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
+                <span class="truncate">${activeTopic.title} • ${activeUnit ? activeUnit.title : ''}</span>
+                <span class="text-indigo-500 font-bold">▾</span>
+              </div>
+            </div>
+          </button>
+          <button onclick="window.app.toggleMobileGrammarDrawer(true)"
+            class="shrink-0 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs flex items-center gap-1 ml-2 active:scale-95 transition-all">
+            <span>สารบัญ</span>
+            <span class="text-[10px] text-indigo-200">(${currentIndex + 1}/${allUnits.length})</span>
+          </button>
+        </div>
+
+        <!-- MAIN WORKSPACE: Desktop 2-Columns (xl:) vs Mobile Single Column with Slide-over Drawer -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
           
-          <!-- LEFT COLUMN: 15 Topics Syllabus Drawer -->
-          <div class="lg:col-span-4 xl:col-span-4 space-y-3 lg:sticky lg:top-20">
+          <!-- LEFT COLUMN: 15 Topics Syllabus Drawer (DESKTOP ONLY: xl:block) -->
+          <div class="hidden xl:block xl:col-span-4 space-y-3 xl:sticky xl:top-20">
             <div class="flex items-center justify-between px-1">
               <h2 class="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
                 <span>📑 สารบัญหลักสูตร (Syllabus)</span>
@@ -1283,118 +1394,35 @@ class EngMasteryApp {
               <span class="text-[11px] text-slate-400 font-medium">${completedUnits}/${totalUnits} ผ่านแล้ว</span>
             </div>
 
-            <!-- Accordion List -->
+            <!-- Desktop Accordion List -->
             <div class="space-y-2.5 max-h-[calc(100vh-140px)] overflow-y-auto pr-1 custom-scrollbar">
-              ${syllabus.map((topic, topicIdx) => {
-                const isOpen = !!this.grammarAccordionOpen[topic.id];
-                const topicUnits = topic.units || [];
-                const doneCount = topicUnits.filter(u => this.completedGrammarUnits.has(u.id)).length;
-                const isTopicAllDone = topicUnits.length > 0 && doneCount === topicUnits.length;
-                const isTopicActive = topic.id === activeTopic.id;
-
-                return `
-                  <div class="rounded-2xl border transition-all duration-200 overflow-hidden ${
-                    isTopicActive
-                      ? 'border-indigo-400/80 dark:border-indigo-600 bg-white dark:bg-slate-900 shadow-md ring-1 ring-indigo-500/20'
-                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
-                  }">
-                    <!-- Accordion Topic Header Button -->
-                    <button onclick="window.app.toggleGrammarAccordion('${topic.id}')"
-                      class="w-full p-3.5 flex items-center justify-between text-left gap-2.5 transition-colors group">
-                      <div class="flex items-center gap-3 min-w-0">
-                        <span class="text-xl shrink-0 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform">
-                          ${topic.icon || '📘'}
-                        </span>
-                        <div class="min-w-0">
-                          <div class="flex items-center gap-1.5">
-                            <span class="text-[11px] font-black text-indigo-500">#${topicIdx + 1}</span>
-                            <h3 class="text-xs font-black text-slate-900 dark:text-white truncate">
-                              ${topic.title}
-                            </h3>
-                          </div>
-                          <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                            ${topic.titleTh || ''}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div class="flex items-center gap-2 shrink-0">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          isTopicAllDone
-                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
-                            : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
-                        }">
-                          ${doneCount}/${topicUnits.length}
-                        </span>
-                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </button>
-
-                    <!-- Units List in Drawer -->
-                    ${isOpen ? `
-                      <div class="px-2 pb-2.5 pt-0.5 space-y-1 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/30">
-                        ${topicUnits.map((u, uIdx) => {
-                          const isUnitActive = activeUnit && u.id === activeUnit.id;
-                          const isUnitDone = this.completedGrammarUnits.has(u.id);
-
-                          return `
-                            <button onclick="window.app.selectGrammarUnit('${topic.id}', '${u.id}')"
-                              class="w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between gap-2.5 ${
-                                isUnitActive
-                                  ? 'bg-indigo-600 text-white font-bold shadow-sm shadow-indigo-600/30'
-                                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
-                              }">
-                              <div class="flex items-center gap-2 min-w-0">
-                                <span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] ${
-                                  isUnitDone
-                                    ? (isUnitActive ? 'bg-white text-indigo-600 font-black' : 'bg-emerald-500 text-white font-black')
-                                    : (isUnitActive ? 'border border-white/60 text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-400')
-                                }">
-                                  ${isUnitDone ? '✓' : (uIdx + 1)}
-                                </span>
-                                <span class="truncate">${u.title}</span>
-                              </div>
-                              ${isUnitDone ? `
-                                <span class="text-[10px] font-bold ${isUnitActive ? 'text-indigo-200' : 'text-emerald-500'} shrink-0">
-                                  ผ่าน
-                                </span>
-                              ` : ''}
-                            </button>
-                          `;
-                        }).join('')}
-                      </div>
-                    ` : ''}
-                  </div>
-                `;
-              }).join('')}
+              ${renderAccordionItems()}
             </div>
           </div>
 
           <!-- RIGHT COLUMN: Active Unit Reader & Interactive Workspace -->
-          <div id="grammar-unit-reader" class="lg:col-span-8 xl:col-span-8 space-y-6">
+          <div id="grammar-unit-reader" class="col-span-1 xl:col-span-8 space-y-6">
             ${activeUnit ? `
               <!-- Unit Header Card -->
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
                   <!-- Breadcrumb -->
-                  <div class="flex items-center gap-1.5 text-xs text-slate-400 flex-wrap">
-                    <span class="hover:text-indigo-600 cursor-pointer" onclick="window.app.switchLessonsTrack('grammar')">Grammar Hub</span>
+                  <div class="flex items-center gap-1.5 text-xs text-slate-400 flex-wrap min-w-0">
+                    <button onclick="window.app.enterLessonsTrack('hub')" class="hover:text-indigo-600 font-bold">Lessons Hub</button>
                     <span>/</span>
                     <span class="text-indigo-600 dark:text-indigo-400 font-bold">${activeTopic.title}</span>
                     <span>/</span>
-                    <span class="text-slate-700 dark:text-slate-300 font-medium truncate">${activeUnit.title}</span>
+                    <span class="text-slate-700 dark:text-slate-300 font-medium truncate max-w-[200px] sm:max-w-none">${activeUnit.title}</span>
                   </div>
 
                   <!-- Completion Toggle Button -->
                   <button onclick="window.app.markGrammarUnitComplete('${activeUnit.id}')"
-                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
+                    class="whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
                       isCurrentUnitDone
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100'
                         : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100'
                     }">
-                    <span>${isCurrentUnitDone ? '✅ เรียนจบยูนิตนี้แล้ว' : '🎯 ทำเครื่องหมายว่าเรียนจบ'}</span>
+                    <span>${isCurrentUnitDone ? '✅ เรียนจบแล้ว' : '🎯 ทำเครื่องหมายจบ'}</span>
                     <span class="text-[10px] text-amber-500 font-black">+10 XP</span>
                   </button>
                 </div>
@@ -1406,7 +1434,7 @@ class EngMasteryApp {
                     </span>
                     <span class="text-xs text-slate-400 font-medium">${activeTopic.title}</span>
                   </div>
-                  <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
+                  <h2 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white leading-snug break-words">
                     ${activeUnit.title}
                   </h2>
                   <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
@@ -1417,7 +1445,7 @@ class EngMasteryApp {
 
               <!-- CARD 1: FORMULA BOX (สูตรโครงสร้าง) -->
               ${activeUnit.formula ? `
-                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-5 sm:p-6 text-white border border-indigo-500/30 shadow-lg">
+                <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-4 sm:p-6 text-white border border-indigo-500/30 shadow-lg">
                   <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
                       <span>📐</span>
@@ -1427,7 +1455,7 @@ class EngMasteryApp {
                       Rule Matrix
                     </span>
                   </div>
-                  <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 font-mono text-sm sm:text-base font-bold text-emerald-300 tracking-wide break-words">
+                  <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 font-mono text-xs sm:text-base font-bold text-emerald-300 tracking-wide overflow-x-auto break-words">
                     ${activeUnit.formula}
                   </div>
                   <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -1435,10 +1463,10 @@ class EngMasteryApp {
               ` : ''}
 
               <!-- CARD 2: DETAILED & PLAIN EXPLANATION (คำอธิบายละเอียด เข้าใจง่าย) -->
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
                 <div class="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
                   <span class="text-base">💡</span>
-                  <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                     คำอธิบายและหลักการจำ (Simple & Detailed Explanation)
                   </h3>
                 </div>
@@ -1448,15 +1476,15 @@ class EngMasteryApp {
               </div>
 
               <!-- CARD 3: REAL-WORLD EXAMPLES (ตัวอย่างประโยคจริง + เสียง + ซ้อมพูด) -->
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 flex-wrap gap-1">
                   <div class="flex items-center gap-2">
                     <span class="text-base">💬</span>
-                    <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                    <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                       ประโยคตัวอย่างการใช้งานจริง (Real-World Examples)
                     </h3>
                   </div>
-                  <span class="text-[11px] text-slate-400 font-medium">กด 🔊 ฟังเสียง หรือ 🎙️ ซ้อมพูด</span>
+                  <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium">กด 🔊 ฟังเสียง หรือ 🎙️ ซ้อมพูด</span>
                 </div>
 
                 <div class="grid grid-cols-1 gap-3.5">
@@ -1466,12 +1494,12 @@ class EngMasteryApp {
                     const micId = `grammar-ex-${currentIndex}-${exIdx}`;
 
                     return `
-                      <div class="p-4 rounded-2xl border ${
+                      <div class="p-3.5 sm:p-4 rounded-2xl border ${
                         isTech
                           ? 'border-indigo-100 dark:border-indigo-900/40 bg-indigo-50/30 dark:bg-indigo-950/20'
                           : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30'
                       } space-y-2.5 transition-all">
-                        <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
                           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             isTech
                               ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300'
@@ -1480,27 +1508,27 @@ class EngMasteryApp {
                             ${isTech ? '💻 สายงาน Tech & DevOps' : '☕ ชีวิตประจำวัน (Daily Life)'}
                           </span>
                           
-                          <div class="flex items-center gap-1.5">
+                          <div class="flex items-center gap-1.5 shrink-0">
                             <!-- Audio Button -->
                             <button onclick="window.speechEngine.speak('${escapedEn}')"
-                              class="p-1.5 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:scale-110 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700" title="ฟังการออกเสียง">
+                              class="p-1.5 sm:px-2 sm:py-1.5 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:scale-105 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700 text-xs" title="ฟังการออกเสียง">
                               🔊
                             </button>
                             <!-- Mic Speaking Practice Button -->
                             <button id="grammar-mic-btn-${micId}" onclick="window.app.startGrammarSpeaking('${escapedEn}', '${micId}')"
-                              class="p-1.5 rounded-xl bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:scale-110 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1 text-xs font-bold" title="ซ้อมออกเสียงประโยคนี้">
+                              class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:scale-105 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1 text-xs font-bold" title="ซ้อมออกเสียงประโยคนี้">
                               <span>🎙️</span>
-                              <span class="text-[10px] hidden sm:inline">ซ้อมพูด</span>
+                              <span class="text-[10px] hidden xs:inline sm:inline">ซ้อมพูด</span>
                             </button>
                           </div>
                         </div>
 
                         <!-- Sentence English & Thai -->
                         <div>
-                          <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                          <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug break-words">
                             ${ex.en}
                           </p>
-                          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                             ${ex.th}
                           </p>
                         </div>
@@ -1515,11 +1543,11 @@ class EngMasteryApp {
 
               <!-- CARD 4: QUICK CHECK QUIZ (แบบทดสอบ 1 ข้อ ทบทวนทันที) -->
               ${activeUnit.quickCheck ? `
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
                   <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                     <div class="flex items-center gap-2">
                       <span class="text-base">🎯</span>
-                      <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                      <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                         แบบฝึกหัดทบทวนทันที (Quick Check Quiz)
                       </h3>
                     </div>
@@ -1531,7 +1559,7 @@ class EngMasteryApp {
                   </p>
 
                   <!-- Options Grid -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
                     ${activeUnit.quickCheck.options.map((opt, optIdx) => {
                       const isSubmitted = !!currentQuizRecord;
                       const isCorrectChoice = optIdx === activeUnit.quickCheck.correctIndex;
@@ -1539,15 +1567,15 @@ class EngMasteryApp {
                       const escapedExp = (activeUnit.quickCheck.explanation || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                       let btnClass = "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400";
-                      let badge = `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] font-bold">${String.fromCharCode(65 + optIdx)}</span>`;
+                      let badge = `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] font-bold shrink-0">${String.fromCharCode(65 + optIdx)}</span>`;
 
                       if (isSubmitted) {
                         if (isCorrectChoice) {
                           btnClass = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold";
-                          badge = `<span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>`;
+                          badge = `<span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</span>`;
                         } else if (isUserChoice) {
                           btnClass = "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300 font-bold";
-                          badge = `<span class="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold">✗</span>`;
+                          badge = `<span class="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0">✗</span>`;
                         } else {
                           btnClass = "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 text-slate-400 opacity-60";
                         }
@@ -1555,9 +1583,9 @@ class EngMasteryApp {
 
                       return `
                         <button ${isSubmitted ? 'disabled' : ''} onclick="window.app.submitGrammarQuickCheck('${activeUnit.id}', ${optIdx}, ${activeUnit.quickCheck.correctIndex}, '${escapedExp}')"
-                          class="p-3.5 rounded-2xl border text-xs text-left transition-all flex items-center gap-3 ${btnClass} ${isSubmitted ? 'cursor-default' : 'active:scale-95'}">
+                          class="p-3 sm:p-3.5 rounded-2xl border text-xs text-left transition-all flex items-center gap-2.5 sm:gap-3 ${btnClass} ${isSubmitted ? 'cursor-default' : 'active:scale-95'} min-h-[46px]">
                           ${badge}
-                          <span class="flex-1">${opt}</span>
+                          <span class="flex-1 leading-snug">${opt}</span>
                         </button>
                       `;
                     }).join('')}
@@ -1565,7 +1593,7 @@ class EngMasteryApp {
 
                   <!-- Quiz Feedback & Explanation -->
                   ${currentQuizRecord ? `
-                    <div class="p-4 rounded-2xl ${
+                    <div class="p-3.5 sm:p-4 rounded-2xl ${
                       currentQuizRecord.isCorrect
                         ? 'bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-200'
                         : 'bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-200'
@@ -1582,23 +1610,23 @@ class EngMasteryApp {
               ` : ''}
 
               <!-- BOTTOM NAVIGATION BAR (Previous / Next Unit) -->
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4">
+              <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-2 sm:gap-4">
                 ${prevUnitItem ? `
                   <button onclick="window.app.selectGrammarUnit('${prevUnitItem.topicId}', '${prevUnitItem.unitId}')"
-                    class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-2 group">
+                    class="px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1.5 sm:gap-2 group shrink-0 active:scale-95">
                     <span class="group-hover:-translate-x-1 transition-transform">←</span>
-                    <div class="text-left hidden sm:block">
+                    <div class="text-left hidden md:block">
                       <div class="text-[9px] text-slate-400 uppercase">ก่อนหน้า</div>
                       <div class="truncate max-w-[120px]">${prevUnitItem.unitTitle}</div>
                     </div>
-                    <span class="sm:hidden">ก่อนหน้า</span>
+                    <span class="md:hidden">ก่อนหน้า</span>
                   </button>
                 ` : `
-                  <div class="text-xs text-slate-400 font-medium px-2">เริ่มบทเรียนแรก</div>
+                  <div class="text-[11px] text-slate-400 font-medium px-2">เริ่มบทแรก</div>
                 `}
 
-                <div class="text-center">
-                  <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">บทเรียน</div>
+                <div class="text-center px-1">
+                  <div class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider">บทเรียน</div>
                   <div class="text-xs sm:text-sm font-black text-indigo-600 dark:text-indigo-400">
                     ${currentIndex + 1} / ${allUnits.length}
                   </div>
@@ -1606,25 +1634,57 @@ class EngMasteryApp {
 
                 ${nextUnitItem ? `
                   <button onclick="window.app.selectGrammarUnit('${nextUnitItem.topicId}', '${nextUnitItem.unitId}')"
-                    class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all flex items-center gap-2 group shadow-sm shadow-indigo-600/20">
-                    <div class="text-right hidden sm:block">
+                    class="px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 sm:gap-2 group shadow-sm shadow-indigo-600/20 shrink-0 active:scale-95">
+                    <div class="text-right hidden md:block">
                       <div class="text-[9px] text-indigo-200 uppercase">ถัดไป</div>
                       <div class="truncate max-w-[120px]">${nextUnitItem.unitTitle}</div>
                     </div>
-                    <span class="sm:hidden">ถัดไป</span>
+                    <span class="md:hidden">ถัดไป</span>
                     <span class="group-hover:translate-x-1 transition-transform">→</span>
                   </button>
                 ` : `
-                  <div class="px-4 py-2 text-xs font-bold text-emerald-500 flex items-center gap-1">
-                    <span>🎉 ครบทุกบทเรียน!</span>
+                  <div class="px-3 py-1.5 text-xs font-bold text-emerald-500 flex items-center gap-1">
+                    <span>🎉 ครบทุกบท!</span>
                   </div>
                 `}
               </div>
             ` : `
               <div class="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center text-slate-500 border border-slate-200 dark:border-slate-800">
-                <p class="text-base font-bold">กรุณาเลือกยูนิตบทเรียนจากสารบัญด้านซ้าย</p>
+                <p class="text-base font-bold">กรุณาเลือกยูนิตบทเรียนจากสารบัญ</p>
+                <button onclick="window.app.toggleMobileGrammarDrawer(true)" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+                  เปิดสารบัญ 15 หัวข้อ
+                </button>
               </div>
             `}
+          </div>
+        </div>
+
+        <!-- MOBILE SLIDE-OVER SYLLABUS MODAL / DRAWER (xl:hidden) -->
+        <div id="grammar-mobile-syllabus-drawer" class="fixed inset-0 z-50 ${this.mobileGrammarDrawerOpen ? '' : 'hidden'} xl:hidden flex flex-col justify-end bg-black/60 backdrop-blur-xs transition-opacity duration-300">
+          <!-- Backdrop click to close -->
+          <div class="absolute inset-0" onclick="window.app.toggleMobileGrammarDrawer(false)"></div>
+
+          <!-- Drawer Content Panel -->
+          <div class="relative z-10 bg-white dark:bg-slate-900 w-full max-h-[85vh] rounded-t-3xl p-4 sm:p-6 flex flex-col shadow-2xl border-t border-slate-200 dark:border-slate-800 animate-slideUp">
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 shrink-0">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60">📑</span>
+                <div>
+                  <h3 class="text-sm font-black text-slate-900 dark:text-white">สารบัญ 15 หัวข้อไวยากรณ์</h3>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">เลือกบทย่อยที่ต้องการเรียน (${completedUnits}/${totalUnits} ผ่านแล้ว)</p>
+                </div>
+              </div>
+              <button onclick="window.app.toggleMobileGrammarDrawer(false)"
+                class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 flex items-center justify-center font-bold text-sm hover:bg-slate-200">
+                ✕
+              </button>
+            </div>
+
+            <!-- Drawer Scrollable Accordion List -->
+            <div class="overflow-y-auto py-3 space-y-2.5 flex-1 pr-1 custom-scrollbar">
+              ${renderAccordionItems()}
+            </div>
           </div>
         </div>
       </div>
@@ -1654,6 +1714,19 @@ class EngMasteryApp {
     }
   }
 
+  toggleMobileGrammarDrawer(isOpen) {
+    window.soundFx.playClick();
+    this.mobileGrammarDrawerOpen = isOpen !== undefined ? isOpen : !this.mobileGrammarDrawerOpen;
+    const drawer = document.getElementById("grammar-mobile-syllabus-drawer");
+    if (drawer) {
+      if (this.mobileGrammarDrawerOpen) {
+        drawer.classList.remove("hidden");
+      } else {
+        drawer.classList.add("hidden");
+      }
+    }
+  }
+
   selectGrammarUnit(topicId, unitId) {
     window.soundFx.playClick();
     if (window.speechEngine) {
@@ -1662,16 +1735,16 @@ class EngMasteryApp {
     this.activeGrammarTopicId = topicId;
     this.activeGrammarUnitId = unitId;
     this.grammarAccordionOpen[topicId] = true;
+    this.mobileGrammarDrawerOpen = false; // Close drawer immediately on unit selection
+
     const container = document.getElementById("main-content-view");
     if (container) {
       this.renderLevelListing(container, window.courseData || []);
     }
-    if (window.innerWidth < 1024) {
-      setTimeout(() => {
-        const reader = document.getElementById("grammar-unit-reader");
-        if (reader) reader.scrollIntoView({ behavior: "smooth" });
-      }, 50);
-    }
+    setTimeout(() => {
+      const reader = document.getElementById("grammar-unit-reader");
+      if (reader) reader.scrollIntoView({ behavior: "smooth" });
+    }, 50);
   }
 
   markGrammarUnitComplete(unitId) {
