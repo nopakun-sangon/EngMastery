@@ -42,7 +42,7 @@ class EngMasteryApp {
     this.speakingLabCategory = "standup";
 
     // --- State for Lessons Hub & Grammar Syllabus ---
-    this.lessonsHubTrack = "grammar"; // 'grammar' or 'core'
+    this.lessonsHubTrack = null; // null for Hub landing, or 'grammar', 'core'
     this.activeGrammarTopicId = "questions";
     this.activeGrammarUnitId = null;
     this.grammarAccordionOpen = { "questions": true };
@@ -225,6 +225,11 @@ class EngMasteryApp {
 
     if (viewName === "level-detail") {
       this.activeLevelId = params.levelId !== undefined ? params.levelId : null;
+      if (params.track !== undefined) {
+        this.lessonsHubTrack = params.track;
+      } else if (!params.levelId) {
+        this.lessonsHubTrack = null;
+      }
     }
     if (viewName === "reading-lab") {
       this.activeReadingArticleId = params.articleId !== undefined ? params.articleId : null;
@@ -740,9 +745,202 @@ class EngMasteryApp {
 
     if (this.lessonsHubTrack === "grammar") {
       this.renderGrammarCourseView(container);
-    } else {
+    } else if (this.lessonsHubTrack === "core") {
       this.renderCoreLevelsView(container, courses);
+    } else {
+      this.renderLessonsHubPortal(container, courses);
     }
+  }
+
+  // =========================================================================
+  // LESSONS HUB PORTAL: 2 PROMINENT COURSE BLOCKS (GRAMMAR & CEFR ROADMAP)
+  // =========================================================================
+  renderLessonsHubPortal(container, courses) {
+    this.activeLevelId = null;
+    courses = courses || window.courseData || [];
+    const state = window.storageManager.state;
+    const syllabus = window.grammarSyllabusData || [];
+
+    // CEFR Course Stats
+    const completedLevelsCount = courses.filter(c => (state.completedLevels || []).includes(c.id)).length;
+    const cefrPercent = courses.length ? Math.round((completedLevelsCount / courses.length) * 100) : 0;
+
+    // Grammar Course Stats
+    let totalGrammarUnits = 0;
+    syllabus.forEach(t => { totalGrammarUnits += (t.units || []).length; });
+    const completedGrammarUnits = this.completedGrammarUnits.size;
+    const grammarPercent = totalGrammarUnits ? Math.round((completedGrammarUnits / totalGrammarUnits) * 100) : 0;
+
+    const totalXP = (state.stats && state.stats.totalXP) || 0;
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-5xl mx-auto pb-14">
+        <!-- Hero Header -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-10 text-white shadow-xl border border-indigo-800/40">
+          <div class="relative z-10 space-y-4 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
+              <span>🎓 Lessons Hub • ศูนย์รวมห้องเรียน</span>
+              <span class="text-indigo-400">•</span>
+              <span>เลือกบล็อกคอร์สเรียนที่ต้องการ</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+              เลือกเส้นทางการเรียนรู้ที่คุณต้องการ
+            </h1>
+
+            <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+              พัฒนาทักษะภาษาอังกฤษอย่างเป็นระบบและตรงจุด เลือกเจาะลึกไวยากรณ์ 15 หมวดหมู่ หรือเริ่มปูพื้นฐาน 6 ระดับตามมาตรฐานสากล CEFR จากระดับเริ่มต้นสู่ระดับสูง
+            </p>
+
+            <!-- Learning Quick Summary Stats -->
+            <div class="pt-3 flex flex-wrap items-center gap-3 text-xs">
+              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>📘</span>
+                <span class="text-indigo-200">ไวยากรณ์:</span>
+                <span class="font-black text-amber-300">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย (${grammarPercent}%)</span>
+              </div>
+              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>🗺️</span>
+                <span class="text-indigo-200">ปูพื้นฐาน 6 ระดับ:</span>
+                <span class="font-black text-emerald-300">${completedLevelsCount} / ${courses.length} ระดับ (${cefrPercent}%)</span>
+              </div>
+              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>✨</span>
+                <span class="text-indigo-200">XP รวม:</span>
+                <span class="font-black text-amber-400">${totalXP} XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative glow -->
+          <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- 2 Main Course Blocks -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          
+          <!-- BLOCK 1: 📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ) -->
+          <div onclick="window.app.enterLessonsTrack('grammar')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+
+            <div class="space-y-5">
+              <!-- Block Header -->
+              <div class="flex items-center justify-between">
+                <span class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  📘
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  15 หมวดหมู่หลัก
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-2">
+                  <span>คอร์สไวยากรณ์ (Grammar Mastery)</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2.5 leading-relaxed">
+                  เจาะลึก 15 หมวดหมู่วิเคราะห์ตามสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมกล่องสูตรไวยากรณ์ ตัวอย่างประโยคจริงในชีวิตประจำวัน & สายงานไอที/DevOps ระบบทดสอบออกเสียง AI และแบบฝึกหัดทบทวนทันที
+                </p>
+              </div>
+
+              <!-- Topic Tags Preview -->
+              <div class="flex flex-wrap gap-1.5 text-[11px] pt-1">
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1. Parts of Speech</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3. Tenses</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">5. WH-Questions</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">15. If-Clause</span>
+                <span class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">+11 หมวด</span>
+              </div>
+
+              <!-- Progress bar for Grammar -->
+              <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้าการเรียน</span>
+                  <span class="text-indigo-600 dark:text-indigo-400">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย (${grammarPercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: ${grammarPercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Block Action Footer -->
+            <div class="pt-6 mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-400">
+                15 หัวข้อ • 22+ บทย่อย
+              </span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('grammar')"
+                class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 group-hover:translate-x-1 transition-all flex items-center gap-2">
+                <span>เข้าสู่คอร์สไวยากรณ์</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- BLOCK 2: 🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap) -->
+          <div onclick="window.app.enterLessonsTrack('core')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500"></div>
+
+            <div class="space-y-5">
+              <!-- Block Header -->
+              <div class="flex items-center justify-between">
+                <span class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  🗺️
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                  มาตรฐาน CEFR สากล
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center gap-2">
+                  <span>ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2.5 leading-relaxed">
+                  หลักสูตรปูพื้นฐานตามระดับสากล CEFR แบ่งเป็น 6 ระดับ (A1 ถึง C2) เรียนรู้ผ่าน 4 เสาหลัก: Core Grammar, Chunks คำศัพท์ติดปาก, บทสนทนาการทำงานจริง และ Action Drill & Quiz 5 ข้อ
+                </p>
+              </div>
+
+              <!-- Level Tags Preview -->
+              <div class="flex flex-wrap gap-1.5 text-[11px] pt-1">
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">A1 Survivor</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">A2 Explorer</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">B1/B2</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">C1/C2 Pro</span>
+              </div>
+
+              <!-- Progress bar for CEFR -->
+              <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้าการเรียน</span>
+                  <span class="text-emerald-600 dark:text-emerald-400">${completedLevelsCount} / ${courses.length} ระดับ (${cefrPercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2.5 rounded-full transition-all duration-500" style="width: ${cefrPercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Block Action Footer -->
+            <div class="pt-6 mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-400">
+                6 ระดับ • 4 เสาหลัก
+              </span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('core')"
+                class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 group-hover:translate-x-1 transition-all flex items-center gap-2">
+                <span>เข้าสู่คอร์ส 6 ระดับ</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
   }
 
   renderCoreLevelsView(container, courses) {
@@ -754,7 +952,20 @@ class EngMasteryApp {
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-5xl mx-auto pb-12">
+      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto pb-12">
+        <!-- Return Navigation Bar -->
+        <div class="flex items-center justify-between pb-1">
+          <button onclick="window.app.enterLessonsTrack('hub')"
+            class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>← กลับสู่หน้าเลือกคอร์ส Lessons Hub</span>
+          </button>
+          <button onclick="window.app.enterLessonsTrack('grammar')"
+            class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+            <span>📘 สลับไปคอร์สไวยากรณ์ (Grammar) ➔</span>
+          </button>
+        </div>
+
         <!-- Hero Blog Header -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
@@ -987,7 +1198,20 @@ class EngMasteryApp {
     const currentQuizRecord = activeUnit ? this.grammarQuizSubmitted[activeUnit.id] : null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-16">
+      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-16">
+        <!-- Return Navigation Bar -->
+        <div class="flex items-center justify-between pb-1">
+          <button onclick="window.app.enterLessonsTrack('hub')"
+            class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>← กลับสู่หน้าเลือกคอร์ส Lessons Hub</span>
+          </button>
+          <button onclick="window.app.enterLessonsTrack('core')"
+            class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+            <span>🗺️ สลับไปคอร์สปูพื้นฐาน 6 ระดับ ➔</span>
+          </button>
+        </div>
+
         <!-- Hero Header with Track Switcher -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
@@ -1407,13 +1631,18 @@ class EngMasteryApp {
     `;
   }
 
-  switchLessonsTrack(track) {
+  enterLessonsTrack(track) {
     window.soundFx.playClick();
-    this.lessonsHubTrack = track;
+    this.lessonsHubTrack = (track === "hub" || !track) ? null : track;
     const container = document.getElementById("main-content-view");
     if (container) {
       this.renderLevelListing(container, window.courseData || []);
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  switchLessonsTrack(track) {
+    this.enterLessonsTrack(track);
   }
 
   toggleGrammarAccordion(topicId) {
