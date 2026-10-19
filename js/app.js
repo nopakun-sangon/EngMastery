@@ -41,10 +41,19 @@ class EngMasteryApp {
     this.irregularVerbSearch = "";
     this.speakingLabCategory = "standup";
 
+    // --- State for Lessons Hub & Grammar Syllabus ---
+    this.lessonsHubTrack = "grammar"; // 'grammar' or 'core'
+    this.activeGrammarTopicId = "questions";
+    this.activeGrammarUnitId = null;
+    this.grammarAccordionOpen = { "questions": true };
+
     // Load persisted progress from localStorage
     try {
       const savedVocabs = JSON.parse(localStorage.getItem("engmastery_reviewed_vocabs") || "[]");
       this.reviewedVocabIds = new Set(savedVocabs);
+      this.grammarQuizAnswers = {};
+      this.grammarQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_grammar_quizzes") || "{}");
+      this.completedGrammarUnits = new Set(JSON.parse(localStorage.getItem("engmastery_completed_grammar_units") || "[]"));
       this.articleQuizAnswers = {};
       this.articleQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_article_quizzes") || "{}");
       this.masterclassQuizAnswers = {};
@@ -71,6 +80,9 @@ class EngMasteryApp {
       this.vocabIndex = null;
     } catch (e) {
       this.reviewedVocabIds = new Set();
+      this.grammarQuizAnswers = {};
+      this.grammarQuizSubmitted = {};
+      this.completedGrammarUnits = new Set();
       this.articleQuizAnswers = {};
       this.articleQuizSubmitted = {};
       this.masterclassQuizAnswers = {};
@@ -724,6 +736,18 @@ class EngMasteryApp {
   // =========================================================================
   renderLevelListing(container, courses) {
     this.activeLevelId = null;
+    courses = courses || window.courseData || [];
+
+    if (this.lessonsHubTrack === "grammar") {
+      this.renderGrammarCourseView(container);
+    } else {
+      this.renderCoreLevelsView(container, courses);
+    }
+  }
+
+  renderCoreLevelsView(container, courses) {
+    this.activeLevelId = null;
+    courses = courses || window.courseData || [];
     const state = window.storageManager.state;
     const completedCount = courses.filter(c => (state.completedLevels || []).includes(c.id)).length;
     const progressPercent = courses.length ? Math.round((completedCount / courses.length) * 100) : 0;
@@ -734,6 +758,18 @@ class EngMasteryApp {
         <!-- Hero Blog Header -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
+            <!-- Track Switcher Pills -->
+            <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
+              <button onclick="window.app.switchLessonsTrack('grammar')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
+                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ)</span>
+              </button>
+              <button onclick="window.app.switchLessonsTrack('core')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
+                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
+              </button>
+            </div>
+
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
               <span>🌟 CEFR Standardized Roadmap</span>
               <span class="text-indigo-400">•</span>
@@ -884,6 +920,658 @@ class EngMasteryApp {
     `;
   }
 
+  renderGrammarCourseView(container) {
+    this.activeLevelId = null;
+    const syllabus = window.grammarSyllabusData || [];
+    if (!syllabus.length) {
+      container.innerHTML = `
+        <div class="p-12 text-center text-slate-500">
+          <p class="text-base font-bold">ไม่พบข้อมูลหลักสูตรไวยากรณ์</p>
+          <button onclick="window.app.switchLessonsTrack('core')" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+            สลับไปดูคอร์สปูพื้นฐาน 6 ระดับ
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    // Flatten all units for global navigation
+    const allUnits = [];
+    syllabus.forEach(topic => {
+      (topic.units || []).forEach(unit => {
+        allUnits.push({
+          topicId: topic.id,
+          topicTitle: topic.title,
+          topicTitleTh: topic.titleTh,
+          topicIcon: topic.icon,
+          unitId: unit.id,
+          unitTitle: unit.title,
+          unit: unit
+        });
+      });
+    });
+
+    // Resolve active topic
+    let activeTopic = syllabus.find(t => t.id === this.activeGrammarTopicId);
+    if (!activeTopic) {
+      activeTopic = syllabus.find(t => t.id === "questions") || syllabus[0];
+      this.activeGrammarTopicId = activeTopic.id;
+    }
+    this.grammarAccordionOpen[activeTopic.id] = true;
+
+    // Resolve active unit
+    let activeUnitItem = allUnits.find(item => item.unitId === this.activeGrammarUnitId);
+    if (!activeUnitItem) {
+      const firstInTopic = (activeTopic.units && activeTopic.units[0]);
+      if (firstInTopic) {
+        this.activeGrammarUnitId = firstInTopic.id;
+        activeUnitItem = allUnits.find(item => item.unitId === firstInTopic.id);
+      } else if (allUnits.length > 0) {
+        this.activeGrammarUnitId = allUnits[0].unitId;
+        activeUnitItem = allUnits[0];
+      }
+    }
+
+    const activeUnit = activeUnitItem ? activeUnitItem.unit : null;
+    const currentIndex = allUnits.findIndex(item => item.unitId === (activeUnit ? activeUnit.id : null));
+    const prevUnitItem = currentIndex > 0 ? allUnits[currentIndex - 1] : null;
+    const nextUnitItem = currentIndex < allUnits.length - 1 ? allUnits[currentIndex + 1] : null;
+
+    // Overall Progress
+    const totalUnits = allUnits.length;
+    const completedUnits = allUnits.filter(item => this.completedGrammarUnits.has(item.unitId)).length;
+    const progressPercent = totalUnits > 0 ? Math.round((completedUnits / totalUnits) * 100) : 0;
+    const totalXP = (window.storageManager.state.stats && window.storageManager.state.stats.totalXP) || 0;
+
+    const isCurrentUnitDone = activeUnit ? this.completedGrammarUnits.has(activeUnit.id) : false;
+    const currentQuizRecord = activeUnit ? this.grammarQuizSubmitted[activeUnit.id] : null;
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-16">
+        <!-- Hero Header with Track Switcher -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
+          <div class="relative z-10 space-y-4 max-w-3xl">
+            <!-- Track Switcher Pills -->
+            <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
+              <button onclick="window.app.switchLessonsTrack('grammar')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
+                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ)</span>
+              </button>
+              <button onclick="window.app.switchLessonsTrack('core')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
+                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
+              </button>
+            </div>
+
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
+              <span>📚 Complete Grammar Syllabus</span>
+              <span class="text-indigo-400">•</span>
+              <span>15 หมวดหมู่หลัก ครอบคลุมทุกโครงสร้าง</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+              คอร์สไวยากรณ์ภาษาอังกฤษ (Grammar Mastery Course)
+            </h1>
+
+            <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+              รวมเนื้อหาไวยากรณ์สำคัญ 15 หัวข้อหลัก เรียงตามลำดับสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมสูตรโครงสร้างประโยค 
+              ตัวอย่างประโยคจริงในชีวิตประจำวันและสายงานไอที/DevOps พร้อมระบบทดสอบการออกเสียงและแบบฝึกหัดทบทวนทันที
+            </p>
+
+            <!-- Learning Progress Tracker -->
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
+              <div class="flex-1 bg-white/10 p-3.5 rounded-2xl border border-white/10 backdrop-blur-xs">
+                <div class="flex items-center justify-between mb-1.5 font-bold">
+                  <span class="text-indigo-200">ความคืบหน้าคอร์สไวยากรณ์</span>
+                  <span class="text-amber-300">${completedUnits} / ${totalUnits} บทย่อย (${progressPercent}%)</span>
+                </div>
+                <div class="w-full bg-black/30 rounded-full h-2.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-indigo-200">หมวดหมู่</div>
+                  <div class="text-base font-black text-white">15 หัวข้อ</div>
+                </div>
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-indigo-200">XP สะสม</div>
+                  <div class="text-base font-black text-amber-300">${totalXP} XP</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative glow -->
+          <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- Main Workspace: Left Syllabus Accordion + Right Content Reader -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT COLUMN: 15 Topics Syllabus Drawer -->
+          <div class="lg:col-span-4 xl:col-span-4 space-y-3 lg:sticky lg:top-20">
+            <div class="flex items-center justify-between px-1">
+              <h2 class="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <span>📑 สารบัญหลักสูตร (Syllabus)</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-bold">15 หัวข้อ</span>
+              </h2>
+              <span class="text-[11px] text-slate-400 font-medium">${completedUnits}/${totalUnits} ผ่านแล้ว</span>
+            </div>
+
+            <!-- Accordion List -->
+            <div class="space-y-2.5 max-h-[calc(100vh-140px)] overflow-y-auto pr-1 custom-scrollbar">
+              ${syllabus.map((topic, topicIdx) => {
+                const isOpen = !!this.grammarAccordionOpen[topic.id];
+                const topicUnits = topic.units || [];
+                const doneCount = topicUnits.filter(u => this.completedGrammarUnits.has(u.id)).length;
+                const isTopicAllDone = topicUnits.length > 0 && doneCount === topicUnits.length;
+                const isTopicActive = topic.id === activeTopic.id;
+
+                return `
+                  <div class="rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isTopicActive
+                      ? 'border-indigo-400/80 dark:border-indigo-600 bg-white dark:bg-slate-900 shadow-md ring-1 ring-indigo-500/20'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
+                  }">
+                    <!-- Accordion Topic Header Button -->
+                    <button onclick="window.app.toggleGrammarAccordion('${topic.id}')"
+                      class="w-full p-3.5 flex items-center justify-between text-left gap-2.5 transition-colors group">
+                      <div class="flex items-center gap-3 min-w-0">
+                        <span class="text-xl shrink-0 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform">
+                          ${topic.icon || '📘'}
+                        </span>
+                        <div class="min-w-0">
+                          <div class="flex items-center gap-1.5">
+                            <span class="text-[11px] font-black text-indigo-500">#${topicIdx + 1}</span>
+                            <h3 class="text-xs font-black text-slate-900 dark:text-white truncate">
+                              ${topic.title}
+                            </h3>
+                          </div>
+                          <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                            ${topic.titleTh || ''}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-2 shrink-0">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          isTopicAllDone
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                            : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                        }">
+                          ${doneCount}/${topicUnits.length}
+                        </span>
+                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </button>
+
+                    <!-- Units List in Drawer -->
+                    ${isOpen ? `
+                      <div class="px-2 pb-2.5 pt-0.5 space-y-1 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/30">
+                        ${topicUnits.map((u, uIdx) => {
+                          const isUnitActive = activeUnit && u.id === activeUnit.id;
+                          const isUnitDone = this.completedGrammarUnits.has(u.id);
+
+                          return `
+                            <button onclick="window.app.selectGrammarUnit('${topic.id}', '${u.id}')"
+                              class="w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between gap-2.5 ${
+                                isUnitActive
+                                  ? 'bg-indigo-600 text-white font-bold shadow-sm shadow-indigo-600/30'
+                                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
+                              }">
+                              <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] ${
+                                  isUnitDone
+                                    ? (isUnitActive ? 'bg-white text-indigo-600 font-black' : 'bg-emerald-500 text-white font-black')
+                                    : (isUnitActive ? 'border border-white/60 text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-400')
+                                }">
+                                  ${isUnitDone ? '✓' : (uIdx + 1)}
+                                </span>
+                                <span class="truncate">${u.title}</span>
+                              </div>
+                              ${isUnitDone ? `
+                                <span class="text-[10px] font-bold ${isUnitActive ? 'text-indigo-200' : 'text-emerald-500'} shrink-0">
+                                  ผ่าน
+                                </span>
+                              ` : ''}
+                            </button>
+                          `;
+                        }).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Active Unit Reader & Interactive Workspace -->
+          <div id="grammar-unit-reader" class="lg:col-span-8 xl:col-span-8 space-y-6">
+            ${activeUnit ? `
+              <!-- Unit Header Card -->
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <!-- Breadcrumb -->
+                  <div class="flex items-center gap-1.5 text-xs text-slate-400 flex-wrap">
+                    <span class="hover:text-indigo-600 cursor-pointer" onclick="window.app.switchLessonsTrack('grammar')">Grammar Hub</span>
+                    <span>/</span>
+                    <span class="text-indigo-600 dark:text-indigo-400 font-bold">${activeTopic.title}</span>
+                    <span>/</span>
+                    <span class="text-slate-700 dark:text-slate-300 font-medium truncate">${activeUnit.title}</span>
+                  </div>
+
+                  <!-- Completion Toggle Button -->
+                  <button onclick="window.app.markGrammarUnitComplete('${activeUnit.id}')"
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
+                      isCurrentUnitDone
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100'
+                        : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100'
+                    }">
+                    <span>${isCurrentUnitDone ? '✅ เรียนจบยูนิตนี้แล้ว' : '🎯 ทำเครื่องหมายว่าเรียนจบ'}</span>
+                    <span class="text-[10px] text-amber-500 font-black">+10 XP</span>
+                  </button>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <span class="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-800/50">
+                      ${activeTopic.badge || 'Grammar'}
+                    </span>
+                    <span class="text-xs text-slate-400 font-medium">${activeTopic.title}</span>
+                  </div>
+                  <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
+                    ${activeUnit.title}
+                  </h2>
+                  <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    ${activeUnit.summary}
+                  </p>
+                </div>
+              </div>
+
+              <!-- CARD 1: FORMULA BOX (สูตรโครงสร้าง) -->
+              ${activeUnit.formula ? `
+                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-5 sm:p-6 text-white border border-indigo-500/30 shadow-lg">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                      <span>📐</span>
+                      <span>โครงสร้าง / สูตรหลัก (Grammar Formula)</span>
+                    </span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-indigo-200">
+                      Rule Matrix
+                    </span>
+                  </div>
+                  <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 font-mono text-sm sm:text-base font-bold text-emerald-300 tracking-wide break-words">
+                    ${activeUnit.formula}
+                  </div>
+                  <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                </div>
+              ` : ''}
+
+              <!-- CARD 2: DETAILED & PLAIN EXPLANATION (คำอธิบายละเอียด เข้าใจง่าย) -->
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <span class="text-base">💡</span>
+                  <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                    คำอธิบายและหลักการจำ (Simple & Detailed Explanation)
+                  </h3>
+                </div>
+                <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm leading-relaxed space-y-3">
+                  ${this.formatMarkdownContent(activeUnit.explanation)}
+                </div>
+              </div>
+
+              <!-- CARD 3: REAL-WORLD EXAMPLES (ตัวอย่างประโยคจริง + เสียง + ซ้อมพูด) -->
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">💬</span>
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                      ประโยคตัวอย่างการใช้งานจริง (Real-World Examples)
+                    </h3>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-medium">กด 🔊 ฟังเสียง หรือ 🎙️ ซ้อมพูด</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3.5">
+                  ${(activeUnit.examples || []).map((ex, exIdx) => {
+                    const isTech = ex.cat === "Tech";
+                    const escapedEn = (ex.en || "").replace(/'/g, "\\'");
+                    const micId = `grammar-ex-${currentIndex}-${exIdx}`;
+
+                    return `
+                      <div class="p-4 rounded-2xl border ${
+                        isTech
+                          ? 'border-indigo-100 dark:border-indigo-900/40 bg-indigo-50/30 dark:bg-indigo-950/20'
+                          : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30'
+                      } space-y-2.5 transition-all">
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            isTech
+                              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300'
+                              : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                          }">
+                            ${isTech ? '💻 สายงาน Tech & DevOps' : '☕ ชีวิตประจำวัน (Daily Life)'}
+                          </span>
+                          
+                          <div class="flex items-center gap-1.5">
+                            <!-- Audio Button -->
+                            <button onclick="window.speechEngine.speak('${escapedEn}')"
+                              class="p-1.5 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:scale-110 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700" title="ฟังการออกเสียง">
+                              🔊
+                            </button>
+                            <!-- Mic Speaking Practice Button -->
+                            <button id="grammar-mic-btn-${micId}" onclick="window.app.startGrammarSpeaking('${escapedEn}', '${micId}')"
+                              class="p-1.5 rounded-xl bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:scale-110 active:scale-95 shadow-xs transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1 text-xs font-bold" title="ซ้อมออกเสียงประโยคนี้">
+                              <span>🎙️</span>
+                              <span class="text-[10px] hidden sm:inline">ซ้อมพูด</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <!-- Sentence English & Thai -->
+                        <div>
+                          <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                            ${ex.en}
+                          </p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            ${ex.th}
+                          </p>
+                        </div>
+
+                        <!-- Mic Speaking Feedback Slot -->
+                        <div id="grammar-mic-result-${micId}"></div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+
+              <!-- CARD 4: QUICK CHECK QUIZ (แบบทดสอบ 1 ข้อ ทบทวนทันที) -->
+              ${activeUnit.quickCheck ? `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                  <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-2">
+                      <span class="text-base">🎯</span>
+                      <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                        แบบฝึกหัดทบทวนทันที (Quick Check Quiz)
+                      </h3>
+                    </div>
+                    <span class="text-xs font-bold text-amber-500">+10 XP</span>
+                  </div>
+
+                  <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
+                    ${activeUnit.quickCheck.question}
+                  </p>
+
+                  <!-- Options Grid -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    ${activeUnit.quickCheck.options.map((opt, optIdx) => {
+                      const isSubmitted = !!currentQuizRecord;
+                      const isCorrectChoice = optIdx === activeUnit.quickCheck.correctIndex;
+                      const isUserChoice = isSubmitted && currentQuizRecord.selectedIndex === optIdx;
+                      const escapedExp = (activeUnit.quickCheck.explanation || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                      let btnClass = "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400";
+                      let badge = `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] font-bold">${String.fromCharCode(65 + optIdx)}</span>`;
+
+                      if (isSubmitted) {
+                        if (isCorrectChoice) {
+                          btnClass = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold";
+                          badge = `<span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>`;
+                        } else if (isUserChoice) {
+                          btnClass = "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300 font-bold";
+                          badge = `<span class="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold">✗</span>`;
+                        } else {
+                          btnClass = "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 text-slate-400 opacity-60";
+                        }
+                      }
+
+                      return `
+                        <button ${isSubmitted ? 'disabled' : ''} onclick="window.app.submitGrammarQuickCheck('${activeUnit.id}', ${optIdx}, ${activeUnit.quickCheck.correctIndex}, '${escapedExp}')"
+                          class="p-3.5 rounded-2xl border text-xs text-left transition-all flex items-center gap-3 ${btnClass} ${isSubmitted ? 'cursor-default' : 'active:scale-95'}">
+                          ${badge}
+                          <span class="flex-1">${opt}</span>
+                        </button>
+                      `;
+                    }).join('')}
+                  </div>
+
+                  <!-- Quiz Feedback & Explanation -->
+                  ${currentQuizRecord ? `
+                    <div class="p-4 rounded-2xl ${
+                      currentQuizRecord.isCorrect
+                        ? 'bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-200'
+                        : 'bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-200'
+                    } text-xs space-y-1.5 animate-fadeIn">
+                      <div class="flex items-center gap-2 font-bold">
+                        <span>${currentQuizRecord.isCorrect ? '🎉 ถูกต้องครับ!' : '💡 เฉลยและคำอธิบาย'}</span>
+                      </div>
+                      <p class="leading-relaxed text-[11px] sm:text-xs">
+                        ${currentQuizRecord.explanation || activeUnit.quickCheck.explanation}
+                      </p>
+                    </div>
+                  ` : ''}
+                </div>
+              ` : ''}
+
+              <!-- BOTTOM NAVIGATION BAR (Previous / Next Unit) -->
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4">
+                ${prevUnitItem ? `
+                  <button onclick="window.app.selectGrammarUnit('${prevUnitItem.topicId}', '${prevUnitItem.unitId}')"
+                    class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-2 group">
+                    <span class="group-hover:-translate-x-1 transition-transform">←</span>
+                    <div class="text-left hidden sm:block">
+                      <div class="text-[9px] text-slate-400 uppercase">ก่อนหน้า</div>
+                      <div class="truncate max-w-[120px]">${prevUnitItem.unitTitle}</div>
+                    </div>
+                    <span class="sm:hidden">ก่อนหน้า</span>
+                  </button>
+                ` : `
+                  <div class="text-xs text-slate-400 font-medium px-2">เริ่มบทเรียนแรก</div>
+                `}
+
+                <div class="text-center">
+                  <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">บทเรียน</div>
+                  <div class="text-xs sm:text-sm font-black text-indigo-600 dark:text-indigo-400">
+                    ${currentIndex + 1} / ${allUnits.length}
+                  </div>
+                </div>
+
+                ${nextUnitItem ? `
+                  <button onclick="window.app.selectGrammarUnit('${nextUnitItem.topicId}', '${nextUnitItem.unitId}')"
+                    class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all flex items-center gap-2 group shadow-sm shadow-indigo-600/20">
+                    <div class="text-right hidden sm:block">
+                      <div class="text-[9px] text-indigo-200 uppercase">ถัดไป</div>
+                      <div class="truncate max-w-[120px]">${nextUnitItem.unitTitle}</div>
+                    </div>
+                    <span class="sm:hidden">ถัดไป</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                  </button>
+                ` : `
+                  <div class="px-4 py-2 text-xs font-bold text-emerald-500 flex items-center gap-1">
+                    <span>🎉 ครบทุกบทเรียน!</span>
+                  </div>
+                `}
+              </div>
+            ` : `
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center text-slate-500 border border-slate-200 dark:border-slate-800">
+                <p class="text-base font-bold">กรุณาเลือกยูนิตบทเรียนจากสารบัญด้านซ้าย</p>
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  switchLessonsTrack(track) {
+    window.soundFx.playClick();
+    this.lessonsHubTrack = track;
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderLevelListing(container, window.courseData || []);
+    }
+  }
+
+  toggleGrammarAccordion(topicId) {
+    window.soundFx.playClick();
+    this.grammarAccordionOpen[topicId] = !this.grammarAccordionOpen[topicId];
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderLevelListing(container, window.courseData || []);
+    }
+  }
+
+  selectGrammarUnit(topicId, unitId) {
+    window.soundFx.playClick();
+    if (window.speechEngine) {
+      window.speechEngine.stop();
+    }
+    this.activeGrammarTopicId = topicId;
+    this.activeGrammarUnitId = unitId;
+    this.grammarAccordionOpen[topicId] = true;
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderLevelListing(container, window.courseData || []);
+    }
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        const reader = document.getElementById("grammar-unit-reader");
+        if (reader) reader.scrollIntoView({ behavior: "smooth" });
+      }, 50);
+    }
+  }
+
+  markGrammarUnitComplete(unitId) {
+    if (this.completedGrammarUnits.has(unitId)) {
+      this.completedGrammarUnits.delete(unitId);
+      window.soundFx.playClick();
+      this.showToast("ยกเลิกการทำเครื่องหมายสำเร็จแล้ว", "info");
+    } else {
+      this.completedGrammarUnits.add(unitId);
+      window.soundFx.playCorrect();
+      window.storageManager.addXP(10);
+      window.storageManager.recordQuestProgress("readArticles", 1);
+      this.renderHeaderStats();
+      this.showToast("🎉 ยินดีด้วย! คุณเรียนจบยูนิตนี้แล้ว (+10 XP)", "success");
+    }
+    localStorage.setItem("engmastery_completed_grammar_units", JSON.stringify([...this.completedGrammarUnits]));
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderLevelListing(container, window.courseData || []);
+    }
+  }
+
+  submitGrammarQuickCheck(unitId, selectedIndex, correctIndex, explanation) {
+    const isCorrect = selectedIndex === correctIndex;
+    this.grammarQuizSubmitted[unitId] = {
+      selectedIndex,
+      isCorrect,
+      explanation
+    };
+    localStorage.setItem("engmastery_grammar_quizzes", JSON.stringify(this.grammarQuizSubmitted));
+
+    if (isCorrect) {
+      window.soundFx.playCorrect();
+      window.storageManager.addXP(10);
+      window.storageManager.recordQuestProgress("completeQuiz", 1);
+      this.renderHeaderStats();
+      this.showToast("🎉 ยอดเยี่ยมมาก! คำตอบถูกต้อง (+10 XP)", "success");
+    } else {
+      window.soundFx.playIncorrect();
+      this.showToast("💡 ยังไม่ถูกต้อง ลองอ่านคำอธิบายด้านล่างดูนะครับ", "info");
+    }
+
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderLevelListing(container, window.courseData || []);
+    }
+  }
+
+  startGrammarSpeaking(targetText, elementId) {
+    if (!window.speechEngine) return;
+    if (!window.speechEngine.hasRecognition) {
+      this.showToast("เบราว์เซอร์ของคุณยังไม่รองรับระบบตรวจจับเสียงพูด (แนะนำให้ใช้ Google Chrome หรือ Microsoft Edge)", "error");
+      return;
+    }
+
+    const resultBox = document.getElementById(`grammar-mic-result-${elementId}`);
+    const micBtn = document.getElementById(`grammar-mic-btn-${elementId}`);
+    if (micBtn) micBtn.classList.add("recording-pulse");
+
+    if (resultBox) {
+      resultBox.innerHTML = `
+        <div class="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs text-indigo-700 dark:text-indigo-300 flex items-center gap-2 animate-pulse mt-2">
+          <span class="text-base">🎙️</span>
+          <span class="font-bold">กำลังฟังเสียงของคุณ... กรุณาพูดประโยคภาษาอังกฤษเลยครับ</span>
+        </div>
+      `;
+    }
+
+    window.speechEngine.listenAndScore(targetText, {
+      onStart: () => {
+        window.soundFx.playClick();
+      },
+      onResult: (res) => {
+        if (micBtn) micBtn.classList.remove("recording-pulse");
+        const feedback = this.getVoiceScoreFeedback(res.score);
+
+        if (resultBox) {
+          resultBox.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-800 border ${
+              feedback.passed ? 'border-emerald-500/50' : 'border-amber-500/50'
+            } shadow-md space-y-2 mt-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 font-black text-xs ${feedback.textColor}">
+                  <span class="text-base">${feedback.emoji}</span>
+                  <span>${feedback.label}</span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-black shadow-xs ${feedback.badgeClass}">
+                  ${res.score}%
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                ข้อความที่ได้ยิน: <span class="font-bold text-slate-700 dark:text-slate-300">"${res.spokenText || '(ไม่พบเสียง)'}"</span>
+              </p>
+              <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div class="h-2 rounded-full transition-all duration-500 ${feedback.barColor}" style="width: ${res.score}%"></div>
+              </div>
+              <p class="text-[11px] font-medium ${feedback.passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}">
+                ${feedback.message}
+              </p>
+            </div>
+          `;
+        }
+
+        if (feedback.passed) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(10);
+          window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
+          this.renderHeaderStats();
+          this.showToast(`${feedback.emoji} การออกเสียง ${res.score}% ยอดเยี่ยมมาก! (+10 XP)`, "success");
+        } else {
+          window.soundFx.playIncorrect();
+          this.showToast(`${feedback.emoji} ได้คะแนน ${res.score}% ลองออกเสียงใหม่อีกครั้งให้ชัดเจนขึ้นนะครับ`, "info");
+        }
+      },
+      onError: (err) => {
+        if (micBtn) micBtn.classList.remove("recording-pulse");
+        if (resultBox) {
+          resultBox.innerHTML = `
+            <div class="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-600 dark:text-rose-400 mt-2">
+              ⚠️ ${err.message || 'ไม่สามารถตรวจจับเสียงได้'}
+            </div>
+          `;
+        }
+        this.showToast(err.message || "ไมโครโฟนขัดข้อง", "error");
+      }
+    });
+  }
+
   renderLevelDetailView(container, levelId) {
     const courses = window.courseData || [];
     if (!levelId) {
@@ -911,7 +1599,7 @@ class EngMasteryApp {
           <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
             class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>กลับสู่หน้ารวมห้องเรียน 6 ระดับ (All Levels Hub)</span>
+            <span>กลับสู่ Lessons Hub (ห้องเรียน)</span>
           </button>
           <div class="flex items-center gap-2">
             ${prevCourse ? `
