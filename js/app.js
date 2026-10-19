@@ -3776,7 +3776,10 @@ class EngMasteryApp {
   // =========================================================================
   renderMasterclassView(container, masterclassId) {
     const masterclasses = window.masterclassData || [];
-    const activeId = masterclassId !== undefined ? masterclassId : this.activeMasterclassId;
+    let activeId = masterclassId !== undefined ? masterclassId : this.activeMasterclassId;
+    if (activeId === "mc-wh-questions-mastery") {
+      activeId = "mc-wh-part-1";
+    }
     this.activeMasterclassId = activeId;
 
     if (activeId) {
@@ -3934,6 +3937,32 @@ class EngMasteryApp {
           </div>
         </div>
 
+        <!-- WH Questions Mastery Series Stepper -->
+        ${topic.id.startsWith('mc-wh-part-') ? `
+          <div class="p-3.5 sm:p-4 rounded-3xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md bg-indigo-600 text-white font-black text-[10px] uppercase tracking-wider">Series</span>
+              <span class="font-bold text-slate-800 dark:text-slate-200">WH Questions Mastery (3 Parts)</span>
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+              <button onclick="window.app.switchMasterclass('mc-wh-part-1')"
+                class="px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 ${topic.id === 'mc-wh-part-1' ? 'bg-indigo-600 text-white shadow-xs font-black' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-indigo-600 border border-slate-200 dark:border-slate-800'}">
+                Part 1: Who/What/Where/When
+              </button>
+              <span class="text-slate-400">➔</span>
+              <button onclick="window.app.switchMasterclass('mc-wh-part-2')"
+                class="px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 ${topic.id === 'mc-wh-part-2' ? 'bg-indigo-600 text-white shadow-xs font-black' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-indigo-600 border border-slate-200 dark:border-slate-800'}">
+                Part 2: Why/Which/How
+              </button>
+              <span class="text-slate-400">➔</span>
+              <button onclick="window.app.switchMasterclass('mc-wh-part-3')"
+                class="px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 ${topic.id === 'mc-wh-part-3' ? 'bg-indigo-600 text-white shadow-xs font-black' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-indigo-600 border border-slate-200 dark:border-slate-800'}">
+                Part 3: Indirect Questions
+              </button>
+            </div>
+          </div>
+        ` : ''}
+
         <!-- Summary Callout Box -->
         <div class="p-5 rounded-3xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
           <strong class="text-indigo-600 dark:text-indigo-400 block mb-1">💡 สรุปใจความสำคัญ (Executive Summary):</strong>
@@ -3950,6 +3979,43 @@ class EngMasteryApp {
 
         <!-- Interactive Knowledge Check (Quiz 5 ข้อ) -->
         ${this.renderMasterclassQuiz(topic, answers, quizResult)}
+
+        <!-- WH Series Next / Prev Navigation -->
+        ${topic.id.startsWith('mc-wh-part-') ? `
+          <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            ${topic.id === 'mc-wh-part-2' ? `
+              <button onclick="window.app.switchMasterclass('mc-wh-part-1')"
+                class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center gap-1.5 transition-colors">
+                <span>⬅ ตอนก่อนหน้า: Part 1/3 (Who, What, Where, When)</span>
+              </button>
+            ` : topic.id === 'mc-wh-part-3' ? `
+              <button onclick="window.app.switchMasterclass('mc-wh-part-2')"
+                class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center gap-1.5 transition-colors">
+                <span>⬅ ตอนก่อนหน้า: Part 2/3 (Why, Which, How)</span>
+              </button>
+            ` : `<div></div>`}
+
+            ${topic.id === 'mc-wh-part-1' ? `
+              <button onclick="window.app.switchMasterclass('mc-wh-part-2')"
+                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
+                <span>ตอนถัดไป: Part 2/3 (Why, Which, How)</span>
+                <span>➔</span>
+              </button>
+            ` : topic.id === 'mc-wh-part-2' ? `
+              <button onclick="window.app.switchMasterclass('mc-wh-part-3')"
+                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
+                <span>ตอนถัดไป: Part 3/3 (Indirect Questions)</span>
+                <span>➔</span>
+              </button>
+            ` : `
+              <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
+                class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all">
+                <span>✓ พิชิตครบทั้ง 3 ตอน (กลับสู่ Masterclass Hub)</span>
+                <span>➔</span>
+              </button>
+            `}
+          </div>
+        ` : ''}
       </div>
     `;
   }
