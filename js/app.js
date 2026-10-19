@@ -48,6 +48,10 @@ class EngMasteryApp {
       // Reading Lab State
       this.activeReadingArticleId = null;
       this.selectedReadingLevel = "all";
+      this.readingCollectionFilter = "all";
+      this.readingSearchQuery = "";
+      this.readingPage = 1;
+      this.readingItemsPerPage = 12;
       this.readingTtsPlaying = false;
       this.readingTtsIndex = null;
       this.readingTtsRate = 1.0;
@@ -68,6 +72,10 @@ class EngMasteryApp {
       // Reading Lab State
       this.activeReadingArticleId = null;
       this.selectedReadingLevel = "all";
+      this.readingCollectionFilter = "all";
+      this.readingSearchQuery = "";
+      this.readingPage = 1;
+      this.readingItemsPerPage = 12;
       this.readingTtsPlaying = false;
       this.readingTtsIndex = null;
       this.readingTtsRate = 1.0;
@@ -2111,11 +2119,25 @@ class EngMasteryApp {
     }
   }
 
+  getReadingList() {
+    const base = window.readingData || [];
+    const stories = window.shortStoriesData || [];
+    const idSet = new Set(base.map(a => a.id));
+    const merged = [...base];
+    for (const s of stories) {
+      if (!idSet.has(s.id)) {
+        merged.push(s);
+        idSet.add(s.id);
+      }
+    }
+    return merged;
+  }
+
   // =========================================================================
-  // VIEW: READING LAB (GRADED READING PRACTICE CEFR A1–C2)
+  // VIEW: READING LAB (GRADED READING PRACTICE & 100 SHORT STORIES)
   // =========================================================================
   renderReadingLabView(container, articleId) {
-    const readingList = window.readingData || [];
+    const readingList = this.getReadingList();
     if (articleId) {
       const article = readingList.find(a => a.id === articleId) || readingList[0];
       this.renderReadingArticleDetail(container, article);
@@ -2126,16 +2148,83 @@ class EngMasteryApp {
 
   setReadingLevel(level) {
     this.selectedReadingLevel = level;
+    this.readingPage = 1;
     window.soundFx.playClick();
     const container = document.getElementById("main-content-view");
-    if (container) this.renderReadingListing(container, window.readingData || []);
+    if (container) this.renderReadingListing(container, this.getReadingList());
+  }
+
+  setReadingCollection(col) {
+    this.readingCollectionFilter = col;
+    this.readingPage = 1;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderReadingListing(container, this.getReadingList());
+  }
+
+  setReadingSearch(query) {
+    this.readingSearchQuery = query;
+    this.readingPage = 1;
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderReadingListing(container, this.getReadingList());
+    const searchInput = document.getElementById("reading-search-input");
+    if (searchInput) {
+      searchInput.focus();
+      const valLen = searchInput.value.length;
+      searchInput.setSelectionRange(valLen, valLen);
+    }
+  }
+
+  setReadingPage(page) {
+    this.readingPage = page;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderReadingListing(container, this.getReadingList());
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   renderReadingListing(container, readingList) {
-    const filter = this.selectedReadingLevel || "all";
-    const filtered = filter === "all" ? readingList : readingList.filter(a => a.level === filter);
+    const collectionFilter = this.readingCollectionFilter || "all";
+    const levelFilter = this.selectedReadingLevel || "all";
+    const searchQuery = (this.readingSearchQuery || "").trim().toLowerCase();
+
+    // 1. Filter by collection
+    let list = readingList;
+    if (collectionFilter === "100-short-stories") {
+      list = list.filter(a => a.collection === "100-short-stories");
+    } else if (collectionFilter === "tech-cefr") {
+      list = list.filter(a => a.collection !== "100-short-stories");
+    }
+
+    // 2. Filter by level
+    if (levelFilter !== "all") {
+      list = list.filter(a => a.level === levelFilter);
+    }
+
+    // 3. Filter by search query
+    if (searchQuery) {
+      list = list.filter(a => {
+        const titleMatch = (a.title || "").toLowerCase().includes(searchQuery);
+        const titleThMatch = (a.titleTh || "").toLowerCase().includes(searchQuery);
+        const summaryMatch = (a.summary || "").toLowerCase().includes(searchQuery);
+        const vocabMatch = (a.keyVocab || []).some(v => (v.word || "").toLowerCase().includes(searchQuery) || (v.th || "").toLowerCase().includes(searchQuery));
+        return titleMatch || titleThMatch || summaryMatch || vocabMatch;
+      });
+    }
+
+    // Counts for UI badges
+    const totalAll = readingList.length;
+    const storiesCount = readingList.filter(a => a.collection === "100-short-stories").length;
+    const techCount = readingList.filter(a => a.collection !== "100-short-stories").length;
     const completedCount = Object.values(this.readingQuizSubmitted).filter(r => r && r.passed).length;
     const totalXPFromReading = Object.values(this.readingQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
+
+    // Pagination
+    const itemsPerPage = this.readingItemsPerPage || 12;
+    const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+    const currentPage = Math.max(1, Math.min(this.readingPage || 1, totalPages));
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = list.slice(startIndex, startIndex + itemsPerPage);
 
     container.innerHTML = `
       <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto">
@@ -2145,15 +2234,15 @@ class EngMasteryApp {
           <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="max-w-xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-3">
-                <span>📖 CEFR Graded Reading Lab</span>
+                <span>📖 Graded Reading & 100 Short Stories</span>
                 <span>•</span>
-                <span>5 ระดับสากล (A1–C2)</span>
+                <span>${totalAll} เรื่อง & บทความ</span>
               </div>
               <h1 class="text-2xl sm:text-3xl font-black tracking-tight">
-                ห้องฝึกการอ่าน (Reading Practice Lab)
+                ห้องฝึกการอ่าน (Reading Lab)
               </h1>
               <p class="mt-2 text-emerald-100 text-xs sm:text-sm leading-relaxed">
-                ฝึกอ่านบทความภาษาอังกฤษที่แบ่งระดับความยากตามมาตรฐานสากล CEFR ตั้งแต่ระดับเริ่มต้น A1 จนถึงระดับผู้เชี่ยวชาญ C2 พร้อมเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซวัดความเข้าใจ
+                ฝึกอ่านเรื่องสั้นภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! ครอบคลุมทั้งชุด <strong>100 English Short Stories</strong> สอดแทรกคำศัพท์ใช้งานจริง และบทความ CEFR A1–C2 พร้อมระบบเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซสะสม XP
               </p>
             </div>
 
@@ -2162,109 +2251,214 @@ class EngMasteryApp {
               <div>
                 <span class="text-xs uppercase text-emerald-200 font-medium">ความคืบหน้าการอ่าน</span>
                 <div class="text-2xl font-black mt-1 text-white flex items-center gap-2">
-                  <span>${completedCount} / ${readingList.length}</span>
-                  <span class="text-xs font-normal px-2 py-0.5 rounded bg-emerald-500/80 text-white">บทความ</span>
+                  <span>${completedCount} / ${totalAll}</span>
+                  <span class="text-xs font-normal px-2 py-0.5 rounded bg-emerald-500/80 text-white">เรื่อง</span>
                 </div>
                 <p class="text-xs text-emerald-200 mt-1">รับไปแล้ว +${totalXPFromReading} XP</p>
               </div>
               <div class="mt-3 pt-3 border-t border-white/10">
                 <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
-                  <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: ${Math.round((completedCount / (readingList.length || 1)) * 100)}%"></div>
+                  <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: ${Math.round((completedCount / (totalAll || 1)) * 100)}%"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Level Filter Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1">
-          ${[
-            { id: "all", label: "🌟 ทั้งหมด (10 บทความ)" },
-            { id: "A1", label: "🟢 Level 1: A1 (Survivor)" },
-            { id: "A2", label: "🔵 Level 2: A2 (Storyteller)" },
-            { id: "B1", label: "🔷 Level 3: B1 (Connector)" },
-            { id: "B2", label: "🟣 Level 4: B2 (Professional)" },
-            { id: "C1", label: "👑 Level 5: C1-C2 (Master)" },
-          ].map(tab => `
-            <button onclick="window.app.setReadingLevel('${tab.id}')"
+        <!-- Filter & Search Control Panel -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
+          <!-- Collection Tabs -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1">
+            <button onclick="window.app.setReadingCollection('all')"
               class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
-                filter === tab.id
+                collectionFilter === 'all'
                   ? 'bg-indigo-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }">
-              ${tab.label}
+              🌟 ทั้งหมด (${totalAll})
             </button>
-          `).join("")}
+            <button onclick="window.app.setReadingCollection('100-short-stories')"
+              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                collectionFilter === '100-short-stories'
+                  ? 'bg-emerald-600 text-white shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }">
+              📚 100 Short Stories (${storiesCount})
+            </button>
+            <button onclick="window.app.setReadingCollection('tech-cefr')"
+              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                collectionFilter === 'tech-cefr'
+                  ? 'bg-teal-600 text-white shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }">
+              💼 Tech & Workplace CEFR (${techCount})
+            </button>
+          </div>
+
+          <!-- Level Filter & Search Bar in one row -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+            <!-- CEFR Level Chips -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+              ${[
+                { id: "all", label: "ทุกระดับ" },
+                { id: "A1", label: "🟢 A1" },
+                { id: "A2", label: "🔵 A2" },
+                { id: "B1", label: "🔷 B1" },
+                { id: "B2", label: "🟣 B2" },
+                { id: "C1", label: "👑 C1-C2" },
+              ].map(tab => `
+                <button onclick="window.app.setReadingLevel('${tab.id}')"
+                  class="px-3 py-1.5 rounded-xl font-bold shrink-0 transition-all ${
+                    levelFilter === tab.id
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
+                      : 'bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }">
+                  ${tab.label}
+                </button>
+              `).join("")}
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative min-w-[240px] md:w-72">
+              <input type="text" id="reading-search-input"
+                placeholder="🔍 ค้นหาชื่อเรื่อง, คำศัพท์..."
+                value="${this.readingSearchQuery || ''}"
+                oninput="window.app.setReadingSearch(this.value)"
+                class="w-full px-3.5 py-1.5 pl-8 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">🔍</span>
+              ${this.readingSearchQuery ? `
+                <button onclick="window.app.setReadingSearch('')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs">✕</button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Status -->
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+          <span>พบ <strong>${list.length}</strong> เรื่อง ${list.length > 0 ? `(${startIndex + 1} - ${Math.min(startIndex + itemsPerPage, list.length)} จากทั้งหมด ${list.length})` : ''}</span>
+          ${totalPages > 1 ? `<span>หน้า ${currentPage} / ${totalPages}</span>` : ''}
         </div>
 
         <!-- Articles Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          ${filtered.map(art => {
-            const quizRecord = this.readingQuizSubmitted[art.id];
-            const isPassed = quizRecord && quizRecord.passed;
+        ${list.length === 0 ? `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <span class="text-4xl">🔍</span>
+            <h3 class="text-base font-bold text-slate-700 dark:text-slate-200">ไม่พบเรื่องสั้นที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-400">ลองค้นหาด้วยคำอื่น หรือกด "ทั้งหมด" เพื่อดูเรื่องสั้นทั้งหมด</p>
+            <button onclick="window.app.setReadingSearch(''); window.app.setReadingLevel('all'); window.app.setReadingCollection('all');"
+              class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-md hover:bg-indigo-700 transition-all">
+              ล้างการค้นหา
+            </button>
+          </div>
+        ` : `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            ${paginatedItems.map(art => {
+              const quizRecord = this.readingQuizSubmitted[art.id];
+              const isPassed = quizRecord && quizRecord.passed;
 
-            return `
-              <div onclick="window.app.navigateTo('reading-lab', { articleId: '${art.id}' })"
-                class="bg-white dark:bg-slate-900 border ${isPassed ? 'border-emerald-300 dark:border-emerald-800/80 shadow-emerald-500/5' : 'border-slate-200 dark:border-slate-800'} rounded-3xl p-6 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer flex flex-col justify-between space-y-4 group">
-                
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="text-3xl">${art.coverEmoji}</span>
-                    <div class="flex items-center gap-2">
-                      <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        ${art.levelBadge}
-                      </span>
-                      ${isPassed ? `
-                        <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800">
-                          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                          <span>ผ่านแล้ว (${quizRecord.score}/${quizRecord.total})</span>
+              return `
+                <div onclick="window.app.navigateTo('reading-lab', { articleId: '${art.id}' })"
+                  class="bg-white dark:bg-slate-900 border ${isPassed ? 'border-emerald-300 dark:border-emerald-800/80 shadow-emerald-500/5' : 'border-slate-200 dark:border-slate-800'} rounded-3xl p-6 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer flex flex-col justify-between space-y-4 group">
+                  
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-3xl">${art.coverEmoji}</span>
+                      <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                          ${art.levelBadge}
                         </span>
-                      ` : `
-                        <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold">
-                          ✨ +${art.xpReward} XP
+                        ${isPassed ? `
+                          <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>ผ่านแล้ว</span>
+                          </span>
+                        ` : `
+                          <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold">
+                            ✨ +${art.xpReward} XP
+                          </span>
+                        `}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                        ${art.title}
+                      </h2>
+                      <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                        ${art.titleTh}
+                      </p>
+                    </div>
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                      ${art.summary}
+                    </p>
+
+                    <!-- Key vocab tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                      ${(art.keyVocab || []).slice(0, 3).map(v => `
+                        <span class="px-2 py-0.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[10px] font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                          🔑 ${v.word} (${v.th})
                         </span>
-                      `}
+                      `).join("")}
                     </div>
                   </div>
 
-                  <div>
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                      ${art.title}
-                    </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                      ${art.titleTh}
-                    </p>
-                  </div>
-
-                  <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                    ${art.summary}
-                  </p>
-
-                  <!-- Key vocab tags -->
-                  <div class="flex flex-wrap gap-1.5 pt-1">
-                    ${art.keyVocab.slice(0, 3).map(v => `
-                      <span class="px-2 py-0.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[10px] font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        🔑 ${v.word} (${v.th})
-                      </span>
-                    `).join("")}
+                  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                    <div class="flex items-center gap-3">
+                      <span>⏱️ ${art.estimatedTime}</span>
+                      <span>•</span>
+                      <span>📝 ${art.wordCount} คำ</span>
+                    </div>
+                    <span class="font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span>เริ่มอ่าน</span>
+                      <span>➔</span>
+                    </span>
                   </div>
                 </div>
+              `;
+            }).join("")}
+          </div>
+        `}
 
-                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <div class="flex items-center gap-3">
-                    <span>⏱️ ${art.estimatedTime}</span>
-                    <span>•</span>
-                    <span>📝 ${art.wordCount} คำ</span>
-                  </div>
-                  <span class="font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    <span>เริ่มอ่าน</span>
-                    <span>➔</span>
-                  </span>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
+        <!-- Pagination Controls -->
+        ${totalPages > 1 ? `
+          <div class="flex items-center justify-center gap-2 pt-4">
+            <button onclick="window.app.setReadingPage(${currentPage - 1})"
+              ${currentPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-400"' : 'class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95"'}>
+              ← หน้าก่อนหน้า
+            </button>
+
+            <div class="flex items-center gap-1">
+              ${Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+                .reduce((acc, p, idx, arr) => {
+                  if (idx > 0 && p - arr[idx - 1] > 1) acc.push('ellipsis');
+                  acc.push(p);
+                  return acc;
+                }, [])
+                .map(item => {
+                  if (item === 'ellipsis') {
+                    return `<span class="px-2 text-slate-400 text-xs">...</span>`;
+                  }
+                  return `
+                    <button onclick="window.app.setReadingPage(${item})"
+                      class="w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                        currentPage === item
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      }">
+                      ${item}
+                    </button>
+                  `;
+                }).join("")}
+            </div>
+
+            <button onclick="window.app.setReadingPage(${currentPage + 1})"
+              ${currentPage === totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-400"' : 'class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95"'}>
+              หน้าถัดไป →
+            </button>
+          </div>
+        ` : ''}
       </div>
     `;
   }
@@ -2561,7 +2755,7 @@ class EngMasteryApp {
   }
 
   playReadingArticleTts(articleId) {
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (!article || !article.paragraphs || article.paragraphs.length === 0) return;
 
@@ -2655,7 +2849,7 @@ class EngMasteryApp {
     this.showReadingThai = !this.showReadingThai;
     window.soundFx.playClick();
     const container = document.getElementById("main-content-view");
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
@@ -2666,7 +2860,7 @@ class EngMasteryApp {
     this.readingFontSize = size;
     window.soundFx.playClick();
     const container = document.getElementById("main-content-view");
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
@@ -2680,7 +2874,7 @@ class EngMasteryApp {
     }
     window.soundFx.playClick();
     const container = document.getElementById("main-content-view");
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
@@ -2696,7 +2890,7 @@ class EngMasteryApp {
   }
 
   submitReadingQuiz(articleId) {
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (!article) return;
 
@@ -2761,7 +2955,7 @@ class EngMasteryApp {
     } catch (e) {}
 
     const container = document.getElementById("main-content-view");
-    const articles = window.readingData || [];
+    const articles = this.getReadingList();
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
