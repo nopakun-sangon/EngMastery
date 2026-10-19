@@ -140,7 +140,7 @@ class EngMasteryApp {
     const mobileDrawer = document.getElementById("mobile-drawer");
     if (mobileDrawer) mobileDrawer.classList.add("hidden");
 
-    // Update active nav styling
+    // Update active nav styling (Desktop sidebar & Mobile drawer)
     document.querySelectorAll("[data-nav-target]").forEach(btn => {
       const target = btn.getAttribute("data-nav-target");
       if (target === viewName) {
@@ -149,6 +149,18 @@ class EngMasteryApp {
       } else {
         btn.classList.remove("text-indigo-600", "dark:text-indigo-400", "bg-indigo-50", "dark:bg-indigo-950/40");
         btn.classList.add("text-slate-600", "dark:text-slate-400");
+      }
+    });
+
+    // Update active nav styling (Mobile bottom nav bar)
+    document.querySelectorAll("[data-bottom-nav]").forEach(btn => {
+      const target = btn.getAttribute("data-bottom-nav");
+      if (target === viewName) {
+        btn.classList.add("text-indigo-600", "dark:text-indigo-400", "font-bold");
+        btn.classList.remove("text-slate-500", "dark:text-slate-400", "font-medium");
+      } else {
+        btn.classList.remove("text-indigo-600", "dark:text-indigo-400", "font-bold");
+        btn.classList.add("text-slate-500", "dark:text-slate-400", "font-medium");
       }
     });
 
@@ -232,12 +244,12 @@ class EngMasteryApp {
               </p>
               <div class="mt-5 flex flex-wrap items-center gap-3">
                 <button onclick="window.app.navigateTo('level-detail', { levelId: '${courses[0] ? courses[0].id : 'level-a1'}' })"
-                  class="px-5 py-2.5 bg-white text-indigo-700 font-bold text-sm rounded-xl hover:bg-indigo-50 shadow-md transition-all flex items-center gap-2 active:scale-95">
+                  class="w-full sm:w-auto px-5 py-2.5 bg-white text-indigo-700 font-bold text-sm rounded-xl hover:bg-indigo-50 shadow-md transition-all flex items-center justify-center gap-2 active:scale-95">
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
                   <span>เริ่มเรียน: ${courses[0] ? courses[0].levelTitle : 'Level A1'}</span>
                 </button>
                 <button onclick="window.app.navigateTo('speaking-lab')"
-                  class="px-5 py-2.5 bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold text-sm rounded-xl border border-white/20 transition-all flex items-center gap-2">
+                  class="w-full sm:w-auto px-5 py-2.5 bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold text-sm rounded-xl border border-white/20 transition-all flex items-center justify-center gap-2 active:scale-95">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                   <span>ห้องซ้อมพูด (Speaking Lab)</span>
                 </button>

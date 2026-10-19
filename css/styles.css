@@ -218,3 +218,22 @@ body {
   animation: correct-pop 0.4s ease-out;
 }
 
+/* ========================================================================= */
+/* RESPONSIVE & MOBILE / TABLET / TOUCH ENHANCEMENTS */
+/* ========================================================================= */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Ensure smooth overflow scrolling on mobile */
+.overflow-y-auto, .overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
