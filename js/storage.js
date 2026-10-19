@@ -29,6 +29,18 @@ class StorageManager {
       },
       completedLevels: [], // e.g. ["level-a1"]
       quizHistory: {},    // e.g. { "level-a1": { bestScore: 5, totalQuestions: 5, percent: 100, timestamp: "..." } }
+      savedVocab: [],     // e.g. ["deploy", "redundancy", "latency"]
+      dailyQuests: {
+        date: new Date().toISOString().split("T")[0],
+        readArticle: 0,       // target: 1 (20 XP)
+        speakSentences: 0,    // target: 3 (15 XP)
+        reviewFlashcards: 0,  // target: 10 (10 XP)
+        claimed: {
+          readArticle: false,
+          speakSentences: false,
+          reviewFlashcards: false
+        }
+      },
       preferences: {
         theme: "dark",
         accent: "en-US",
@@ -43,11 +55,29 @@ class StorageManager {
       const raw = localStorage.getItem(this.STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        const today = new Date().toISOString().split("T")[0];
+        let quests = parsed.dailyQuests;
+        if (!quests || quests.date !== today) {
+          quests = {
+            date: today,
+            readArticle: 0,
+            speakSentences: 0,
+            reviewFlashcards: 0,
+            claimed: {
+              readArticle: false,
+              speakSentences: false,
+              reviewFlashcards: false
+            }
+          };
+        }
+
         return {
           ...this.getDefaultState(),
           ...parsed,
           profile: { ...this.getDefaultState().profile, ...(parsed.profile || {}) },
           stats: { ...this.getDefaultState().stats, ...(parsed.stats || {}) },
+          savedVocab: Array.isArray(parsed.savedVocab) ? parsed.savedVocab : [],
+          dailyQuests: quests,
           preferences: { ...this.getDefaultState().preferences, ...(parsed.preferences || {}) }
         };
       }
@@ -174,6 +204,99 @@ class StorageManager {
   }
 
   // ==========================================
+  // DAILY QUESTS & REWARDS
+  // ==========================================
+  getDailyQuests() {
+    const today = new Date().toISOString().split("T")[0];
+    if (!this.state.dailyQuests || this.state.dailyQuests.date !== today) {
+      this.state.dailyQuests = {
+        date: today,
+        readArticle: 0,
+        speakSentences: 0,
+        reviewFlashcards: 0,
+        claimed: {
+          readArticle: false,
+          speakSentences: false,
+          reviewFlashcards: false
+        }
+      };
+      this.save();
+    }
+    return this.state.dailyQuests;
+  }
+
+  recordQuestProgress(type, count = 1) {
+    const quests = this.getDailyQuests();
+    if (type in quests && typeof quests[type] === "number") {
+      quests[type] += count;
+      this.save();
+    }
+    return quests;
+  }
+
+  claimQuestReward(questKey) {
+    const quests = this.getDailyQuests();
+    const targets = {
+      readArticle: { target: 1, xp: 20, name: "อ่านบทความใน Reading Lab 1 เรื่อง" },
+      speakSentences: { target: 3, xp: 15, name: "ซ้อมพูดใน Speaking Lab 3 ประโยค" },
+      reviewFlashcards: { target: 10, xp: 10, name: "ทบทวน Flashcard 10 คำ" }
+    };
+
+    const config = targets[questKey];
+    if (!config) return { success: false, message: "ภารกิจไม่ถูกต้อง" };
+
+    if (quests.claimed && quests.claimed[questKey]) {
+      return { success: false, message: "รับรางวัลภารกิจนี้ไปแล้ววันนี้" };
+    }
+
+    if ((quests[questKey] || 0) < config.target) {
+      return { success: false, message: `ยังทำภารกิจไม่ครบ (${quests[questKey] || 0}/${config.target})` };
+    }
+
+    // Reward XP
+    quests.claimed[questKey] = true;
+    this.addXP(config.xp);
+    this.save();
+    return { success: true, xp: config.xp, name: config.name };
+  }
+
+  // ==========================================
+  // MY SAVED VOCAB (BOOKMARKS)
+  // ==========================================
+  getSavedVocab() {
+    if (!Array.isArray(this.state.savedVocab)) {
+      this.state.savedVocab = [];
+    }
+    return this.state.savedVocab;
+  }
+
+  isWordSaved(word) {
+    if (!word) return false;
+    const clean = word.toLowerCase().trim();
+    return this.getSavedVocab().includes(clean);
+  }
+
+  toggleSaveWord(word) {
+    if (!word) return false;
+    const clean = word.toLowerCase().trim();
+    const list = this.getSavedVocab();
+    const idx = list.indexOf(clean);
+    let isSaved = false;
+
+    if (idx >= 0) {
+      list.splice(idx, 1);
+      isSaved = false;
+    } else {
+      list.push(clean);
+      isSaved = true;
+    }
+
+    this.state.savedVocab = list;
+    this.save();
+    return isSaved;
+  }
+
+  // ==========================================
   // BACKUP & RESTORE (JSON Export / Import)
   // ==========================================
   exportBackupJSON() {
@@ -225,4 +348,10 @@ class StorageManager {
   }
 }
 
-window.storageManager = new StorageManager();
+if (typeof window !== "undefined") {
+  window.storageManager = new StorageManager();
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = StorageManager;
+}

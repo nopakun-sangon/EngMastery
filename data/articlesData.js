@@ -448,6 +448,195 @@ const articlesData = [
         explanation: "ถูกต้อง! การอ้างปัญหาทางเทคนิคอย่างสุภาพ เช่น 'Your audio broke up for a second' (เสียงกระตุกไปครู่หนึ่ง) ช่วยให้คู่สนทนาทวนประเด็นเดิมให้ฟังอีกรอบโดยไม่ทำให้เขารู้สึกเสียหน้าหรือถูกวิจารณ์เรื่องสำเนียง"
       }
     ]
+  },
+  {
+    id: "art-pull-request-mastery",
+    title: "The Anatomy of a Perfect Pull Request (PR) & Code Review: ศิลปะการเขียน PR และการให้ Feedback โค้ดอย่างมืออาชีพ",
+    titleEn: "The Anatomy of a Perfect Pull Request (PR) & Code Review: High-Impact Descriptions, Empathy & Professional Feedback",
+    category: "Engineering Best Practices",
+    categoryTh: "แนวทางปฏิบัติทางวิศวกรรม & การพัฒนาซอฟต์แวร์",
+    readTime: "9 นาที",
+    author: "Senior Staff Software Engineer & Open Source Maintainer",
+    publishedDate: "2026-10-20",
+    coverEmoji: "🐙",
+    summary: "เคยไหมที่เปิดดู Pull Request แล้วเจอแค่ชื่อ 'fix bug' บรรทัดเดียวโดยไม่มีคำอธิบาย? บทความนี้จะเปิดเผยพิมพ์เขียวการเขียน PR Description ที่ทำให้ Reviewer อนุมัติไวขึ้น 3 เท่า, การติดแท็ก Conventional Commits, และชุดประโยคภาษาอังกฤษสำหรับให้ Code Review แบบสุภาพ สร้างสรรค์ และไม่สร้างความขุ่นเคือง",
+    tags: ["Code Review", "Pull Request", "GitHub", "DevOps Culture", "Constructive Feedback"],
+    sections: [
+      {
+        heading: "1. ทำไม PR Description ที่ดีถึงช่วยประหยัดเวลาทั้งทีมได้หลายร้อยชั่วโมง?",
+        content: `ในวัฒนธรรมการทำงานแบบวิศวกรรมสากล (Global Engineering Culture) โค้ดที่คุณเขียนคือผลผลิต แต่ **Pull Request Description คือคู่มือการเดินทางสำหรับผู้ตรวจทาน (Reviewer Roadmap)**\n\nเมื่อผู้ตรวจทานเปิด PR ขึ้นมา สิ่งแรกที่สมองของเขาต้องการคือ "Context" (บริบท): ทำไมคุณถึงแก้ตรงนี้? แก้ปัญหาอะไร? และทดสอบอย่างไร? หากไม่มีคำอธิบาย ผู้ตรวจทานจะต้องเสียเวลาแกะรอยโค้ดทีละบรรทัด ซึ่งนำไปสู่ความล่าช้า (Review Bottleneck) หรือการกดยอมรับแบบลวก ๆ จนเกิด Production Bug`,
+        keyPhrases: [
+          { en: "A well-crafted PR description minimizes cognitive load for reviewers.", th: "คำอธิบาย PR ที่เรียบเรียงมาอย่างดีช่วยลดภาระทางสมองของผู้ตรวจทานได้อย่างมาก" },
+          { en: "Clear context accelerates the review turnaround time.", th: "บริบทที่ชัดเจนช่วยเร่งความเร็วในการตรวจทานโค้ดให้เสร็จสิ้นเร็วยิ่งขึ้น" }
+        ]
+      },
+      {
+        heading: "2. The 3-Part PR Formula: สูตรสำเร็จ 3 ส่วนที่ Reviewer รัก",
+        content: `PR Description ที่สมบูรณ์แบบไม่จำเป็นต้องยาวเป็นเรียงความ แต่ต้องมีองค์ประกอบ 3 ส่วนหลัก:
+
+• **What & Why (ทำอะไรและทำไม):**
+  - *"This PR introduces token-based rate limiting to protect the authentication endpoints from brute-force spikes."*
+• **How to Test / Verification (ทดสอบอย่างไร):**
+  - *"Tested locally with automated unit tests (\`npm test\`) and simulated 1,000 requests/sec with k6 to ensure Redis latency remains under 5ms."*
+• **Impact & Rollback Strategy (ผลกระทบและแผนรับมือ):**
+  - *"Requires database migration \`20261020_add_tokens\`. If anomalies arise, the feature flag \`ENABLE_RATE_LIMIT\` can be toggled off immediately without container redeployment."*`,
+        keyPhrases: [
+          { en: "This change introduces graceful fallback handling for third-party API timeouts.", th: "การเปลี่ยนแปลงนี้เพิ่มกลไกจัดการข้อผิดพลาดแบบนุ่มนวลกรณีที่ API ภายนอกตอบสนองช้าเกินกำหนด" },
+          { en: "Automated regression tests passed with 98% branch coverage.", th: "การทดสอบอัตโนมัติเพื่อป้องกันผลกระทบข้างเคียงผ่านเกณฑ์ด้วยความครอบคลุม 98%" }
+        ]
+      },
+      {
+        heading: "3. Conventional Comments: เทคนิคการให้ Feedback โค้ดอย่างสร้างสรรค์",
+        content: `ปัญหาใหญ่ของการ Code Review ในทีมข้ามชาติคือ **Tone of Voice** คำพูดสั้น ๆ อย่าง *"Why did you use this loop?"* อาจทำให้ผู้เขียนรู้สึกถูกโจมตีได้ วงการวิศวกรรมระดับโลกจึงนิยมใช้ระบบ **Conventional Comments** โดยการใส่ Label นำหน้าความคิดเห็นเสมอ:
+
+• **\`suggestion:\` (ข้อเสนอแนะเพื่อปรับปรุงให้ดีขึ้น ไม่ได้บังคับ):**
+  - *"suggestion: We could use \`Promise.allSettled\` here so that a single failed notification doesn't abort the entire batch."*
+• **\`nitpick:\` (หรือ \`nit:\` เรื่องเล็กน้อยด้านสไตล์หรือการจัดหน้า ไม่บล็อกการ Merge):**
+  - *"nit: Missing trailing comma on line 42 to adhere to our Prettier style guide."*
+• **\`question:\` (สงสัยเพื่อความเข้าใจ ไม่ได้แปลว่าผิด):**
+  - *"question: Just curious, did we consider caching this query result in Redis to prevent N+1 database queries?"*
+• **\`blocker:\` (หรือ \`issue:\` ปัญหาสำคัญที่ต้องแก้ก่อน Merge เช่น Security หรือ Memory Leak):**
+  - *"blocker: This query is vulnerable to SQL injection because user input is concatenated directly. We should use parameterized queries."*
+• **\`praise:\` (คำชมเชยเพื่อสร้างกำลังใจ):**
+  - *"praise: Elegant refactoring! This makes the state management logic so much easier to reason about."*`,
+        keyPhrases: [
+          { en: "nit: Consider renaming this variable to convey its intent more clearly.", th: "ข้อสังเกตเล็กน้อย: ลองพิจารณาเปลี่ยนชื่อตัวแปรนี้เพื่อสื่อความหมายให้ชัดเจนขึ้นครับ" },
+          { en: "suggestion: Extracting this helper function will improve unit testability.", th: "ข้อเสนอแนะ: การแยกฟังก์ชันตัวช่วยนี้ออกมาจะช่วยให้เขียน Unit Test ได้ง่ายขึ้นครับ" }
+        ]
+      }
+    ],
+    readingQuiz: [
+      {
+        question: "การใช้คำว่า 'nit:' หรือ 'nitpick:' นำหน้าคอมเมนต์ใน Code Review หมายถึงอะไร?",
+        options: [
+          "โค้ดนี้มีบั๊กร้ายแรง ห้ามนำขึ้น Production เด็ดขาด",
+          "ข้อสังเกตเล็กน้อยเรื่องรูปแบบความสวยงามหรือการตั้งชื่อ ซึ่งไม่ได้ขัดขวางการ Merge",
+          "ผู้ตรวจทานต้องการยกเลิก PR ทันที",
+          "โค้ดนี้คอมไพล์ไม่ผ่าน"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'nit:' (nitpick) หมายถึงข้อสังเกตเล็กน้อย เช่น การเว้นวรรค ตัวสะกด หรือการจัดฟอร์แมต ซึ่งผู้เขียนจะแก้หรือไม่แก้ก็ได้ และไม่บล็อกการอนุมัติ PR"
+      },
+      {
+        question: "หากต้องการตั้งคำถามเพื่อสอบถามเหตุผลในการออกแบบโค้ดโดยไม่ทำให้เพื่อนร่วมงานรู้สึกถูกจับผิด ควรพิมพ์อย่างไร?",
+        options: [
+          "Why is this code so messy?",
+          "Who wrote this terrible logic?",
+          "question: Could you explain the rationale behind choosing a recursive approach here?",
+          "Just rewrite it immediately."
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! การใช้คำนำหน้า 'question:' ตามด้วยคำถามที่สุภาพ เช่น 'Could you explain the rationale...' มุ่งเน้นการแลกเปลี่ยนความรู้ทางเทคนิคอย่างสร้างสรรค์และให้เกียรติกัน"
+      },
+      {
+        question: "สิ่งใดที่ควรระบุไว้ใน PR Description เพื่อให้ทีมปฏิบัติการ (Ops/SRE) มั่นใจในการปล่อยขึ้น Production?",
+        options: [
+          "คำบ่นเรื่องการทำงานล่วงเวลา",
+          "ขั้นตอนการทดสอบ (Verification) และกลยุทธ์การ Rollback กรณีเกิดเหตุฉุกเฉิน",
+          "การบอกให้ทีมอื่นรับผิดชอบเองหากมีปัญหา",
+          "การแปะรูปภาพที่ไม่เกี่ยวข้องกับงาน"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! การระบุขั้นตอนการตรวจสอบ (Verification Steps) และแผนการกู้คืนระบบ (Rollback Strategy) ช่วยสร้างความมั่นใจสูงสุดและสะท้อนวุฒิภาวะทางวิศวกรรมระดับสูง"
+      }
+    ]
+  },
+  {
+    id: "art-cross-cultural-comm",
+    title: "Cross-Cultural Communication in Global Engineering Teams: ถอดรหัสการทำงานร่วมกับทีมทั่วโลก High-Context vs Low-Context และ Psychological Safety",
+    titleEn: "Cross-Cultural Communication in Global Engineering Teams: Bridging High-Context vs Low-Context Cultures & Psychological Safety",
+    category: "Global Collaboration",
+    categoryTh: "การทำงานร่วมกันระดับสากล & ข้ามวัฒนธรรม",
+    readTime: "8 นาที",
+    author: "Global Engineering Director & Cultural Intelligence Trainer",
+    publishedDate: "2026-10-20",
+    coverEmoji: "🌏",
+    summary: "เมื่อวิศวกรไทยต้องทำงานร่วมกับเพื่อนร่วมทีมจากอเมริกา, ยุโรป, อินเดีย, สิงคโปร์, และญี่ปุ่น: ถอดรหัสแผนผังวัฒนธรรมของ Erin Meyer (The Culture Map), ความต่างระหว่าง Direct Feedback กับ Indirect Feedback, และกลยุทธ์การสื่อสารที่จะทำให้คุณได้รับการยอมรับในทีมวิศวกรรมระดับโลก",
+    tags: ["Cross-Cultural", "Culture Map", "Global Teams", "Psychological Safety", "Leadership"],
+    sections: [
+      {
+        heading: "1. The Culture Map: ทำความเข้าใจ Low-Context vs High-Context",
+        content: `ในการทำงานกับทีมระดับนานาชาติ ความขัดแย้งส่วนใหญ่ไม่ได้เกิดจากความสามารถทางเทคนิค แต่เกิดจาก **"รูปแบบการสื่อสารทางวัฒนธรรมที่ต่างกัน"** ดังที่ศาสตราจารย์ Erin Meyer ได้สรุปไว้ในหนังสือ *The Culture Map*:
+
+• **Low-Context Cultures (สื่อสารตรง ชัดเจน ข้อความทั้งหมดอยู่ในคำพูด):**
+  - พบในสหรัฐอเมริกา, เยอรมนี, เนเธอร์แลนด์, ออสเตรเลีย
+  - หากมีข้อผิดพลาด เขาจะพูดออกมาตรง ๆ เช่น *"This architecture is inefficient, here is why."*
+  - **ข้อควรระวังสำหรับคนไทย:** อย่าคิดว่าเขาโกรธหรือมีอคติส่วนตัว วัฒนธรรมของเขาแยกเรื่องงานออกจากเรื่องคนอย่างชัดเจน (Attack the problem, not the person)
+
+• **High-Context Cultures (สื่อสารอ้อม ต้องอ่านระหว่างบรรทัดและดูบริบท):**
+  - พบในไทย, ญี่ปุ่น, เกาหลี, และหลายประเทศในเอเชีย
+  - มักใช้คำว่า *"Maybe we can consider...", "It could be a bit challenging..."* แทนคำว่า "ไม่"
+  - **ข้อควรระวังสำหรับคนทำงานกับฝรั่ง:** หากคุณพูดอ้อมเกินไป ชาวต่างชาติอาจเข้าใจว่าคุณเห็นด้วยหรือไม่มีปัญหาอะไรเลย ทำให้เกิดความเข้าใจคลาดเคลื่อน`,
+        keyPhrases: [
+          { en: "In low-context communication, transparency and clarity are highly prized.", th: "ในการสื่อสารแบบ Low-Context ความโปร่งใสและความชัดเจนตรงไปตรงมาถือเป็นสิ่งที่มีคุณค่าสูงสุด" },
+          { en: "Feedback should challenge the technical idea, never the individual.", th: "การให้ข้อเสนอแนะควรมุ่งท้าทายแนวคิดทางเทคนิค แต่ต้องไม่พุ่งเป้าไปที่ตัวบุคคล" }
+        ]
+      },
+      {
+        heading: "2. Psychological Safety: สร้างบรรยากาศที่ทุกคนกล้าพูดความจริง",
+        content: `งานวิจัยชื่อดัง **Project Aristotle ของ Google** พบว่าปัจจัยอันดับ 1 ที่ทำให้ทีมวิศวกรรมมีผลงานยอดเยี่ยมที่สุด ไม่ใช่การรวมคนเก่งที่สุดไว้ด้วยกัน แต่คือ **Psychological Safety (ความปลอดภัยทางจิตวิทยา)**\n\nความปลอดภัยทางจิตวิทยาคือสภาวะที่สมาชิกในทีมรู้สึกปลอดภัยที่จะเสี่ยง, ตั้งคำถาม, หรือยอมรับความผิดพลาดโดยไม่ต้องกลัวว่าจะถูกหัวเราะเยาะหรือถูกลงโทษ:
+
+• **เมื่อทำผิดพลาด (Blameless Mindset):**
+  - ให้พูดอย่างตรงไปตรงมา: *"I made a mistake in the configuration file that caused the service restart. I have rolled it back and documented the preventative steps."*
+  - หัวหน้าทีมและเพื่อนร่วมทีมควรตอบรับด้วย: *"Thank you for the quick turnaround and transparent disclosure."*
+• **เมื่อไม่รู้ข้อมูล:**
+  - แทนที่จะแกล้งทำเป็นรู้ ให้ใช้ประโยคอย่างมืออาชีพ: *"I don't have that context off the top of my head, but I will dig into the documentation and report back by this afternoon."*`,
+        keyPhrases: [
+          { en: "Psychological safety fosters innovation and open blameless discussions.", th: "ความปลอดภัยทางจิตวิทยาช่วยส่งเสริมนวัตกรรมและการพูดคุยแก้ปัญหาอย่างเปิดเผยโดยไม่จับผิด" },
+          { en: "Admitting knowledge gaps transparently is a sign of engineering maturity.", th: "การยอมรับในสิ่งที่ตนเองยังไม่รู้ถือเป็นสัญญาณของวุฒิภาวะทางวิศวกรรม" }
+        ]
+      },
+      {
+        heading: "3. การแสดงความคิดเห็นขัดแย้งอย่างสุภาพและสร้างสรรค์ (Disagreeing Agreeably)",
+        content: `การทำงานในทีมระดับโลก คุณจะต้องเผชิญกับการถกเถียงเรื่อง Architecture หรือเครื่องมือที่จะเลือกใช้ การพูดว่า *"I disagree"* ตรง ๆ บ่อยครั้งอาจฟังดูกระด้างจนเกินไป ให้ใช้เทคนิค **The 3-Step Diplomatic Disagreement**:
+
+1. **รับฟังและยอมรับมุมมองของอีกฝ่ายก่อน (Acknowledge):**
+   - *"I see your point about optimizing for fast read speeds..."*
+2. **เสนอความกังวลหรือข้อมูลเพิ่มเติม (Introduce the Trade-off):**
+   - *"However, my concern is that this approach introduces high write amplification and increases our cloud storage costs."*
+3. **เปิดพื้นที่ให้อภิปรายร่วมกัน (Invite Collaboration):**
+   - *"What do you think about benchmarking both strategies with realistic traffic patterns before deciding?"*`,
+        keyPhrases: [
+          { en: "I understand the rationale, but we should also weigh the operational trade-offs.", th: "ผมเข้าใจเหตุผลครับ แต่เราควรชั่งน้ำหนักข้อดีข้อเสียด้านการดูแลรักษาระบบด้วยเช่นกัน" },
+          { en: "Could we benchmark both approaches before making a final architectural decision?", th: "เรามาลองทดสอบประสิทธิภาพของทั้งสองแนวทางก่อนตัดสินใจเลือกสถาปัตยกรรมขั้นสุดท้ายกันดีไหมครับ?" }
+        ]
+      }
+    ],
+    readingQuiz: [
+      {
+        question: "ในวัฒนธรรมแบบ Low-Context (เช่น สหรัฐอเมริกา หรือ เยอรมนี) เมื่อเพื่อนร่วมงานวิจารณ์โค้ดของคุณตรง ๆ สิ่งที่คุณควรเข้าใจคืออะไร?",
+        options: [
+          "เขากำลังดูถูกความสามารถส่วนตัวของคุณ",
+          "เขากำลังโฟกัสที่การปรับปรุงคุณภาพงานและประสิทธิภาพโค้ด โดยไม่ได้มีเจตนาโจมตีตัวบุคคล",
+          "เขาต้องการให้คุณลาออกจากทีม",
+          "เขาโกรธที่คุณทำงานช้า"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! วัฒนธรรม Low-Context แยกตัวบุคคล (Person) ออกจากปัญหา (Problem) อย่างชัดเจน การวิจารณ์โค้ดตรงไปตรงมามีเป้าหมายเพื่อผลสัมฤทธิ์ของระบบ ไม่ใช่อคติส่วนตัว"
+      },
+      {
+        question: "จากผลการวิจัย Project Aristotle ของ Google ปัจจัยสำคัญที่สุดที่ทำให้ทีมวิศวกรรมมีประสิทธิภาพสูงสุดคืออะไร?",
+        options: [
+          "การมีคนที่จบจากมหาวิทยาลัยชั้นนำมากที่สุด",
+          "การมีงบประมาณโครงการสูงที่สุด",
+          "Psychological Safety (ความปลอดภัยทางจิตวิทยาที่ทำให้ทุกคนกล้าเสี่ยงและเปิดเผยความจริง)",
+          "การไม่เคยทำผิดพลาดเลยตลอดทั้งปี"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! Psychological Safety คือรากฐานที่สำคัญที่สุด ซึ่งทำให้สมาชิกในทีมกล้าพูดความจริง กล้าถามคำถาม และกล้าทดลองสิ่งใหม่โดยไม่ต้องกลัวการลงโทษหรือความอับอาย"
+      },
+      {
+        question: "เมื่อคุณต้องการแสดงความเห็นต่างในที่ประชุมด้านเทคนิค รูปแบบการพูดข้อใดฟังดูเป็นมืออาชีพและสร้างสรรค์ที่สุด?",
+        options: [
+          "Your architecture is completely wrong and makes no sense.",
+          "I agree with whatever you say.",
+          "I understand your point about speed, but have we considered the trade-offs on memory consumption?",
+          "เงียบไว้แล้วไปทำตามใจตัวเองทีหลัง"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! รูปแบบ 'I understand your point, but have we considered...' เป็นการรับฟังมุมมองเดิมก่อน จากนั้นจึงชี้ประเด็นเรื่องข้อแลกเปลี่ยน (Trade-offs) เพื่อหาข้อสรุปร่วมกันอย่างมืออาชีพ"
+      }
+    ]
   }
 ];
 
@@ -458,4 +647,5 @@ if (typeof window !== "undefined") {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = articlesData;
 }
+
 

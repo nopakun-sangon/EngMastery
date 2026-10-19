@@ -33,6 +33,11 @@ class EngMasteryApp {
     this.isCardFlipped = false;
     this.isReadingAloud = false;
 
+    // --- State for Cheat Sheet Hub & Speaking Lab ---
+    this.cheatSheetTab = "tenses";
+    this.irregularVerbSearch = "";
+    this.speakingLabCategory = "standup";
+
     // Load persisted progress from localStorage
     try {
       const savedVocabs = JSON.parse(localStorage.getItem("engmastery_reviewed_vocabs") || "[]");
@@ -255,6 +260,9 @@ class EngMasteryApp {
       case "speaking-lab":
         this.renderSpeakingLabView(container);
         break;
+      case "cheat-sheet":
+        this.renderCheatSheetView(container);
+        break;
       case "profile":
         this.renderProfileAndBackupView(container);
         break;
@@ -323,6 +331,9 @@ class EngMasteryApp {
           </div>
         </div>
 
+        <!-- DAILY QUESTS & STREAK MISSIONS -->
+        ${this.renderDailyQuestsCard()}
+
         <!-- Metric Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Total XP -->
@@ -384,7 +395,7 @@ class EngMasteryApp {
             <span class="text-[11px] text-slate-400">อัปเกรดทักษะรอบด้าน</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <!-- Hub 1: Vocabulary & Flashcards -->
             <div onclick="window.app.navigateTo('vocabulary')"
               class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-purple-900/90 to-slate-900 text-white border border-purple-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
@@ -468,11 +479,34 @@ class EngMasteryApp {
                   ห้องติวเข้ม (Masterclass)
                 </h3>
                 <p class="text-xs text-rose-200/80 leading-relaxed">
-                  เจาะลึก 12 Tenses Blueprint, Tense คู่ที่ออกสอบบ่อย และกำจัด 4 จุดตายไวยากรณ์
+                  เจาะลึก 12 Tenses Blueprint, Tense คู่ที่ออกสอบบ่อย, และการสื่อสารในงาน
                 </p>
               </div>
               <div class="pt-3 border-t border-rose-800/40 flex items-center justify-between text-xs font-bold text-rose-300">
                 <span>เข้าห้องติวเข้ม</span>
+                <span class="group-hover:translate-x-1 transition-transform">➔</span>
+              </div>
+            </div>
+
+            <!-- Hub 5: Grammar Cheat Sheet Hub -->
+            <div onclick="window.app.navigateTo('cheat-sheet')"
+              class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-amber-900/90 to-slate-900 text-white border border-amber-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">📑</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/30 text-amber-200 border border-amber-400/40">
+                    Matrix & Maps
+                  </span>
+                </div>
+                <h3 class="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                  สรุปไวยากรณ์ (Cheat Sheet)
+                </h3>
+                <p class="text-xs text-amber-200/80 leading-relaxed">
+                  12 Tenses Matrix, แผนผัง In/On/At, และกริยา 3 ช่อง 100 คำพร้อมเสียงอ่าน native
+                </p>
+              </div>
+              <div class="pt-3 border-t border-amber-800/40 flex items-center justify-between text-xs font-bold text-amber-300">
+                <span>เปิดแผ่นสรุป</span>
                 <span class="group-hover:translate-x-1 transition-transform">➔</span>
               </div>
             </div>
@@ -548,6 +582,138 @@ class EngMasteryApp {
         </div>
       </div>
     `;
+  }
+
+  // =========================================================================
+  // DAILY QUESTS CARD & CLAIM LOGIC
+  // =========================================================================
+  renderDailyQuestsCard() {
+    const quests = window.storageManager.getDailyQuests();
+    const questList = [
+      {
+        key: 'readArticle',
+        title: 'อ่านบทความใน Reading Lab 1 เรื่อง',
+        icon: '📖',
+        target: 1,
+        xp: 20,
+        view: 'reading-lab'
+      },
+      {
+        key: 'speakSentences',
+        title: 'ซ้อมพูดใน Speaking Lab 3 ประโยค',
+        icon: '🎙️',
+        target: 3,
+        xp: 15,
+        view: 'speaking-lab'
+      },
+      {
+        key: 'reviewFlashcards',
+        title: 'ทบทวน Flashcard 10 คำ',
+        icon: '🎲',
+        target: 10,
+        xp: 10,
+        view: 'vocabulary'
+      }
+    ];
+
+    const completedQuestsCount = questList.filter(q => (quests[q.key] || 0) >= q.target).length;
+    const totalBonus = 45; // 20 + 15 + 10
+
+    return `
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎯</span>
+              <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                ภารกิจประจำวัน (Daily Quests & Streak Missions)
+              </h2>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              ทำภารกิจรายวันเพื่อสะสมคะแนน XP และรักษาเปลวไฟ Daily Streak! (สำเร็จ ${completedQuestsCount}/${questList.length})
+            </p>
+          </div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40 text-amber-600 dark:text-amber-400 text-xs font-bold shrink-0 self-start sm:self-auto">
+            <span>✨</span>
+            <span>โบนัสรวม +${totalBonus} XP ต่อวัน</span>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          ${questList.map(q => {
+            const current = quests[q.key] || 0;
+            const isCompleted = current >= q.target;
+            const isClaimed = quests.claimed && quests.claimed[q.key];
+            const pct = Math.min(100, Math.round((current / q.target) * 100));
+
+            return `
+              <div class="p-4 rounded-2xl border ${
+                isClaimed 
+                  ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-90'
+                  : isCompleted 
+                    ? 'bg-gradient-to-br from-amber-500/10 via-amber-50/40 to-transparent dark:from-amber-950/40 dark:to-slate-900 border-amber-300 dark:border-amber-800 shadow-xs'
+                    : 'bg-slate-50/70 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800'
+              } flex flex-col justify-between space-y-3">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-2xl">${q.icon}</span>
+                    <span class="text-xs font-black text-amber-500 flex items-center gap-1">
+                      <span>✨</span>
+                      <span>+${q.xp} XP</span>
+                    </span>
+                  </div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug">
+                    ${q.title}
+                  </h3>
+                  <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                    <span>ความคืบหน้า</span>
+                    <span class="font-bold ${isCompleted ? 'text-emerald-500' : 'text-slate-600 dark:text-slate-300'}">
+                      ${Math.min(current, q.target)} / ${q.target}
+                    </span>
+                  </div>
+                  <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-500 ${
+                      isClaimed ? 'bg-slate-400' : isCompleted ? 'bg-emerald-500' : 'bg-indigo-500'
+                    }" style="width: ${pct}%"></div>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-end">
+                  ${
+                    isClaimed
+                      ? `<span class="px-3 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1">
+                          <span>✅</span><span>รับรางวัลแล้ว</span>
+                        </span>`
+                      : isCompleted
+                        ? `<button onclick="window.app.claimDailyQuest('${q.key}')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-black shadow-md flex items-center gap-1.5 active:scale-95 animate-bounce">
+                            <span>🎉</span><span>รับ +${q.xp} XP</span>
+                          </button>`
+                        : `<button onclick="window.app.navigateTo('${q.view}')" class="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1 transition-all active:scale-95">
+                            <span>ไปทำภารกิจ</span><span>➔</span>
+                          </button>`
+                  }
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  claimDailyQuest(questKey) {
+    const res = window.storageManager.claimQuestReward(questKey);
+    if (res.success) {
+      window.soundFx.playVictory();
+      this.renderHeaderStats();
+      this.showToast(`🎉 สำเร็จภารกิจ "${res.name}" รับรางวัล +${res.xp} XP!`, "success");
+      const container = document.getElementById("main-content-view");
+      if (container && this.currentView === "dashboard") {
+        this.renderDashboardView(container);
+      }
+    } else {
+      this.showToast(res.message, "info");
+    }
   }
 
   // =========================================================================
@@ -900,13 +1066,24 @@ class EngMasteryApp {
           <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">${grammarData.summary}</p>
         </div>
 
-        <!-- Rules Cards -->
+        <!-- Rules Cards as Sub-Units -->
         <div class="space-y-4">
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs">กฎเหล็กสำคัญ (Core Rules):</h3>
-          ${grammarData.rules.map(rule => `
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-3">
-              <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs flex items-center gap-2">
+              <span class="text-indigo-600 dark:text-indigo-400">📚</span>
+              <span>หน่วยการเรียนรู้ย่อย (Modular Sub-Units):</span>
+            </h3>
+            <span class="text-[11px] text-slate-400 font-mono">${grammarData.rules.length} Sub-Units</span>
+          </div>
+          ${grammarData.rules.map((rule, rIdx) => `
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                  Unit ${rIdx + 1}
+                </span>
+                <span class="text-[11px] text-slate-400 font-medium">Core Grammar Rule</span>
+              </div>
+              <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>${rule.ruleName}</span>
               </h4>
               <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
@@ -1547,6 +1724,7 @@ class EngMasteryApp {
           window.soundFx.playCorrect();
           window.storageManager.addXP(20);
           window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
           this.renderHeaderStats();
           this.showToast(`🌟 ยอดเยี่ยมมาก! คะแนนการออกเสียง ${res.score}% (+20 XP)`, "success");
         } else {
@@ -1566,58 +1744,196 @@ class EngMasteryApp {
   }
 
   // =========================================================================
-  // VIEW 3: SPEAKING LAB (STANDALONE PRACTICE ROOM)
+  // VIEW 3: SPEAKING LAB (5 CATEGORIZED DRILLS PRACTICE ROOM)
   // =========================================================================
   renderSpeakingLabView(container) {
-    const defaultPhrases = [
-      { en: "Could I please get an iced oat milk latte to go?", th: "ขอกาแฟลาเต้เย็นใส่นมโอ๊ตสั่งกลับบ้านหนึ่งแก้วค่ะ" },
-      { en: "Where did you buy this beautiful camera?", th: "คุณซื้อกล้องสวยตัวนี้มาจากที่ไหนหรือครับ?" },
-      { en: "If I were in your position, I would negotiate for better terms.", th: "ถ้าฉันอยู่ในสถานการณ์ของคุณ ฉันจะเจรจาขอเงื่อนไขที่ดีกว่านี้" },
-      { en: "I see your point, however, we also need to consider the timeline constraint.", th: "ผมเข้าใจประเด็นของคุณครับ อย่างไรก็ตาม เราจำเป็นต้องพิจารณาข้อจำกัดด้านกรอบเวลาด้วยเช่นกัน" },
-      { en: "Seldom have we witnessed such remarkable digital transformation and growth.", th: "น้อยครั้งนักที่พวกเราจะได้ประจักษ์ถึงการเติบโตและการเปลี่ยนผ่านสู่ดิจิทัลอันยอดเยี่ยมเช่นนี้" }
+    const categories = [
+      {
+        id: "standup",
+        label: "Daily Stand-up & Sprint",
+        emoji: "🚀",
+        badge: "Agile & Standup",
+        description: "ประโยคอัปเดตงานประจำวัน รายงานความคืบหน้า และเคลียร์ปัญหาติดขัด (Blockers)"
+      },
+      {
+        id: "incidents",
+        label: "Incident & Outage Alerts",
+        emoji: "🚨",
+        badge: "SRE & On-call",
+        description: "ประโยคแจ้งเตือนเหตุฉุกเฉิน เซิร์ฟเวอร์ล่ม สั่ง Rollback และวิเคราะห์ Root Cause"
+      },
+      {
+        id: "meetings",
+        label: "Meetings & Polite Proposals",
+        emoji: "💼",
+        badge: "Discussion & Trade-offs",
+        description: "ประโยคเสนอความคิดเห็น ถกเถียงเรื่องสถาปัตยกรรม และการสรุป Action items"
+      },
+      {
+        id: "phonics",
+        label: "Phonics & Tricky Sounds",
+        emoji: "🗣️",
+        badge: "Minimal Pairs",
+        description: "ฝึกออกเสียงพยางค์และคู่เสียงที่คนไทยมักออกผิด เช่น /v/ vs /w/, /θ/, และเสียงท้ายประโยค"
+      },
+      {
+        id: "social",
+        label: "Office Small Talk & Social",
+        emoji: "☕",
+        badge: "Team Bonding",
+        description: "ประโยคชวนคุยผูกมิตรกับเพื่อนร่วมทีม ชื่นชมผลงาน และสร้างบรรยากาศเป็นกันเอง"
+      }
     ];
 
+    const phraseMap = {
+      standup: [
+        { en: "Yesterday, I completed the database indexing task and verified it on staging.", th: "เมื่อวานผมทำ Indexing ฐานข้อมูลเสร็จและตรวจสอบบน Staging เรียบร้อยแล้วครับ" },
+        { en: "Today, I will focus on integrating the payment gateway webhooks.", th: "วันนี้ผมจะโฟกัสที่การเชื่อมต่อ Webhook ของระบบชำระเงินครับ" },
+        { en: "I have no blockers at the moment, everything is progressing on track.", th: "ตอนนี้ผมไม่มีปัญหาติดขัดอะไร ทุกอย่างดำเนินไปตามแผนครับ" },
+        { en: "Could we sync up after the stand-up regarding the API schema changes?", th: "หลังจบ Stand-up เรามาซิงก์กันเรื่องการเปลี่ยน Schema ของ API ได้ไหมครับ?" },
+        { en: "I am currently blocked by missing IAM permissions on the GCP service account.", th: "ตอนนี้ผมติดขัดเรื่องสิทธิ์การเข้าถึง Service Account บน GCP ครับ" },
+        { en: "The pull request is ready for review, please take a look when you have time.", th: "PR พร้อมให้รีวิวแล้วครับ รบกวนช่วยตรวจดูเมื่อมีเวลาว่างนะครับ" }
+      ],
+      incidents: [
+        { en: "We are experiencing a sudden spike in latency across all microservices.", th: "เรากำลังพบว่า Latency พุ่งสูงขึ้นกะทันหันในทุก Microservices ครับ" },
+        { en: "The database connection pool has been exhausted, leading to HTTP 500 errors.", th: "Connection pool ของฐานข้อมูลเต็ม ส่งผลให้เกิด Error 500 ครับ" },
+        { en: "I have initiated an immediate rollback to the previous stable release container.", th: "ผมได้สั่ง Rollback กลับไปเวอร์ชันก่อนหน้าที่เสถียรทันทีแล้วครับ" },
+        { en: "Traffic has stabilized, and error rates have returned to normal baseline levels.", th: "ปริมาณทราฟฟิกนิ่งแล้ว และอัตรา Error กลับสู่ระดับปกติแล้วครับ" },
+        { en: "Let's schedule a blameless post-mortem meeting for tomorrow morning.", th: "เรามานัดประชุม Post-mortem แบบไม่จับผิดกันพรุ่งนี้เช้านะครับ" },
+        { en: "Please isolate the compromised pod and inspect the security audit logs immediately.", th: "กรุณาแยก Pod ที่มีความเสี่ยงออกและตรวจสอบ Audit Log ทันทีครับ" }
+      ],
+      meetings: [
+        { en: "I agree with your proposal, but we also need to consider the maintenance overhead.", th: "ผมเห็นด้วยกับข้อเสนอครับ แต่เราต้องพิจารณาภาระด้านการดูแลรักษาระยะยาวด้วย" },
+        { en: "Could you please elaborate on how this caching mechanism handles cache invalidation?", th: "ช่วยอธิบายเพิ่มเติมได้ไหมครับว่ากลไกแคชนี้จัดการการล้างข้อมูลแคชอย่างไร?" },
+        { en: "From my perspective, migrating to a serverless architecture will reduce idle infrastructure costs.", th: "ในมุมมองของผม การย้ายไปสถาปัตยกรรม Serverless จะช่วยลดค่าใช้จ่ายคลาวด์ช่วงที่ไม่มีการใช้งานลงได้ครับ" },
+        { en: "Let's align on the action items and assign clear owners before wrapping up the call.", th: "ก่อนจบการประชุม เรามาสรุป Action items และผู้รับผิดชอบให้ตรงกันก่อนนะครับ" },
+        { en: "Just to clarify, does this database migration require scheduled maintenance downtime?", th: "ขอความชัดเจนอีกนิด การย้ายระบบครั้งนี้จำเป็นต้องมีช่วงเวลาปิดปรับปรุงระบบหรือไม่ครับ?" },
+        { en: "I propose we run a small proof of concept before rolling this out to all regions.", th: "ผมขอเสนอให้เราทำ Proof of Concept ดูก่อนที่จะปล่อยไปยังทุก Region ครับ" }
+      ],
+      phonics: [
+        { en: "Verify that the wireless virtual network is working reliably.", th: "ตรวจสอบว่าเครือข่ายเสมือนไร้สายทำงานได้อย่างน่าเชื่อถือ (แยกเสียง /v/ กัดริมฝีปาก vs /w/ ห่อปาก)" },
+        { en: "Think about the security of these three interconnected systems.", th: "ลองคิดถึงความปลอดภัยของทั้งสามระบบที่เชื่อมโยงกันนี้ (เสียง /θ/ แลบลิ้น vs /s/ ฟันชิด)" },
+        { en: "Read the release notes carefully before loading the container cluster.", th: "อ่าน Release notes อย่างละเอียดก่อนที่จะโหลด Container Cluster (แยกเสียง /r/ ห่อลิ้น vs /l/ แตะเพดานปาก)" },
+        { en: "Please configure the production firewall rules properly.", th: "กรุณากำหนดค่าไฟร์วอลล์ของโปรดักชันให้ถูกต้องสมบูรณ์ (แยกเสียง /p/ ริมฝีปากปิด vs /f/ ฟันบนแตะริมฝีปากล่าง)" },
+        { en: "The build succeeded and passed all integration test suites.", th: "การ Build สำเร็จและผ่านชุดการทดสอบ Integration ทั้งหมดแล้ว (เสียงลงท้าย -ed: /ɪd/ ใน succeeded vs /t/ ใน passed)" },
+        { en: "Ship the feature branch directly to the testing sandbox environment.", th: "ส่ง Feature branch ตรงไปยังพื้นที่ทดสอบ Sandbox (แยกเสียง /ʃ/ ชู่ปาก vs /tʃ/ ออกเสียง ช)" }
+      ],
+      social: [
+        { en: "How has your week been going so far? Anything exciting on your radar?", th: "สัปดาห์นี้การทำงานของคุณเป็นอย่างไรบ้างครับ มีอะไรน่าตื่นเต้นไหม?" },
+        { en: "Are you planning to do anything fun this upcoming weekend?", th: "สุดสัปดาห์ที่จะถึงนี้มีแผนไปเที่ยวพักผ่อนที่ไหนสนุก ๆ ไหมครับ?" },
+        { en: "I really enjoyed your presentation during the engineering all-hands meeting.", th: "ผมชอบสไลด์นำเสนอของคุณในที่ประชุมใหญ่ฝ่ายวิศวกรรมมากเลยครับ" },
+        { en: "Do you fancy grabbing a cup of freshly brewed coffee downstairs?", th: "อยากลงไปดื่มกาแฟสดข้างล่างด้วยกันสักแก้วไหมครับ?" },
+        { en: "Congratulations on successfully launching the new service, fantastic work team!", th: "ยินดีด้วยกับการเปิดตัวบริการใหม่ สำเร็จลุล่วง เป็นผลงานที่ยอดเยี่ยมมากครับ!" },
+        { en: "Feel free to reach out anytime if you need an extra pair of eyes on that pull request.", th: "ติดต่อมาได้ตลอดเลยนะครับถ้าต้องการคนช่วยตรวจดู Pull Request นั้น" }
+      ]
+    };
+
+    const activeCatId = this.speakingLabCategory || "standup";
+    const activeCat = categories.find(c => c.id === activeCatId) || categories[0];
+    const phrases = phraseMap[activeCatId] || phraseMap.standup;
+
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-2xl mx-auto">
-        <div class="text-center space-y-2">
-          <span class="px-3 py-1 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+        <!-- Header Banner -->
+        <div class="text-center space-y-2 max-w-2xl mx-auto">
+          <span class="px-3.5 py-1 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span>AI Voice Recognition</span>
+            <span>AI Voice Recognition & Scoring</span>
           </span>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">ห้องซ้อมพูด (AI Speaking Lab)</h1>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            ฝึกพูดออกเสียงภาษาอังกฤษผ่านไมโครโฟน ระบบจะวิเคราะห์ความถูกต้องและให้คะแนนความแม่นยำแบบเรียลไทม์
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            ห้องซ้อมพูดแยกหมวด (AI Speaking Lab)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            ฝึกพูดออกเสียงภาษาอังกฤษ 5 หมวดหมู่การทำงานจริง วิเคราะห์ความแม่นยำผ่าน Web Speech AI แบบเรียลไทม์ พร้อมสะสม XP และภารกิจประจำวัน
           </p>
         </div>
 
-        <div class="space-y-3">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">เลือกประโยคเป้าหมายเพื่อฝึกพูด:</h3>
-          <div class="space-y-2.5">
-            ${defaultPhrases.map((p, idx) => `
-              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <!-- 5 Category Pills Navigation -->
+        <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto">
+          ${categories.map(c => `
+            <button onclick="window.app.switchSpeakingCategory('${c.id}')"
+              class="flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+                activeCatId === c.id
+                  ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/50 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }">
+              <span class="text-base">${c.emoji}</span>
+              <span class="truncate">${c.label}</span>
+            </button>
+          `).join("")}
+        </div>
+
+        <!-- Active Category Header Card -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">${activeCat.emoji}</span>
+              <h2 class="text-sm sm:text-base font-bold text-indigo-950 dark:text-indigo-200">
+                ${activeCat.label}
+              </h2>
+              <span class="text-[10px] px-2 py-0.5 rounded-md font-bold uppercase bg-indigo-200/60 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-300">
+                ${activeCat.badge}
+              </span>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300">
+              ${activeCat.description}
+            </p>
+          </div>
+          <span class="text-xs font-bold text-amber-500 shrink-0 flex items-center gap-1 self-start sm:self-auto">
+            <span>✨</span>
+            <span>+15 XP ต่อประโยคที่ผ่านเกณฑ์</span>
+          </span>
+        </div>
+
+        <!-- Phrases Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ${phrases.map((p, idx) => `
+            <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
                 <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">"${p.en}"</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">${p.th}</p>
-                  </div>
-                  <button onclick="window.speechEngine.speak('${p.en.replace(/'/g, "\\'")}')" class="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl transition-all shrink-0">
+                  <span class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold flex items-center justify-center shrink-0">
+                    ${idx + 1}
+                  </span>
+                  <button onclick="window.speechEngine.speak('${p.en.replace(/'/g, "\\'")}')"
+                    class="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl transition-all shrink-0 active:scale-95"
+                    title="ฟังเสียงเจ้าของภาษา">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
                   </button>
                 </div>
-                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span id="standalone-mic-status-${idx}" class="text-[11px] text-slate-400">แตะไมค์แล้วเริ่มอ่านประโยค</span>
+                <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug font-serif">
+                  "${p.en}"
+                </p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                  ${p.th}
+                </p>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col gap-2">
+                <div class="flex items-center justify-between gap-2">
+                  <span id="standalone-mic-status-${idx}" class="text-[11px] text-slate-400 truncate">
+                    แตะไมค์แล้วเริ่มอ่านประโยค
+                  </span>
                   <button id="standalone-mic-btn-${idx}" onclick="window.app.startStandaloneSpeaking(${idx}, '${p.en.replace(/'/g, "\\'")}')"
-                    class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5 active:scale-95">
+                    class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0 active:scale-95">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                     <span>แตะเพื่อพูด</span>
                   </button>
                 </div>
               </div>
-            `).join("")}
-          </div>
+            </div>
+          `).join("")}
         </div>
       </div>
     `;
+  }
+
+  switchSpeakingCategory(categoryKey) {
+    window.soundFx.playClick();
+    this.speakingLabCategory = categoryKey;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "speaking-lab") {
+      this.renderSpeakingLabView(container);
+    }
   }
 
   startStandaloneSpeaking(idx, targetText) {
@@ -1640,6 +1956,7 @@ class EngMasteryApp {
           window.soundFx.playCorrect();
           window.storageManager.addXP(15);
           window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
           this.renderHeaderStats();
           this.showToast(`คะแนนการออกเสียง ${res.score}% ยอดเยี่ยมมาก! (+15 XP)`, "success");
         } else {
@@ -1656,6 +1973,693 @@ class EngMasteryApp {
         if (micBtn) micBtn.classList.remove("recording-pulse");
       }
     });
+  }
+
+  // =========================================================================
+  // VIEW: GRAMMAR CHEAT SHEET HUB (12 TENSES, IN/ON/AT MAP, 100 IRREGULAR VERBS)
+  // =========================================================================
+  renderCheatSheetView(container) {
+    const activeTab = this.cheatSheetTab || "tenses";
+    const searchQuery = (this.irregularVerbSearch || "").toLowerCase().trim();
+
+    // 100 Most Common Irregular Verbs Database
+    const irregularVerbs = [
+      { v1: "be", v2: "was / were", v3: "been", th: "เป็น, อยู่, คือ", pattern: "A-B-C" },
+      { v1: "become", v2: "became", v3: "become", th: "กลายเป็น", pattern: "A-B-A" },
+      { v1: "begin", v2: "began", v3: "begun", th: "เริ่มต้น", pattern: "A-B-C" },
+      { v1: "break", v2: "broke", v3: "broken", th: "แตก, หัก, พัง", pattern: "A-B-C" },
+      { v1: "bring", v2: "brought", v3: "brought", th: "นำมา, พามา", pattern: "A-B-B" },
+      { v1: "build", v2: "built", v3: "built", th: "สร้าง, ประกอบ", pattern: "A-B-B" },
+      { v1: "buy", v2: "bought", v3: "bought", th: "ซื้อ", pattern: "A-B-B" },
+      { v1: "catch", v2: "caught", v3: "caught", th: "จับ, คว้า, ดักจับ", pattern: "A-B-B" },
+      { v1: "choose", v2: "chose", v3: "chosen", th: "เลือก", pattern: "A-B-C" },
+      { v1: "come", v2: "came", v3: "come", th: "มา", pattern: "A-B-A" },
+      { v1: "cost", v2: "cost", v3: "cost", th: "มีราคา, มีต้นทุน", pattern: "A-A-A" },
+      { v1: "cut", v2: "cut", v3: "cut", th: "ตัด, ลดทอน", pattern: "A-A-A" },
+      { v1: "do", v2: "did", v3: "done", th: "ทำ, ปฏิบัติ", pattern: "A-B-C" },
+      { v1: "draw", v2: "drew", v3: "drawn", th: "วาด, ดึงดูด", pattern: "A-B-C" },
+      { v1: "drink", v2: "drank", v3: "drunk", th: "ดื่ม", pattern: "A-B-C" },
+      { v1: "drive", v2: "drove", v3: "driven", th: "ขับรถ, ขับเคลื่อน", pattern: "A-B-C" },
+      { v1: "eat", v2: "ate", v3: "eaten", th: "กิน, รับประทาน", pattern: "A-B-C" },
+      { v1: "fall", v2: "fell", v3: "fallen", th: "ตก, ร่วง, ล้ม", pattern: "A-B-C" },
+      { v1: "feed", v2: "fed", v3: "fed", th: "ป้อน, ส่งข้อมูลเข้า", pattern: "A-B-B" },
+      { v1: "feel", v2: "felt", v3: "felt", th: "รู้สึก", pattern: "A-B-B" },
+      { v1: "fight", v2: "fought", v3: "fought", th: "ต่อสู้", pattern: "A-B-B" },
+      { v1: "find", v2: "found", v3: "found", th: "ค้นหา, พบเจอ", pattern: "A-B-B" },
+      { v1: "fly", v2: "flew", v3: "flown", th: "บิน", pattern: "A-B-C" },
+      { v1: "forget", v2: "forgot", v3: "forgotten", th: "ลืม", pattern: "A-B-C" },
+      { v1: "forgive", v2: "forgave", v3: "forgiven", th: "ให้อภัย", pattern: "A-B-C" },
+      { v1: "freeze", v2: "froze", v3: "frozen", th: "แช่แข็ง, ค้าง, หยุดนิ่ง", pattern: "A-B-C" },
+      { v1: "get", v2: "got", v3: "got / gotten", th: "ได้รับ, กลายเป็น", pattern: "A-B-C" },
+      { v1: "give", v2: "gave", v3: "given", th: "ให้, มอบให้", pattern: "A-B-C" },
+      { v1: "go", v2: "went", v3: "gone", th: "ไป", pattern: "A-B-C" },
+      { v1: "grow", v2: "grew", v3: "grown", th: "เติบโต, ปลูก", pattern: "A-B-C" },
+      { v1: "hang", v2: "hung", v3: "hung", th: "แขวน, ค้าง", pattern: "A-B-B" },
+      { v1: "have", v2: "had", v3: "had", th: "มี, รับประทาน", pattern: "A-B-B" },
+      { v1: "hear", v2: "heard", v3: "heard", th: "ได้ยิน", pattern: "A-B-B" },
+      { v1: "hide", v2: "hid", v3: "hidden", th: "ซ่อน, ปิดบัง", pattern: "A-B-C" },
+      { v1: "hit", v2: "hit", v3: "hit", th: "ตี, ชน, ยิงรีเควสต์", pattern: "A-A-A" },
+      { v1: "hold", v2: "held", v3: "held", th: "ถือ, ยึด, จัดประชุม", pattern: "A-B-B" },
+      { v1: "hurt", v2: "hurt", v3: "hurt", th: "เจ็บปวด, ทำร้าย", pattern: "A-A-A" },
+      { v1: "keep", v2: "kept", v3: "kept", th: "เก็บรักษา, ทำต่อไป", pattern: "A-B-B" },
+      { v1: "know", v2: "knew", v3: "known", th: "รู้, รู้จัก", pattern: "A-B-C" },
+      { v1: "lead", v2: "led", v3: "led", th: "นำทาง, เป็นผู้นำ", pattern: "A-B-B" },
+      { v1: "learn", v2: "learned / learnt", v3: "learned / learnt", th: "เรียนรู้", pattern: "A-B-B" },
+      { v1: "leave", v2: "left", v3: "left", th: "ออกจาก, ทิ้งไว้", pattern: "A-B-B" },
+      { v1: "lend", v2: "lent", v3: "lent", th: "ให้ยืม", pattern: "A-B-B" },
+      { v1: "let", v2: "let", v3: "let", th: "อนุญาต, ปล่อยให้", pattern: "A-A-A" },
+      { v1: "lie", v2: "lay", v3: "lain", th: "นอนราบ, วางอยู่", pattern: "A-B-C" },
+      { v1: "light", v2: "lit", v3: "lit", th: "จุดไฟ, ส่องสว่าง", pattern: "A-B-B" },
+      { v1: "lose", v2: "lost", v3: "lost", th: "สูญหาย, พ่ายแพ้", pattern: "A-B-B" },
+      { v1: "make", v2: "made", v3: "made", th: "ทำ, สร้าง", pattern: "A-B-B" },
+      { v1: "mean", v2: "meant", v3: "meant", th: "หมายถึง, ตั้งใจ", pattern: "A-B-B" },
+      { v1: "meet", v2: "met", v3: "met", th: "พบปะ, เจอ", pattern: "A-B-B" },
+      { v1: "pay", v2: "paid", v3: "paid", th: "จ่ายเงิน, ชำระ", pattern: "A-B-B" },
+      { v1: "put", v2: "put", v3: "put", th: "วาง, ใส่", pattern: "A-A-A" },
+      { v1: "quit", v2: "quit", v3: "quit", th: "เลิก, ยุติ, ออกจากงาน", pattern: "A-A-A" },
+      { v1: "read", v2: "read (เรด)", v3: "read (เรด)", th: "อ่าน", pattern: "A-B-B" },
+      { v1: "ride", v2: "rode", v3: "ridden", th: "ขี่, โดยสาร", pattern: "A-B-C" },
+      { v1: "ring", v2: "rang", v3: "rung", th: "สั่นกระดิ่ง, โทรหา", pattern: "A-B-C" },
+      { v1: "rise", v2: "rose", v3: "risen", th: "ลอยขึ้น, เพิ่มขึ้น", pattern: "A-B-C" },
+      { v1: "run", v2: "ran", v3: "run", th: "วิ่ง, ดำเนินระบบ", pattern: "A-B-A" },
+      { v1: "say", v2: "said", v3: "said", th: "พูด, บอก", pattern: "A-B-B" },
+      { v1: "see", v2: "saw", v3: "seen", th: "เห็น", pattern: "A-B-C" },
+      { v1: "seek", v2: "sought", v3: "sought", th: "ค้นหา, แสวงหา", pattern: "A-B-B" },
+      { v1: "sell", v2: "sold", v3: "sold", th: "ขาย", pattern: "A-B-B" },
+      { v1: "send", v2: "sent", v3: "sent", th: "ส่ง", pattern: "A-B-B" },
+      { v1: "set", v2: "set", v3: "set", th: "ตั้งค่า, วางระบบ", pattern: "A-A-A" },
+      { v1: "shake", v2: "shook", v3: "shaken", th: "เขย่า, สั่น", pattern: "A-B-C" },
+      { v1: "shine", v2: "shone", v3: "shone", th: "ส่องแสง, เปล่งประกาย", pattern: "A-B-B" },
+      { v1: "shoot", v2: "shot", v3: "shot", th: "ยิง, ถ่ายภาพ", pattern: "A-B-B" },
+      { v1: "show", v2: "showed", v3: "shown", th: "แสดง, ให้ดู", pattern: "A-B-C" },
+      { v1: "shut", v2: "shut", v3: "shut", th: "ปิด, ยุติการทำงาน", pattern: "A-A-A" },
+      { v1: "sing", v2: "sang", v3: "sung", th: "ร้องเพลง", pattern: "A-B-C" },
+      { v1: "sink", v2: "sank", v3: "sunk", th: "จมลง", pattern: "A-B-C" },
+      { v1: "sit", v2: "sat", v3: "sat", th: "นั่ง", pattern: "A-B-B" },
+      { v1: "sleep", v2: "slept", v3: "slept", th: "นอนหลับ", pattern: "A-B-B" },
+      { v1: "speak", v2: "spoke", v3: "spoken", th: "พูด, สนทนา", pattern: "A-B-C" },
+      { v1: "spend", v2: "spent", v3: "spent", th: "ใช้จ่าย, ใช้เวลา", pattern: "A-B-B" },
+      { v1: "split", v2: "split", v3: "split", th: "แยก, แบ่งส่วน", pattern: "A-A-A" },
+      { v1: "spread", v2: "spread", v3: "spread", th: "แพร่กระจาย, ขยายผล", pattern: "A-A-A" },
+      { v1: "stand", v2: "stood", v3: "stood", th: "ยืน, คงอยู่", pattern: "A-B-B" },
+      { v1: "steal", v2: "stole", v3: "stolen", th: "ขโมย, โจรกรรม", pattern: "A-B-C" },
+      { v1: "stick", v2: "stuck", v3: "stuck", th: "ติดอยู่, เกาะติด", pattern: "A-B-B" },
+      { v1: "strike", v2: "struck", v3: "struck", th: "ชน, ตี, ประท้วง", pattern: "A-B-B" },
+      { v1: "swear", v2: "swore", v3: "sworn", th: "สาบาน", pattern: "A-B-C" },
+      { v1: "sweep", v2: "swept", v3: "swept", th: "กวาด, เคลียร์พื้นที่", pattern: "A-B-B" },
+      { v1: "swim", v2: "swam", v3: "swum", th: "ว่ายน้ำ", pattern: "A-B-C" },
+      { v1: "take", v2: "took", v3: "taken", th: "นำไป, รับเอา, ใช้เวลา", pattern: "A-B-C" },
+      { v1: "teach", v2: "taught", v3: "taught", th: "สอน", pattern: "A-B-B" },
+      { v1: "tear", v2: "tore", v3: "torn", th: "ฉีกขาด", pattern: "A-B-C" },
+      { v1: "tell", v2: "told", v3: "told", th: "บอก, เล่า", pattern: "A-B-B" },
+      { v1: "think", v2: "thought", v3: "thought", th: "คิด, ไตร่ตรอง", pattern: "A-B-B" },
+      { v1: "throw", v2: "threw", v3: "thrown", th: "ขว้าง, โยน, พ่น Exception", pattern: "A-B-C" },
+      { v1: "understand", v2: "understood", v3: "understood", th: "เข้าใจ", pattern: "A-B-B" },
+      { v1: "wake", v2: "woke", v3: "woken", th: "ตื่น, ปลุก", pattern: "A-B-C" },
+      { v1: "wear", v2: "wore", v3: "worn", th: "สวมใส่, สึกหรอ", pattern: "A-B-C" },
+      { v1: "win", v2: "won", v3: "won", th: "ชนะ, คว้าชัย", pattern: "A-B-B" },
+      { v1: "withdraw", v2: "withdrew", v3: "withdrawn", th: "ถอนเงิน, ถอนตัว", pattern: "A-B-C" },
+      { v1: "write", v2: "wrote", v3: "written", th: "เขียน, บันทึก", pattern: "A-B-C" }
+    ];
+
+    const filteredVerbs = irregularVerbs.filter(v => {
+      if (!searchQuery) return true;
+      return (
+        v.v1.toLowerCase().includes(searchQuery) ||
+        v.v2.toLowerCase().includes(searchQuery) ||
+        v.v3.toLowerCase().includes(searchQuery) ||
+        v.th.toLowerCase().includes(searchQuery)
+      );
+    });
+
+    container.innerHTML = `
+      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto pb-16">
+        <!-- Hub Top Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 via-amber-700 to-indigo-900 text-white p-6 sm:p-8 shadow-xl">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-xl space-y-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider text-amber-100">
+                <span>📑</span>
+                <span>Visual Summary Hub • แผ่นสรุปไวยากรณ์ด่วน</span>
+              </span>
+              <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+                Grammar Cheat Sheet Matrix
+              </h1>
+              <p class="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+                สรุปโครงสร้างสำคัญในหน้าเดียว: ตารางสูตร 12 Tenses (Active vs Passive), แผนผัง In/On/At Map จำง่าย, และตารางกริยา 3 ช่อง 100 คำที่พบบ่อยที่สุดพร้อมเสียงอ่าน Native TTS
+              </p>
+            </div>
+            <div class="flex items-center gap-2 self-start md:self-auto shrink-0">
+              <button onclick="window.app.navigateTo('dashboard')"
+                class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition-all flex items-center gap-1.5 active:scale-95">
+                <span>← กลับ Dashboard</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Primary Matrix Tabs -->
+        <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto">
+          <button onclick="window.app.switchCheatSheetTab('tenses')"
+            class="flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+              activeTab === 'tenses'
+                ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-sm border border-slate-200/50 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }">
+            <span>⏰</span>
+            <span>12 Tenses Formula Matrix</span>
+          </button>
+
+          <button onclick="window.app.switchCheatSheetTab('prepositions')"
+            class="flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+              activeTab === 'prepositions'
+                ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-sm border border-slate-200/50 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }">
+            <span>🗺️</span>
+            <span>In, On, At Visual Map</span>
+          </button>
+
+          <button onclick="window.app.switchCheatSheetTab('verbs')"
+            class="flex-1 min-w-[150px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+              activeTab === 'verbs'
+                ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-sm border border-slate-200/50 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }">
+            <span>🔤</span>
+            <span>100 Irregular Verbs Table</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: 12 Tenses Formula Matrix -->
+        ${activeTab === 'tenses' ? `
+          <div class="space-y-6">
+            <div class="p-4 sm:p-5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-amber-950 dark:text-amber-200 flex items-center gap-2">
+                  <span>ตารางสรุปพิมพ์เขียว 12 Tenses (The Complete Tense Matrix)</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                  เทียบสูตรโครงสร้าง Active (ประธานทำเอง) vs Passive (ประธานถูกกระทำ), คำบอกเวลา (Time Markers) และตัวอย่างประโยคจริง
+                </p>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-xl bg-amber-200/60 dark:bg-amber-900/60 text-amber-900 dark:text-amber-300 shrink-0 self-start sm:self-auto">
+                12 Tenses • Active & Passive
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- 1. Present Simple -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">Present</span>
+                  <span class="text-xs text-slate-400 font-mono">Simple</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Present Simple</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: กิจวัตร, ความจริงทั่วไป, งานที่เกิดขึ้นประจำวัน</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + V.1 (-s/-es)</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + is/am/are + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> always, usually, every day, often, runs
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"The server backs up all user databases nightly."</p>
+                  <button onclick="window.speechEngine.speak('The server backs up all user databases nightly.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 2. Present Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">Present</span>
+                  <span class="text-xs text-slate-400 font-mono">Continuous</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Present Continuous</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: กำลังทำอยู่ ณ วินาทีนี้, โปรเจกต์ชั่วคราว</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + is/am/are + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + is/am/are + being + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> now, right now, at the moment, currently
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"We are currently rolling out the new security patch."</p>
+                  <button onclick="window.speechEngine.speak('We are currently rolling out the new security patch.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 3. Present Perfect -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">Present</span>
+                  <span class="text-xs text-slate-400 font-mono">Perfect</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Present Perfect</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: เพิ่งเสร็จสิ้น, ทำตั้งแต่อดีตถึงปัจจุบัน, ประสบการณ์</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + have/has + V.3</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + have/has + been + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> already, just, yet, since, for, ever
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"The pipeline has successfully deployed the release."</p>
+                  <button onclick="window.speechEngine.speak('The pipeline has successfully deployed the release.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 4. Present Perfect Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">Present</span>
+                  <span class="text-xs text-slate-400 font-mono">Perf Con</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Present Perfect Con</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: ทำต่อเนื่องไม่หยุดตั้งแต่อดีตและยังทำอยู่</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + have/has + been + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> (Rarely used in Passive)</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> all day, for 3 hours, since morning
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"I have been debugging this memory leak for 4 hours."</p>
+                  <button onclick="window.speechEngine.speak('I have been debugging this memory leak for 4 hours.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 5. Past Simple -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">Past</span>
+                  <span class="text-xs text-slate-400 font-mono">Simple</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Past Simple</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: เกิดขึ้นและจบลงแล้วในอดีต มีเวลาระบุชัดเจน</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + V.2</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + was/were + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> yesterday, last night, in 2025, 2 days ago
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"The database crashed at midnight yesterday."</p>
+                  <button onclick="window.speechEngine.speak('The database crashed at midnight yesterday.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 6. Past Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">Past</span>
+                  <span class="text-xs text-slate-400 font-mono">Continuous</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Past Continuous</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: กำลังดำเนินอยู่ในอดีตตอนที่มีอีกเหตุการณ์แทรกเข้ามา</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + was/were + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + was/were + being + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> while, when, as, at 8 PM yesterday
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"While I was testing the API, the network went down."</p>
+                  <button onclick="window.speechEngine.speak('While I was testing the API, the network went down.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 7. Past Perfect -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">Past</span>
+                  <span class="text-xs text-slate-400 font-mono">Perfect</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Past Perfect</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: เกิดขึ้นและเสร็จก่อนอีกเหตุการณ์หนึ่งในอดีต (เกิดก่อน)</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + had + V.3</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + had + been + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> before, after, by the time
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"We had tested the code before we merged it into main."</p>
+                  <button onclick="window.speechEngine.speak('We had tested the code before we merged it into main.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 8. Past Perfect Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">Past</span>
+                  <span class="text-xs text-slate-400 font-mono">Perf Con</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Past Perfect Con</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: ทำต่อเนื่องมาเป็นเวลานานก่อนจะมีเหตุการณ์อดีตตามมา</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + had + been + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> (Rarely used)</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> had been doing ... before
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"They had been working on the migration before the alert fired."</p>
+                  <button onclick="window.speechEngine.speak('They had been working on the migration before the alert fired.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 9. Future Simple -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">Future</span>
+                  <span class="text-xs text-slate-400 font-mono">Simple</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Future Simple</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: สิ่งที่จะเกิดขึ้นในอนาคต, การตัดสินใจทันที, สัญญา</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + will + V.inf</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + will be + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> tomorrow, next week, soon, in 2030
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"The new cluster will be provisioned tomorrow morning."</p>
+                  <button onclick="window.speechEngine.speak('The new cluster will be provisioned tomorrow morning.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 10. Future Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">Future</span>
+                  <span class="text-xs text-slate-400 font-mono">Continuous</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Future Continuous</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: จะกำลังกระทำอยู่ ณ เวลาที่ระบุชัดเจนในอนาคต</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + will be + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> (Rarely used)</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> this time tomorrow, at 10 AM tomorrow
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"This time tomorrow, we will be running the load tests."</p>
+                  <button onclick="window.speechEngine.speak('This time tomorrow, we will be running the load tests.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 11. Future Perfect -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">Future</span>
+                  <span class="text-xs text-slate-400 font-mono">Perfect</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Future Perfect</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: จะเสร็จสมบูรณ์เรียบร้อยเมื่อถึงเวลาในอนาคต</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + will have + V.3</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> S + will have been + V.3</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> by Friday, by the end of next month
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"By Friday, our team will have finished the refactor."</p>
+                  <button onclick="window.speechEngine.speak('By Friday, our team will have finished the refactor.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+
+              <!-- 12. Future Perfect Continuous -->
+              <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">Future</span>
+                  <span class="text-xs text-slate-400 font-mono">Perf Con</span>
+                </div>
+                <h3 class="text-base font-black text-slate-900 dark:text-white">Future Perfect Con</h3>
+                <div class="text-xs text-slate-500 dark:text-slate-400">ใช้กับ: จะทำต่อเนื่องมาครบระยะเวลาหนึ่งในอนาคต</div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl space-y-1 text-xs font-mono">
+                  <div><strong class="text-indigo-600 dark:text-indigo-400">Active:</strong> S + will have been + V.ing</div>
+                  <div><strong class="text-purple-600 dark:text-purple-400">Passive:</strong> (Rarely used)</div>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                  <span class="font-bold text-slate-500 dark:text-slate-300">Keywords:</span> for 5 years by next year
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-start justify-between gap-2">
+                  <p class="text-xs italic text-slate-700 dark:text-slate-300">"By December, I will have been writing Go for 3 years."</p>
+                  <button onclick="window.speechEngine.speak('By December, I will have been writing Go for 3 years.')" class="p-1 text-indigo-500 hover:scale-110 shrink-0">🔊</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Tab 2: Prepositions Visual Map (IN, ON, AT) -->
+        ${activeTab === 'prepositions' ? `
+          <div class="space-y-6">
+            <div class="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
+                  <span>แผนผังปีรามิด In, On, At: จากกว้างที่สุด สู่จุดเป๊ะที่สุด</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                  กฎจำง่าย: กว้างสุดใช้ <strong>IN</strong>, เจาะจงขึ้นมาใช้ <strong>ON</strong>, และเป๊ะที่สุดใช้ <strong>AT</strong>
+                </p>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-xl bg-indigo-200/60 dark:bg-indigo-900/60 text-indigo-900 dark:text-indigo-300 shrink-0 self-start sm:self-auto">
+                Time & Place Matrix
+              </span>
+            </div>
+
+            <!-- Inverted Pyramid Cards -->
+            <div class="space-y-4">
+              <!-- LEVEL 1: IN (BIGGEST & MOST GENERAL) -->
+              <div class="p-6 rounded-3xl bg-gradient-to-r from-blue-900/90 to-indigo-900/90 text-white border border-blue-700/60 shadow-md space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-blue-500/30 border border-blue-400/40 text-blue-200 flex items-center justify-center font-black text-sm">IN</span>
+                    <h3 class="text-lg font-black text-white">IN: ระดับกว้างใหญ่ • ห้วงเวลา & อาณาเขตปิด (General)</h3>
+                  </div>
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/30 text-blue-200 border border-blue-400/40 font-mono">Broad / Enclosed</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-blue-200 flex items-center gap-1.5">
+                      <span>⏰</span>
+                      <span>IN กับเวลา (Time: ศตวรรษ, ปี, ฤดู, เดือน, ช่วงวัน)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • in the 21st century<br>
+                      • in 2026 / in the 90s<br>
+                      • in October / in summer<br>
+                      • in the morning / afternoon / evening
+                    </p>
+                    <p class="pt-2 text-[11px] text-blue-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"We plan to migrate the database in Q4."</em>
+                    </p>
+                  </div>
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-blue-200 flex items-center gap-1.5">
+                      <span>📍</span>
+                      <span>IN กับสถานที่ (Place: ประเทศ, เมือง, อาคาร, พื้นที่ปิด)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • in Singapore / in Bangkok<br>
+                      • in the server room / in the office<br>
+                      • in a car / in a taxi (ยานพาหนะยืนไม่ได้)<br>
+                      • in the cloud / in the us-central1 region
+                    </p>
+                    <p class="pt-2 text-[11px] text-blue-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"The cluster runs in the us-central1 region."</em>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LEVEL 2: ON (MORE SPECIFIC & SURFACES) -->
+              <div class="p-6 rounded-3xl bg-gradient-to-r from-emerald-900/90 to-teal-900/90 text-white border border-emerald-700/60 shadow-md space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 flex items-center justify-center font-black text-sm">ON</span>
+                    <h3 class="text-lg font-black text-white">ON: ระดับเจาะจง • วันที่, พื้นผิว & สื่ออิเล็กทรอนิกส์ (Specific)</h3>
+                  </div>
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 font-mono">Specific / Surface</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-emerald-200 flex items-center gap-1.5">
+                      <span>⏰</span>
+                      <span>ON กับเวลา (Time: วันในสัปดาห์, วันที่, วันพิเศษ)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • on Monday / on weekends<br>
+                      • on October 20th<br>
+                      • on my birthday / on New Year's Day<br>
+                      • on deployment day
+                    </p>
+                    <p class="pt-2 text-[11px] text-emerald-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"The sprint demo will take place on Friday afternoon."</em>
+                    </p>
+                  </div>
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-emerald-200 flex items-center gap-1.5">
+                      <span>📍</span>
+                      <span>ON กับสถานที่ (Place: บนพื้นผิว, ถนน, ระบบ/แพลตฟอร์ม)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • on the table / on the wall<br>
+                      • on Sukhumvit Road / on the 3rd floor<br>
+                      • on the bus / on the train (ยานพาหนะยืนได้)<br>
+                      • on GitHub / on Slack / on AWS EC2
+                    </p>
+                    <p class="pt-2 text-[11px] text-emerald-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"I dropped the logs on the incident channel on Slack."</em>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LEVEL 3: AT (EXACT & PRECISE) -->
+              <div class="p-6 rounded-3xl bg-gradient-to-r from-rose-900/90 to-purple-900/90 text-white border border-rose-700/60 shadow-md space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-rose-500/30 border border-rose-400/40 text-rose-200 flex items-center justify-center font-black text-sm">AT</span>
+                    <h3 class="text-lg font-black text-white">AT: ระดับเป๊ะที่สุด • เวลาตามเข็มนาฬิกา & พิกัดจุด (Precise Point)</h3>
+                  </div>
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/30 text-rose-200 border border-rose-400/40 font-mono">Exact / Point</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-rose-200 flex items-center gap-1.5">
+                      <span>⏰</span>
+                      <span>AT กับเวลา (Time: เวลาเป๊ะ ๆ, จุดเวลาสำคัญ)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • at 9:00 AM / at 14:30 UTC<br>
+                      • at noon / at midnight<br>
+                      • at runtime / at startup<br>
+                      • at the moment / at sunset
+                    </p>
+                    <p class="pt-2 text-[11px] text-rose-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"The backup cron job runs at 02:00 UTC."</em>
+                    </p>
+                  </div>
+                  <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 space-y-2">
+                    <h4 class="font-bold text-rose-200 flex items-center gap-1.5">
+                      <span>📍</span>
+                      <span>AT กับสถานที่ (Place: เลขที่อยู่เฉพาะ, จุดพิกัด, พิกัดโค้ด)</span>
+                    </h4>
+                    <p class="text-slate-200 leading-relaxed font-mono">
+                      • at 123 Silom Road<br>
+                      • at the airport / at the bus stop<br>
+                      • at the top of the page<br>
+                      • at line 42 in main.go
+                    </p>
+                    <p class="pt-2 text-[11px] text-rose-200/90 border-t border-white/10">
+                      💡 ตัวอย่าง: <em>"The NullPointerException occurred at line 84."</em>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Tab 3: 100 Irregular Verbs Table -->
+        ${activeTab === 'verbs' ? `
+          <div class="space-y-4">
+            <!-- Search & Filter Bar -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="relative flex-1 max-w-md">
+                <input type="text"
+                  value="${this.irregularVerbSearch || ''}"
+                  placeholder="ค้นหากริยา 3 ช่อง (เช่น do, broke, eaten, กิน...)"
+                  oninput="window.app.searchIrregularVerbs(this.value)"
+                  class="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                พบ <strong class="text-amber-600 dark:text-amber-400 font-bold">${filteredVerbs.length}</strong> จาก 100 คำ
+              </span>
+            </div>
+
+            <!-- Responsive Verbs Table -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xs">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">
+                      <th class="py-3 px-4">#</th>
+                      <th class="py-3 px-4">V.1 (Infinitive)</th>
+                      <th class="py-3 px-4">V.2 (Past Simple)</th>
+                      <th class="py-3 px-4">V.3 (Past Participle)</th>
+                      <th class="py-3 px-4">ความหมายภาษาไทย</th>
+                      <th class="py-3 px-4 text-center">แบบรูป</th>
+                      <th class="py-3 px-4 text-right">เสียงอ่าน</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                    ${filteredVerbs.map((v, idx) => `
+                      <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-3 px-4 font-mono text-slate-400">${idx + 1}</td>
+                        <td class="py-3 px-4 font-bold text-slate-900 dark:text-white font-mono text-sm">${v.v1}</td>
+                        <td class="py-3 px-4 font-bold text-indigo-600 dark:text-indigo-400 font-mono text-sm">${v.v2}</td>
+                        <td class="py-3 px-4 font-bold text-purple-600 dark:text-purple-400 font-mono text-sm">${v.v3}</td>
+                        <td class="py-3 px-4 text-slate-700 dark:text-slate-300 font-medium">${v.th}</td>
+                        <td class="py-3 px-4 text-center">
+                          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                            v.pattern === 'A-A-A' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' :
+                            v.pattern === 'A-B-B' ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300' :
+                            v.pattern === 'A-B-A' ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300' :
+                            'bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
+                          }">
+                            ${v.pattern}
+                          </span>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                          <button onclick="window.speechEngine.speak('${v.v1}, ${v.v2}, ${v.v3}')"
+                            class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-all active:scale-95"
+                            title="ฟังเสียงอ่านกริยาทั้ง 3 ช่อง">
+                            🔊
+                          </button>
+                        </td>
+                      </tr>
+                    `).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  switchCheatSheetTab(tabKey) {
+    window.soundFx.playClick();
+    this.cheatSheetTab = tabKey;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "cheat-sheet") {
+      this.renderCheatSheetView(container);
+    }
+  }
+
+  searchIrregularVerbs(query) {
+    this.irregularVerbSearch = query;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "cheat-sheet") {
+      this.renderCheatSheetView(container);
+    }
   }
 
   // =========================================================================
@@ -1848,13 +2852,17 @@ class EngMasteryApp {
 
           <!-- Category Filter Pills -->
           <div class="flex flex-wrap items-center gap-2">
-            ${[
-              { id: "all", label: "🌟 ทั้งหมด" },
-              { id: "tech-devops", label: "💻 Tech & DevOps" },
-              { id: "workplace-business", label: "💼 Workplace" },
-              { id: "phrasal-idioms", label: "⚡ Phrasal Verbs" },
-              { id: "daily-oxford", label: "📚 Oxford 3000™" }
-            ].map(cat => `
+            ${(() => {
+              const savedCount = (window.storageManager.getSavedVocab() || []).length;
+              return [
+                { id: "all", label: "🌟 ทั้งหมด" },
+                { id: "saved", label: `⭐ คำที่บันทึกไว้ (${savedCount})` },
+                { id: "tech-devops", label: "💻 Tech & DevOps" },
+                { id: "workplace-business", label: "💼 Workplace" },
+                { id: "phrasal-idioms", label: "⚡ Phrasal Verbs" },
+                { id: "daily-oxford", label: "📚 Oxford 3000™" }
+              ];
+            })().map(cat => `
               <button onclick="window.app.setVocabCategory('${cat.id}')"
                 class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   this.vocabFilter === cat.id
@@ -1877,6 +2885,25 @@ class EngMasteryApp {
 
   renderFlashcardMode(filtered) {
     if (filtered.length === 0) {
+      if (this.vocabFilter === 'saved') {
+        return `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center space-y-4 max-w-lg mx-auto">
+            <div class="text-4xl">⭐</div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">ยังไม่มีคำศัพท์ที่บันทึกไว้ในสมุดส่วนตัว</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              เมื่อคุณอ่านบทความใน <strong>Reading Lab</strong> แล้วแตะที่คำศัพท์เพื่อดูความหมาย ให้กดปุ่มดาว ⭐ ที่มุมบนขวาของหน้าต่างแปลศัพท์ เพื่อบันทึกคำศัพท์มาทบทวนในหน้านี้ได้ทันทีครับ
+            </p>
+            <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <button onclick="window.app.navigateTo('reading-lab')" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95">
+                ไปฝึกอ่านใน Reading Lab ➔
+              </button>
+              <button onclick="window.app.resetVocabFilters()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl">
+                ดูคำศัพท์ทั่วไปทั้งหมด
+              </button>
+            </div>
+          </div>
+        `;
+      }
       return `
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center space-y-3">
           <div class="text-4xl">🔍</div>
@@ -2195,13 +3222,44 @@ class EngMasteryApp {
   }
 
   getFilteredVocabList(vocabs) {
-    return vocabs.filter(v => {
-      const matchCat = this.vocabFilter === 'all' || v.category === this.vocabFilter;
+    let baseList = vocabs;
+    if (this.vocabFilter === 'saved') {
+      const savedWords = window.storageManager.getSavedVocab() || [];
+      const vocabMap = new Map();
+      vocabs.forEach(v => {
+        if (v.word) vocabMap.set(v.word.toLowerCase(), v);
+      });
+
+      baseList = [];
+      savedWords.forEach(sw => {
+        const found = vocabMap.get(sw.toLowerCase());
+        if (found) {
+          baseList.push(found);
+        } else {
+          baseList.push({
+            id: `saved-${sw.toLowerCase()}`,
+            word: sw,
+            ipa: "",
+            pos: "Vocab",
+            level: "Personal",
+            category: "saved",
+            categoryLabel: "⭐ My Saved",
+            th: "คำศัพท์ที่บันทึกไว้ในสมุดส่วนตัว",
+            definition: "Saved from Reading Lab or Dictionary lookup",
+            exampleEn: `I saved "${sw}" to review later in my vocabulary notebook.`,
+            exampleTh: `ฉันบันทึกคำว่า "${sw}" ไว้ทบทวนในสมุดคำศัพท์ส่วนตัว`
+          });
+        }
+      });
+    }
+
+    return baseList.filter(v => {
+      const matchCat = this.vocabFilter === 'all' || this.vocabFilter === 'saved' || v.category === this.vocabFilter;
       if (!matchCat) return false;
       if (!this.vocabSearch) return true;
       const q = this.vocabSearch.toLowerCase().trim();
       return (
-        v.word.toLowerCase().includes(q) ||
+        (v.word && v.word.toLowerCase().includes(q)) ||
         (v.th && v.th.toLowerCase().includes(q)) ||
         (v.definition && v.definition.toLowerCase().includes(q)) ||
         (v.exampleEn && v.exampleEn.toLowerCase().includes(q))
@@ -2292,6 +3350,7 @@ class EngMasteryApp {
   toggleFlashcardFlip() {
     window.soundFx.playFlip();
     this.isCardFlipped = !this.isCardFlipped;
+    window.storageManager.recordQuestProgress("reviewFlashcards", 1);
     const cardInner = document.querySelector(".card-inner");
     if (cardInner) {
       if (this.isCardFlipped) {
@@ -2343,6 +3402,7 @@ class EngMasteryApp {
         localStorage.setItem("engmastery_reviewed_vocabs", JSON.stringify([...this.reviewedVocabIds]));
       } catch (e) {}
       window.storageManager.addXP(5);
+      window.storageManager.recordQuestProgress("reviewFlashcards", 1);
       window.soundFx.playCorrect();
       this.renderHeaderStats();
       this.showToast("+5 XP! จำคำศัพท์ได้แล้ว เก่งมาก 🎉", "success");
@@ -3230,6 +4290,8 @@ class EngMasteryApp {
       xpEarned: article.xpReward
     };
 
+    window.storageManager.recordQuestProgress("readArticle", 1);
+
     try {
       localStorage.setItem("engmastery_reading_quizzes", JSON.stringify(this.readingQuizSubmitted));
     } catch (e) {}
@@ -3519,6 +4581,11 @@ class EngMasteryApp {
           </div>
 
           <div class="flex items-center gap-1">
+            <button id="reading-word-save-btn" onclick="window.app.toggleSaveWordFromPopup('${entry.word.replace(/'/g, "\\'")}')"
+              class="w-10 h-10 rounded-full ${window.storageManager.isWordSaved(entry.word) ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40'} flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+              title="${window.storageManager.isWordSaved(entry.word) ? 'บันทึกแล้ว (คลิกเพื่อยกเลิก)' : 'บันทึกคำศัพท์นี้ (Save to My Vocab)'}">
+              <span class="text-base">${window.storageManager.isWordSaved(entry.word) ? '⭐' : '☆'}</span>
+            </button>
             <button onclick="window.speechEngine.speak('${entry.word.replace(/'/g, "\\'")}')"
               class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
               title="ฟังเสียงอ่านคำศัพท์ (Pronounce)">
@@ -3593,6 +4660,28 @@ class EngMasteryApp {
         </div>
       </div>
     `;
+  }
+
+  toggleSaveWordFromPopup(word) {
+    window.soundFx.playFlip();
+    const res = window.storageManager.toggleSaveWord(word);
+    const saveBtn = document.getElementById("reading-word-save-btn");
+    if (saveBtn) {
+      if (res.saved) {
+        saveBtn.className = "w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-800 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm";
+        saveBtn.innerHTML = '<span class="text-base">⭐</span>';
+        saveBtn.title = "บันทึกแล้ว (คลิกเพื่อยกเลิก)";
+      } else {
+        saveBtn.className = "w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm";
+        saveBtn.innerHTML = '<span class="text-base">☆</span>';
+        saveBtn.title = "บันทึกคำศัพท์นี้ (Save to My Vocab)";
+      }
+    }
+    this.showToast(res.saved ? `⭐ บันทึก "${word}" ลงใน My Vocab แล้ว!` : `นำ "${word}" ออกจาก My Vocab แล้ว`, "success");
+    if (this.currentView === "vocabulary" && this.vocabFilter === "saved") {
+      const container = document.getElementById("main-content-view");
+      if (container) this.renderVocabularyView(container);
+    }
   }
 
   closeReadingWordPopup() {

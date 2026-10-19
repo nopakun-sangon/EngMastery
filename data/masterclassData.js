@@ -1082,15 +1082,318 @@ const masterclassData = [
     },
     {
       "id": "mc-wh3-q5",
-      "question": "ในการประชุม Incident Retro หากต้องการถามเหตุผลการตัดสินใจทางเทคนิคอย่างสร้างสรรค์ ไม่ฟังดูจับผิดหรือตำหนิ ควรใช้ประโยคใด?",
-      "options": [
-        "Why did you make such a bad mistake?",
-        "Who is to blame for this failure?",
-        "What was the reasoning behind this design decision?",
-        "Why couldn't you test this before merging?"
+    }
+  ]
+},
+// =========================================================================
+// MASTERCLASS 7: BUSINESS EMAIL & SLACK FORMULAS
+// =========================================================================
+{
+  id: "mc-business-email-slack",
+  title: "Business Email & Slack Formulas: เขียนแชตและอีเมลแบบมืออาชีพ สุภาพ ชัดเจน ได้ผลลัพธ์ทันที",
+  titleEn: "Professional Business Email & Slack Formulas: Templates, Etiquette & Impactful Workplace Communication",
+  category: "Workplace Communication",
+  categoryTh: "การสื่อสารในที่ทำงาน & อีเมลธุรกิจ",
+  badge: "💼 Workplace Communication Pro",
+  badgeColor: "blue",
+  readTime: "15 นาที",
+  author: "Executive Communication Coach & Technical Lead",
+  publishedDate: "2026-10-20",
+  coverEmoji: "✉️",
+  summary: "ปลดล็อกทักษะการเขียนอีเมลและข้อความแชต (Slack / Teams) ในองค์กรยุคใหม่: กฎเหล็ก Subject Line ให้คนเปิดอ่านใน 3 วินาที, โครงสร้าง 4-Part Email Blueprint, ศิลปะการทวงงานอย่างสุภาพ (Gentle Follow-ups), การปฏิเสธข้อเสนอโดยไม่เสียความสัมพันธ์, และ 5 สำเร็จรูป Templates พร้อมใช้ทันที",
+  tags: ["Business Email", "Slack Etiquette", "Polite English", "Workplace Communication", "Templates"],
+  sections: [
+    {
+      heading: "1. The 4-Part Email Blueprint: โครงสร้างอีเมลทรงพลัง 4 จังหวะ",
+      content: `อีเมลธุรกิจในระดับสากลต้อง **Clear (ชัดเจน), Concise (กระชับ) และ Action-oriented (มีจุดประสงค์ชัดเจน)** ไม่ควรเขียนเกริ่นยาวเยิ่นเย้อ โครงสร้างที่มืออาชีพทั่วโลกยอมรับประกอบด้วย 4 ส่วน:
+
+1. **The Professional Salutation (คำทักทาย):**
+   - *Hi Alex,* (สุภาพ เป็นกันเอง นิยมสูงสุดในบริษัทเทค)
+   - *Dear Mr. Davis,* (ทางการมาก ใช้กับลูกค้าภายนอกหรือผู้บริหารระดับสูง)
+   - *Good morning Team,* (ส่งรวมทั้งทีม)
+
+2. **The Context & Purpose Hook (บอกเหตุผลทันทีในประโยคแรก):**
+   - *"I am writing to update you on the database migration progress."*
+   - *"Following up on our sprint retrospective yesterday..."*
+   - *"Quick question regarding the API rate-limiting policy."*
+
+3. **The Core Details & Call to Action (รายละเอียดและสิ่งที่ต้องการให้ทำ):**
+   - สรุปประเด็นเป็น Bullet Points สั้น ๆ 2-3 บรรทัด
+   - ระบุวันเวลาที่ต้องการคำตอบอย่างชัดเจน: *"Could you please review the attached draft by Friday, 3 PM SGT?"*
+
+4. **The Professional Sign-off (คำลงท้าย):**
+   - *Best regards,* / *Warm regards,* (สุภาพ มาตรฐานสากล)
+   - *Thanks and regards,* (สไตล์วิศวกรและผู้จัดการโปรเจกต์)
+   - *Cheers,* (เป็นกันเองกับเพื่อนร่วมทีมที่สนิทกัน)`,
+      keyPhrases: [
+        { en: "I am writing to provide an update regarding the staging deployment.", th: "ผมเขียนอีเมลนี้มาเพื่อแจ้งอัปเดตเกี่ยวกับการดีพลอยบน Staging ครับ" },
+        { en: "Could you please review the proposed architecture by Wednesday EOD?", th: "รบกวนช่วยตรวจทานสถาปัตยกรรมที่เสนอภายในสิ้นวันพุธนี้ได้ไหมครับ?" }
+      ]
+    },
+    {
+      heading: "2. Slack & Teams Etiquette: กฎเหล็กการสื่อสารแบบ Asynchronous",
+      content: `การแชตในแอปที่ทำงานอย่าง Slack หรือ Microsoft Teams แตกต่างจากอีเมลอย่างสิ้นเชิง เพื่อไม่ให้รบกวนสมาธิ (Deep Work) ของเพื่อนร่วมทีม จงปฏิบัติตามกฎ 3 ข้อนี้:
+
+• **ห้ามส่งแค่คำว่า "Hi" หรือ "Hello" แล้วเงียบ (No "Hello" in Slack!):**
+  - ❌ *Don't:* "Hi John" ... (รอ 10 นาทีแล้วค่อยพิมพ์ต่อ)
+  - ✅ *Do:* "Hi John, quick question: do you have the latest API docs for the payment service? No rush!"
+
+• **ใช้ Status และ Reactions ให้คุ้มค่า:**
+  - กด 👀 (eyes) เพื่อบอกว่า "กำลังดูให้"
+  - กด ✅ (white checkmark) เพื่อบอกว่า "จัดการเรียบร้อยแล้ว"
+  - กด 🚀 เพื่อบอกว่า "ดีพลอยขึ้นระบบแล้ว"
+
+• **การแท็กคนอย่างมีมารยาท:**
+  - หลีกเลี่ยงการใช้ \`@channel\` หรือ \`@here\` พร่ำเพรื่อ เว้นแต่เป็น Production Incident ร้ายแรงระดับ P0/P1`,
+      keyPhrases: [
+        { en: "Hey team, heads up: we will be restarting the Redis cluster in 10 minutes.", th: "สวัสดีทีม ขอแจ้งเตือนล่วงหน้า: เราจะรีสตาร์ต Redis cluster ในอีก 10 นาทีครับ" },
+        { en: "Acknowledged. Looking into the logs now.", th: "รับทราบครับ กำลังเข้าไปตรวจดูบันทึก Log เดี๋ยวนี้" }
+      ]
+    },
+    {
+      heading: "3. Master Templates: 5 แม่แบบสำเร็จรูปพร้อมใช้งานจริง",
+      content: `### Template A: การทวงงานอย่างสุภาพ (Gentle Follow-Up)
+**Subject:** Following up: [Project Name] Review
+
+> Hi Sarah,
+>
+> I hope your week is going well.
+>
+> Just following up on the PR review for the authentication service. We are aiming to merge this ahead of tomorrow's release freeze.
+>
+> Could you please take a look when you have a moment? If you have any questions or blockers, I am happy to hop on a quick huddle.
+>
+> Best regards,  
+> [Your Name]
+
+---
+
+### Template B: การปฏิเสธคำขอหรือเลื่อนกำหนดส่งอย่างมืออาชีพ (Polite Decline / Rescheduling)
+**Subject:** Update on [Feature Name] Timeline
+
+> Hi Team,
+>
+> Thank you for sharing the updated requirements.
+>
+> After assessing our team's current sprint capacity and the ongoing P1 bug fixes, we won't be able to deliver this feature by this Friday without compromising test coverage.
+>
+> We propose targeting the next sprint deployment (Tuesday, Oct 28). Would this timeline work for your stakeholder demo?
+>
+> Thanks for your understanding,  
+> [Your Name]
+
+---
+
+### Template C: การแจ้งเตือนปัญหาเซิร์ฟเวอร์หรือ Incident Report
+**Subject:** [INCIDENT UPDATE] High Latency on Payment Gateway
+
+> Hi everyone,
+>
+> **Summary:** We are currently investigating an elevated error rate (5xx) on the Payment Gateway service.
+> **Impact:** Approximately 4% of checkout requests are failing.
+> **Current Status:** The on-call SRE team has rolled back the latest container release and traffic is stabilizing.
+> **Next Steps:** A root cause analysis (RCA) meeting will be scheduled tomorrow morning.
+>
+> We will provide another update in 30 minutes.
+>
+> SRE On-call Team`,
+      keyPhrases: [
+        { en: "Just wanted to circle back on this before the deadline.", th: "อยากจะขอวนกลับมาติดตามเรื่องนี้ก่อนถึงกำหนดส่งครับ" },
+        { en: "Due to unforeseen technical constraints, we need to push back the release date.", th: "เนื่องจากข้อจำกัดทางเทคนิคที่คาดไม่ถึง เราจำเป็นต้องเลื่อนวันเปิดตัวออกไปครับ" }
+      ]
+    }
+  ],
+  quiz: [
+    {
+      id: "mc-email-q1",
+      question: "ในการทำงานบน Slack / Teams เหตุผลที่ไม่ควรพิมพ์ทักแค่ 'Hi' หรือ 'Hello' โดด ๆ แล้วเงียบคืออะไร?",
+      options: [
+        "เพราะทำให้ระบบแจ้งเตือนค้าง",
+        "เพราะเป็นการบังคับให้อีกฝ่ายต้องหยุดงานมาตอบรับโดยที่ยังไม่รู้ว่ามีเรื่องอะไร (Context Switching)",
+        "เพราะโปรแกรมจะบล็อกข้อความสั้น",
+        "เพราะคำว่า Hi เป็นคำไม่สุภาพในทุกกรณี"
       ],
-      "answer": 2,
-      "explanation": "ถูกต้อง! \"What was the reasoning behind this design decision?\" เป็นประโยคที่มุ่งเน้นการทำความเข้าใจบริบทการตัดสินใจ (Blameless culture) ฟังดูเป็นมืออาชีพและสร้างสรรค์ที่สุด"
+      answer: 1,
+      explanation: "ถูกต้อง! ปรากฏการณ์ 'No Hello' ชี้ว่าการทักแค่ 'Hi' ทำให้ผู้รับเกิดความกังวลและเสียสมาธิ ทางที่ดีควรทักพร้อมระบุคำถามหรือประเด็นที่ต้องการให้ครบถ้วนในข้อความเดียว"
+    },
+    {
+      id: "mc-email-q2",
+      question: "หากต้องการทวงถามความคืบหน้าของงานจากเพื่อนร่วมงานหรือลูกค้าอย่างสุภาพ ไม่ฟังดูกดดัน ควรใช้วลีใด?",
+      options: [
+        "Why haven't you finished this yet?",
+        "Do your job quickly please.",
+        "Just following up to see if you had a chance to look at this.",
+        "I demand an answer right now."
+      ],
+      answer: 2,
+      explanation: "ถูกต้อง! 'Just following up to see if you had a chance to look at this' เป็นประโยคติดตามงานที่สุภาพ ให้เกียรติ และมีความเป็นมืออาชีพสูง"
+    },
+    {
+      id: "mc-email-q3",
+      question: "คำลงท้ายอีเมล (Sign-off) ข้อใดที่สุภาพและเหมาะสมที่สุดสำหรับติดต่อคู่ค้าหรือลูกค้าภายนอก?",
+      options: [
+        "Bye bye,",
+        "Best regards,",
+        "Later bro,",
+        "Cya,"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! 'Best regards,' เป็นคำลงท้ายมาตรฐานระดับสากลที่มีทั้งความสุภาพและอบอุ่น เหมาะกับทุกระดับความสัมพันธ์ทางธุรกิจ"
+    },
+    {
+      id: "mc-email-q4",
+      question: "ในกรณีที่งานเสร็จไม่ทันกำหนดส่ง วิธีชี้แจงที่ดีที่สุดในอีเมลคือข้อใด?",
+      options: [
+        "เงียบไว้จนกว่าจะเสร็จแล้วค่อยส่ง",
+        "โทษว่าทีมอื่นทำงานช้าทำให้เราส่งงานไม่ได้",
+        "แจ้งล่วงหน้า อธิบายเหตุผลตามจริง เสนอกำหนดส่งใหม่ และสอบถามความเห็น",
+        "ส่งอีเมลไปบ่นเรื่องงานหนัก"
+      ],
+      answer: 2,
+      explanation: "ถูกต้อง! การบริหารความคาดหวัง (Managing Expectations) ด้วยการแจ้งล่วงหน้าอย่างตรงไปตรงมา พร้อมเสนอทางออกหรือกำหนดเวลาใหม่ (Alternative timeline) สะท้อนความเป็นมืออาชีพสูงสุด"
+    },
+    {
+      id: "mc-email-q5",
+      question: "คำว่า 'EOD' ที่มักพบบ่อยในอีเมลธุรกิจ (เช่น 'Please submit by Friday EOD') ย่อมาจากอะไร?",
+      options: [
+        "End of Discussion (จบการเจรจา)",
+        "End of Day (สิ้นสุดวันทำการ โดยทั่วไปคือเวลาประมาณ 17:00 - 18:00 น.)",
+        "Early on Delivery (ส่งก่อนเวลา)",
+        "Error on Database (ข้อผิดพลาดบนฐานข้อมูล)"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! EOD ย่อมาจาก 'End of Day' หมายถึงภายในสิ้นสุดวันทำการของวันนั้น ๆ"
+    }
+  ]
+},
+
+// =========================================================================
+// MASTERCLASS 8: TECH JOB INTERVIEW MASTERY
+// =========================================================================
+{
+  id: "mc-tech-job-interview",
+  title: "Tech Job Interview Mastery: พิชิตการสัมภาษณ์งานภาษาอังกฤษด้วย STAR Framework",
+  titleEn: "Ace Your Tech Job Interview: STAR Framework, System Design Discussions & Answering Tricky Questions",
+  category: "Career & Interview",
+  categoryTh: "สัมภาษณ์งานสายเทค & ความก้าวหน้าอาชีพ",
+  badge: "🎯 Interview Champion",
+  badgeColor: "emerald",
+  readTime: "20 นาที",
+  author: "Global Engineering Hiring Manager & Tech Career Coach",
+  publishedDate: "2026-10-20",
+  coverEmoji: "🚀",
+  summary: "คู่มือฉบับสมบูรณ์สำหรับวิศวกรซอฟต์แวร์, DevOps, Cloud Engineers และบุคลากรสายเทคที่ต้องการสัมภาษณ์งานภาษาอังกฤษกับบริษัทข้ามชาติ: โครงสร้าง Elevator Pitch 90 วินาที, การเล่าความสำเร็จด้วย STAR Framework เน้นตัวเลข Impact, เทคนิคตอบคำถามจุดอ่อน (Weaknesses) และการตั้งคำถามทรงพลังกลับไปยังผู้สัมภาษณ์",
+  tags: ["Job Interview", "STAR Framework", "Tech Career", "Elevator Pitch", "Behavioral Interview"],
+  sections: [
+    {
+      heading: "1. The 90-Second Elevator Pitch: ตอบ 'Tell me about yourself' ให้โดดเด่น",
+      content: `คำถามแรกสุดที่ผู้สัมภาษณ์ถามเกือบ 100% คือ *"Tell me about yourself"* หรือ *"Walk me through your background"*\n\nข้อผิดพลาดที่พบบ่อยคือการเล่าประวัติย่อหน้าต่อหน้าตามเรซูเม่อย่างน่าเบื่อ สูตรสำเร็จของ 90-Second Pitch คือ **Present ➔ Past ➔ Future Impact**:
+
+1. **Present (ปัจจุบันทำอะไรและเชี่ยวชาญด้านใด):**
+   - *"Currently, I'm a Senior DevOps Engineer with over five years of experience specializing in Kubernetes, cloud architecture, and CI/CD automation on Google Cloud and AWS."*
+2. **Past (ผลงานเด่นในอดีตที่จับต้องได้):**
+   - *"In my previous role at XYZ Tech, I led the migration from a monolithic backend to a microservices architecture, which reduced our deployment time from two hours to under eight minutes."*
+3. **Future (ทำไมถึงสนใจตำแหน่งนี้และบริษัทนี้):**
+   - *"I've been following your team's innovative work in real-time fintech infrastructure, and I'm very excited about this role because it perfectly aligns with my passion for high-reliability systems."*`,
+      keyPhrases: [
+        { en: "I specialize in architecting scalable and highly available cloud infrastructure.", th: "ผมมีความเชี่ยวชาญด้านการออกแบบสถาปัตยกรรมคลาวด์ที่รองรับการขยายตัวและมีความพร้อมใช้งานสูงครับ" },
+        { en: "I am eager to leverage my automation skills to support your team's rapid expansion.", th: "ผมกระตือรือร้นที่จะนำทักษะด้าน Automation มาช่วยผลักดันการเติบโตอย่างรวดเร็วของทีมครับ" }
+      ]
+    },
+    {
+      heading: "2. The STAR Framework: เล่าประสบการณ์เชิงพฤติกรรม (Behavioral Questions)",
+      content: `เมื่อเจอคำถามประเภท *"Tell me about a time when a production incident occurred"* หรือ *"Describe a difficult conflict with a colleague"*, ผู้สัมภาษณ์ไม่ได้ต้องการฟังความคิดเห็นลอย ๆ แต่ต้องการเห็น **Evidence of Problem-Solving**:
+
+• **S - Situation (ปูบริบทสั้น ๆ 15%):**
+  - ตั้งฉากให้เห็นปัญหา: *"During a Black Friday flash sale last year, our primary database CPU spiked to 98%, causing API timeouts."*
+• **T - Task (ภารกิจหรือเป้าหมายของคุณ 15%):**
+  - บทบาทหน้าที่ของคุณ: *"As the on-call engineer, my objective was to stabilize the database within 15 minutes to prevent revenue loss."*
+• **A - Action (การกระทำเชิงลึกของคุณ 50% - สำคัญที่สุด!):**
+  - เล่าขั้นตอนที่คุณตัดสินใจ: *"I immediately analyzed the slow-query logs, identified an unindexed query hammering the replica, applied a temporary read-cache via Redis, and throttled non-critical endpoints."*
+• **R - Result (ผลลัพธ์และสิ่งที่ได้เรียนรู้ 20%):**
+  - วัดผลเป็นตัวเลข: *"Latency dropped back to normal within 9 minutes, with zero data loss. Following the post-mortem, I established automated query indexing checks in our CI pipeline to prevent future regressions."*`,
+      keyPhrases: [
+        { en: "This initiative led to a 35% decrease in infrastructure costs.", th: "โครงการนี้ส่งผลให้ค่าใช้จ่ายด้านโครงสร้างพื้นฐานลดลงถึง 35%" },
+        { en: "We conducted a blameless post-mortem to identify systemic improvements.", th: "พวกเราจัดประชุม Post-mortem แบบไม่จับผิดเพื่อค้นหาแนวทางปรับปรุงเชิงระบบ" }
+      ]
+    },
+    {
+      heading: "3. Reverse Interviewing: คำถามเด็ดที่คุณควรถามกลับเพื่อสร้างความประทับใจ",
+      content: `ช่วงท้ายของการสัมภาษณ์เมื่อเขาถามว่า *"Do you have any questions for us?"* การบอกว่า "No, I don't have any" คือสัญญาณอันตรายที่บ่งบอกถึงความไม่กระตือรือร้น! จงใช้โอกาสนี้แสดงวิสัยทัศน์:
+
+• **ถามเกี่ยวกับวัฒนธรรมทางเทคนิค (Engineering Culture):**
+  - *"How does the team balance shipping new features with paying down technical debt?"* (ทีมจัดสมดุลระหว่างการส่งมอบฟีเจอร์ใหม่กับการลดหนี้ทางเทคนิคอย่างไร?)
+  - *"What does your deployment frequency and test automation coverage currently look like?"* (ความถี่ในการดีพลอยและความครอบคลุมของการทดสอบอัตโนมัติของทีมเป็นอย่างไรบ้าง?)
+• **ถามเกี่ยวกับตัวชี้วัดความสำเร็จ:**
+  - *"What would success look like for someone in this role during the first 90 days?"* (ในมุมมองของคุณ ความสำเร็จของคนในตำแหน่งนี้ในช่วง 90 วันแรกวัดจากอะไร?)
+• **ถามเกี่ยวกับความท้าทายของทีม:**
+  - *"What is the biggest technical bottleneck your infrastructure team is tackling right now?"* (คอขวดทางเทคนิคที่ใหญ่ที่สุดที่ทีมโครงสร้างพื้นฐานกำลังแก้อยู่ตอนนี้คืออะไร?)`,
+      keyPhrases: [
+        { en: "What would success look like for this position in the first ninety days?", th: "ความสำเร็จสำหรับตำแหน่งนี้ในช่วงเก้าสิบวันแรกมีหน้าตาเป็นอย่างไรครับ?" },
+        { en: "How does your engineering team handle blameless incident reviews?", th: "ทีมวิศวกรรมของคุณมีแนวทางอย่างไรในการรีวิวเหตุการณ์เซิร์ฟเวอร์ล่มแบบสร้างสรรค์?" }
+      ]
+    }
+  ],
+  quiz: [
+    {
+      id: "mc-interview-q1",
+      question: "ใน STAR Framework ตัวอักษร 'A' (Action) ควรได้รับน้ำหนักเวลาในการเล่ามากที่สุด (ประมาณ 50%) เพราะเหตุใด?",
+      options: [
+        "เพราะผู้สัมภาษณ์อยากฟังชื่อเครื่องมือที่คุณรู้จักทั้งหมด",
+        "เพราะเป็นส่วนที่แสดงถึงกระบวนการคิด การตัดสินใจ และทักษะจริงที่คุณลงมือปฏิบัติเพื่อแก้ปัญหา",
+        "เพราะเป็นส่วนที่พูดง่ายที่สุด",
+        "เพราะต้องใช้เวลาในการจำบทพูด"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! ตัวอักษร Action แสดงให้เห็นถึงกระบวนการคิดและทักษะเฉพาะตัวของคุณว่า เมื่อเจอปัญหา คุณมีวิธีวิเคราะห์และลงมือแก้ไขอย่างไรอย่างเป็นรูปธรรม"
+    },
+    {
+      id: "mc-interview-q2",
+      question: "เมื่อผู้สัมภาษณ์ถามว่า 'What is your greatest weakness?' (จุดอ่อนที่ใหญ่ที่สุดของคุณคืออะไร) แนวทางการตอบที่ฉลาดและเป็นมืออาชีพที่สุดคือข้อใด?",
+      options: [
+        "ตอบว่า 'I have no weaknesses, I'm a perfectionist who works too hard.'",
+        "ตอบจุดอ่อนร้ายแรงที่ขัดกับงาน เช่น 'I hate coding and I am always late for meetings.'",
+        "ระบุทักษะจริงที่เคยเป็นจุดที่ต้องพัฒนา พร้อมอธิบายขั้นตอนและผลลัพธ์ที่คุณกำลังฝึกฝนเพื่อปรับปรุงให้ดีขึ้น",
+        "เปลี่ยนเรื่องคุยทันทีเพื่อหลีกเลี่ยงการตอบ"
+      ],
+      answer: 2,
+      explanation: "ถูกต้อง! การตอบจุดอ่อนอย่างมืออาชีพคือการแสดง Self-awareness (ความตระหนักรู้ในตนเอง) และ Growth Mindset โดยบอกจุดที่กำลังพัฒนาและแผนการปรับปรุงที่ทำอยู่จริง"
+    },
+    {
+      id: "mc-interview-q3",
+      question: "เมื่อผู้สัมภาษณ์ถามว่า 'Do you have any questions for us?' การตอบว่า 'No, I think you covered everything.' ส่งผลอย่างไร?",
+      options: [
+        "ทำให้ผู้สัมภาษณ์ประทับใจเพราะประหยัดเวลา",
+        "แสดงถึงความรอบคอบและความมั่นใจ",
+        "อาจทำให้ผู้สัมภาษณ์รู้สึกว่าคุณขาดความสนใจ ความอยากรู้ และความกระตือรือร้นต่อบริษัท",
+        "ทำให้ได้คะแนนเต็มในส่วนคำถาม"
+      ],
+      answer: 2,
+      explanation: "ถูกต้อง! การไม่ถามคำถามกลับมักถูกมองว่าขาดความสนใจ การถามคำถามที่มีคุณค่า (Reverse Interviewing) ช่วยตอกย้ำความเฉลียวฉลาดและความตั้งใจจริงของคุณ"
+    },
+    {
+      id: "mc-interview-q4",
+      question: "ในการเล่าผลลัพธ์ (Result) ตามสูตร STAR Framework สิ่งใดที่ช่วยสร้างความน่าเชื่อถือและความประทับใจสูงสุด?",
+      options: [
+        "การบอกว่าทุกคนในทีมชมเชย",
+        "ตัวเลขหรือสถิติที่วัดผลได้จริง (Measurable Metrics) เช่น ลดเวลาได้กี่ % หรือลด Downtime ได้เท่าใด",
+        "การพูดคำศัพท์ทางเทคนิคให้ยากที่สุด",
+        "การบอกว่าตนเองทำสำเร็จคนเดียวโดยไม่พึ่งใคร"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! การใช้ตัวเลขที่จับต้องได้ (Measurable Impact) เช่น 'reduced deployment time by 40%' หรือ 'saved $20,000 in monthly cloud costs' จะช่วยเพิ่มความน่าเชื่อถือให้เรื่องเล่าของคุณได้อย่างมหาศาล"
+    },
+    {
+      id: "mc-interview-q5",
+      question: "หากคุณไม่เข้าใจคำถามทางเทคนิคที่ผู้สัมภาษณ์ถาม สิ่งที่ควรทำคืออะไร?",
+      options: [
+        "เดาคำตอบไปมั่ว ๆ เผื่อจะถูก",
+        "ยิ้มแล้วพยักหน้า จากนั้นตอบเรื่องอื่นแทน",
+        "ขอความชัดเจนอย่างสุภาพ เช่น 'Could you please clarify what you mean by that?' หรือสรุปทวนสิ่งที่เข้าใจก่อนตอบ",
+        "บอกผู้สัมภาษณ์ว่าคำถามไม่ดีและไม่ตรงสาย"
+      ],
+      answer: 2,
+      explanation: "ถูกต้อง! ในการทำงานจริง การขอความชัดเจน (Clarification) ก่อนเริ่มลงมือทำถือเป็นคุณสมบัติของวิศวกรที่ดีเยี่ยม ผู้สัมภาษณ์ยินดีที่จะอธิบายบริบทเพิ่มเติมให้คุณเสมอ"
     }
   ]
 }
@@ -1103,3 +1406,4 @@ if (typeof window !== "undefined") {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = masterclassData;
 }
+
