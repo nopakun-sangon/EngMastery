@@ -1169,7 +1169,9 @@ class EngMasteryApp {
       activeTopic = syllabus.find(t => t.id === "questions") || syllabus[0];
       this.activeGrammarTopicId = activeTopic.id;
     }
-    this.grammarAccordionOpen[activeTopic.id] = true;
+    if (this.grammarAccordionOpen[activeTopic.id] === undefined) {
+      this.grammarAccordionOpen[activeTopic.id] = true;
+    }
 
     // Resolve active unit
     let activeUnitItem = allUnits.find(item => item.unitId === this.activeGrammarUnitId);
