@@ -710,7 +710,186 @@ const masterclassData = [
         explanation: "ถูกต้อง! โครงสร้าง 'Each of + นามพหูพจน์' ตัวประธานแท้จริงคือคำว่า 'Each' ซึ่งมีความหมายเป็นเอกพจน์ (แต่ละโหนดเดี่ยว ๆ) ดังนั้นกริยาจึงต้องผันเป็นเอกพจน์คือ 'has'"
       }
     ]
-  }
+  },
+  // =========================================================================
+  // MASTERCLASS 4: WH QUESTIONS MASTERY (DAILY LIFE TO DEVOPS & TECH)
+  // =========================================================================
+  {
+  "id": "mc-wh-questions-mastery",
+  "title": "WH Questions Mastery: จากชีวิตประจำวันสู่แวดวง DevOps และที่ทำงาน",
+  "titleEn": "WH Questions Mastery: From Everyday Conversations to High-Stakes Workplace & DevOps Communications",
+  "category": "Communication & Workplace",
+  "categoryTh": "ไวยากรณ์ & การสื่อสารสายงาน Tech",
+  "badge": "💡 High-Frequency Question Framework",
+  "badgeColor": "emerald",
+  "readTime": "15 นาที",
+  "author": "Senior English Curriculum Designer & Practical English Coach",
+  "publishedDate": "2026-10-19",
+  "coverEmoji": "❓",
+  "summary": "เจาะลึกการใช้คำถามปลายเปิดตระกูล WH Questions (Who, What, Where, When, Why, Which, How) และตระกูล How... อย่างแม่นยำ เปรียบเทียบสองมิติชัดเจนระหว่างบทสนทนาชีวิตประจำวันกับบริบทการทำงานจริงในแวดวง DevOps & Tech พร้อมเคล็ดลับขั้นสูงเรื่อง Indirect Questions และแบบฝึกหัดท้าทาย 10 ข้อ",
+  "tags": [
+    "WH Questions",
+    "DevOps English",
+    "Workplace Communication",
+    "Indirect Questions",
+    "Stand-up Meetings",
+    "Troubleshooting"
+  ],
+  "sections": [
+    {
+      "heading": "1. บทนำและหัวใจสำคัญของ WH Questions (The Core Philosophy & Universal Formulas)",
+      "content": "ในภาษาอังกฤษ คำถามแบ่งออกเป็น 2 ประเภทใหญ่:\n1. **Closed Questions (Yes/No Questions):** คำถามปลายปิดที่ตอบได้เพียง ใช่ หรือ ไม่ใช่\n2. **Open-Ended Questions (WH Questions):** คำถามปลายเปิดที่ใช้เพื่อขอ **ข้อมูลเชิงลึก (Specific Information)** เช่น ข้อเท็จจริง, สาเหตุ, บุคคล, สถานที่, หรือขั้นตอนการแก้ปัญหา ซึ่งเป็นหัวใจสำคัญสูงสุดในการทำงานและการสนทนาในชีวิตจริง\n\n---\n\n### 📐 โครงสร้างไวยากรณ์สากล 2 รูปแบบ (The 2 Universal Formulas)\n\n#### 🔹 รูปแบบที่ 1: Standard Formula (ถามหากรรม หรือส่วนขยายของประโยค)\nใช้เมื่อเราทราบประธาน หรือมีประธานในประโยคคำถามอยู่แล้ว (ต้องใช้กริยาช่วย do / does / did / is / am / are / has / have / will / can / should):\n\n42396\\mathbf{WH\text{-}Word} + \\mathbf{Auxiliary\\ Verb} + \\mathbf{Subject} + \\mathbf{Main\\ Verb\\ (V.inf)} + \\dots ?42396\n\n• ตัวอย่าง Daily Life: *\"Where **do** you **live**?\"* (คุณอาศัยอยู่ที่ไหน?)\n• ตัวอย่าง DevOps: *\"Why **did** the pipeline **fail**?\"* (ทำไมไปป์ไลน์ถึงล้มเหลว?)\n\n#### 🔹 รูปแบบที่ 2: Subject Question Formula (ถามหาตัว 'ประธาน' ผู้กระทำ)\nใช้เมื่อคำว่า **Who** หรือ **What** ทำหน้าที่เป็นตัวประธานของประโยคเสียเอง **กฎเหล็ก: ห้ามใส่ do / does / did มาช่วยเด็ดขาด!** ให้ผันกริยาแท้ตาม Tense นั้น ๆ ทันที:\n\n42396\\mathbf{WH\text{-}Word\\ (Subject)} + \\mathbf{Main\\ Verb\\ (ผันตาม\\ Tense)} + \\mathbf{Object\\ /\\ Complement} ?42396\n\n• *\"Who **approved** this pull request?\"* (ใครเป็นคนอนุมัติ PR นี้? — Who เป็นประธานกระทำกริยา approve)\n• *\"What **caused** the memory leak?\"* (อะไรเป็นสาเหตุที่ทำให้เกิดเมมโมรีรั่ว?)\n\n⚠️ **เปรียบเทียบข้อแตกต่างที่หลายคนสับสน:**\n• *\"Who called you?\"* (ใครโทรหาคุณ? ➔ Who เป็นประธาน ถามหาคนโทร)\n• *\"Who did you call?\"* (คุณโทรหาใคร? ➔ You เป็นประธาน ถามหากรรม)",
+      "keyPhrases": [
+        {
+          "en": "WH-questions demand actionable information, not just a simple yes or no.",
+          "th": "คำถาม WH ต้องการข้อมูลที่นำไปปฏิบัติได้จริง ไม่ใช่เพียงแค่ตอบรับหรือปฏิเสธ"
+        },
+        {
+          "en": "Never use auxiliary do/does/did when the WH-word is the subject.",
+          "th": "ห้ามใช้กริยาช่วย do/does/did เมื่อคำ WH ทำหน้าที่เป็นประธานของประโยค"
+        }
+      ]
+    },
+    {
+      "heading": "2. เจาะลึก Who, What, Where, When (ตารางเปรียบเทียบ Daily Life VS DevOps)",
+      "content": "มาเจาะลึก 4 คำถามแรกที่เป็นแกนหลักของการรวบรวมข้อมูล:\n\n### 👤 1. WHO (ถามหาบุคคล, ทีม, หรือผู้รับผิดชอบ)\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"Who is coming to dinner tonight?\"* (คืนนี้ใครจะมากินข้าวเย็นด้วย?)\n  - *\"Who did you go to the cinema with?\"* (คุณไปดูหนังกับใครมา?)\n  - *\"Who left the front door unlocked?\"* (ใครเปิดประตูหน้าบ้านทิ้งไว้ไม่ได้ล็อก?)\n  - *\"Who is your favorite musical artist?\"* (ใครคือศิลปินเพลงคนโปรดของคุณ?)\n  - *\"Who recommended this coffee shop to you?\"* (ใครแนะนำร้านกาแฟนี้ให้คุณ?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"Who is currently on-call for production incidents?\"* (ตอนนี้ใครเป็นคนเข้าเวร On-call สำหรับเหตุการณ์ระบบโปรดักชัน?)\n  - *\"Who approved this hotfix to be merged into main?\"* (ใครเป็นผู้อนุมัติให้ผสานตัวแก้บักด่วนนี้เข้าสู่กิ่ง main?)\n  - *\"Who has administrative access to the AWS IAM console?\"* (ใครมีสิทธิ์ระดับแอดมินในการเข้าถึงคอนโซล AWS IAM?)\n  - *\"Who is the primary contact person for this third-party payment gateway outage?\"* (ใครคือผู้ประสานงานหลักสำหรับเหตุการณ์เกตเวย์การชำระเงินของพาร์ตเนอร์ล่ม?)\n  - *\"Who will lead the post-mortem retro on Friday?\"* (ใครจะเป็นผู้นำการประชุมวิเคราะห์สาเหตุหลังเหตุการณ์ระบบล่ม (Post-mortem) ในวันศุกร์?)\n\n---\n\n### 📦 2. WHAT (ถามหาสิ่งของ, การกระทำ, ปัญหา, หรือสถานะ)\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"What are your plans for the upcoming weekend?\"* (สุดสัปดาห์ที่จะถึงนี้คุณมีแผนจะทำอะไรบ้าง?)\n  - *\"What happened to your smartphone screen?\"* (หน้าจอโทรศัพท์ของคุณไปโดนอะไรมา?)\n  - *\"What kind of food do you usually cook at home?\"* (ปกติคุณชอบทำอาหารประเภทไหนทานที่บ้าน?)\n  - *\"What time do you usually wake up on weekdays?\"* (ปกติวันธรรมดาคุณตื่นนอนกี่โมง?)\n  - *\"What is the best way to get to the airport from here?\"* (วิธีที่ดีที่สุดในการเดินทางไปสนามบินจากที่นี่คือทางไหน?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"What is the root cause of this sudden 504 Gateway Timeout spike?\"* (สาเหตุที่แท้จริง (Root Cause) ของการที่เออร์เรอร์ 504 พุ่งสูงขึ้นอย่างกะทันหันคืออะไร?)\n  - *\"What version of Kubernetes are we running across our staging clusters?\"* (คลัสเตอร์ Staging ของเรากำลังรัน Kubernetes เวอร์ชันไหนอยู่?)\n  - *\"What is our rollback plan if the database migration fails midway?\"* (แผนการย้อนกลับ (Rollback) ของเราคืออะไร หากการไมเกรตฐานข้อมูลล้มเหลวกลางคัน?)\n  - *\"What key blockers are preventing us from closing this sprint goal?\"* (มีอุปสรรคสำคัญ (Blockers) อะไรบ้างที่ทำให้เราปิดเป้าหมายของสปรินต์นี้ไม่ได้?)\n  - *\"What does the error trace in Datadog indicate?\"* (Stack trace ของข้อผิดพลาดใน Datadog บ่งชี้ถึงปัญหาตรงจุดไหน?)\n  - *\"What is our target Mean Time to Recovery (MTTR) for Tier-1 services?\"* (เป้าหมายระยะเวลาเฉลี่ยในการกู้คืนระบบ (MTTR) สำหรับบริการระดับ Tier-1 คือเท่าใด?)\n\n---\n\n### 📍 3. WHERE (ถามหาสถานที่, ที่ตั้งไฟล์, Path, หรือ Environment)\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"Where did you buy those comfortable running shoes?\"* (คุณซื้อรองเท้าวิ่งที่ใส่สบายคู่นั้นมาจากที่ไหน?)\n  - *\"Where can I find an ATM around this corner?\"* (แถวหัวมุมนี้มีตู้ ATM อยู่ตรงไหนบ้าง?)\n  - *\"Where are we meeting for lunch tomorrow?\"* (พรุ่งนี้พวกเราจะนัดเจอกันกินข้าวเที่ยงที่ไหน?)\n  - *\"Where did I leave my car keys?\"* (ฉันวางกุญแจรถทิ้งไว้ที่ไหนนะ?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"Where are the persistent logs stored for this Docker container?\"* (ไฟล์ Log ถาวรของคอนเทนเนอร์ตัวนี้ถูกเก็บไว้ที่พาทไหน?)\n  - *\"Where is the secret encryption key mounted in the Kubernetes pod?\"* (คีย์ลับสำหรับถอดรหัสถูกเมานต์ไว้ที่ไดเรกทอรีใดใน Pod?)\n  - *\"Where can I find the Terraform configuration files for the production VPC?\"* (ฉันจะหาไฟล์คอนฟิก Terraform ของโปรดักชัน VPC ได้จากโฟลเดอร์ไหน?)\n  - *\"Where did the memory leak occur in the recent heap dump analysis?\"* (จากการวิเคราะห์ Heap dump ล่าสุด พบว่าการรั่วไหลของหน่วยความจำเกิดขึ้นที่ส่วนใดของโค้ด?)\n  - *\"Where should we redirect incoming traffic during the scheduled maintenance?\"* (ระหว่างการปิดปรับปรุงระบบตามกำหนดการ เราควรเปลี่ยนเส้นทางทราฟฟิกไปที่ใด?)\n\n---\n\n### ⏱️ 4. WHEN (ถามหาเวลา, กำหนดการ, หรือจุดกระตุ้น Event)\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"When does the next express train arrive?\"* (รถไฟด่วนขบวนถัดไปจะมาถึงเมื่อไหร่?)\n  - *\"When was the last time you visited your hometown?\"* (ครั้งล่าสุดที่คุณกลับไปเยี่ยมบ้านเกิดคือเมื่อไหร่?)\n  - *\"When will the package be delivered to my apartment?\"* (พัสดุจะถูกนำมาส่งที่อพาร์ตเมนต์ของฉันช่วงเวลาไหน?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"When is the scheduled maintenance window for the core database?\"* (ช่วงเวลาปิดปรับปรุงระบบ (Maintenance Window) ของฐานข้อมูลหลักกำหนดไว้เมื่อไหร่?)\n  - *\"When does our wildcard SSL certificate expire?\"* (ใบรับรองความปลอดภัย Wildcard SSL ของเราจะหมดอายุลงเมื่อใด?)\n  - *\"When will the automated end-to-end regression tests complete?\"* (การทดสอบระบบอัตโนมัติแบบครอบคลุมทั้งระบบ (E2E Regression) จะเสร็จสิ้นเมื่อไหร่?)\n  - *\"When was this breaking commit merged into the release candidate branch?\"* (คอมมิตที่ทำให้โค้ดพังตัวนี้ถูกผสานเข้าสู่กิ่ง Release Candidate ตั้งแต่เมื่อไหร่?)\n  - *\"When should we trigger the canary deployment to 10% of users?\"* (เราควรเริ่มปล่อยเวอร์ชันทดสอบแบบ Canary ไปยังผู้ใช้ 10% แรกเมื่อไหร่?)"
+    },
+    {
+      "heading": "3. เจาะลึก Why, Which, How (การวิเคราะห์สาเหตุ, ตัวเลือก และวิธีการ)",
+      "content": "### 🧠 5. WHY (ถามหาเหตุผล, Root Cause, และการตัดสินใจเชิงเทคนิค)\nในแนวคิด DevOps และ SRE คำว่า **Why** ถูกนำมาใช้ในกระบวนการ **\"The 5 Whys Methodology\"** เพื่อสืบหาสาเหตุที่แท้จริง ไม่ใช่แค่แก้ปัญหาที่ปลายเหตุ:\n\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"Why did they cancel the outdoor concert?\"* (ทำไมพวกเขาถึงยกเลิกคอนเสิร์ตกลางแจ้งล่ะ?)\n  - *\"Why are you looking so stressed today?\"* (ทำไมวันนี้คุณดูเคร่งเครียดจัง?)\n  - *\"Why don't we try that new Japanese ramen place?\"* (ทำไมเราไม่ลองไปกินร้านราเมนญี่ปุ่นเปิดใหม่ร้านนั้นดูล่ะ?)\n  - *\"Why did the flight get delayed by three hours?\"* (ทำไมเที่ยวบินถึงล่าช้าไปตั้ง 3 ชั่วโมง?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"Why did the autoscaling group fail to provision additional EC2 instances?\"* (ทำไมระบบ Autoscaling ถึงไม่สามารถเปิดเครื่อง EC2 เพิ่มขึ้นตามที่ตั้งไว้?)\n  - *\"Why are we observing a sudden surge in 5xx server errors on the payment endpoint?\"* (ทำไมเราถึงพบการพุ่งขึ้นอย่างกะทันหันของเออร์เรอร์ 5xx บนเอนด์พอยต์ชำระเงิน?)\n  - *\"Why did we choose Apache Kafka over RabbitMQ for this streaming pipeline?\"* (ทำไมทีมเราถึงตัดสินใจเลือกใช้ Apache Kafka แทน RabbitMQ สำหรับไปป์ไลน์ข้อมูลแบบสตรีมมิ่ง?)\n  - *\"Why was this pull request merged without passing the mandatory linting checks?\"* (ทำไม Pull Request นี้ถึงถูกเมิร์จโดยที่ยังไม่ผ่านการตรวจโค้ดตามมาตรฐาน Linting?)\n  - *\"Why is the cache hit ratio dropping below our defined SLA threshold?\"* (ทำไมอัตราความคุ้มค่าของการดึงแคช (Cache Hit Ratio) ถึงร่วงลงต่ำกว่าเกณฑ์ SLA ที่ตกลงไว้?)\n\n---\n\n### 🔀 6. WHICH (ถามหาตัวเลือกที่มีอยู่อย่างจำกัด หรือการเปรียบเทียบ)\nข้อแตกต่างระหว่าง **Which** กับ **What**:\n- ใช้ **Which** เมื่อมีตัวเลือกชัดเจนในใจ (เช่น จาก 2 หรือ 3 สิ่งตรงหน้า)\n- ใช้ **What** เมื่อเป็นการถามปลายเปิดกว้างไม่จำกัดตัวเลือก\n\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"Which shirt looks better on me, the navy or the white one?\"* (เสื้อตัวไหนดูดีกว่าสำหรับฉัน ตัวสีกรมท่าหรือสีขาว?)\n  - *\"Which platform does the train to Oxford depart from?\"* (รถไฟไปออกซฟอร์ดออกจากชานชาลาไหน?)\n  - *\"Which dish would you recommend for someone who loves spicy food?\"* (คุณจะแนะนำอาหารจานไหนสำหรับคนที่ชอบทานรสจัด?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"Which deployment strategy should we adopt: blue-green or rolling update?\"* (เราควรเลือกใช้กลยุทธ์การดีพลอยแบบไหน: Blue-Green หรือ Rolling Update?)\n  - *\"Which cloud provider offers lower network latency for users in Southeast Asia?\"* (ผู้ให้บริการคลาวด์เจ้าไหนให้ค่าความหน่วงของเครือข่าย (Latency) ที่ต่ำกว่าสำหรับผู้ใช้ในเอเชียตะวันออกเฉียงใต้?)\n  - *\"Which microservice is responsible for publishing events to the order topic?\"* (ไมโครเซอร์วิสตัวไหนมีหน้าที่ยิง Event ไปยัง Topic คำสั่งซื้อ?)\n  - *\"Which branch should I rebase my feature branch against before opening the PR?\"* (ฉันควรทำ Rebase กิ่งฟีเจอร์ของฉันเทียบกับกิ่งใดก่อนเปิด PR?)\n  - *\"Which database node is currently designated as the primary read-write replica?\"* (โหนดฐานข้อมูลตัวไหนถูกกำหนดให้เป็นเครื่องหลักสำหรับอ่าน-เขียนในปัจจุบัน?)\n\n---\n\n### ⚙️ 7. HOW (ถามถึงวิธีการ, สภาพ, หรือขั้นตอนการทำงาน)\n• **หมวด A: ชีวิตประจำวัน (Daily Life):**\n  - *\"How was your flight back from Tokyo?\"* (เที่ยวบินขากลับจากโตเกียวของคุณราบรื่นดีไหม?)\n  - *\"How do you make this pasta sauce taste so creamy?\"* (คุณทำซอสพาสต้านี้ยังไงถึงรสชาติเข้มข้นกลมกล่อมขนาดนี้?)\n  - *\"How did you resolve the conflict with your roommate?\"* (คุณแก้ปัญหาความขัดแย้งกับรูมเมตของคุณอย่างไร?)\n  - *\"How can I reset my password on this application?\"* (ฉันสามารถรีเซ็ตรหัสผ่านในแอปนี้ได้อย่างไร?)\n\n• **หมวด B: สายงาน DevOps & ที่ทำงาน (Workplace & DevOps):**\n  - *\"How do we reproduce this race condition bug in our local development environment?\"* (เราจะจำลองปัญหา Race Condition นี้ในเครื่อง Development ส่วนตัวได้อย่างไร?)\n  - *\"How does the API gateway route authenticated requests to downstream services?\"* (API Gateway กระจายคำขอที่ยืนยันตัวตนแล้วไปยังบริการปลายทางอย่างไร?)\n  - *\"How can we optimize our Elasticsearch indexing pipeline to reduce disk I/O?\"* (เราจะปรับปรุงไปป์ไลน์ Indexing ของ Elasticsearch อย่างไรเพื่อลดภาระการอ่านเขียนดิสก์?)\n  - *\"How do we orchestrate a zero-downtime database schema migration?\"* (เราจะจัดการการเปลี่ยนโครงสร้างฐานข้อมูลโดยที่ระบบไม่หยุดทำงาน (Zero-Downtime) ได้อย่างไร?)\n  - *\"How can we automate the teardown of ephemeral test environments via CI scripts?\"* (เราจะเขียนสคริปต์ CI สั่งทำลายสภาพแวดล้อมทดสอบชั่วคราวแบบอัตโนมัติได้อย่างไร?)"
+    },
+    {
+      "heading": "4. เจาะลึกกลุ่มคำถามเจาะจง (The \"How + Adjective/Adverb\" Family)",
+      "content": "ในการทำงานด้าน IT และ DevOps ตัวเลข สถิติ และระยะเวลา คือข้อมูลชี้วัดสำคัญ กลุ่มคำถาม **How + ส่วนขยาย** จึงถูกใช้งานบ่อยที่สุดในการวัดผล Metrics:\n\n### 🔢 1. How Many (ถามหา \"จำนวนนับได้\" — Countable Nouns)\n• **Daily Life:**\n  - *\"How many cups of espresso do you drink in a typical workday?\"* (วันทำงานปกติคุณดื่มเอสเพรสโซกี่แก้ว?)\n  - *\"How many people are attending the team building workshop?\"* (มีกี่คนที่จะเข้าร่วมเวิร์กช็อปสร้างทีมสัมพันธ์?)\n• **DevOps & Workplace:**\n  - *\"How many active replicas are currently running in the payment namespace?\"* (มี Pod ที่ทำงานอยู่กี่ตัวใน Namespace การชำระเงิน?)\n  - *\"How many concurrent HTTP connections can this load balancer sustain simultaneously?\"* (โหลดบาลานเซอร์ตัวนี้สามารถรองรับการเชื่อมต่อพร้อมกันได้กี่การเชื่อมต่อ?)\n  - *\"How many failed login attempts occurred before the IP was blocked?\"* (มีการพยายามล็อกอินผิดพลาดกี่ครั้งก่อนที่ IP นั้นจะถูกบล็อก?)\n\n---\n\n### 💰 2. How Much (ถามหา \"ปริมาณนับไม่ได้\" หรือ \"ราคา/งบประมาณ\" — Uncountable Nouns & Cost)\n• **Daily Life:**\n  - *\"How much time do you spend commuting to the office every morning?\"* (คุณใช้เวลาเดินทางไปออฟฟิศตอนเช้ามากน้อยแค่ไหน?)\n  - *\"How much did you pay for this mechanical keyboard?\"* (คีย์บอร์ดกลไกตัวนี้ราคาเท่าไหร่?)\n• **DevOps & Workplace:**\n  - *\"How much disk capacity is remaining on the primary database storage volume?\"* (เหลือพื้นที่ความจุดิสก์อยู่เท่าไหร่บนโวลุมจัดเก็บข้อมูลของฐานข้อมูลหลัก?)\n  - *\"How much network bandwidth are our backup snapshots consuming during peak hours?\"* (การทำสแนปช็อตสำรองข้อมูลกินแบนด์วิธเครือข่ายไปเท่าไหร่ในช่วงชั่วโมงเร่งด่วน?)\n  - *\"How much will migrating this Kubernetes cluster to managed EKS cost per month?\"* (การย้ายคลัสเตอร์ Kubernetes ไปใช้บริการ EKS แบบ Managed จะมีค่าใช้จ่ายประมาณเท่าไหร่ต่อเดือน?)\n\n---\n\n### ⏳ 3. How Long (ถามหา \"ระยะเวลา\" — Duration & Timeframes)\n• **Daily Life:**\n  - *\"How long have you been working as a software developer?\"* (คุณทำงานเป็นนักพัฒนาซอฟต์แวร์มานานแค่ไหนแล้ว?)\n  - *\"How long does it take to walk from the train station to your office?\"* (เดินจากสถานีรถไฟไปถึงออฟฟิศของคุณใช้เวลานานเท่าไหร่?)\n• **DevOps & Workplace:**\n  - *\"How long did the automated failover take during the simulated drill?\"* (การสลับระบบสำรองอัตโนมัติ (Failover) ใช้เวลานานแค่ไหนระหว่างการซ้อมแผนฉุกเฉิน?)\n  - *\"How long has this background worker job been stuck in the processing queue?\"* (งาน Background Worker ตัวนี้ค้างอยู่ในคิวประมวลผลมานานเท่าไหร่แล้ว?)\n  - *\"How long will the blue-green traffic switchover take to reach 100%?\"* (การสลับทราฟฟิกแบบ Blue-Green จะใช้เวลานานเท่าใดในการปรับขึ้นเต็ม 100%?)\n\n---\n\n### 🔄 4. How Often (ถามหา \"ความถี่\" — Frequency & Cadence)\n• **Daily Life:**\n  - *\"How often do you go to the gym during the week?\"* (คุณไปออกกำลังกายที่ยิมบ่อยแค่ไหนในแต่ละสัปดาห์?)\n  - *\"How often do you back up your personal laptop data?\"* (คุณสำรองข้อมูลในแล็ปท็อปส่วนตัวบ่อยแค่ไหน?)\n• **DevOps & Workplace:**\n  - *\"How often do we run automated vulnerability scans on our base container images?\"* (เราสแกนหาช่องโหว่ด้านความปลอดภัยบนอิมเมจพื้นฐานของคอนเทนเนอร์บ่อยแค่ไหน?)\n  - *\"How often does Prometheus scrape metrics from this target endpoint?\"* (Prometheus ดึงข้อมูลสถิติตัวชี้วัดจากเอนด์พอยต์นี้ทุก ๆ กี่วินาที/นาที?)\n  - *\"How often do we review and rotate our production API secrets?\"* (เรามีรอบในการตรวจสอบและผลัดเปลี่ยน (Rotate) รหัสลับ API ของโปรดักชันบ่อยแค่ไหน?)"
+    },
+    {
+      "heading": "5. เทคนิคขั้นสูงและจุดที่มักผิดบ่อย (Pro Tips & The Indirect Questions Trap)",
+      "content": "ในการทำงานระดับสากล โดยเฉพาะการสื่อสารกับผู้บริหาร, ลูกค้า, หรือทีมต่างชาติ การถามคำถามตรงๆ เกินไป (Direct Questions) บางครั้งอาจฟังดูห้วนหรือเป็นการจับผิด (Aggressive) ทักษะขั้นสูงที่ต้องใช้คือ **Indirect Questions (การถามแบบอ้อมและสุภาพ)**\n\n---\n\n### ⚠️ กฎเหล็กของ Indirect Questions (The Golden Rule)\nเมื่อคุณนำประโยคเกริ่นสุภาพ เช่น:\n- *\"Could you tell me...\"* (คุณพอจะบอกฉันได้ไหมว่า...)\n- *\"Do you know...\"* (คุณพอจะทราบไหมว่า...)\n- *\"Would you mind explaining...\"* (คุณจะรังเกียจไหมหากช่วยอธิบายว่า...)\n- *\"I was wondering...\"* (ฉันอยากทราบว่า...)\n- *\"Do you have any idea...\"* (คุณพอจะมีข้อมูลไหมว่า...)\n\n**กฎไวยากรณ์:** ประโยคด้านหลังจะถูกเปลี่ยนกลับเป็น **\"โครงสร้างประโยคบอกเล่า\" (Subject + Verb)** เสมอ! ห้ามสลับกริยาช่วย (is/are/did) มาไว้หน้าประธานอีกต่อไป:\n\n| Direct Question (ตรงๆ ห้วนๆ) | Indirect Question (สุภาพ มืออาชีพ) | จุดที่ห้ามผิดเด็ดขาด |\n| :--- | :--- | :--- |\n| **Where is** the API gateway? | Could you tell me where the API gateway **is**? | ❌ ห้ามใช้ *where is the API gateway* |\n| **When will** the deployment finish? | Do you know when the deployment **will finish**? | ❌ ห้ามใช้ *when will the deployment...* |\n| **Why did** the build fail? | Can you explain why the build **failed**? | ❌ ตัด *did* ทิ้ง แล้วผันกริยากลับเป็น *V.2 (failed)* |\n| **How does** this cache eviction work? | I was wondering how this cache eviction **works**. | ❌ ตัด *does* ทิ้ง แล้วผันกริยาเติม *-s (works)* |\n| **Who is** responsible for this service? | Do you happen to know who **is** responsible for this service? | กริยาย้ายไปอยู่หลังประธานเสมอ |\n\n---\n\n### 💡 สรุป Checklist ก่อนกดส่งข้อความคำถามใน Slack / Teams\n1. ถ้าต้องการความช่วยเหลือจากทีมอื่น ให้เปิดด้วย *\"Could you please let me know where/when/how...\"*\n2. ถ้าตั้งคำถามด้วย Who ในฐานะผู้ลงมือทำ อย่าเผลอใส่ *Who did make this change?* ให้ใช้ *Who made this change?*\n3. ใช้ **Why** อย่างระมัดระวัง เพราะการถาม *\"Why did you do that?\"* อาจฟังดูเป็นการตำหนิ ให้เปลี่ยนเป็น *\"What was the reasoning behind this design decision?\"* (อะไรคือเหตุผลเบื้องหลังการตัดสินใจออกแบบนี้?) ซึ่งจะฟังดูเป็นมืออาชีพและสร้างสรรค์กว่ามาก!"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "mc-wh-1",
+      "question": "คุณต้องการถามในที่ประชุมว่า \"ใครเป็นคนอนุมัติ Pull Request นี้เมื่อเช้า?\" ประโยคภาษาอังกฤษข้อใดถูกต้องตามหลัก Subject Question?",
+      "options": [
+        "Who did approve this pull request this morning?",
+        "Who approved this pull request this morning?",
+        "Who was approved this pull request this morning?",
+        "Whom did approve this pull request this morning?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! เมื่อ \"Who\" ทำหน้าที่เป็นประธานผู้กระทำกริยาอนุมัติโดยตรง (Subject Question) ห้ามใช้กริยาช่วย did ให้ผันกริยาแท้เป็นอดีต (V.2) ได้ทันที คือ \"Who approved...\""
+    },
+    {
+      "id": "mc-wh-2",
+      "question": "ประโยคใดถามหา \"สาเหตุที่แท้จริงของการที่เซิร์ฟเวอร์ล่ม\" ได้ถูกต้องตามหลักไวยากรณ์?",
+      "options": [
+        "What did cause the server crash?",
+        "What caused the server crash?",
+        "What does caused the server crash?",
+        "What was cause the server crash?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! \"What\" ในที่นี้ทำหน้าที่เป็นประธาน (อะไรเป็นสาเหตุ) จึงตามด้วยกริยา V.2 คือ \"caused\" โดยไม่ต้องใส่กริยาช่วย did"
+    },
+    {
+      "id": "mc-wh-3",
+      "question": "ต้องการถามหาที่เก็บไฟล์คอนฟิกอย่างสุภาพด้วย Indirect Question: \"Could you please tell me where _____?\"",
+      "options": [
+        "are the Kubernetes config files stored",
+        "the Kubernetes config files are stored",
+        "do the Kubernetes config files store",
+        "is stored the Kubernetes config files"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! ใน Indirect Questions ลำดับคำจะต้องเรียงแบบประโยคบอกเล่า คือ ประธาน (the Kubernetes config files) มาก่อนกริยา (are stored)"
+    },
+    {
+      "id": "mc-wh-4",
+      "question": "ข้อใดใช้คำถาม \"เมื่อไหร่\" ในบริบทการหมดอายุของใบรับรองความปลอดภัย SSL ได้ถูกต้อง?",
+      "options": [
+        "When is our SSL certificate expire?",
+        "When does our SSL certificate expire?",
+        "When our SSL certificate does expire?",
+        "When expires our SSL certificate?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! โครงสร้าง Standard WH Question ใน Present Simple คือ WH-Word (When) + does + Subject (our SSL certificate) + V.inf (expire)?"
+    },
+    {
+      "id": "mc-wh-5",
+      "question": "ต้องการถามเพื่อนร่วมงานว่า \"ทำไมอัตราความผิดพลาดของระบบถึงพุ่งสูงขึ้น?\" ข้อใดถูกต้อง?",
+      "options": [
+        "Why did the system error rate spike so suddenly?",
+        "Why the system error rate spiked so suddenly?",
+        "Why was the system error rate spike so suddenly?",
+        "Why does the system error rate spiked so suddenly?"
+      ],
+      "answer": 0,
+      "explanation": "ถูกต้อง! ใช้ Past Simple: Why + did + Subject (the system error rate) + V.inf (spike) ... ?"
+    },
+    {
+      "id": "mc-wh-6",
+      "question": "เมื่อมี 2 แนวทางสถาปัตยกรรมที่ชัดเจนตรงหน้า และต้องการถามว่า \"ตัวไหนช่วยประหยัดต้นทุนคลาวด์ได้ดีกว่ากัน\" ควรใช้คำถามใด?",
+      "options": [
+        "What architecture saves more cloud costs?",
+        "Which architecture saves more cloud costs?",
+        "Where architecture saves more cloud costs?",
+        "How architecture saves more cloud costs?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! เมื่อมีตัวเลือกที่จำกัดและเฉพาะเจาะจงให้เปรียบเทียบ ต้องใช้ \"Which\" แทน \"What\""
+    },
+    {
+      "id": "mc-wh-7",
+      "question": "\"How can we simulate high-traffic load in our staging environment?\" มีความหมายตรงกับข้อใด?",
+      "options": [
+        "ทำไมเราถึงต้องจำลองทราฟฟิกสูงในสเตจจิ้ง?",
+        "เราจะจำลองโหลดทราฟฟิกสูงในสภาพแวดล้อมสเตจจิ้งได้อย่างไร?",
+        "เมื่อไหร่ที่เราควรจำลองทราฟฟิกสูงในสเตจจิ้ง?",
+        "ใครเป็นคนจำลองทราฟฟิกสูงในสเตจจิ้ง?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! \"How can we...\" หมายถึง \"พวกเราจะสามารถทำ...ได้อย่างไร\" ซึ่งถามถึงวิธีปฏิบัติหรือขั้นตอนทางเทคนิค"
+    },
+    {
+      "id": "mc-wh-8",
+      "question": "ต้องการถามจำนวนเครื่องเซิร์ฟเวอร์ที่ได้รับผลกระทบจากเหตุการณ์ระบบล่ม (เซิร์ฟเวอร์นับได้) ต้องขึ้นต้นด้วยคำใด?",
+      "options": [
+        "How much servers were affected by the outage?",
+        "How many servers were affected by the outage?",
+        "How long servers were affected by the outage?",
+        "How often servers were affected by the outage?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! \"servers\" เป็นคำนามนับได้พหูพจน์ ต้องใช้ \"How many\" (ส่วน How much ใช้กับคำนามนับไม่ได้ เช่น disk space หรือ money)"
+    },
+    {
+      "id": "mc-wh-9",
+      "question": "ต้องการถามว่า \"ฐานข้อมูลใช้เวลากู้คืนนานแค่ไหน?\" ข้อใดถูกต้อง?",
+      "options": [
+        "How often did the database recovery take?",
+        "How long did the database recovery take?",
+        "How many did the database recovery take?",
+        "How much time was the database recovery take?"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! ถามถึงระยะเวลา (Duration) ใช้ \"How long did ... take?\""
+    },
+    {
+      "id": "mc-wh-10",
+      "question": "แปลงประโยค Direct Question: \"Why did the microservice crash?\" เป็นประโยคสุภาพ Indirect Question: \"Do you have any idea _____?\"",
+      "options": [
+        "why did the microservice crash",
+        "why the microservice crashed",
+        "why does the microservice crashed",
+        "why was the microservice crash"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! ใน Indirect Question ต้องตัด did ทิ้ง แล้วผันกริยากลับเป็นประโยคบอกเล่ารูปอดีต: \"why the microservice crashed\""
+    }
+  ]
+}
 ];
 
 if (typeof window !== "undefined") {
