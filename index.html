@@ -135,6 +135,11 @@
           <span class="hidden lg:inline truncate">คลังคำศัพท์ & Flashcard</span>
         </button>
 
+        <button data-nav-target="reading-lab" class="w-full flex items-center justify-center lg:justify-start gap-3 px-3 lg:px-4 py-3 rounded-2xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group" title="ฝึกอ่าน 5 ระดับ (Reading Lab)">
+          <span class="text-lg shrink-0">📖</span>
+          <span class="hidden lg:inline truncate">ฝึกอ่าน 5 ระดับ (Reading Lab)</span>
+        </button>
+
         <button data-nav-target="articles" class="w-full flex items-center justify-center lg:justify-start gap-3 px-3 lg:px-4 py-3 rounded-2xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group" title="คลังบทความ & Reader">
           <span class="text-lg shrink-0">📚</span>
           <span class="hidden lg:inline truncate">คลังบทความ & Reader</span>
@@ -199,17 +204,17 @@
       <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🎲</div>
       <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">คำศัพท์</span>
     </button>
-    <button data-bottom-nav="articles" onclick="window.app.navigateTo('articles')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="บทความ">
-      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">📚</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">บทความ</span>
-    </button>
-    <button data-bottom-nav="masterclass" onclick="window.app.navigateTo('masterclass')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="ติวเข้ม">
-      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🎯</div>
-      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">ติวเข้ม</span>
+    <button data-bottom-nav="reading-lab" onclick="window.app.navigateTo('reading-lab')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="ฝึกอ่าน">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">📖</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">ฝึกอ่าน</span>
     </button>
     <button data-bottom-nav="sentence-builder" onclick="window.app.navigateTo('sentence-builder')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="แต่งประโยค">
       <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🧩</div>
       <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">แต่งประโยค</span>
+    </button>
+    <button data-bottom-nav="masterclass" onclick="window.app.navigateTo('masterclass')" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all text-slate-500 dark:text-slate-400 font-medium active:scale-95 shrink" aria-label="ติวเข้ม">
+      <div class="w-5 h-5 flex items-center justify-center text-sm shrink-0">🎯</div>
+      <span class="text-[10px] tracking-tight leading-tight mt-0.5 truncate max-w-full text-center">ติวเข้ม</span>
     </button>
   </nav>
 
@@ -236,6 +241,9 @@
           </button>
           <button data-nav-target="vocabulary" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
             <span>🎲 คลังคำศัพท์ & Flashcard</span>
+          </button>
+          <button data-nav-target="reading-lab" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
+            <span>📖 ฝึกอ่าน 5 ระดับ (Reading Lab)</span>
           </button>
           <button data-nav-target="articles" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
             <span>📚 คลังบทความ (Articles Library)</span>
@@ -274,9 +282,10 @@
   <!-- Aggregator -->
   <script src="lessons/courseData.js"></script>
 
-  <!-- Dedicated Datasets (Vocab, Articles, Masterclass, Sentence Builder) -->
+  <!-- Dedicated Datasets (Vocab, Articles, Reading Lab, Masterclass, Sentence Builder) -->
   <script src="data/vocabData.js"></script>
   <script src="data/articlesData.js"></script>
+  <script src="data/readingData.js"></script>
   <script src="data/masterclassData.js"></script>
   <script src="data/sentenceBuilderData.js"></script>
 

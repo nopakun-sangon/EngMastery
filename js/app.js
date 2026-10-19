@@ -45,6 +45,16 @@ class EngMasteryApp {
       this.sentenceDrillIndex = {};
       this.sentenceBuilderState = {};
       this.sentenceCompletedDrills = JSON.parse(localStorage.getItem("engmastery_sentence_drills_completed") || "{}");
+      // Reading Lab State
+      this.activeReadingArticleId = null;
+      this.selectedReadingLevel = "all";
+      this.readingTtsPlaying = false;
+      this.readingTtsIndex = null;
+      this.readingTtsRate = 1.0;
+      this.showReadingThai = true;
+      this.readingFontSize = "base";
+      this.readingQuizAnswers = {};
+      this.readingQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_reading_quizzes") || "{}");
     } catch (e) {
       this.reviewedVocabIds = new Set();
       this.articleQuizAnswers = {};
@@ -55,6 +65,16 @@ class EngMasteryApp {
       this.sentenceDrillIndex = {};
       this.sentenceBuilderState = {};
       this.sentenceCompletedDrills = {};
+      // Reading Lab State
+      this.activeReadingArticleId = null;
+      this.selectedReadingLevel = "all";
+      this.readingTtsPlaying = false;
+      this.readingTtsIndex = null;
+      this.readingTtsRate = 1.0;
+      this.showReadingThai = true;
+      this.readingFontSize = "base";
+      this.readingQuizAnswers = {};
+      this.readingQuizSubmitted = {};
     }
 
     this.init();
@@ -167,6 +187,9 @@ class EngMasteryApp {
     if (params.levelId) {
       this.activeLevelId = params.levelId;
     }
+    if (viewName === "reading-lab") {
+      this.activeReadingArticleId = params.articleId !== undefined ? params.articleId : null;
+    }
     if (viewName === "articles") {
       this.activeArticleId = params.articleId !== undefined ? params.articleId : null;
     }
@@ -176,6 +199,9 @@ class EngMasteryApp {
     if (viewName === "sentence-builder") {
       this.activeSentenceTopicId = params.topicId !== undefined ? params.topicId : null;
     }
+
+    // Stop active audio if switching away or to another article
+    this.stopReadingTts();
 
     this.renderView(viewName);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -194,6 +220,9 @@ class EngMasteryApp {
         break;
       case "vocabulary":
         this.renderVocabularyView(container);
+        break;
+      case "reading-lab":
+        this.renderReadingLabView(container, this.activeReadingArticleId);
         break;
       case "articles":
         this.renderArticlesView(container, this.activeArticleId);
@@ -336,7 +365,7 @@ class EngMasteryApp {
             <span class="text-[11px] text-slate-400">อัปเกรดทักษะรอบด้าน</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Hub 1: Vocabulary & Flashcards -->
             <div onclick="window.app.navigateTo('vocabulary')"
               class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-purple-900/90 to-slate-900 text-white border border-purple-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
@@ -348,10 +377,10 @@ class EngMasteryApp {
                   </span>
                 </div>
                 <h3 class="text-base font-bold text-white group-hover:text-purple-300 transition-colors">
-                  คลังคำศัพท์ & โหมดสุ่มการ์ด
+                  คลังคำศัพท์ & การ์ด 3D
                 </h3>
                 <p class="text-xs text-purple-200/80 leading-relaxed">
-                  สุ่มคำศัพท์ความถี่สูง Oxford 3000™, ศัพท์เทคนิค DevOps & Cloud, และ Phrasal Verbs พร้อมเสียง TTS และพลิกการ์ด 3D
+                  สุ่มคำศัพท์ Oxford 3000™, ศัพท์เทคนิค DevOps & Cloud, และ Phrasal Verbs พร้อมเสียง TTS
                 </p>
               </div>
               <div class="pt-3 border-t border-purple-800/40 flex items-center justify-between text-xs font-bold text-purple-300">
@@ -360,30 +389,53 @@ class EngMasteryApp {
               </div>
             </div>
 
-            <!-- Hub 2: Articles Library & Reader -->
-            <div onclick="window.app.navigateTo('articles')"
-              class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-blue-900/90 to-slate-900 text-white border border-blue-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
+            <!-- Hub 2: Reading Lab (CEFR A1–C2) -->
+            <div onclick="window.app.navigateTo('reading-lab')"
+              class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-emerald-900/90 to-slate-900 text-white border border-emerald-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
-                  <span class="text-3xl">📚</span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-500/30 text-blue-200 border border-blue-400/40">
-                    Deep Reader
+                  <span class="text-3xl">📖</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/30 text-emerald-200 border border-emerald-400/40">
+                    5 Levels (A1-C2)
                   </span>
                 </div>
-                <h3 class="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
-                  คลังบทความเชิงลึก (Articles)
+                <h3 class="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  ห้องฝึกอ่าน (Reading Lab)
                 </h3>
-                <p class="text-xs text-blue-200/80 leading-relaxed">
-                  ฝึกคิดเป็นภาษาอังกฤษ, ถอดรหัสสำเนียงอินเดีย-อังกฤษ, และเทคนิคการเขียนอีเมล & แชท Slack ให้ได้ใจทีมงานสากล
+                <p class="text-xs text-emerald-200/80 leading-relaxed">
+                  บทความแบ่งระดับสากล CEFR พร้อมเสียง Audio Player, แตะดูคำแปล และควิซวัดความเข้าใจ
                 </p>
               </div>
-              <div class="pt-3 border-t border-blue-800/40 flex items-center justify-between text-xs font-bold text-blue-300">
-                <span>อ่านบทความ & ทำควิซ</span>
+              <div class="pt-3 border-t border-emerald-800/40 flex items-center justify-between text-xs font-bold text-emerald-300">
+                <span>เข้าห้องฝึกอ่าน</span>
                 <span class="group-hover:translate-x-1 transition-transform">➔</span>
               </div>
             </div>
 
-            <!-- Hub 3: Masterclass Hub -->
+            <!-- Hub 3: Sentence Builder -->
+            <div onclick="window.app.navigateTo('sentence-builder')"
+              class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-blue-900/90 to-slate-900 text-white border border-blue-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">🧩</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-500/30 text-blue-200 border border-blue-400/40">
+                    Interactive
+                  </span>
+                </div>
+                <h3 class="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
+                  ฝึกแต่งประโยค (Builder)
+                </h3>
+                <p class="text-xs text-blue-200/80 leading-relaxed">
+                  ลากวางบล็อกคำศัพท์ 10 หัวข้อการทำงานจริง ฝึกโครงสร้างประโยคไวยากรณ์เป๊ะ
+                </p>
+              </div>
+              <div class="pt-3 border-t border-blue-800/40 flex items-center justify-between text-xs font-bold text-blue-300">
+                <span>เริ่มฝึกแต่งประโยค</span>
+                <span class="group-hover:translate-x-1 transition-transform">➔</span>
+              </div>
+            </div>
+
+            <!-- Hub 4: Masterclass Hub -->
             <div onclick="window.app.navigateTo('masterclass')"
               class="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-rose-900/90 to-slate-900 text-white border border-rose-800/50 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all flex flex-col justify-between space-y-4">
               <div class="space-y-2">
@@ -394,10 +446,10 @@ class EngMasteryApp {
                   </span>
                 </div>
                 <h3 class="text-base font-bold text-white group-hover:text-rose-300 transition-colors">
-                  ห้องติวเข้ม (Masterclass Hub)
+                  ห้องติวเข้ม (Masterclass)
                 </h3>
                 <p class="text-xs text-rose-200/80 leading-relaxed">
-                  เจาะลึก Ultimate 12 Tenses Blueprint, Tense คู่ที่ออกสอบบ่อย และกำจัด 4 จุดตายไวยากรณ์ (Passive, Articles, Prepositions)
+                  เจาะลึก 12 Tenses Blueprint, Tense คู่ที่ออกสอบบ่อย และกำจัด 4 จุดตายไวยากรณ์
                 </p>
               </div>
               <div class="pt-3 border-t border-rose-800/40 flex items-center justify-between text-xs font-bold text-rose-300">
@@ -2056,6 +2108,663 @@ class EngMasteryApp {
       if (barEl) barEl.style.width = `${progressPercent}%`;
 
       this.renderVocabContentArea();
+    }
+  }
+
+  // =========================================================================
+  // VIEW: READING LAB (GRADED READING PRACTICE CEFR A1–C2)
+  // =========================================================================
+  renderReadingLabView(container, articleId) {
+    const readingList = window.readingData || [];
+    if (articleId) {
+      const article = readingList.find(a => a.id === articleId) || readingList[0];
+      this.renderReadingArticleDetail(container, article);
+    } else {
+      this.renderReadingListing(container, readingList);
+    }
+  }
+
+  setReadingLevel(level) {
+    this.selectedReadingLevel = level;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderReadingListing(container, window.readingData || []);
+  }
+
+  renderReadingListing(container, readingList) {
+    const filter = this.selectedReadingLevel || "all";
+    const filtered = filter === "all" ? readingList : readingList.filter(a => a.level === filter);
+    const completedCount = Object.values(this.readingQuizSubmitted).filter(r => r && r.passed).length;
+    const totalXPFromReading = Object.values(this.readingQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
+
+    container.innerHTML = `
+      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto">
+        <!-- Header Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-700 to-indigo-900 text-white p-6 sm:p-8 shadow-xl">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-3">
+                <span>📖 CEFR Graded Reading Lab</span>
+                <span>•</span>
+                <span>5 ระดับสากล (A1–C2)</span>
+              </div>
+              <h1 class="text-2xl sm:text-3xl font-black tracking-tight">
+                ห้องฝึกการอ่าน (Reading Practice Lab)
+              </h1>
+              <p class="mt-2 text-emerald-100 text-xs sm:text-sm leading-relaxed">
+                ฝึกอ่านบทความภาษาอังกฤษที่แบ่งระดับความยากตามมาตรฐานสากล CEFR ตั้งแต่ระดับเริ่มต้น A1 จนถึงระดับผู้เชี่ยวชาญ C2 พร้อมเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซวัดความเข้าใจ
+              </p>
+            </div>
+
+            <!-- Stats Box -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl md:w-56 shrink-0 flex flex-col justify-between">
+              <div>
+                <span class="text-xs uppercase text-emerald-200 font-medium">ความคืบหน้าการอ่าน</span>
+                <div class="text-2xl font-black mt-1 text-white flex items-center gap-2">
+                  <span>${completedCount} / ${readingList.length}</span>
+                  <span class="text-xs font-normal px-2 py-0.5 rounded bg-emerald-500/80 text-white">บทความ</span>
+                </div>
+                <p class="text-xs text-emerald-200 mt-1">รับไปแล้ว +${totalXPFromReading} XP</p>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/10">
+                <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+                  <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: ${Math.round((completedCount / (readingList.length || 1)) * 100)}%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Level Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1">
+          ${[
+            { id: "all", label: "🌟 ทั้งหมด (10 บทความ)" },
+            { id: "A1", label: "🟢 Level 1: A1 (Survivor)" },
+            { id: "A2", label: "🔵 Level 2: A2 (Storyteller)" },
+            { id: "B1", label: "🔷 Level 3: B1 (Connector)" },
+            { id: "B2", label: "🟣 Level 4: B2 (Professional)" },
+            { id: "C1", label: "👑 Level 5: C1-C2 (Master)" },
+          ].map(tab => `
+            <button onclick="window.app.setReadingLevel('${tab.id}')"
+              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                filter === tab.id
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }">
+              ${tab.label}
+            </button>
+          `).join("")}
+        </div>
+
+        <!-- Articles Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          ${filtered.map(art => {
+            const quizRecord = this.readingQuizSubmitted[art.id];
+            const isPassed = quizRecord && quizRecord.passed;
+
+            return `
+              <div onclick="window.app.navigateTo('reading-lab', { articleId: '${art.id}' })"
+                class="bg-white dark:bg-slate-900 border ${isPassed ? 'border-emerald-300 dark:border-emerald-800/80 shadow-emerald-500/5' : 'border-slate-200 dark:border-slate-800'} rounded-3xl p-6 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer flex flex-col justify-between space-y-4 group">
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-3xl">${art.coverEmoji}</span>
+                    <div class="flex items-center gap-2">
+                      <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        ${art.levelBadge}
+                      </span>
+                      ${isPassed ? `
+                        <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800">
+                          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                          <span>ผ่านแล้ว (${quizRecord.score}/${quizRecord.total})</span>
+                        </span>
+                      ` : `
+                        <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold">
+                          ✨ +${art.xpReward} XP
+                        </span>
+                      `}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      ${art.title}
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                      ${art.titleTh}
+                    </p>
+                  </div>
+
+                  <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    ${art.summary}
+                  </p>
+
+                  <!-- Key vocab tags -->
+                  <div class="flex flex-wrap gap-1.5 pt-1">
+                    ${art.keyVocab.slice(0, 3).map(v => `
+                      <span class="px-2 py-0.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[10px] font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        🔑 ${v.word} (${v.th})
+                      </span>
+                    `).join("")}
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                  <div class="flex items-center gap-3">
+                    <span>⏱️ ${art.estimatedTime}</span>
+                    <span>•</span>
+                    <span>📝 ${art.wordCount} คำ</span>
+                  </div>
+                  <span class="font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    <span>เริ่มอ่าน</span>
+                    <span>➔</span>
+                  </span>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  renderReadingArticleDetail(container, article) {
+    const quizRecord = this.readingQuizSubmitted[article.id];
+    const isPassed = quizRecord && quizRecord.passed;
+    const currentRate = this.readingTtsRate || 1.0;
+    const showThai = this.showReadingThai !== false;
+    const fontSize = this.readingFontSize || "base";
+    const answers = this.readingQuizAnswers[article.id] || {};
+    const isQuizSubmitted = !!quizRecord;
+
+    const fontClasses = {
+      sm: "text-sm leading-relaxed",
+      base: "text-base leading-relaxed sm:text-lg sm:leading-loose",
+      lg: "text-lg leading-loose sm:text-xl sm:leading-loose"
+    }[fontSize] || "text-base leading-relaxed sm:text-lg sm:leading-loose";
+
+    container.innerHTML = `
+      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+        <!-- Top Navigation & Breadcrumbs -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <button onclick="window.app.navigateTo('reading-lab')"
+            class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1.5 active:scale-95">
+            <span>←</span>
+            <span>กลับสู่ห้องฝึกอ่าน (All Readings)</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              ${article.levelBadge}
+            </span>
+            ${isPassed ? `
+              <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1 border border-emerald-300 dark:border-emerald-800">
+                <span>✓ ผ่านแล้ว</span>
+              </span>
+            ` : `
+              <span class="px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-900/40">
+                ✨ +${article.xpReward} XP
+              </span>
+            `}
+          </div>
+        </div>
+
+        <!-- Article Title & Meta -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span>${article.coverEmoji}</span>
+            <span class="font-bold uppercase tracking-wider">${article.levelTitle}</span>
+            <span>•</span>
+            <span>⏱️ ${article.estimatedTime}</span>
+            <span>•</span>
+            <span>📝 ${article.wordCount} คำ</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            ${article.title}
+          </h1>
+          <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">
+            ${article.titleTh}
+          </p>
+        </div>
+
+        <!-- Interactive Control Bar -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <!-- Audio Playback Controls -->
+          <div class="flex items-center gap-2">
+            <button id="reading-play-all-btn" onclick="window.app.toggleReadingTts('${article.id}')"
+              class="px-4 py-2 rounded-2xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm ${
+                this.readingTtsPlaying
+                  ? 'bg-amber-500 hover:bg-amber-600 text-white'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white active:scale-95'
+              }">
+              <span id="reading-tts-icon">${this.readingTtsPlaying ? '⏸️' : '🎧'}</span>
+              <span id="reading-tts-text">${this.readingTtsPlaying ? 'หยุดเสียงอ่าน' : 'ฟังเสียงอ่านทั้งบทความ'}</span>
+            </button>
+
+            <!-- Speed selector -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 text-xs font-bold text-slate-600 dark:text-slate-300">
+              ${[0.75, 1.0, 1.25].map(spd => `
+                <button onclick="window.app.setReadingTtsSpeed(${spd}, '${article.id}')"
+                  class="px-2 py-1 rounded-lg transition-all ${
+                    currentRate === spd
+                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                      : 'hover:text-slate-900 dark:hover:text-white'
+                  }">
+                  ${spd}x
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Reading Display Options -->
+          <div class="flex items-center gap-2">
+            <!-- Toggle Thai Translation -->
+            <button onclick="window.app.toggleReadingThai('${article.id}')"
+              class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
+                showThai
+                  ? 'bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400'
+                  : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+              }">
+              <span>👁️</span>
+              <span>${showThai ? 'คำแปลไทย: เปิดอยู่' : 'คำแปลไทย: ซ่อน'}</span>
+            </button>
+
+            <!-- Font Size Toggle -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 text-xs font-bold text-slate-600 dark:text-slate-300">
+              <button onclick="window.app.setReadingFontSize('sm', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'sm' ? 'bg-white dark:bg-slate-700 text-indigo-600 shadow-sm' : ''}">A-</button>
+              <button onclick="window.app.setReadingFontSize('base', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'base' ? 'bg-white dark:bg-slate-700 text-indigo-600 shadow-sm' : ''}">A</button>
+              <button onclick="window.app.setReadingFontSize('lg', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'lg' ? 'bg-white dark:bg-slate-700 text-indigo-600 shadow-sm' : ''}">A+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Vocabulary & Chunks Summary Box -->
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/50 rounded-3xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black uppercase text-indigo-700 dark:text-indigo-300 tracking-wider flex items-center gap-2">
+              <span>💡</span>
+              <span>คำศัพท์และก้อนประโยคสำคัญประจำบทความ (Key Vocabulary & Chunks):</span>
+            </h3>
+            <span class="text-[11px] text-indigo-500 font-medium">แตะไอคอน 🔊 เพื่อฟังเสียง</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${article.keyVocab.map(v => `
+              <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-indigo-100 dark:border-indigo-900/40 p-2.5 rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-sm text-slate-900 dark:text-white">${v.word}</span>
+                    <span class="text-[11px] font-mono text-slate-400">${v.ipa}</span>
+                    <span class="text-[10px] px-1.5 py-0.2 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-600 font-bold">${v.pos}</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 truncate">${v.th}</p>
+                  ${v.chunk ? `<p class="text-[10px] text-indigo-600 dark:text-indigo-400 italic">“${v.chunk}”</p>` : ''}
+                </div>
+                <button onclick="window.speechEngine.speak('${v.word.replace(/'/g, "\\'")}')"
+                  class="w-7 h-7 rounded-xl bg-indigo-50 dark:bg-indigo-900/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 flex items-center justify-center shrink-0 active:scale-95 transition-all"
+                  title="ฟังเสียงอ่านคำศัพท์">
+                  🔊
+                </button>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <!-- Main Reading Paragraphs Content -->
+        <div class="space-y-4">
+          ${article.paragraphs.map(p => `
+            <div id="reading-para-${p.id}"
+              class="reading-paragraph-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm transition-all space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <p class="${fontClasses} font-serif text-slate-800 dark:text-slate-100">
+                  ${p.en}
+                </p>
+                <button onclick="window.app.playReadingParagraphTts('${p.id}', '${p.en.replace(/'/g, "\\'")}')"
+                  class="p-2 rounded-xl text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-all shrink-0 active:scale-95"
+                  title="ฟังเสียงอ่านย่อหน้านี้">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                </button>
+              </div>
+
+              ${showThai ? `
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                  <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
+                    ${p.th}
+                  </p>
+                </div>
+              ` : ''}
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- Reading Comprehension Quiz Section -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xl">📝</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                  แบบทดสอบวัดความเข้าใจท้ายบทความ (Reading Comprehension Quiz)
+                </h3>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">
+                ตอบคำถามเพื่อวัดความเข้าใจจากเนื้อหาที่อ่าน และสะสมคะแนน +${article.xpReward} XP
+              </p>
+            </div>
+            ${isPassed ? `
+              <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-black">
+                คะแนนล่าสุด: ${quizRecord.score} / ${quizRecord.total} (${quizRecord.percent}%)
+              </span>
+            ` : ''}
+          </div>
+
+          <div class="space-y-6">
+            ${article.quiz.map((q, qIdx) => {
+              const selectedOpt = answers[qIdx];
+
+              return `
+                <div class="space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                  <div class="flex items-start gap-2.5">
+                    <span class="w-6 h-6 rounded-lg bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      ${qIdx + 1}
+                    </span>
+                    <div class="space-y-1 flex-1">
+                      <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.2 rounded text-[9px] font-black uppercase ${
+                          q.type === 'true-false' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/80 dark:text-amber-300' : 'bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300'
+                        }">
+                          ${q.type === 'true-false' ? 'True / False' : 'Multiple Choice'}
+                        </span>
+                      </div>
+                      <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                        ${q.question}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2 pt-1 pl-8">
+                    ${q.options.map((opt, optIdx) => {
+                      const isOptionSelected = selectedOpt === optIdx;
+                      let optionClass = "border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300";
+
+                      if (isQuizSubmitted) {
+                        if (optIdx === q.answer) {
+                          optionClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 font-bold";
+                        } else if (isOptionSelected && optIdx !== q.answer) {
+                          optionClass = "border-red-500 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 line-through";
+                        } else {
+                          optionClass = "opacity-50 border-slate-200 dark:border-slate-800 text-slate-400";
+                        }
+                      } else if (isOptionSelected) {
+                        optionClass = "border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-bold shadow-sm";
+                      }
+
+                      return `
+                        <label class="flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition-all ${optionClass}">
+                          <input type="radio" name="reading_q_${article.id}_${qIdx}"
+                            ${isQuizSubmitted ? 'disabled' : ''}
+                            ${isOptionSelected ? 'checked' : ''}
+                            onchange="window.app.selectReadingQuizOption('${article.id}', ${qIdx}, ${optIdx})"
+                            class="text-indigo-600 focus:ring-indigo-500" />
+                          <span>${opt}</span>
+                          ${isQuizSubmitted && optIdx === q.answer ? '<span class="ml-auto text-emerald-600 font-black">✓ คำตอบที่ถูกต้อง</span>' : ''}
+                        </label>
+                      `;
+                    }).join("")}
+                  </div>
+
+                  ${isQuizSubmitted ? `
+                    <div class="mt-2 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs text-indigo-800 dark:text-indigo-200 leading-relaxed ml-8">
+                      <span class="font-bold">💡 คำอธิบาย:</span> ${q.explanation}
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <!-- Quiz Submission / Retry Actions -->
+          <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            ${isQuizSubmitted ? `
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold ${quizRecord.passed ? 'text-emerald-600' : 'text-red-500'}">
+                  ${quizRecord.passed ? `🎉 ยอดเยี่ยม! คุณสอบผ่าน (${quizRecord.score}/${quizRecord.total})` : `ยังไม่ผ่านเกณฑ์ (${quizRecord.score}/${quizRecord.total}) ลองทบทวนดูอีกครั้ง`}
+                </span>
+                <button onclick="window.app.retryReadingQuiz('${article.id}')"
+                  class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-xl transition-all">
+                  ทำควิซใหม่อีกครั้ง
+                </button>
+              </div>
+            ` : `
+              <button onclick="window.app.submitReadingQuiz('${article.id}')"
+                class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95">
+                <span>ส่งคำตอบ (Submit Answers)</span>
+                <span>➔</span>
+              </button>
+            `}
+            <button onclick="window.app.navigateTo('reading-lab')" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              กลับไปหน้ารวมบทความ
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  toggleReadingTts(articleId) {
+    if (this.readingTtsPlaying) {
+      this.stopReadingTts();
+    } else {
+      this.playReadingArticleTts(articleId);
+    }
+  }
+
+  playReadingArticleTts(articleId) {
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (!article || !article.paragraphs || article.paragraphs.length === 0) return;
+
+    this.stopReadingTts();
+    this.readingTtsPlaying = true;
+    this.readingTtsIndex = 0;
+
+    const playNextParagraph = () => {
+      if (!this.readingTtsPlaying || this.readingTtsIndex >= article.paragraphs.length) {
+        this.stopReadingTts();
+        return;
+      }
+
+      const para = article.paragraphs[this.readingTtsIndex];
+      // Highlight current paragraph in UI
+      document.querySelectorAll(".reading-paragraph-card").forEach(el => {
+        el.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+      });
+      const currentEl = document.getElementById(`reading-para-${para.id}`);
+      if (currentEl) {
+        currentEl.classList.add("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+        currentEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      window.speechEngine.speak(
+        para.en,
+        () => {
+          this.updateTtsButtonState(true);
+        },
+        () => {
+          if (this.readingTtsPlaying) {
+            this.readingTtsIndex++;
+            setTimeout(playNextParagraph, 350);
+          }
+        }
+      );
+    };
+
+    playNextParagraph();
+  }
+
+  playReadingParagraphTts(paraId, text) {
+    this.stopReadingTts();
+    document.querySelectorAll(".reading-paragraph-card").forEach(el => {
+      el.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+    });
+    const currentEl = document.getElementById(`reading-para-${paraId}`);
+    if (currentEl) {
+      currentEl.classList.add("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+    }
+
+    window.speechEngine.speak(text, null, () => {
+      if (currentEl) {
+        currentEl.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+      }
+    });
+  }
+
+  stopReadingTts() {
+    this.readingTtsPlaying = false;
+    this.readingTtsIndex = null;
+    if (window.speechEngine) {
+      window.speechEngine.stop();
+    }
+    document.querySelectorAll(".reading-paragraph-card").forEach(el => {
+      el.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+    });
+    this.updateTtsButtonState(false);
+  }
+
+  updateTtsButtonState(isPlaying) {
+    const iconEl = document.getElementById("reading-tts-icon");
+    const textEl = document.getElementById("reading-tts-text");
+    const btnEl = document.getElementById("reading-play-all-btn");
+    if (iconEl && textEl && btnEl) {
+      if (isPlaying) {
+        iconEl.textContent = "⏸️";
+        textEl.textContent = "หยุดเสียงอ่าน";
+        btnEl.classList.remove("bg-emerald-600", "hover:bg-emerald-700");
+        btnEl.classList.add("bg-amber-500", "hover:bg-amber-600");
+      } else {
+        iconEl.textContent = "🎧";
+        textEl.textContent = "ฟังเสียงอ่านทั้งบทความ";
+        btnEl.classList.remove("bg-amber-500", "hover:bg-amber-600");
+        btnEl.classList.add("bg-emerald-600", "hover:bg-emerald-700");
+      }
+    }
+  }
+
+  toggleReadingThai(articleId) {
+    this.showReadingThai = !this.showReadingThai;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  setReadingFontSize(size, articleId) {
+    this.readingFontSize = size;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  setReadingTtsSpeed(speed, articleId) {
+    this.readingTtsRate = speed;
+    if (window.speechEngine) {
+      window.speechEngine.setRate(speed);
+    }
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  selectReadingQuizOption(articleId, qIdx, optIdx) {
+    window.soundFx.playClick();
+    if (!this.readingQuizAnswers[articleId]) {
+      this.readingQuizAnswers[articleId] = {};
+    }
+    this.readingQuizAnswers[articleId][qIdx] = optIdx;
+  }
+
+  submitReadingQuiz(articleId) {
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (!article) return;
+
+    const answers = this.readingQuizAnswers[articleId] || {};
+    const totalQuestions = article.quiz.length;
+
+    if (Object.keys(answers).length < totalQuestions) {
+      alert("กรุณาตอบคำถามให้ครบทุกข้อก่อนส่งคำตอบครับ");
+      return;
+    }
+
+    let score = 0;
+    article.quiz.forEach((q, idx) => {
+      if (answers[idx] === q.answer) {
+        score++;
+      }
+    });
+
+    const percent = Math.round((score / totalQuestions) * 100);
+    const passed = score >= Math.ceil(totalQuestions * 0.6); // 60%+ passes
+
+    const previousSubmission = this.readingQuizSubmitted[articleId];
+    const alreadyEarned = previousSubmission && previousSubmission.passed;
+
+    this.readingQuizSubmitted[articleId] = {
+      score,
+      total: totalQuestions,
+      percent,
+      passed,
+      xpEarned: article.xpReward
+    };
+
+    try {
+      localStorage.setItem("engmastery_reading_quizzes", JSON.stringify(this.readingQuizSubmitted));
+    } catch (e) {}
+
+    if (passed) {
+      window.soundFx.playVictory();
+      if (!alreadyEarned) {
+        window.storageManager.addXP(article.xpReward);
+        this.renderHeaderStats();
+        this.showToast(`ยอดเยี่ยมมาก! คุณผ่านแบบทดสอบการอ่าน ${score}/${totalQuestions} ข้อ (+${article.xpReward} XP) 🎉`, "success");
+      } else {
+        this.showToast(`คุณทำแบบทดสอบได้ ${score}/${totalQuestions} ข้อ ⭐`, "info");
+      }
+    } else {
+      window.soundFx.playIncorrect();
+      this.showToast(`ได้คะแนน ${score}/${totalQuestions} ข้อ ลองอ่านทบทวนและทำใหม่อีกครั้งนะ`, "error");
+    }
+
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "reading-lab") {
+      this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  retryReadingQuiz(articleId) {
+    delete this.readingQuizAnswers[articleId];
+    delete this.readingQuizSubmitted[articleId];
+    try {
+      localStorage.setItem("engmastery_reading_quizzes", JSON.stringify(this.readingQuizSubmitted));
+    } catch (e) {}
+
+    const container = document.getElementById("main-content-view");
+    const articles = window.readingData || [];
+    const article = articles.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderReadingArticleDetail(container, article);
     }
   }
 
