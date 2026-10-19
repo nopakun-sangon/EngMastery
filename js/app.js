@@ -775,7 +775,7 @@ class EngMasteryApp {
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-5xl mx-auto pb-14">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14">
         <!-- Hero Header -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-10 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
@@ -953,7 +953,7 @@ class EngMasteryApp {
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto pb-12">
+      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-12">
         <!-- Return Navigation Bar -->
         <div class="flex items-center justify-between pb-1">
           <button onclick="window.app.enterLessonsTrack('hub')"
@@ -1289,80 +1289,55 @@ class EngMasteryApp {
     };
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-28 sm:pb-20">
-        <!-- Return Navigation Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-1">
-          <button onclick="window.app.enterLessonsTrack('hub')"
-            class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>← กลับสู่หน้าเลือกคอร์ส Lessons Hub</span>
-          </button>
-          <button onclick="window.app.enterLessonsTrack('core')"
-            class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
-            <span>🗺️ สลับไปคอร์สปูพื้นฐาน 6 ระดับ ➔</span>
-          </button>
-        </div>
+      <div class="space-y-5 animate-fadeIn w-full mx-auto pb-28 sm:pb-20">
+        <!-- Compact Top Navigation Bar (Replaces Hero Banner) -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3 sm:p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <button onclick="window.app.enterLessonsTrack('hub')"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition-all shrink-0 active:scale-95"
+              title="กลับสู่หน้าเลือกคอร์ส Lessons Hub">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+              <span>กลับเลือกคอร์ส</span>
+            </button>
 
-        <!-- Hero Header with Track Switcher -->
-        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-5 sm:p-8 text-white shadow-xl border border-indigo-800/40">
-          <div class="relative z-10 space-y-4 max-w-3xl">
-            <!-- Track Switcher Pills -->
-            <div class="inline-flex flex-wrap p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
-              <button onclick="window.app.switchLessonsTrack('grammar')"
-                class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-1.5">
-                <span>📘 คอร์สไวยากรณ์ (15 หัวข้อ)</span>
-              </button>
-              <button onclick="window.app.switchLessonsTrack('core')"
-                class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-1.5">
-                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR)</span>
-              </button>
-            </div>
+            <div class="h-4 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
 
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-              <span>📚 Complete Grammar Syllabus</span>
-              <span class="text-indigo-400">•</span>
-              <span>15 หมวดหมู่หลัก ครอบคลุมทุกโครงสร้าง</span>
-            </div>
-
-            <h1 class="text-xl sm:text-3xl font-black tracking-tight text-white leading-tight">
-              คอร์สไวยากรณ์ภาษาอังกฤษ (Grammar Mastery Course)
-            </h1>
-
-            <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
-              รวมเนื้อหาไวยากรณ์สำคัญ 15 หัวข้อหลัก เรียงตามลำดับสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมสูตรโครงสร้างประโยค 
-              ตัวอย่างประโยคจริงในชีวิตประจำวันและสายงานไอที/DevOps พร้อมระบบทดสอบการออกเสียงและแบบฝึกหัดทบทวนทันที
-            </p>
-
-            <!-- Learning Progress Tracker -->
-            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs">
-              <div class="flex-1 bg-white/10 p-3 sm:p-3.5 rounded-2xl border border-white/10 backdrop-blur-xs">
-                <div class="flex items-center justify-between mb-1.5 font-bold">
-                  <span class="text-indigo-200">ความคืบหน้าคอร์สไวยากรณ์</span>
-                  <span class="text-amber-300">${completedUnits} / ${totalUnits} บทย่อย (${progressPercent}%)</span>
-                </div>
-                <div class="w-full bg-black/30 rounded-full h-2.5 overflow-hidden">
-                  <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2.5 sm:gap-3">
-                <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 text-center">
-                  <div class="text-[10px] text-indigo-200">หมวดหมู่</div>
-                  <div class="text-sm sm:text-base font-black text-white">15 หัวข้อ</div>
-                </div>
-                <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 text-center">
-                  <div class="text-[10px] text-indigo-200">XP สะสม</div>
-                  <div class="text-sm sm:text-base font-black text-amber-300">${totalXP} XP</div>
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-lg shrink-0">📘</span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h1 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                    คอร์สไวยากรณ์ (Grammar Mastery)
+                  </h1>
+                  <span class="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-800/50">
+                    15 หัวข้อ
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Decorative glow -->
-          <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="flex items-center gap-2.5 sm:gap-3">
+            <!-- Compact Progress -->
+            <div class="hidden md:flex items-center gap-2 text-xs">
+              <span class="text-slate-400 font-medium">ความคืบหน้า:</span>
+              <div class="w-24 bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-2 rounded-full transition-all duration-300" style="width: ${progressPercent}%"></div>
+              </div>
+              <span class="font-bold text-indigo-600 dark:text-indigo-400">${completedUnits}/${totalUnits} (${progressPercent}%)</span>
+            </div>
+
+            <!-- Switch to CEFR button -->
+            <button onclick="window.app.enterLessonsTrack('core')"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/60 transition-all flex items-center gap-1.5 shrink-0 active:scale-95">
+              <span>🗺️ สลับไปคอร์ส 6 ระดับ (CEFR)</span>
+              <span>➔</span>
+            </button>
+          </div>
         </div>
 
-        <!-- MOBILE / TABLET QUICK SYLLABUS TRIGGER BAR (Hidden on xl screens) -->
-        <div class="xl:hidden flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-16 z-20">
+        <!-- MOBILE / TABLET QUICK SYLLABUS TRIGGER BAR (Hidden on lg screens) -->
+        <div class="lg:hidden flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-16 z-20">
           <button onclick="window.app.toggleMobileGrammarDrawer(true)" class="flex items-center gap-2.5 text-left min-w-0 flex-1 group">
             <span class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-base shrink-0 group-hover:scale-105 transition-transform">📑</span>
             <div class="min-w-0 flex-1">
@@ -1383,11 +1358,11 @@ class EngMasteryApp {
           </button>
         </div>
 
-        <!-- MAIN WORKSPACE: Desktop 2-Columns (xl:) vs Mobile Single Column with Slide-over Drawer -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        <!-- MAIN WORKSPACE: Desktop 2-Columns (lg:) vs Mobile Single Column with Slide-over Drawer -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          <!-- LEFT COLUMN: 15 Topics Syllabus Drawer (DESKTOP ONLY: xl:block) -->
-          <div class="hidden xl:block xl:col-span-4 space-y-3 xl:sticky xl:top-20">
+          <!-- LEFT COLUMN: 15 Topics Syllabus Drawer (DESKTOP: lg:block) -->
+          <div class="hidden lg:block lg:col-span-4 xl:col-span-3 space-y-3 lg:sticky lg:top-20">
             <div class="flex items-center justify-between px-1">
               <h2 class="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
                 <span>📑 สารบัญหลักสูตร (Syllabus)</span>
@@ -1397,13 +1372,13 @@ class EngMasteryApp {
             </div>
 
             <!-- Desktop Accordion List -->
-            <div class="space-y-2.5 max-h-[calc(100vh-140px)] overflow-y-auto pr-1 custom-scrollbar">
+            <div class="space-y-2.5 max-h-[calc(100vh-100px)] overflow-y-auto pr-1 custom-scrollbar">
               ${renderAccordionItems()}
             </div>
           </div>
 
           <!-- RIGHT COLUMN: Active Unit Reader & Interactive Workspace -->
-          <div id="grammar-unit-reader" class="col-span-1 xl:col-span-8 space-y-6">
+          <div id="grammar-unit-reader" class="col-span-1 lg:col-span-8 xl:col-span-9 space-y-6">
             ${activeUnit ? `
               <!-- Unit Header Card -->
               <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
@@ -1661,8 +1636,8 @@ class EngMasteryApp {
           </div>
         </div>
 
-        <!-- MOBILE SLIDE-OVER SYLLABUS MODAL / DRAWER (xl:hidden) -->
-        <div id="grammar-mobile-syllabus-drawer" class="fixed inset-0 z-50 ${this.mobileGrammarDrawerOpen ? '' : 'hidden'} xl:hidden flex flex-col justify-end bg-black/60 backdrop-blur-xs transition-opacity duration-300">
+        <!-- MOBILE SLIDE-OVER SYLLABUS MODAL / DRAWER (lg:hidden) -->
+        <div id="grammar-mobile-syllabus-drawer" class="fixed inset-0 z-50 ${this.mobileGrammarDrawerOpen ? '' : 'hidden'} lg:hidden flex flex-col justify-end bg-black/60 backdrop-blur-xs transition-opacity duration-300">
           <!-- Backdrop click to close -->
           <div class="absolute inset-0" onclick="window.app.toggleMobileGrammarDrawer(false)"></div>
 
