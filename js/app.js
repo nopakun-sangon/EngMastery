@@ -32,6 +32,9 @@ class EngMasteryApp {
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
     this.isReadingAloud = false;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
+    this.browseVocabScores = {};
 
     // --- State for Cheat Sheet Hub & Speaking Lab ---
     this.cheatSheetTab = "tenses";
@@ -2921,6 +2924,9 @@ class EngMasteryApp {
     }
     const currentCard = filtered[this.currentFlashcardIndex];
     const isLearned = this.reviewedVocabIds.has(currentCard.id);
+    const isSaved = window.storageManager.isWordSaved(currentCard.word);
+    const voiceScore = this.flashcardVoiceScore;
+    const feedback = voiceScore ? this.getVoiceScoreFeedback(voiceScore.score) : null;
 
     return `
       <div class="space-y-4 max-w-lg mx-auto">
@@ -2931,11 +2937,11 @@ class EngMasteryApp {
         </div>
 
         <!-- 3D Flashcard Container -->
-        <div class="perspective-1000 w-full h-[370px] sm:h-[390px] cursor-pointer select-none" onclick="window.app.toggleFlashcardFlip()">
+        <div class="perspective-1000 w-full min-h-[410px] sm:min-h-[430px] h-[420px] sm:h-[450px] cursor-pointer select-none" onclick="window.app.toggleFlashcardFlip()">
           <div class="card-inner w-full h-full relative rounded-3xl transition-transform duration-500 transform-style-3d ${this.isCardFlipped ? 'is-flipped' : ''}">
             
             <!-- FRONT FACE -->
-            <div class="card-front absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-indigo-700/50 shadow-2xl backface-hidden">
+            <div class="card-front absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-700/50 shadow-2xl backface-hidden">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
@@ -2945,24 +2951,82 @@ class EngMasteryApp {
                     ${currentCard.pos}
                   </span>
                 </div>
-                <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.word.replace(/'/g, "\\'")}')"
-                  class="p-2.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all shadow-md"
-                  title="ฟังเสียงอ่านออกเสียง">
-                  <svg class="w-5 h-5 text-indigo-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
-                </button>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="event.stopPropagation(); window.app.toggleSaveWordFromFlashcard('${currentCard.word.replace(/'/g, "\\'")}')"
+                    class="p-2 rounded-2xl ${isSaved ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-white/10 text-white/70 hover:text-white'} hover:bg-white/20 active:scale-95 transition-all shadow-md"
+                    title="${isSaved ? 'คำที่บันทึกแล้ว (คลิกเพื่อยกเลิก)' : 'บันทึกลงสมุดคำศัพท์ส่วนตัว'}">
+                    <span class="text-sm">${isSaved ? '⭐' : '☆'}</span>
+                  </button>
+                  <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.word.replace(/'/g, "\\'")}')"
+                    class="p-2 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all shadow-md"
+                    title="ฟังเสียงอ่านออกเสียง">
+                    <svg class="w-5 h-5 text-indigo-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                  </button>
+                </div>
               </div>
 
-              <!-- Center Word -->
-              <div class="text-center my-auto space-y-2">
+              <!-- Center Word & Pronunciation Test Area -->
+              <div class="text-center my-auto space-y-2.5">
                 <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white drop-shadow-md">
                   ${currentCard.word}
                 </h2>
                 <div class="inline-block px-3 py-1 rounded-full bg-white/10 text-xs sm:text-sm font-mono text-indigo-200">
                   ${currentCard.ipa}
                 </div>
+
+                <!-- Voice Scoring / Recording Status Block -->
+                <div class="pt-1 w-full max-w-sm mx-auto">
+                  ${this.flashcardIsListening ? `
+                    <div class="p-3 rounded-2xl bg-red-950/80 border border-red-500/60 shadow-lg text-center space-y-1.5 animate-pulse backdrop-blur-sm">
+                      <div class="flex items-center justify-center gap-2 text-red-200 font-bold text-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                        <span>กำลังฟังเสียง... กรุณาออกเสียง "${currentCard.word}"</span>
+                      </div>
+                      <p class="text-[11px] text-red-300/80">พูดเข้าไมโครโฟนได้เลยครับ</p>
+                    </div>
+                  ` : voiceScore && feedback ? `
+                    <div class="p-3 sm:p-3.5 rounded-2xl bg-slate-900/95 border ${feedback.passed ? 'border-emerald-500/60 shadow-emerald-500/20' : 'border-amber-500/60 shadow-amber-500/20'} shadow-xl space-y-2 backdrop-blur-md">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 font-black text-xs sm:text-sm ${feedback.textColor}">
+                          <span class="text-base">${feedback.emoji}</span>
+                          <span>${feedback.label}</span>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-black shadow-sm ${feedback.badgeClass}">
+                          ความเหมือน ${voiceScore.score}%
+                        </span>
+                      </div>
+                      <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-white/10">
+                        <div class="h-full rounded-full transition-all duration-700 ease-out ${feedback.barColor}" style="width: ${voiceScore.score}%"></div>
+                      </div>
+                      <p class="text-[11px] sm:text-xs text-slate-200 leading-snug">
+                        ${feedback.message}
+                      </p>
+                      <div class="text-[10px] text-slate-400 font-mono truncate">
+                        ได้ยินว่า: <span class="text-white font-sans font-semibold">"${voiceScore.spokenText || '(ไม่ได้ยินคำ)'}"</span>
+                      </div>
+                      <div class="pt-1.5 border-t border-white/10 flex items-center justify-center gap-2">
+                        <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.word.replace(/'/g, "\\'")}')"
+                          class="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-indigo-200 text-[11px] font-bold flex items-center gap-1 transition-all">
+                          🔊 ฟังต้นฉบับ
+                        </button>
+                        <button onclick="event.stopPropagation(); window.app.startFlashcardSpeaking('${currentCard.word.replace(/'/g, "\\'")}')"
+                          class="px-3 py-1 rounded-xl bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold flex items-center gap-1.5 shadow-md transition-all active:scale-95">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                          <span>ซ้อมพูดใหม่</span>
+                        </button>
+                      </div>
+                    </div>
+                  ` : `
+                    <button onclick="event.stopPropagation(); window.app.startFlashcardSpeaking('${currentCard.word.replace(/'/g, "\\'")}')"
+                      class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-red-900/40 flex items-center justify-center gap-2 transition-all mx-auto">
+                      <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                      <span>🎙️ กดเพื่อทดสอบการออกเสียงคำนี้</span>
+                    </button>
+                  `}
+                </div>
               </div>
 
-              <div class="text-center pt-3 border-t border-white/10">
+              <div class="text-center pt-2.5 border-t border-white/10">
                 <span class="text-xs text-indigo-300/80 flex items-center justify-center gap-1.5 animate-pulse">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                   <span>แตะที่การ์ดเพื่อพลิกดูคำแปลและความหมาย</span>
@@ -2971,18 +3035,39 @@ class EngMasteryApp {
             </div>
 
             <!-- BACK FACE -->
-            <div class="card-back absolute inset-0 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-200 dark:border-indigo-900/60 shadow-2xl backface-hidden transform-rotate-y-180">
+            <div class="card-back absolute inset-0 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-200 dark:border-indigo-900/60 shadow-2xl backface-hidden transform-rotate-y-180 overflow-y-auto">
               <div class="space-y-3">
                 <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                   <div class="flex items-center gap-2">
                     <span class="text-base font-bold text-slate-900 dark:text-white">${currentCard.word}</span>
                     <span class="text-xs font-mono text-slate-400 dark:text-slate-500">${currentCard.ipa}</span>
                   </div>
-                  <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.word.replace(/'/g, "\\'")}')"
-                    class="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-colors">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
-                  </button>
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="event.stopPropagation(); window.app.startFlashcardSpeaking('${currentCard.word.replace(/'/g, "\\'")}')"
+                      class="p-2 rounded-xl ${this.flashcardIsListening ? 'bg-red-600 text-white recording-pulse' : 'bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 hover:bg-red-100'} transition-all shadow-xs"
+                      title="ซ้อมออกเสียงคำนี้">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                    </button>
+                    <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.word.replace(/'/g, "\\'")}')"
+                      class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-colors shadow-xs"
+                      title="ฟังเสียงอ่าน">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                    </button>
+                  </div>
                 </div>
+
+                <!-- Voice Score Summary on Back Face if scored -->
+                ${voiceScore && feedback ? `
+                  <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-1.5 font-bold ${feedback.textColor}">
+                      <span>${feedback.emoji}</span>
+                      <span>${feedback.label}</span>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-black ${feedback.badgeClass}">
+                      ความเหมือน ${voiceScore.score}%
+                    </span>
+                  </div>
+                ` : ''}
 
                 <!-- Thai Translation & English Definition -->
                 <div>
@@ -3099,6 +3184,8 @@ class EngMasteryApp {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           ${visibleItems.map(v => {
             const isLearned = this.reviewedVocabIds.has(v.id);
+            const scoreData = this.browseVocabScores[v.id];
+            const isSaved = window.storageManager.isWordSaved(v.word);
             return `
               <div class="bg-white dark:bg-slate-900 border ${
                 isLearned ? 'border-emerald-200 dark:border-emerald-900/60' : 'border-slate-200 dark:border-slate-800'
@@ -3113,22 +3200,48 @@ class EngMasteryApp {
                       <span class="text-[11px] font-mono text-slate-400">${v.ipa}</span>
                     </div>
                     <div class="flex items-center gap-1">
+                      <button onclick="window.app.toggleSaveWordFromFlashcard('${v.word.replace(/'/g, "\\'")}')"
+                        class="p-1.5 rounded-xl ${isSaved ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40' : 'text-slate-400 hover:text-amber-500 bg-slate-100 dark:bg-slate-800'} transition-colors"
+                        title="${isSaved ? 'คำที่บันทึกแล้ว' : 'บันทึกลงสมุดศัพท์'}">
+                        <span class="text-xs">${isSaved ? '⭐' : '☆'}</span>
+                      </button>
                       <button onclick="window.speechEngine.speak('${v.word.replace(/'/g, "\\'")}')"
-                        class="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:scale-110 transition-transform">
+                        class="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:scale-110 transition-transform"
+                        title="ฟังเสียงอ่าน">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                      </button>
+                      <button onclick="window.app.startBrowseVocabSpeaking('${v.id}', '${v.word.replace(/'/g, "\\'")}')"
+                        class="p-1.5 rounded-xl ${scoreData?.isListening ? 'bg-red-600 text-white recording-pulse' : 'bg-slate-100 dark:bg-slate-800 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50'} hover:scale-110 transition-all"
+                        title="ทดสอบการออกเสียงคำนี้">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                       </button>
                     </div>
                   </div>
 
-                  <h3 class="text-lg font-black text-slate-900 dark:text-white">
-                    ${v.word}
+                  <h3 class="text-lg font-black text-slate-900 dark:text-white flex items-center justify-between">
+                    <span>${v.word}</span>
+                    <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400 font-sans">${v.th}</span>
                   </h3>
-                  <div class="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-                    ${v.th}
-                  </div>
                   <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                     ${v.definition}
                   </p>
+
+                  ${scoreData?.isListening ? `
+                    <div class="p-2 rounded-xl bg-red-950/60 border border-red-500/50 text-[11px] text-red-200 flex items-center gap-2 animate-pulse">
+                      <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                      <span>กำลังฟังเสียง... ออกเสียง: "${v.word}"</span>
+                    </div>
+                  ` : scoreData && scoreData.feedback ? `
+                    <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+                      <div class="flex items-center gap-1.5 font-bold ${scoreData.feedback.textColor}">
+                        <span>${scoreData.feedback.emoji}</span>
+                        <span>${scoreData.feedback.label}</span>
+                      </div>
+                      <span class="px-2 py-0.5 rounded-full text-xs font-black ${scoreData.feedback.badgeClass}">
+                        ${scoreData.score}%
+                      </span>
+                    </div>
+                  ` : ''}
 
                   <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs space-y-1">
                     <div class="flex items-start justify-between gap-2">
@@ -3273,6 +3386,8 @@ class EngMasteryApp {
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
     this.browseVisibleCount = 24;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
     const container = document.getElementById("main-content-view");
     if (container && this.currentView === "vocabulary") {
       this.renderVocabularyView(container);
@@ -3283,6 +3398,8 @@ class EngMasteryApp {
     window.soundFx.playClick();
     this.vocabMode = mode;
     this.isCardFlipped = false;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
     const container = document.getElementById("main-content-view");
     if (container && this.currentView === "vocabulary") {
       this.renderVocabularyView(container);
@@ -3304,6 +3421,8 @@ class EngMasteryApp {
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
     this.browseVisibleCount = 24;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
 
     const clearBtn = document.getElementById("vocab-clear-search-btn");
     if (clearBtn) {
@@ -3327,6 +3446,8 @@ class EngMasteryApp {
 
   clearVocabSearch() {
     this.vocabSearch = "";
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
     const inputEl = document.getElementById("vocab-search-input");
     if (inputEl) {
       inputEl.value = "";
@@ -3341,6 +3462,8 @@ class EngMasteryApp {
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
     this.browseVisibleCount = 24;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
     const container = document.getElementById("main-content-view");
     if (container && this.currentView === "vocabulary") {
       this.renderVocabularyView(container);
@@ -3368,6 +3491,8 @@ class EngMasteryApp {
       window.soundFx.playClick();
       this.currentFlashcardIndex += 1;
       this.isCardFlipped = false;
+      this.flashcardVoiceScore = null;
+      this.flashcardIsListening = false;
       this.renderVocabContentArea();
     }
   }
@@ -3377,6 +3502,8 @@ class EngMasteryApp {
       window.soundFx.playClick();
       this.currentFlashcardIndex -= 1;
       this.isCardFlipped = false;
+      this.flashcardVoiceScore = null;
+      this.flashcardIsListening = false;
       this.renderVocabContentArea();
     }
   }
@@ -3392,6 +3519,8 @@ class EngMasteryApp {
     } while (nextIndex === this.currentFlashcardIndex && filtered.length > 1);
     this.currentFlashcardIndex = nextIndex;
     this.isCardFlipped = false;
+    this.flashcardVoiceScore = null;
+    this.flashcardIsListening = false;
     this.renderVocabContentArea();
   }
 
@@ -3419,6 +3548,204 @@ class EngMasteryApp {
 
       this.renderVocabContentArea();
     }
+  }
+
+  toggleSaveWordFromFlashcard(word) {
+    window.soundFx.playFlip();
+    const res = window.storageManager.toggleSaveWord(word);
+    if (res.saved) {
+      this.showToast(`⭐ บันทึกคำว่า "${word}" ลงในสมุดคำศัพท์แล้ว`, "success");
+    } else {
+      this.showToast(`ลบคำว่า "${word}" ออกจากสมุดคำศัพท์แล้ว`, "info");
+    }
+    this.renderVocabContentArea();
+  }
+
+  /**
+   * Tiered Pronunciation Feedback with Emojis and Encouraging Messages
+   * Covers: 100% (สมบูรณ์แบบ), 90-99% (ยอดเยี่ยมมาก), 80-89% (ดีมาก ผ่านเกณฑ์),
+   * 60-79% (เกือบแล้ว พยายามอีกนิด), 40-59% (กำลังมาถูกทาง พยายามอีกหน่อย), <40% (ลองใหม่อีกครั้ง)
+   */
+  getVoiceScoreFeedback(score) {
+    if (score === 100) {
+      return {
+        tier: "perfect",
+        emoji: "🌟💯",
+        label: "สมบูรณ์แบบ!",
+        message: "สำเนียงและการออกเสียงเป๊ะเทียบเท่าเจ้าของภาษา 100%",
+        badgeClass: "bg-emerald-500 text-white shadow-emerald-500/30",
+        textColor: "text-emerald-400",
+        barColor: "bg-emerald-400",
+        passed: true
+      };
+    } else if (score >= 90) {
+      return {
+        tier: "excellent",
+        emoji: "🎉✨",
+        label: "ยอดเยี่ยมมาก!",
+        message: "ออกเสียงชัดเจนมาก ชัดถ้อยชัดคำระดับมืออาชีพ",
+        badgeClass: "bg-teal-500 text-white shadow-teal-500/30",
+        textColor: "text-teal-400",
+        barColor: "bg-teal-400",
+        passed: true
+      };
+    } else if (score >= 80) {
+      return {
+        tier: "good",
+        emoji: "👍🔥",
+        label: "ดีมาก ผ่านเกณฑ์แล้ว!",
+        message: "ออกเสียงถูกต้อง ชัดเจน และสื่อสารได้อย่างมั่นใจ",
+        badgeClass: "bg-blue-500 text-white shadow-blue-500/30",
+        textColor: "text-blue-400",
+        barColor: "bg-blue-400",
+        passed: true
+      };
+    } else if (score >= 60) {
+      return {
+        tier: "almost",
+        emoji: "💪😊",
+        label: "เกือบแล้ว พยายามอีกนิด!",
+        message: "ทำได้ดีแล้ว ลองเน้นเสียงสระและเสียงท้ายคำ (Ending sound) ให้ชัดอีกนิดนะ",
+        badgeClass: "bg-amber-500 text-white shadow-amber-500/30",
+        textColor: "text-amber-400",
+        barColor: "bg-amber-400",
+        passed: false
+      };
+    } else if (score >= 40) {
+      return {
+        tier: "keep_trying",
+        emoji: "🎯💡",
+        label: "กำลังมาถูกทาง พยายามอีกหน่อย!",
+        message: "จังหวะเริ่มได้แล้ว ลองกดฟังเสียงต้นฉบับ 🔊 แล้วออกเสียงตามอีกครั้งนะ",
+        badgeClass: "bg-orange-500 text-white shadow-orange-500/30",
+        textColor: "text-orange-400",
+        barColor: "bg-orange-400",
+        passed: false
+      };
+    } else {
+      return {
+        tier: "retry",
+        emoji: "🎧🌱",
+        label: "ลองใหม่อีกครั้งนะ!",
+        message: "ไม่ต้องกังวล! ลองกดปุ่ม 🔊 ฟังเสียงเจ้าของภาษา 1-2 ครั้ง แล้วพูดตามใหม่อีกทีนะ สู้ๆ",
+        badgeClass: "bg-rose-500 text-white shadow-rose-500/30",
+        textColor: "text-rose-400",
+        barColor: "bg-rose-400",
+        passed: false
+      };
+    }
+  }
+
+  /**
+   * Start speech recognition for testing flashcard word pronunciation
+   */
+  startFlashcardSpeaking(targetWord) {
+    if (!window.speechEngine) return;
+    if (!window.speechEngine.hasRecognition) {
+      this.showToast("เบราว์เซอร์ของคุณยังไม่รองรับระบบตรวจจับเสียงพูด (แนะนำให้ใช้ Google Chrome หรือ Microsoft Edge)", "error");
+      return;
+    }
+
+    this.flashcardIsListening = true;
+    this.renderVocabContentArea();
+
+    window.speechEngine.listenAndScore(targetWord, {
+      onStart: () => {
+        window.soundFx.playClick();
+      },
+      onResult: (res) => {
+        this.flashcardIsListening = false;
+        const feedback = this.getVoiceScoreFeedback(res.score);
+        this.flashcardVoiceScore = {
+          score: res.score,
+          spokenText: res.spokenText,
+          feedback: feedback,
+          passed: feedback.passed
+        };
+
+        if (feedback.passed) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(10);
+          window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
+          window.storageManager.recordQuestProgress("reviewFlashcards", 1);
+          this.renderHeaderStats();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%) รับ +10 XP!`, "success");
+        } else {
+          window.soundFx.playIncorrect();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%)`, "info");
+        }
+
+        this.renderVocabContentArea();
+      },
+      onError: (err) => {
+        this.flashcardIsListening = false;
+        this.renderVocabContentArea();
+        this.showToast(err.message || "เกิดข้อผิดพลาดในการฟังเสียง", "error");
+      },
+      onEnd: () => {
+        if (this.flashcardIsListening) {
+          this.flashcardIsListening = false;
+          this.renderVocabContentArea();
+        }
+      }
+    });
+  }
+
+  /**
+   * Start speech recognition for testing pronunciation in Browse Vocab Table
+   */
+  startBrowseVocabSpeaking(vocabId, targetWord) {
+    if (!window.speechEngine) return;
+    if (!window.speechEngine.hasRecognition) {
+      this.showToast("เบราว์เซอร์ของคุณยังไม่รองรับระบบตรวจจับเสียงพูด (แนะนำ Chrome/Edge)", "error");
+      return;
+    }
+
+    this.browseVocabScores[vocabId] = { isListening: true };
+    this.renderVocabContentArea();
+
+    window.speechEngine.listenAndScore(targetWord, {
+      onStart: () => {
+        window.soundFx.playClick();
+      },
+      onResult: (res) => {
+        const feedback = this.getVoiceScoreFeedback(res.score);
+        this.browseVocabScores[vocabId] = {
+          score: res.score,
+          spokenText: res.spokenText,
+          feedback: feedback,
+          isListening: false,
+          passed: feedback.passed
+        };
+
+        if (feedback.passed) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(10);
+          window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
+          window.storageManager.recordQuestProgress("reviewFlashcards", 1);
+          this.renderHeaderStats();
+          this.showToast(`${feedback.emoji} ${feedback.label} ("${targetWord}": ความเหมือน ${res.score}%) รับ +10 XP!`, "success");
+        } else {
+          window.soundFx.playIncorrect();
+          this.showToast(`${feedback.emoji} ${feedback.label} ("${targetWord}": ความเหมือน ${res.score}%)`, "info");
+        }
+
+        this.renderVocabContentArea();
+      },
+      onError: (err) => {
+        delete this.browseVocabScores[vocabId];
+        this.renderVocabContentArea();
+        this.showToast(err.message || "ไม่สามารถฟังเสียงได้", "error");
+      },
+      onEnd: () => {
+        if (this.browseVocabScores[vocabId]?.isListening) {
+          delete this.browseVocabScores[vocabId];
+          this.renderVocabContentArea();
+        }
+      }
+    });
   }
 
   getReadingList() {
@@ -4591,6 +4918,11 @@ class EngMasteryApp {
               title="ฟังเสียงอ่านคำศัพท์ (Pronounce)">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-4.72 4.72H2.5A1.5 1.5 0 001 9.19v1.62c0 .83.67 1.5 1.5 1.5h1.5l4.72 4.72A.75.75 0 0010 16.5V3.5zm3.78 3.22a.75.75 0 011.06 0 6.5 6.5 0 010 9.19.75.75 0 01-1.06-1.06 5 5 0 000-7.07.75.75 0 010-1.06z"/></svg>
             </button>
+            <button id="reading-word-mic-btn" onclick="window.app.startReadingWordPopupSpeaking('${entry.word.replace(/'/g, "\\'")}')"
+              class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/80 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+              title="ทดสอบออกเสียงคำนี้ (Voice Test)">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </button>
             <button onclick="window.app.closeReadingWordPopup()"
               class="w-9 h-9 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-sm font-bold transition-all ml-1"
               title="ปิดหน้าต่าง (Esc)">
@@ -4603,15 +4935,16 @@ class EngMasteryApp {
         <div class="border-b border-slate-100 dark:border-slate-800/80"></div>
 
         <!-- Thai Meaning (Prominent Bold Purple/Indigo Text) -->
-        <div>
+        <div class="space-y-2">
           <div class="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400 leading-snug tracking-tight">
             ${entry.th}
           </div>
           ${entry.definition ? `
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed mt-2.5">
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
               ${entry.definition}
             </p>
           ` : ''}
+          <div id="reading-word-voice-result-box" class="empty:hidden pt-1"></div>
         </div>
 
         <!-- Example Sentence Card (if present) -->
@@ -4682,6 +5015,83 @@ class EngMasteryApp {
       const container = document.getElementById("main-content-view");
       if (container) this.renderVocabularyView(container);
     }
+  }
+
+  startReadingWordPopupSpeaking(targetWord) {
+    if (!window.speechEngine) return;
+    if (!window.speechEngine.hasRecognition) {
+      this.showToast("เบราว์เซอร์ของคุณยังไม่รองรับระบบตรวจจับเสียงพูด (แนะนำ Chrome/Edge)", "error");
+      return;
+    }
+
+    const micBtn = document.getElementById("reading-word-mic-btn");
+    const resultBox = document.getElementById("reading-word-voice-result-box");
+
+    if (micBtn) micBtn.classList.add("recording-pulse");
+    if (resultBox) {
+      resultBox.innerHTML = `
+        <div class="p-3 rounded-2xl bg-red-950/70 border border-red-500/60 shadow-md text-center space-y-1 animate-pulse">
+          <div class="flex items-center justify-center gap-2 text-red-200 font-bold text-xs">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            <span>กำลังฟังเสียง... กรุณาออกเสียง "${targetWord}"</span>
+          </div>
+          <p class="text-[11px] text-red-300/80">พูดเข้าไมโครโฟนได้เลยครับ</p>
+        </div>
+      `;
+    }
+
+    window.speechEngine.listenAndScore(targetWord, {
+      onStart: () => {
+        window.soundFx.playClick();
+      },
+      onResult: (res) => {
+        if (micBtn) micBtn.classList.remove("recording-pulse");
+        const feedback = this.getVoiceScoreFeedback(res.score);
+
+        if (resultBox) {
+          resultBox.innerHTML = `
+            <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border ${feedback.passed ? 'border-emerald-500/50' : 'border-amber-500/50'} shadow-md space-y-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 font-black text-xs ${feedback.textColor}">
+                  <span class="text-base">${feedback.emoji}</span>
+                  <span>${feedback.label}</span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-black shadow-xs ${feedback.badgeClass}">
+                  ${res.score}%
+                </span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-700 ${feedback.barColor}" style="width: ${res.score}%"></div>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-snug">${feedback.message}</p>
+              <div class="text-[10px] text-slate-400 font-mono truncate">
+                ได้ยินว่า: <span class="text-slate-700 dark:text-white font-sans font-semibold">"${res.spokenText || '(ไม่ได้ยินคำ)'}"</span>
+              </div>
+            </div>
+          `;
+        }
+
+        if (feedback.passed) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(10);
+          window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
+          this.renderHeaderStats();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%) รับ +10 XP!`, "success");
+        } else {
+          window.soundFx.playIncorrect();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%)`, "info");
+        }
+      },
+      onError: (err) => {
+        if (micBtn) micBtn.classList.remove("recording-pulse");
+        if (resultBox) resultBox.innerHTML = "";
+        this.showToast(err.message || "เกิดข้อผิดพลาดในการฟังเสียง", "error");
+      },
+      onEnd: () => {
+        if (micBtn) micBtn.classList.remove("recording-pulse");
+      }
+    });
   }
 
   closeReadingWordPopup() {

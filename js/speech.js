@@ -143,8 +143,8 @@ class SpeechEngine {
           spokenText,
           targetText,
           score,
-          isPass: score >= 65,
-          isExcellent: score >= 88,
+          isPass: score >= 80,
+          isExcellent: score >= 90,
           confidence
         });
       }
@@ -186,10 +186,36 @@ class SpeechEngine {
     if (s1 === s2) return 100;
     if (!s1 || !s2) return 0;
 
-    // Word-level token match & character Levenshtein combined
-    const words1 = s1.split(" ");
-    const words2 = s2.split(" ");
+    const words1 = s1.split(" ").filter(Boolean);
+    const words2 = s2.split(" ").filter(Boolean);
 
+    // If target is a single word
+    if (words2.length === 1) {
+      const target = words2[0];
+      // 1. Exact match in spoken word list
+      if (words1.includes(target)) {
+        return 100;
+      }
+      // 2. Best character similarity match across spoken tokens
+      let bestWordScore = 0;
+      for (const w of words1) {
+        if (w === target) return 100;
+        const maxLen = Math.max(w.length, target.length);
+        const dist = this.levenshteinDistance(w, target);
+        const sim = Math.round(Math.max(0, (1 - dist / maxLen) * 100));
+        if (sim > bestWordScore) bestWordScore = sim;
+      }
+      return bestWordScore;
+    }
+
+    // If exact sub-phrase match for multi-word phrases
+    if (s1.includes(s2) || s2.includes(s1)) {
+      const lenDiff = Math.abs(s1.length - s2.length);
+      if (lenDiff <= 3) return 96;
+      if (lenDiff <= 8) return 88;
+    }
+
+    // Word-level token match & character Levenshtein combined for sentences
     let matchedWords = 0;
     words1.forEach(w => {
       if (words2.includes(w)) matchedWords++;
