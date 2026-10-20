@@ -177,28 +177,38 @@ window.grammarSyllabusData = [
       {
         "id": "pos-verbs-adverbs",
         "title": "Unit 2: Verbs & Adverbs (คำกริยาและคำกริยาวิเศษณ์)",
-        "summary": "หัวใจที่บอกการกระทำ (Action) และคำที่บอกว่าทำอย่างไร บ่อยแค่ไหน",
-        "formula": "Subject + Verb + (Adverb)",
-        "explanation": "\n### 1. Verb (คำกริยา) - หัวใจของประโยค\nประโยคภาษาอังกฤษขาดประธานบางครั้งได้ (เช่น ประโยคคำสั่ง) แต่ **\"ขาดกริยาไม่ได้เด็ดขาด\"**!\n- **Action Verbs (กริยาแสดงอาการ):** build (สร้าง), test (ทดสอบ), deploy (ติดตั้ง), run (วิ่ง/รัน), sleep (นอน)\n- **Linking Verbs / Verb to be (กริยาบอกสภาพ/เป็นอยู่คือ):** is, am, are, was, were, become, feel, look\n\n### 2. Adverb (คำกริยาวิเศษณ์) - ตัวบอกรายละเอียด\nAdverb ทำหน้าที่ขยายกริยา เพื่อบอกว่า **\"ทำอย่างไร (How)\", \"ทำที่ไหน (Where)\", \"ทำเมื่อไร (When)\" หรือ \"บ่อยแค่ไหน (How often)\"**\n- มักจะลงท้ายด้วย **-ly**: quickly (อย่างรวดเร็ว), smoothly (อย่างราบรื่น), successfully (อย่างสำเร็จ)\n- ตัวบอกความถี่: always (เสมอ), usually (ปกติ), often (บ่อยๆ), sometimes (บางครั้ง), never (ไม่เคย)\n\n> [!NOTE]\n> ตัวอย่าง: \"The pipeline runs.\" (ประโยคสมบูรณ์แล้ว) ➔ ขยายด้วย Adverb: \"The pipeline runs **smoothly**.\" (ไพพ์ไลน์ทำงานได้อย่างราบรื่นมาก)\n        ",
+        "summary": "เจาะลึกคำกริยา (Action, Linking, Transitive) และคำกริยาวิเศษณ์ขยายกริยา พร้อมตำแหน่ง Adverb of Frequency",
+        "formula": "Subject + (Adverb of Frequency) + Verb + (Object) + (Adverb of Manner/Place/Time)",
+        "explanation": "\n### 1. Verb (คำกริยา) - เสาหลักที่ขับเคลื่อนทุกประโยค\nในภาษาอังกฤษ ประโยคอาจละประธานได้ในประโยคคำสั่ง แต่ **\"จะขาดคำกริยาไม่ได้เด็ดขาด\"**! กริยาเป็นตัวบอกการกระทำ สถานะ หรือการดำรงอยู่ของประธาน\n\n#### 1) Action Verbs (กริยาแสดงอาการ)\nแสดงการกระทำทางกายภาพหรือความคิด:\n- **Transitive Verbs (กริยาต้องการกรรม):** ต้องมีกรรมมารับ ไม่อย่างนั้นความหมายจะไม่สมบูรณ์ เช่น `deploy`, `fix`, `build`, `send`\n  - *\"The engineer fixed the critical bug.\"* (fixed อะไร? ➔ fixed the bug)\n- **Intransitive Verbs (กริยาไม่ต้องการกรรม):** ประธานทำเอง จบความสมบูรณ์ในตัวเอง เช่น `sleep`, `arrive`, `crash`, `fail`\n  - *\"The application crashed.\"* (จบประโยคได้เลย ไม่ต้องมีกรรม)\n\n#### 2) Linking Verbs (กริยาเชื่อมบอกสภาพ)\nเชื่อมประธานเข้ากับ **Subject Complement (ส่วนเติมเต็มประธาน ซึ่งมักเป็น Adjective)** เพื่อบอกคุณลักษณะ ไม่ได้แสดงการกระทำ:\n- ได้แก่: `is / am / are / was / were`, `become`, `seem`, `appear`, `look`, `feel`, `remain`, `stay`\n- *\"The production environment remains stable.\"* (stable เป็น Adjective ขยายประธาน environment)\n- ⚠️ **ข้อควรระวัง:** หลัง Linking Verb ต้องตามด้วย **Adjective** เสมอ ห้ามตามด้วย Adverb เช่น *\"The food smells delicious.\"* (ไม่ใช่ *deliciously)\n\n---\n\n### 2. Adverb (คำกริยาวิเศษณ์) - เครื่องขยายรายละเอียด\nAdverb ทำหน้าที่ขยาย **Verb (กริยา)**, **Adjective (คุณศัพท์)**, หรือ **Adverb ตัวอื่น** เพื่อตอบคำถาม 4 ประการ:\n1. **How (ทำอย่างไร):** `carefully`, `smoothly`, `efficiently`, `fast`\n2. **Where (ที่ไหน):** `here`, `there`, `everywhere`, `remotely`\n3. **When (เมื่อไร):** `yesterday`, `now`, `soon`, `already`\n4. **How often (บ่อยแค่ไหน):** `always`, `often`, `rarely`, `never`\n\n#### ตารางประเภท Adverb และตำแหน่งการวางในประโยค\n| ประเภท Adverb | ตัวอย่างคำศัพท์ | กฎตำแหน่งการวางในประโยค | ตัวอย่างประโยคจริง |\n| Adverb of Manner (บอกอาการ) | `quickly`, `safely`, `successfully` | วางท้ายประโยค หรือหลังกรรม | *\"The script executed successfully.\"* |\n| Adverb of Frequency (บอกความถี่) | `always`, `usually`, `sometimes`, `never` | หน้ากริยาแท้ / หลัง Verb to be | *\"We always backup our databases.\"* |\n| Adverb of Degree (บอกระดับ) | `very`, `extremely`, `quite`, `too` | วางหน้า Adjective หรือ Adverb ที่ต้องการขยาย | *\"The response time is extremely fast.\"* |\n| Adverb of Time (บอกเวลา) | `today`, `recently`, `tomorrow` | วางต้นหรือท้ายประโยค | *\"We released the patch yesterday.\"* |\n\n---\n\n### 3. จุดกับดักที่คนมักผิดบ่อย (Adverb Pitfalls)\n💡 **คำที่ลงท้ายด้วย -ly แต่เป็น Adjective (ไม่ใช่ Adverb!):**\n- `friendly` (เป็นมิตร), `costly` (ราคาแพง), `timely` (ตรงเวลา), `orderly` (เป็นระเบียบ)\n- *\"He is a friendly manager.\"* (friendly เป็น Adjective ขยาย manager)\n- หากต้องการใช้เป็น Adverb ต้องพูดว่า: *\"in a friendly manner\"*\n\n⚠️ **คำที่รูปเดิมทั้ง Adjective และ Adverb (ห้ามเติม -ly!):**\n| คำศัพท์ | รูป Adjective (คุณศัพท์) | รูป Adverb (กริยาวิเศษณ์) | ❌ รูปที่ผิด (ห้ามใช้) |\n| `fast` | a fast network | runs fast | ~~fastly~~ |\n| `hard` | a hard problem | works hard | ~~hardly~~ (hardly แปลว่า แทบจะไม่) |\n| `late` | a late train | arrived late | ~~lately~~ (lately แปลว่า เมื่อเร็วๆ นี้) |\n| `early` | an early meeting | woke up early | ~~earlyly~~ |\n",
         "examples": [
           {
-            "en": "The database responds very quickly today.",
-            "th": "ฐานข้อมูลตอบสนองได้อย่างรวดเร็วมากในวันนี้",
+            "en": "The database cluster responds very quickly under heavy load.",
+            "th": "คลัสเตอร์ฐานข้อมูลตอบสนองได้อย่างรวดเร็วมากแม้จะอยู่ภายใต้โหลดที่หนักหน่วง",
             "cat": "Tech"
           },
           {
-            "en": "She speaks English fluently with clients.",
-            "th": "เธอพูดภาษาอังกฤษได้อย่างคล่องแคล่วกับลูกค้า",
+            "en": "She speaks English fluently during international client meetings.",
+            "th": "เธอพูดภาษาอังกฤษได้อย่างคล่องแคล่วระหว่างการประชุมกับลูกค้าระดับนานาชาติ",
             "cat": "Daily"
           },
           {
-            "en": "We always backup the database before any release.",
-            "th": "พวกเราสำรองข้อมูลฐานข้อมูลเสมอก่อนการปล่อยเวอร์ชันใหม่ทุกครั้ง",
+            "en": "We always backup the production data before initiating any major migration.",
+            "th": "พวกเราสำรองข้อมูลโปรดักชันเสมอก่อนเริ่มการย้ายระบบครั้งใหญ่ทุกครั้ง",
             "cat": "Tech"
           },
           {
-            "en": "He carefully checked his email before sending it.",
-            "th": "เขาตรวจทานอีเมลอย่างรอบคอบก่อนที่จะกดส่ง",
+            "en": "He carefully verified the flight details before confirming his reservation.",
+            "th": "เขาตรวจสอบรายละเอียดเที่ยวบินอย่างรอบคอบก่อนที่จะยืนยันการจอง",
+            "cat": "Daily"
+          },
+          {
+            "en": "The background worker process crashed unexpectedly due to memory exhaustion.",
+            "th": "โพรเซสทำงานเบื้องหลังหยุดทำงานกะทันหันเนื่องจากหน่วยความจำไม่เพียงพอ",
+            "cat": "Tech"
+          },
+          {
+            "en": "Our team lead is always friendly and approachable to new developers.",
+            "th": "หัวหน้าทีมของเราเป็นมิตรและเปิดรับนักพัฒนาใหม่อยู่เสมอ",
             "cat": "Daily"
           }
         ],
@@ -318,23 +328,38 @@ window.grammarSyllabusData = [
       {
         "id": "pos-adj-prep",
         "title": "Unit 3: Adjectives & Prepositions (คำคุณศัพท์และคำบุพบท)",
-        "summary": "คำบรรยายลักษณะ (Adj) และคำเชื่อมบอกตำแหน่ง/เวลา (In, On, At)",
-        "formula": "Adjective + Noun  |  Preposition + Noun Phrase",
-        "explanation": "\n### 1. Adjective (คำคุณศัพท์) - บรรยายลักษณะคำนาม\nวางไว้ **หน้า Noun** หรือ **หลัง Verb to be**:\n- วางหน้า Noun: \"a **scalable** architecture\" (สถาปัตยกรรมที่ขยายขนาดได้), \"a **new** feature\" (ฟีเจอร์ใหม่)\n- หลัง Verb to be: \"The system is **stable**.\" (ระบบมีความเสถียร)\n\n### 2. Preposition (คำบุพบท) - บอกตำแหน่งและเวลา\n- **In:** ใช้กับพื้นที่กว้าง, เมือง, ประเทศ, เดือน, ปี (in Thailand, in 2026, in production)\n- **On:** ใช้กับวันในสัปดาห์, วันที่, บนพื้นผิว, บนแพลตฟอร์ม (on Monday, on the server, on GitHub)\n- **At:** ใช้กับจุดเจาะจง, เวลาที่แน่นอน (at 9:00 AM, at the office, at line 42)\n        ",
+        "summary": "ทำความเข้าใจคำคุณศัพท์บอกลักษณะ (Adjectives) และคำบุพบทบอกพิกัดเวลาและสถานที่ (Prepositions of Time & Place)",
+        "formula": "Adjective + Noun / Linking Verb + Adjective | Preposition + Noun Phrase",
+        "explanation": "\n### 1. Adjective (คำคุณศัพท์) คืออะไร?\nAdjective มีหน้าที่เดียวคือ **\"ขยายคำนาม (Noun)\"** หรือสรรพนาม เพื่อบอกว่าคำนามนั้นมีลักษณะอย่างไร ขนาดไหน สีอะไร หรือรู้สึกอย่างไร\n\n#### 2 ตำแหน่งสำคัญของ Adjective ในประโยค:\n1. **วางหน้าคำนามโดยตรง (Attributive Position):**\n   - *\"We deployed a **scalable** architecture.\"* (scalable ขยาย architecture)\n   - *\"She bought a **comfortable** office chair.\"*\n2. **วางหลัง Linking Verb (Predicative Position):**\n   - *\"The latency is **high** today.\"* (high ขยายประธาน latency ผ่าน is)\n   - *\"The security audit seemed **thorough**.\"*\n\n#### ตารางลำดับการเรียงคุณศัพท์ (Royal Order of Adjectives - OSASCOMP)\nเมื่อมีคุณศัพท์หลายคำขยายคำนามตัวเดียวกัน ให้เรียงตามลำดับนี้เสมอ:\n| ลำดับ | หมวดหมู่ | ตัวอย่างคำศัพท์ |\n| 1. Opinion (ความคิดเห็น) | `beautiful`, `efficient`, `expensive`, `reliable` |\n| 2. Size (ขนาด) | `large`, `compact`, `tiny`, `huge` |\n| 3. Age (อายุ/ความใหม่) | `new`, `modern`, `legacy`, `ancient` |\n| 4. Shape (รูปทรง) | `round`, `square`, `rectangular` |\n| 5. Color (สี) | `blue`, `dark`, `white` |\n| 6. Origin (แหล่งกำเนิด) | `Japanese`, `American`, `cloud-native` |\n| 7. Material (วัสดุ) | `silicon`, `aluminum`, `wooden` |\n| 8. Purpose (จุดประสงค์การใช้งาน) | `production` (server), `swimming` (pool) |\n\n💡 **ตัวอย่างการเรียง:** *\"an **efficient modern cloud-native** application\"*\n\n---\n\n### 2. Preposition (คำบุพบท) - สะพานเชื่อมตำแหน่งและเวลา\nคำบุพบทเชื่อมคำนามเข้ากับส่วนอื่นๆ ของประโยค เพื่อบอก **เวลา (Time)**, **สถานที่ (Place)**, หรือ **ทิศทาง (Direction)**\n\n#### กฎทองสามเหลี่ยม In / On / At\n| มิติ | IN (กว้างที่สุด/ภาพใหญ่) | ON (เฉพาะเจาะจงระดับกลาง) | AT (เฉพาะเจาะจงสูงสุด/จุดพิกัด) |\n| เวลา (Time) | • ปี/ศตวรรษ: in 2026<br>• เดือน: in October<br>• ช่วงวัน: in the morning | • วันในสัปดาห์: on Monday<br>• วันที่: on October 25th<br>• วันพิเศษ: on New Year's Day | • เวลาตามนาฬิกา: at 9:00 AM<br>• ช่วงเทศกาล: at Christmas<br>• จุดเวลา: at midnight, at noon |\n| สถานที่ (Place) | • ประเทศ: in Thailand<br>• เมือง: in Bangkok<br>• พื้นที่ปิด: in the server room | • ชื่อถนน: on Sukhumvit Road<br>• บนพื้นผิว: on the table, on the screen<br>• ยานพาหนะรวม: on the bus, on the train | • ที่อยู่มีบ้านเลขที่: at 123 Main St.<br>• สถานที่เฉพาะเจาะจง: at the airport, at the office |\n\n⚠️ **Prepositions ในงานไอที & ดิจิทัล:**\n- **On:** `on the internet`, `on the website`, `on the server`, `on AWS`, `on GitHub`\n- **In:** `in the database`, `in the cloud`, `in the log file`, `in production`\n",
         "examples": [
           {
-            "en": "We found a critical bug in the authentication module.",
-            "th": "เราพบบั๊กที่วิกฤตตัวหนึ่งในโมดูลยืนยันตัวตน",
+            "en": "We store critical user tokens in an encrypted Redis database.",
+            "th": "พวกเราจัดเก็บโทเคนสำคัญของผู้ใช้ไว้ในฐานข้อมูล Redis ที่ถูกเข้ารหัสไว้อย่างปลอดภัย",
             "cat": "Tech"
           },
           {
-            "en": "Our daily stand-up meeting starts at 9:30 AM.",
-            "th": "การประชุมสแตนด์อัปประจำวันเริ่มตอน 9 โมงครึ่ง",
+            "en": "The quarterly review meeting is scheduled at nine in the morning on Friday.",
+            "th": "การประชุมทบทวนผลงานประจำไตรมาสมีกำหนดจัดขึ้นตอน 9 โมงเช้าในวันศุกร์",
+            "cat": "Daily"
+          },
+          {
+            "en": "The new feature is deployed on production and runs smoothly.",
+            "th": "ฟีเจอร์ใหม่ได้รับการติดตั้งขึ้นสู่ Production แล้วและทำงานได้อย่างราบรื่น",
             "cat": "Tech"
           },
           {
-            "en": "I left my blue notebook on the meeting table.",
-            "th": "ฉันลืมสมุดบันทึกสีน้ำเงินไว้บนโต๊ะประชุม",
+            "en": "She left her notebook on the conference table in room four.",
+            "th": "เธอลืมสมุดบันทึกไว้บนโต๊ะประชุมในห้องหมายเลขสี่",
+            "cat": "Daily"
+          },
+          {
+            "en": "An efficient cloud-native pipeline reduces build time significantly.",
+            "th": "ไปป์ไลน์แบบ Cloud-native ที่มีประสิทธิภาพช่วยลดเวลาการบิลด์ระบบลงอย่างมีนัยสำคัญ",
+            "cat": "Tech"
+          },
+          {
+            "en": "I met him at the airport before flying to Singapore.",
+            "th": "ฉันพบเขาที่สนามบินก่อนออกเดินทางไปสิงคโปร์",
             "cat": "Daily"
           }
         ],
@@ -464,23 +489,38 @@ window.grammarSyllabusData = [
       {
         "id": "det-articles",
         "title": "Unit 1: Articles Mastery (A, An vs The)",
-        "summary": "กฎเหล็กการเลือกระหว่างคำนามทั่วไป (a/an) กับคำนามที่ชี้เฉพาะเจาะจง (the)",
-        "formula": "a/an + Singular Countable Noun  |  the + Specific Noun",
-        "explanation": "\n### 1. A / An (สิ่งใดสิ่งหนึ่ง ไม่เจาะจง มี 1 ชิ้น)\n- ใช้ **a** นำหน้าคำที่ออกเสียงพยัญชนะ: a server, a user, a bug, a university (เสียง ย)\n- ใช้ **an** นำหน้าคำที่ออกเสียงสระ (อ): an API, an issue, an hour (เสียง อ ไม่ใช่ตัว h), an error\n\n### 2. The (ชี้เฉพาะ ทั้งคนพูดและคนฟังรู้ว่าเป็นตัวไหน)\n- ใช้เมื่อกล่าวถึงสิ่งนั้นซ้ำเป็นครั้งที่สอง\n- ใช้เมื่อสิ่งนั้นมีเพียงหนึ่งเดียวในบริบทนั้น: the production environment, the CEO, the internet\n- ใช้กับสิ่งที่มีการขยายความเจาะจง: the server *that crashed yesterday*\n        ",
+        "summary": "ไขรหัสการใช้ A, An, The และกรณีที่ไม่ต้องใส่ Article (Zero Article) ตามหลักสากล",
+        "formula": "Indefinite (A/An) vs Definite (The) vs Zero Article (Ø)",
+        "explanation": "\n### 1. Indefinite Articles: A vs AN (ไม่เจาะจง)\nใช้กับคำนามนับได้เอกพจน์ (Singular Countable Noun) ที่พูดถึงเป็นครั้งแรกหรือไม่ได้ชี้เฉพาะเจาะจงว่าอันไหน\n\n💡 **กฎเหล็กที่แท้จริง:** การเลือกใช้ **A** หรือ **AN** ขึ้นอยู่กับ **\"เสียงขึ้นต้น (Phonetic Sound)\"** ไม่ใช่ตัวอักษรที่เขียน!\n- **ใช้ AN:** เมื่อคำถัดไปออกเสียงขึ้นต้นด้วย **เสียงสระ (Vowel Sound: อ / ออ)**\n  - `an issue` (เสียง อ)\n  - `an API` (ออกเสียง เอ)\n  - `an hour` (h ไม่ออกเสียง ออกเป็น อาว-เออะ)\n  - `an honest engineer` (h ไม่ออกเสียง)\n- **ใช้ A:** เมื่อคำถัดไปออกเสียงขึ้นต้นด้วย **เสียงพยัญชนะ (Consonant Sound)**\n  - `a server`\n  - `a user` (ตัว u แต่ออกเสียง ยู-เซอะ เสียง ย เป็นพยัญชนะ!)\n  - `a unique design` (เสียง ย)\n  - `a European country` (เสียง ย)\n  - `a one-time password (OTP)` (เสียง ว - วัน)\n\n---\n\n### 2. Definite Article: THE (ชี้เฉพาะเจาะจง)\nใช้ได้กับทั้งนามนับได้เอกพจน์ พหูพจน์ และนามนับไม่ได้ เมื่อผู้พูดและผู้ฟัง **รู้แน่ชัดว่ากำลังหมายถึงสิ่งไหน**\n1. **เมื่อพูดถึงสิ่งนั้นซ้ำเป็นครั้งที่สอง:**\n   - *\"We encountered **a** bug. **The** bug caused high CPU usage.\"*\n2. **มีสิ่งเดียวในโลกหรือในบริบทนั้น:**\n   - `the sun`, `the internet`, `the root directory`, `the CEO`\n3. **ใช้กับคุณศัพท์ขั้นสูงสุด (Superlative Degree):**\n   - `the highest latency`, `the best algorithm`, `the most scalable solution`\n4. **ชื่อสถานที่ทางภูมิศาสตร์เฉพาะ:**\n   - มหาสมุทร/แม่น้ำ: `the Pacific Ocean`, `the Chao Phraya River`\n   - ประเทศที่เป็นพหูพจน์หรือสหพันธรัฐ: `the United States`, `the United Kingdom`, `the Netherlands`\n\n---\n\n### 3. Zero Article (ไม่ต้องใส่ Article ใดๆ เลย)\nห้ามใส่ a, an, หรือ the ในกรณีต่อไปนี้:\n| หมวดหมู่ | ตัวอย่าง | ❌ ผิด (ห้ามใส่) |\n| นามพหูพจน์ที่พูดถึงทั่วไปในภาพรวม | *\"Engineers write clean code.\"* | ~~The engineers write...~~ (ถ้าพูดถึงวิศวกรทั่วๆ ไป) |\n| นามนับไม่ได้ที่พูดถึงทั่วไป | *\"Security is our top priority.\"* | ~~The security is...~~ |\n| ชื่อมื้ออาหาร | `have breakfast`, `eat lunch` | ~~eat a lunch~~ |\n| ชื่อภาษาและวิชา | `English`, `Python`, `Mathematics` | ~~the English language~~ (ถ้าไม่มีคำว่า language) |\n| ชื่อประเทศส่วนใหญ่ที่เป็นชื่อเดี่ยว | `Thailand`, `Japan`, `Germany` | ~~the Thailand~~ |\n| กีฬาและเกม | `play football`, `play chess` | ~~play the football~~ |\n",
         "examples": [
           {
-            "en": "We need a new database server.",
-            "th": "เราต้องการเซิร์ฟเวอร์ฐานข้อมูลเครื่องใหม่สักเครื่อง (เครื่องไหนก็ได้)",
+            "en": "We encountered an unexpected error while provisioning the infrastructure.",
+            "th": "พวกเราพบข้อผิดพลาดที่ไม่คาดคิดในขณะที่กำลังจัดเตรียมระบบโครงสร้างพื้นฐาน",
             "cat": "Tech"
           },
           {
-            "en": "The database server went down again.",
-            "th": "เซิร์ฟเวอร์ฐานข้อมูลเครื่องนั้นล่มอีกแล้ว (เจาะจงเครื่องที่รู้กัน)",
+            "en": "She has been working as a software architect for over an hour today.",
+            "th": "เธอทำงานในฐานะสถาปนิกซอฟต์แวร์มานานกว่าหนึ่งชั่วโมงแล้วในวันนี้",
             "cat": "Tech"
           },
           {
-            "en": "She submitted an error report this morning.",
-            "th": "เธอส่งรายงานข้อผิดพลาดมาเมื่อเช้านี้",
+            "en": "The server room temperature must remain below twenty degrees Celsius.",
+            "th": "อุณหภูมิในห้องเซิร์ฟเวอร์จะต้องถูกควบคุมให้ต่ำกว่ายี่สิบองศาเซลเซียสเสมอ",
+            "cat": "Tech"
+          },
+          {
+            "en": "He bought a unique laptop bag before his trip to Singapore.",
+            "th": "เขาซื้อกระเป๋าแล็ปท็อปดีไซน์เฉพาะตัวก่อนการเดินทางไปสิงคโปร์",
+            "cat": "Daily"
+          },
+          {
+            "en": "Information security requires continuous vigilance across all teams.",
+            "th": "ความมั่นคงปลอดภัยของข้อมูลต้องอาศัยความระมัดระวังอย่างต่อเนื่องในทุกทีม",
+            "cat": "Tech"
+          },
+          {
+            "en": "They had lunch together at the company cafeteria.",
+            "th": "พวกเขารับประทานอาหารกลางวันร่วมกันที่โรงอาหารของบริษัท",
             "cat": "Daily"
           }
         ],
@@ -600,23 +640,38 @@ window.grammarSyllabusData = [
       {
         "id": "det-quantifiers",
         "title": "Unit 2: Quantifiers (Some, Any, Much, Many, Few, Little)",
-        "summary": "การบอกปริมาณสำหรับคำนามนับได้และนับไม่ได้อย่างเป็นธรรมชาติ",
-        "formula": "Some (บอกเล่า/ขอร้อง) vs Any (ปฏิเสธ/คำถาม)  |  Many (นับได้) vs Much (นับไม่ได้)",
-        "explanation": "\n### 1. Some vs Any\n- **Some:** ใช้ในประโยคบอกเล่า หรือยื่นข้อเสนอ/ขอร้องอย่างสุภาพ\n  - \"We have **some** open pull requests.\" (เรามี PR ค้างอยู่บ้าง)\n  - \"Would you like **some** coffee?\" (รับกาแฟไหมครับ?)\n- **Any:** ใช้ในประโยคปฏิเสธและคำถามทั่วไป\n  - \"Are there **any** pending alerts?\" (มี Alert ค้างอยู่ไหม?)\n  - \"We don't have **any** spare hardware.\" (เราไม่มีฮาร์ดแวร์สำรองเลย)\n\n### 2. Many vs Much\n- **Many + นามนับได้พหูพจน์:** many pods, many developers, many errors\n- **Much + นามนับไม่ได้:** much memory, much bandwidth, much time, much traffic\n        ",
+        "summary": "บอกปริมาณอย่างแม่นยำด้วย Some, Any, Much, Many, Few, Little และหลักการเลือกใช้กับคำนาม",
+        "formula": "Quantifier + Countable Plural / Uncountable Noun",
+        "explanation": "\n### 1. กฎพื้นฐาน: การจับคู่ Quantifier กับประเภทคำนาม\nการเลือกใช้คำบอกปริมาณขึ้นอยู่กับว่าคำนามที่ตามหลังเป็น **นามนับได้พหูพจน์ (Plural Countable)** หรือ **นามนับไม่ได้ (Uncountable)**\n\n#### ตารางสรุปการจับคู่ Quantifier ที่ถูกต้อง:\n| คำบอกปริมาณ | ใช้กับนามนับได้พหูพจน์ | ใช้กับนามนับไม่ได้ | ตัวอย่างประโยคจริง |\n| `many` (มาก) | ✔️ | ❌ | *\"There are **many** microservices in the cluster.\"* |\n| `much` (มาก) | ❌ | ✔️ | *\"We don't have **much** disk space left.\"* |\n| `a lot of / lots of` (มาก) | ✔️ | ✔️ (ใช้ได้ทั้งคู่) | *\"The database handles **a lot of** traffic.\"* |\n| `a few` (พอมีบ้าง 2-3 อัน) | ✔️ | ❌ | *\"We have **a few** pull requests to review.\"* |\n| `few` (แทบจะไม่มีเลย เชิงลบ) | ✔️ | ❌ | *\"**Few** developers understand this legacy code.\"* |\n| `a little` (พอมีอยู่บ้าง เล็กน้อย) | ❌ | ✔️ | *\"We need **a little** patience during the migration.\"* |\n| `little` (แทบไม่มีเลย เชิงลบ) | ❌ | ✔️ | *\"There is **little** documentation available.\"* |\n\n---\n\n### 2. Some vs Any: การใช้งานที่ถูกต้อง\n- **Some (บ้าง/บางส่วน):**\n  - ใช้ใน **ประโยคบอกเล่า (Affirmative):** *\"We have **some** questions about the roadmap.\"*\n  - ใช้ใน **ประโยคคำถามที่เป็นการยื่นข้อเสนอหรือขอร้อง (Offers & Requests):**\n    - *\"Would you like **some** coffee?\"* (ยื่นข้อเสนอ)\n    - *\"Could you give me **some** advice?\"* (ขอร้องอย่างสุภาพ)\n- **Any (บ้างไหม/เลย):**\n  - ใช้ใน **ประโยคปฏิเสธ (Negative):** *\"We don't have **any** active incidents right now.\"*\n  - ใช้ใน **ประโยคคำถามทั่วไป (Questions):** *\"Do you have **any** objections to this design?\"*\n  - ใช้ในประโยคบอกเล่าในความหมายว่า **\"อันไหนก็ได้ / ใครก็ได้ (No matter which/who):\"**\n    - *\"You can run this container on **any** cloud platform.\"*\n\n---\n\n### 3. Each, Every, Both, Either, Neither (ข้อสอบยอดฮิต!)\n1. **Each / Every (แต่ละ / ทุกๆ):**\n   - **ต้องตามด้วยคำนามเอกพจน์ และกริยาเอกพจน์เสมอ!**\n   - *\"**Each** engineer **has** their own development environment.\"* (ไม่ใช่ have)\n   - *\"**Every** deployment **requires** automated testing.\"*\n2. **Both (ทั้งสอง) vs Either (อันใดอันหนึ่ง) vs Neither (ไม่ทั้งคู่):**\n   - `Both A and B` ➔ กริยาพหูพจน์: *\"Both servers are responding.\"*\n   - `Either A or B` / `Neither A nor B` ➔ กริยาผันตามประธานตัวที่อยู่ใกล้กริยาที่สุด (Proximity Rule):\n     - *\"Neither the manager nor the developers **were** aware of the bug.\"*\n",
         "examples": [
           {
-            "en": "How much RAM does this container require?",
-            "th": "คอนเทนเนอร์ตัวนี้ต้องใช้ RAM เท่าไร? (RAM นับไม่ได้)",
+            "en": "We don't have much disk space left on the primary database instance.",
+            "th": "พวกเราเหลือพื้นที่ดิสก์ไม่มากแล้วบนอินสแตนซ์ฐานข้อมูลหลัก",
             "cat": "Tech"
           },
           {
-            "en": "How many instances are currently running?",
-            "th": "ตอนนี้มี Instance กำลังทำงานอยู่กี่ตัว? (Instance นับได้)",
+            "en": "Could you give me some feedback on my presentation slides?",
+            "th": "คุณช่วยให้ข้อคิดเห็นบางอย่างเกี่ยวกับสไลด์นำเสนอของฉันหน่อยได้ไหม?",
+            "cat": "Daily"
+          },
+          {
+            "en": "There are few engineers who can debug the legacy kernel module.",
+            "th": "มีวิศวกรน้อยคนมาก (แทบจะไม่มีเลย) ที่สามารถแก้ไขบั๊กโมดูลเคอร์เนลตัวเก่านี้ได้",
             "cat": "Tech"
           },
           {
-            "en": "Do you have any questions before we wrap up?",
-            "th": "มีใครมีคำถามอะไรไหมก่อนที่เราจะปิดการประชุม?",
+            "en": "I only have a little free time this afternoon between meetings.",
+            "th": "ฉันมีเวลาว่างเพียงเล็กน้อยเท่านั้นในช่วงบ่ายนี้ระหว่างการประชุมแต่ละรอบ",
+            "cat": "Daily"
+          },
+          {
+            "en": "Each microservice maintains its own independent database schema.",
+            "th": "แต่ละไมโครเซอร์วิสจะดูแลรักษาสคีมาฐานข้อมูลอิสระเป็นของตนเอง",
+            "cat": "Tech"
+          },
+          {
+            "en": "Do you have any suggestions for improving our daily standup meeting?",
+            "th": "คุณมีข้อเสนอแนะอะไรบ้างไหมสำหรับการปรับปรุงการประชุมสแตนด์อัปประจำวันของเรา?",
             "cat": "Daily"
           }
         ],
@@ -746,28 +801,38 @@ window.grammarSyllabusData = [
       {
         "id": "tense-present-simple-con",
         "title": "Unit 1: Present Simple vs Present Continuous",
-        "summary": "สิ่งที่ทำเป็นกิจวัตร/ความจริงทางระบบ vs สิ่งที่กำลังทำอยู่ ณ วินาทีนี้",
-        "formula": "Present Simple: S + V.1 (s/es)  vs  Present Con: S + is/am/are + V.ing",
-        "explanation": "\n### 1. Present Simple (ความจริง กฎเกณฑ์ กิจวัตรประจำวัน)\n- ใช้กับสิ่งที่เป็นจริงเสมอ การทำงานตามรอบปกติ หรือพฤติกรรมของระบบ\n- **คีย์เวิร์ด:** always, usually, every day, automatically\n- ตัวอย่าง: \"The cron job **runs** every hour.\" (Cron job ทำงานทุกๆ 1 ชั่วโมง เป็นกฎปกติ)\n\n### 2. Present Continuous (กำลังทำอยู่ ณ วินาทีนี้ หรือสถานการณ์ชั่วคราว)\n- ใช้เมื่อเหตุการณ์กำลังดำเนินอยู่ตอนนี้ หรือช่วงนี้เป็นการชั่วคราว\n- **คีย์เวิร์ด:** now, right now, currently, at the moment\n- ตัวอย่าง: \"We **are currently migrating** the user table.\" (เรากำลังย้ายตารางข้อมูลผู้ใช้อยู่ ณ ตอนนี้)\n        ",
+        "summary": "แยกแยะความจริง ความถี่ นิสัย (Present Simple) ออกจากสิ่งที่กำลังดำเนินอยู่หรือการเปลี่ยนแปลงชั่วคราว (Present Continuous)",
+        "formula": "Present Simple: S + V1(s/es) | Present Continuous: S + is/am/are + V.ing",
+        "explanation": "\n### 1. Present Simple: ความจริง กิจวัตร และข้อเท็จจริงสากล\n`Subject + V1 (เติม s/es เมื่อประธานเป็นเอกพจน์ He/She/It/Single Noun)`\n\n#### บริบทการใช้งาน Present Simple:\n1. **General Truths & Facts (ความจริงทั่วไป/สัจธรรม/ระบบการทำงาน):**\n   - *\"PostgreSQL stores data in structured tables.\"*\n   - *\"The sun rises in the east.\"*\n2. **Habits & Routines (นิสัย กิจวัตร สิ่งที่ทำสม่ำเสมอ):**\n   - มักมี Adverb of Frequency: `always`, `usually`, `every day`, `often`\n   - *\"Our team holds a sprint review every two weeks.\"*\n3. **Fixed Timetables & Schedules (ตารางเวลาที่กำหนดไว้แน่นอน):**\n   - *\"The conference starts at nine tomorrow morning.\"*\n\n---\n\n### 2. Present Continuous: กำลังเกิดขึ้น หรืออยู่ระหว่างการเปลี่ยนแปลง\n`Subject + is / am / are + Verb-ing`\n\n#### บริบทการใช้งาน Present Continuous:\n1. **Actions Happening Right Now (กำลังเกิดขึ้นขณะพูด):**\n   - *\"The CI/CD pipeline is deploying version 2.4 right now.\"*\n   - *\"Listen! The fire alarm is ringing.\"*\n2. **Temporary Situations (สถานการณ์ชั่วคราว ไม่ใช่เรื่องถาวร):**\n   - *\"I am working from home this week because my office is being renovated.\"*\n3. **Trends & Changing Situations (แนวโน้มที่กำลังเปลี่ยนแปลง):**\n   - *\"Cloud computing costs are increasing rapidly.\"*\n4. **Definite Near-Future Arrangements (นัดหมายในอนาคตอันใกล้ที่จัดเตรียมไว้แล้ว):**\n   - *\"We are meeting the enterprise clients tomorrow morning.\"*\n\n---\n\n### 3. ตารางเปรียบเทียบและการวิเคราะห์กริยาต้องห้าม (Stative Verbs)\n| มิติการเปรียบเทียบ | Present Simple | Present Continuous |\n| โครงสร้างบอกเล่า | `S + V.1 (s/es)` | `S + is/am/are + V.ing` |\n| โครงสร้างปฏิเสธ | `S + do/does not + V.inf` | `S + is/am/are not + V.ing` |\n| โครงสร้างคำถาม | `Do/Does + S + V.inf?` | `Is/Am/Are + S + V.ing?` |\n| คีย์เวิร์ดบอกเวลา | `always`, `never`, `every day`, `normally` | `now`, `at the moment`, `currently`, `these days` |\n\n⚠️ **Stative Verbs (กริยาบอกสภาวะ ห้ามใช้รูป V.ing เด็ดขาด!):**\nกริยาที่บอกความรู้สึก การรับรู้ ความคิด หรือความเป็นเจ้าของ ไม่ใช่การกระทำทางกายภาพ:\n- **ความคิด/ความเข้าใจ:** `know`, `understand`, `believe`, `remember`, `suppose`\n- **ความรู้สึก/ความชอบ:** `like`, `love`, `hate`, `want`, `need`, `prefer`\n- **การเป็นเจ้าของ:** `belong to`, `own`, `possess`, `contain`\n- **การรับรู้ประสาทสัมผัส:** `hear`, `smell`, `taste`, `seem`\n- ❌ **ห้ามพูด:** *I am knowing the answer.* ➔ ✔️ **ต้องพูด:** *\"I know the answer.\"*\n- ❌ **ห้ามพูด:** *The app is containing bugs.* ➔ ✔️ **ต้องพูด:** *\"The app contains bugs.\"*\n",
         "examples": [
           {
-            "en": "The API gateway routes all incoming requests.",
-            "th": "API Gateway ทำหน้าที่จัดเส้นทางทุก Request ที่ส่งเข้ามา (ความจริง/หน้าที่ปกติ)",
+            "en": "The automated backup process runs every midnight without interruption.",
+            "th": "กระบวนการสำรองข้อมูลอัตโนมัติจะทำงานทุกเที่ยงคืนโดยไม่มีการหยุดชะงัก",
             "cat": "Tech"
           },
           {
-            "en": "I am investigating the latency spike right now.",
-            "th": "ฉันกำลังตรวจสอบปัญหากราฟ Latency พุ่งสูงอยู่ ณ ตอนนี้",
+            "en": "Our engineers are currently investigating the network latency issue.",
+            "th": "วิศวกรของเรากำลังตรวจสอบปัญหาความหน่วงของเครือข่ายอยู่ในขณะนี้",
             "cat": "Tech"
           },
           {
-            "en": "She usually works remotely on Wednesdays.",
-            "th": "ปกติเธอจะทำงานแบบรีโมทในวันพุธ",
+            "en": "She usually drinks black coffee before starting her morning standup meeting.",
+            "th": "ปกติเธอจะดื่มกาแฟดำก่อนเริ่มการประชุมสแตนด์อัปในตอนเช้า",
             "cat": "Daily"
           },
           {
-            "en": "Listen! The fire alarm is ringing.",
-            "th": "ฟังดูสิ! สัญญาณเตือนไฟไหม้กำลังดังอยู่",
+            "en": "I am working on the authentication microservice this afternoon.",
+            "th": "บ่ายนี้ฉันกำลังนั่งทำระบบยืนยันตัวตนสำหรับไมโครเซอร์วิสอยู่",
+            "cat": "Tech"
+          },
+          {
+            "en": "He understands the architecture deeply and leads the technical discussions.",
+            "th": "เขาเข้าใจสถาปัตยกรรมระบบอย่างลึกซึ้งและเป็นผู้นำการสนทนาเชิงเทคนิค",
+            "cat": "Tech"
+          },
+          {
+            "en": "They are staying at a hotel near the office until Friday.",
+            "th": "พวกเขาพักอยู่ที่โรงแรมใกล้กับออฟฟิศชั่วคราวจนถึงวันศุกร์นี้",
             "cat": "Daily"
           }
         ],
@@ -887,23 +952,38 @@ window.grammarSyllabusData = [
       {
         "id": "tense-past-vs-perfect",
         "title": "Unit 2: Past Simple vs Present Perfect",
-        "summary": "อดีตจบลงแล้ว (มีเวลาระบุ) vs สิ่งที่เพิ่งเกิดและผลลัพธ์ยังเชื่อมถึงปัจจุบัน",
-        "formula": "Past Simple: S + V.2  vs  Present Perfect: S + have/has + V.3",
-        "explanation": "\n### 1. Past Simple (จบไปแล้ว มีจุดเวลาในอดีตชัดเจน)\n- ต้องมีคำระบุเวลาในอดีต เช่น yesterday, last night, 2 hours ago, in 2025\n- ตัวอย่าง: \"The server crashed **yesterday**.\" (เซิร์ฟเวอร์ล่มเมื่อวานนี้ จบไปแล้วและเวลาระบุชัด)\n\n### 2. Present Perfect (ทำมาตั้งแต่อดีตถึงปัจจุบัน หรือเพิ่งเสร็จและส่งผลอยู่)\n- ไม่ระบุเวลาที่แน่นอน แต่เน้นผลลัพธ์ว่าทำเสร็จแล้ว หรือยังไม่เสร็จ\n- **คีย์เวิร์ด:** already (แล้ว), just (เพิ่งจะ), yet (ยัง), since (ตั้งแต่), for (เป็นเวลา)\n- ตัวอย่าง: \"We **have already deployed** version 2.4.\" (พวกเราติดตั้งเวอร์ชัน 2.4 เสร็จเรียบร้อยแล้ว และตอนนี้ระบบกำลังรันอยู่)\n        ",
+        "summary": "กุญแจสำคัญในการแยกอดีตที่จบลงแล้ว (Past Simple) ออกจากเหตุการณ์ที่มีผลเชื่อมโยงถึงปัจจุบัน (Present Perfect) และอดีตก่อนอดีต (Past Perfect)",
+        "formula": "Past Simple: S + V2 | Present Perfect: S + have/has + V3 | Past Perfect: S + had + V3",
+        "explanation": "\n### 1. Past Simple: อดีตที่จบสมบูรณ์และตัดขาดจากปัจจุบัน\n`Subject + V2 (Regular: -ed / Irregular: เปลี่ยนรูป)`\nใช้บอกเล่าเรื่องราวที่ **เกิดขึ้นและจบลงไปแล้วในอดีต** โดยมักมี **เวลาระบุไว้อย่างชัดเจน (Definite Time Marker)**:\n- Time Markers: `yesterday`, `last night`, `in 2024`, `two hours ago`, `when I was young`\n- *\"We deployed the patch **yesterday**.\"* (การติดตั้งจบลงไปแล้วเมื่อวานนี้)\n- *\"Steve Jobs founded Apple **in 1976**.\"*\n\n---\n\n### 2. Present Perfect: อดีตที่มีสะพานเชื่อมโยงถึงปัจจุบัน\n`Subject + have / has + V.3 (Past Participle)`\nใช้กับเหตุการณ์ที่เริ่มต้นในอดีต แต่ **ผลลัพธ์หรือประสบการณ์ยังส่งผลมาถึงปัจจุบัน**:\n1. **สิ่งที่ทำตั้งแต่อดีตและดำเนินต่อเนื่องมาจนถึงตอนนี้ (Duration):**\n   - มักใช้กับ `since` (ตั้งแต่จุดเวลา) และ `for` (เป็นระยะเวลานานเท่าใด)\n   - *\"I **have worked** at this tech firm **for five years**.\"* (ทำมา 5 ปีแล้ว และตอนนี้ก็ยังทำอยู่)\n2. **ประสบการณ์ในชีวิต (Life Experience):**\n   - มักใช้กับ `ever`, `never`, `already`, `yet`\n   - *\"**Have** you **ever** configured a Kubernetes ingress?\"*\n   - *\"We **have already fixed** that bug.\"*\n3. **สิ่งที่เพิ่งเกิดขึ้นสดๆ ร้อนๆ และมีผลต่อปัจจุบัน (Recent Actions):**\n   - *\"The server **has crashed**! (ดังนั้นตอนนี้ระบบจึงยังล่มอยู่)\"*\n   - *\"I **have lost** my key. (ตอนนี้เลยเข้าห้องไม่ได้)\"*\n\n---\n\n### 3. ตารางเปรียบเทียบ Past Simple vs Present Perfect\n| จุดสังเกต | Past Simple (S + V2) | Present Perfect (S + have/has + V3) |\n| เวลาระบุชัดเจน | ระบุชัดเจน (`yesterday`, `two days ago`, `in 2023`) | ไม่ระบุเวลาเจาะจง หรือใช้ `since` / `for` |\n| สภาพในปัจจุบัน | เหตุการณ์จบสิ้นแล้ว ไม่เกี่ยวกับปัจจุบัน | ผลลัพธ์หรือสถานะยังคงส่งผลถึงปัจจุบัน |\n| โครงสร้างปฏิเสธ | `S + did not + V.inf` | `S + have/has not + V.3` |\n| โครงสร้างคำถาม | `Did + S + V.inf?` | `Have/Has + S + V.3?` |\n\n---\n\n### 4. Past Perfect: เหตุการณ์ที่เกิดก่อนในอดีต (Past of the Past)\n`Subject + had + V.3`\nเมื่อมีเหตุการณ์ในอดีตเกิดขึ้น **2 เหตุการณ์ซ้อนกัน**:\n- **เหตุการณ์ที่ 1 (เกิดก่อน):** ใช้ **Past Perfect (`had + V.3`)**\n- **เหตุการณ์ที่ 2 (เกิดตามมาทีหลัง):** ใช้ **Past Simple (`V.2`)**\n- *\"The database **had already crashed** before we **noticed** the alert.\"*\n- *\"When she **arrived** at the station, the train **had already left**.\"*\n",
         "examples": [
           {
-            "en": "We rolled back the release 10 minutes ago.",
-            "th": "พวกเราโรลแบ็กเวอร์ชันนั้นกลับไปเมื่อ 10 นาทีที่แล้ว (มีเวลา 10 minutes ago)",
+            "en": "We resolved the production incident yesterday after three hours of debugging.",
+            "th": "พวกเราแก้ไขปัญหาบนระบบ Production ลุล่วงไปได้เมื่อวานนี้หลังจากการดีบักนานสามชั่วโมง",
             "cat": "Tech"
           },
           {
-            "en": "Have you reviewed the pull request yet?",
-            "th": "คุณได้ตรวจรีวิว PR ตัวนั้นหรือยัง?",
+            "en": "Our company has grown rapidly since we launched the cloud platform.",
+            "th": "บริษัทของเราเติบโตอย่างรวดเร็วตั้งแต่เราเปิดตัวแพลตฟอร์มคลาวด์",
             "cat": "Tech"
           },
           {
-            "en": "I have worked at this tech company for three years.",
-            "th": "ฉันทำงานที่บริษัทเทคโนโลยีแห่งนี้มา 3 ปีแล้ว (และปัจจุบันยังทำอยู่)",
+            "en": "Have you ever deployed an application using Docker containers?",
+            "th": "คุณเคยติดตั้งแอปพลิเคชันโดยใช้ Docker Container มาก่อนหรือไม่?",
+            "cat": "Tech"
+          },
+          {
+            "en": "She has lived in Bangkok for ten years and loves the food culture.",
+            "th": "เธออาศัยอยู่ในกรุงเทพฯ มานานสิบปีแล้วและชื่นชอบวัฒนธรรมอาหารมาก",
+            "cat": "Daily"
+          },
+          {
+            "en": "The system had already executed the rollback script before the engineer logged in.",
+            "th": "ระบบได้ทำการรันสคริปต์ย้อนกลับ (Rollback) เสร็จสิ้นไปแล้วก่อนที่วิศวกรจะล็อกอินเข้ามา",
+            "cat": "Tech"
+          },
+          {
+            "en": "I realized that I had left my access card at home when I arrived at the gate.",
+            "th": "ฉันตระหนักได้ว่าฉันลืมคีย์การ์ดไว้ที่บ้านเมื่อฉันเดินทางมาถึงหน้าประตูทางเข้า",
             "cat": "Daily"
           }
         ],
@@ -1033,24 +1113,39 @@ window.grammarSyllabusData = [
       {
         "id": "struct-simple-compound",
         "title": "Unit 1: Simple & Compound Sentences",
-        "summary": "ประโยคใจความเดียวและการเชื่อมประโยคด้วย FANBOYS (for, and, nor, but, or, yet, so)",
-        "formula": "Compound: Independent Clause 1 + [, coordinating conjunction] + Independent Clause 2",
-        "explanation": "\n### 1. Simple Sentence (ประโยคใจความเดียว)\nประกอบด้วย 1 ประธาน (Subject) + 1 ภาคแสดง (Predicate/Verb) สื่อความหมายสมบูรณ์ในตัวเอง\n- \"The build passed.\" (การบิลด์ผ่านแล้ว)\n- \"DevOps engineers automate infrastructure.\" (วิศวกร DevOps ทำงานอัตโนมัติบนโครงสร้างพื้นฐาน)\n\n### 2. Compound Sentence (ประโยคความรวม)\nเอาประโยคใจความเดียว 2 ประโยคที่มีน้ำหนักเท่ากันมาเชื่อมกันด้วย **FANBOYS**:\n- **F**or (เพราะว่า)\n- **A**nd (และ)\n- **N**or (และไม่)\n- **B**ut (แต่)\n- **O**r (หรือ)\n- **Y**et (แต่ทว่า)\n- **S**o (ดังนั้น)\n\n> [!NOTE]\n> กฎเครื่องหมาย: เมื่อเชื่อม 2 ประโยคสมบูรณ์ด้วย FANBOYS ให้ใส่เครื่องหมาย **จุลภาค (Comma ,)** ด้านหน้าคำเชื่อมเสมอ!\n        ",
+        "summary": "เชี่ยวชาญการต่อประโยค 3 รูปแบบ (Simple, Compound, Complex) พร้อมหลักการใช้ FANBOYS และ Subordinating Conjunctions",
+        "formula": "Simple: S + V | Compound: IC, + FANBOYS + IC | Complex: DC, + IC / IC + DC",
+        "explanation": "\n### 1. Simple Sentence (ประโยคความเดียว)\nประกอบด้วย **1 Independent Clause (ประโยคอิสระที่มีประธานและกริยาครบถ้วน)** สื่อความหมายสมบูรณ์ในตัวเอง:\n- *\"The server operates continuously.\"*\n- *\"Alex and Sarah reviewed and approved the pull request.\"* (มีประธานร่วมและกริยาร่วม แต่ยังเป็นประโยคความเดียวเพราะมีใจความหลักอันเดียว)\n\n---\n\n### 2. Compound Sentence (ประโยคความรวม)\nเกิดจากการนำ **Independent Clause 2 ประโยคขึ้นไป** มาเชื่อมเข้าด้วยกัน โดยมีน้ำหนักเท่าเทียมกัน\n\n#### การเชื่อมด้วย FANBOYS (Coordinating Conjunctions)\nจำสูตรอักษรย่อ **F-A-N-B-O-Y-S**:\n- **For:** เพราะว่า (บอกสาเหตุ)\n- **And:** และ (เสริมข้อมูล)\n- **Nor:** และไม่ทั้งสอง (ปฏิเสธคู่)\n- **But:** แต่ (ขัดแย้ง)\n- **Or:** หรือ (ให้เลือก)\n- **Yet:** แต่กระนั้น (ขัดแย้งอย่างสละสลวย)\n- **So:** ดังนั้น (บอกผลลัพธ์)\n\n⚠️ **กฎเครื่องหมาย Comma (,) ใน Compound Sentence:**\nต้องใส่ **Comma (,) หน้า FANBOYS เสมอ** เมื่อเชื่อมสองประโยคที่มีประธานเป็นของตัวเอง!\n`Independent Clause 1, + FANBOYS + Independent Clause 2`\n- *\"The unit tests passed**, but** the staging deployment failed.\"*\n- *\"We scaled up the cluster**, so** the response time improved immediately.\"*\n\n---\n\n### 3. Complex Sentence (ประโยคความซ้อน)\nประกอบด้วย:\n- **1 Independent Clause (ประโยคหลักที่อยู่เดี่ยวๆ ได้)**\n- **1 Dependent / Subordinate Clause (ประโยคย่อยที่ขึ้นต้นด้วยคำเชื่อม อยู่เดี่ยวๆ ไม่ได้)**\n\n#### คำเชื่อมประโยคความซ้อน (Subordinating Conjunctions) ที่พบบ่อย:\n| หมวดหมู่ | คำเชื่อม | ตัวอย่างประโยค |\n| สาเหตุ (Cause/Reason) | `because`, `since`, `as` | *\"The build failed **because** a dependency was missing.\"* |\n| ขัดแย้ง (Contrast/Concession) | `although`, `even though`, `while`, `whereas` | *\"**Although** the traffic spiked, the site remained online.\"* |\n| เวลา (Time) | `when`, `while`, `after`, `before`, `until` | *\"We will release **when** all tests pass.\"* |\n| เงื่อนไข (Condition) | `if`, `unless`, `provided that` | *\"The job will run **if** the trigger is active.\"* |\n\n💡 **กฎเครื่องหมาย Comma ใน Complex Sentence:**\n- **ถ้า Dependent Clause ขึ้นต้นประโยค ➔ ต้องใส่ Comma คั่น:**\n  - *\"**Because the database locked up**, the service timed out.\"*\n- **ถ้า Independent Clause ขึ้นต้นประโยค ➔ ไม่ต้องใส่ Comma:**\n  - *\"The service timed out **because the database locked up**.\"*\n\n---\n\n### 4. กับดักไวยากรณ์: Comma Splice & Run-on Sentence\n❌ **Comma Splice (ความผิดร้ายแรงในงานเขียน):** เอา Comma มาคั่นระหว่าง 2 ประโยคสมบูรณ์โดยไม่มีคำเชื่อม\n- *The server crashed, the engineer restarted it. ❌*\n✔️ **วิธีแก้ไขที่ถูกต้อง:**\n1. ใส่ FANBOYS: *\"The server crashed, **and** the engineer restarted it.\"*\n2. เปลี่ยนเป็น Complex Sentence: *\"**When** the server crashed, the engineer restarted it.\"*\n3. ใช้ Semicolon (;): *\"The server crashed**;** the engineer restarted it.\"*\n",
         "examples": [
           {
-            "en": "The CPU usage was high, so the autoscaler launched two more instances.",
-            "th": "การใช้งาน CPU สูงมาก ดังนั้นระบบ Autoscaler จึงเปิด Instance เพิ่มอีกสองตัว",
+            "en": "The automated pipeline ran all integration tests, and it deployed the build to staging.",
+            "th": "ไปป์ไลน์อัตโนมัติรันการทดสอบการเชื่อมต่อระบบทั้งหมด และได้ทำการติดตั้งบิลด์ขึ้นสู่ Staging",
             "cat": "Tech"
           },
           {
-            "en": "We wanted to deploy today, but the QA tests failed.",
-            "th": "พวกเราอยากจะขึ้นระบบวันนี้ แต่การทดสอบของ QA ไม่ผ่าน",
+            "en": "Although the website experienced record traffic, the cloud servers remained fully responsive.",
+            "th": "แม้ว่าเว็บไซต์จะเผชิญกับปริมาณทราฟฟิกสูงสุดเป็นประวัติการณ์ แต่เซิร์ฟเวอร์คลาวด์ก็ยังคงตอบสนองได้อย่างสมบูรณ์",
             "cat": "Tech"
           },
           {
-            "en": "I like coding in Python, and my colleague prefers Go.",
-            "th": "ฉันชอบเขียนโค้ดด้วย Python และเพื่อนร่วมงานของฉันชอบภาษา Go มากกว่า",
+            "en": "She wanted to attend the conference, but she had to finish an urgent client delivery.",
+            "th": "เธออยากไปร่วมงานประชุมวิชาการนั้น แต่เธอจำเป็นต้องส่งมอบงานด่วนของลูกค้าให้เสร็จก่อน",
             "cat": "Daily"
+          },
+          {
+            "en": "Because the security certificate expired, users could not access the payment gateway.",
+            "th": "เนื่องจากใบรับรองความปลอดภัยหมดอายุ ผู้ใช้งานจึงไม่สามารถเข้าถึงช่องทางการชำระเงินได้",
+            "cat": "Tech"
+          },
+          {
+            "en": "The meeting concluded on time, so we had thirty minutes to prepare for lunch.",
+            "th": "การประชุมเสร็จสิ้นลงตรงเวลา ดังนั้นพวกเราจึงมีเวลาสามสิบนาทีเพื่อเตรียมตัวสำหรับมื้อกลางวัน",
+            "cat": "Daily"
+          },
+          {
+            "en": "We will trigger the production deployment after the security team completes the audit.",
+            "th": "พวกเราจะเริ่มปล่อยระบบโปรดักชันหลังจากทีมความปลอดภัยดำเนินการตรวจสอบเสร็จสิ้น",
+            "cat": "Tech"
           }
         ],
         "quickCheck": [
@@ -1330,23 +1425,38 @@ window.grammarSyllabusData = [
       {
         "id": "q-specific-how",
         "title": "Unit 2: Specific How-Questions (How many, How much, How long, How often)",
-        "summary": "คำถามเจาะจงตัวเลข เวลา ความถี่ และต้นทุน (MTTR, Deployment Time, Cron Schedule)",
-        "formula": "How + (many / much / long / often / far) + Auxiliary Verb + Subject + Verb?",
-        "explanation": "\n### 1. How Many (จำนวนเท่าไร - คำนามนับได้พหูพจน์)\n- *\"How many microservices are running in production?\"* (มีกี่ Microservices ที่กำลังรันอยู่บน Production?)\n- *\"How many pull requests are waiting for code review?\"* (มี PR กี่ตัวที่กำลังรอการตรวจโค้ด?)\n\n### 2. How Much (ปริมาณเท่าไร / ราคาเท่าไร - คำนามนับไม่ได้)\n- *\"How much bandwidth does the streaming service consume per second?\"* (บริการสตรีมมิ่งใช้แบนด์วิดท์เท่าไรต่อวินาที?)\n- *\"How much memory should we allocate to the Redis cache?\"* (เราควรจัดสรรหน่วยความจำให้ Redis Cache เท่าไร?)\n\n### 3. How Long (นานเท่าไร / ใช้เวลาแค่ไหน - MTTR, Downtime, Duration)\n- *\"How long will the database reindexing take?\"* (การจัดทำดัชนีฐานข้อมูลใหม่จะใช้เวลานานเท่าไร?)\n- *\"How long was the API service unavailable during the incident?\"* (ระบบ API ใช้งานไม่ได้เป็นเวลานานเท่าไรในช่วงที่เกิดเหตุขัดข้อง?)\n\n### 4. How Often (บ่อยแค่ไหน - ความถี่, Sync, Cron, Alerts)\n- *\"How often does the sync script run?\"* (สคริปต์ Sync ข้อมูลทำงานบ่อยแค่ไหน?)\n- *\"How often do we conduct security penetration testing?\"* (พวกเราทดสอบเจาะระบบความปลอดภัยบ่อยแค่ไหน?)\n        ",
+        "summary": "เจาะลึกคำถามตระกูล HOW ทั้งหมด: How much, How many, How long, How often, How come และ How about ในงานจริง",
+        "formula": "How + Adjective/Adverb + Auxiliary Verb + Subject + Main Verb?",
+        "explanation": "\n### 1. โครงสร้างคำถามตระกูล HOW (The HOW Family Formula)\nคำว่า **HOW** เมื่อนำมารวมกับ Adjective หรือ Adverb จะแปลงร่างเป็นคำถามที่เจาะจงมิติการวัดและประเมินผลได้อย่างแม่นยำ:\n`How + Adjective/Adverb + กริยาช่วย (do/does/did/is/are/can) + ประธาน + กริยาหลัก ?`\n\n---\n\n### 2. ตารางเจาะลึก 7 รูปแบบคำถาม HOW ที่ใช้บ่อยที่สุด\n| รูปแบบ HOW | มิติที่ถาม | ตัวอย่างคำถามในงาน Tech & DevOps | ตัวอย่างคำถามในชีวิตประจำวัน |\n| **How long** | ระยะเวลา / กรอบเวลา | *\"How long does the container image build take?\"* (บิลด์อิมเมจใช้เวลานานเท่าไร?) | *\"How long have you lived in Chiang Mai?\"* (คุณอยู่ที่เชียงใหม่มากี่ปีแล้ว?) |\n| **How often** | ความถี่ในการเกิดขึ้น | *\"How often do we run automated vulnerability scans?\"* (เราสแกนช่องโหว่บ่อยแค่ไหน?) | *\"How often do you go to the gym?\"* (คุณไปฟิตเนสบ่อยแค่ไหน?) |\n| **How much** | ปริมาณ (นามนับไม่ได้) / ราคา | *\"How much memory is allocated to this pod?\"* (พ็อดนี้จัดสรรแรมไว้เท่าไร?) | *\"How much did this mechanical keyboard cost?\"* (คีย์บอร์ดตัวนี้ราคาเท่าไร?) |\n| **How many** | จำนวนชิ้น (นามนับได้พหูพจน์) | *\"How many nodes are currently running in the cluster?\"* (มีโหนดรันอยู่ในคลัสเตอร์กี่ตัว?) | *\"How many people are attending the dinner?\"* (มีคนไปร่วมงานเลี้ยงกี่คน?) |\n| **How far** | ระยะทาง / ความคืบหน้า | *\"How far are we from finishing the sprint goals?\"* (เราใกล้บรรลุเป้าหมายสปรินต์แค่ไหนแล้ว?) | *\"How far is the headquarters from the station?\"* (สำนักงานใหญ่อยู่ไกลจากสถานีแค่ไหน?) |\n| **How come** | ทำไม (ภาษาพูด = Why) | *\"How come the staging pipeline didn't catch this bug?\"* (ทำไมไปป์ไลน์ Staging ถึงจับบั๊กนี้ไม่ได้?) | *\"How come you didn't join the team lunch today?\"* (ทำไมวันนี้คุณถึงไม่ไปกินข้าวกับทีม?) |\n| **How about** | การเสนอไอเดีย / ชักชวน | *\"How about using a message queue to handle traffic spikes?\"* (ลองใช้คิวข้อความรับโหลดพุ่งดีไหม?) | *\"How about taking a short coffee break?\"* (พวกเราพักดื่มกาแฟสั้นๆ กันหน่อยไหม?) |\n\n---\n\n### 3. ข้อควรระวังพิเศษสำหรับ How come และ How about\n💡 **ความพิเศษของ \"How come\":**\n- ไม่ต้องกลับกริยาช่วยมาไว้หน้าประธาน! เรียงเหมือนประโยคบอกเล่าได้เลย:\n  - *\"How come **you are** late?\"* ✔️ (ไม่ใช่ *How come are you late ❌)\n  - ต่างจาก Why: *\"Why **are you** late?\"* ✔️\n\n💡 **ความพิเศษของ \"How about\" & \"What about\":**\n- ต้องตามด้วย **V.ing (Gerund)** หรือ **Noun Phrase** เสมอ:\n  - *\"How about **refactoring** the legacy codebase?\"* (ไม่ใช่ *How about refactor)\n  - *\"What about **a quick meeting** at 2:00 PM?\"*\n",
         "examples": [
           {
-            "en": "How many pod replicas should we scale during peak hours?",
-            "th": "เราควรขยาย Pod เป็นกี่ Replicas ในช่วงเวลาที่มีผู้ใช้สูงสุด?",
+            "en": "How long does it take to restore the database from the snapshot backup?",
+            "th": "การกู้คืนฐานข้อมูลจากสแนปช็อตสำรองใช้เวลานานเท่าไร?",
             "cat": "Tech"
           },
           {
-            "en": "How long does our CI/CD pipeline take from commit to deploy?",
-            "th": "ไพพ์ไลน์ CI/CD ของเราใช้เวลานานเท่าไรตั้งแต่คอมมิตจนถึงติดตั้งเสร็จ?",
+            "en": "How often do you conduct security awareness training for new employees?",
+            "th": "คุณจัดอบรมการตระหนักรู้ด้านความปลอดภัยสำหรับพนักงานใหม่บ่อยแค่ไหน?",
             "cat": "Tech"
           },
           {
-            "en": "How often do you push your code changes to GitHub?",
-            "th": "คุณพุชโค้ดที่แก้ไขขึ้น GitHub บ่อยแค่ไหน?",
+            "en": "How many active instances are currently handling the payment service traffic?",
+            "th": "มีอินสแตนซ์ที่กำลังทำงานอยู่กี่ตัวที่คอยรับทราฟฟิกของระบบการชำระเงินในขณะนี้?",
+            "cat": "Tech"
+          },
+          {
+            "en": "How much bandwidth does our video streaming feature consume per user session?",
+            "th": "ฟีเจอร์สตรีมมิ่งวิดีโอของเราใช้แบนด์วิดท์เท่าไรต่อการใช้งานหนึ่งเซสชันของผู้ใช้?",
+            "cat": "Tech"
+          },
+          {
+            "en": "How come the monitoring dashboard didn't trigger an alert during the outage?",
+            "th": "ทำไมแดชบอร์ดตรวจสอบระบบถึงไม่ส่งสัญญาณแจ้งเตือนระหว่างที่ระบบหยุดทำงาน?",
+            "cat": "Tech"
+          },
+          {
+            "en": "How about grabbing a quick sandwich before our retrospective meeting starts?",
+            "th": "พวกเราแวะซื้อแซนด์วิชกินรองท้องอย่างรวดเร็วก่อนที่การประชุม Retro จะเริ่มขึ้นดีไหม?",
             "cat": "Daily"
           }
         ],
@@ -1466,23 +1576,38 @@ window.grammarSyllabusData = [
       {
         "id": "q-indirect-questions",
         "title": "Unit 3: Indirect Questions & Polite Traps (การถามอย่างสุภาพในที่ประชุม)",
-        "summary": "กฎเหล็กการแปลง Direct Question เป็น Indirect Question ให้สุภาพและไม่สลับกริยา",
-        "formula": "Polite Opener + WH-Word + Subject + Verb (เรียงแบบประโยคบอกเล่า)",
-        "explanation": "\n### ⚠️ จุดที่มักผิดบ่อยที่สุด (The Biggest Grammar Trap)\nเวลาเราถามคำถามตรงๆ (Direct Question) กริยาช่วยจะอยู่หน้าประธาน:\n- Direct: *\"Where **is** the config file?\"*\n\nแต่เมื่อทำเป็นประโยคคำถามอ้อมๆ เพื่อความสุภาพ (Indirect Question) ขึ้นต้นด้วยคำเกริ่น:\n- **Could you tell me...?** (ช่วยบอกฉันหน่อยได้ไหมว่า...)\n- **Do you happen to know...?** (คุณพอจะทราบไหมว่า...)\n- **I was wondering...?** (ฉันอยากสอบถามหน่อยว่า...)\n\n> [!CAUTION]\n> **กฎเหล็กที่ต้องจำ:** ส่วนที่ตามหลังคำเกริ่นจะ **เปลี่ยนกลับเป็นประโยคบอกเล่า (Subject + Verb)** ทันที! ห้ามสลับกริยาช่วยมาข้างหน้าประธานอีกเด็ดขาด!\n\n#### ตารางเปรียบเทียบความแตกต่าง:\n| Direct (ตรงๆ ห้วนๆ) | Indirect (สุภาพ ระดับมืออาชีพ) | คำแปลภาษาไทย |\n| :--- | :--- | :--- |\n| Where **is** the documentation? | Could you tell me where the documentation **is**? | คุณช่วยบอกฉันหน่อยได้ไหมครับว่าเอกสารอยู่ที่ไหน? |\n| When **will** the server be ready? | Do you know when the server **will** be ready? | คุณพอจะทราบไหมครับว่าเซิร์ฟเวอร์จะพร้อมเมื่อไร? |\n| What **does** this error code mean? | Could you explain what this error code **means**? | ช่วยอธิบายหน่อยได้ไหมครับว่า Error code นี้หมายถึงอะไร? |\n| Why **did** the deployment fail? | Do you know why the deployment **failed**? | คุณทราบไหมครับว่าทำไมการขึ้นระบบถึงล้มเหลว? |\n        ",
+        "summary": "ยกระดับการทำงานระดับมืออาชีพด้วย Indirect Questions ถามสุภาพในที่ประชุม พร้อมกฎการสลับคำเรียงประโยค",
+        "formula": "Polite Starter + Question Word / If / Whether + Subject + Verb (Statement Order)",
+        "explanation": "\n### 1. Indirect Questions คืออะไร และทำไมต้องใช้?\nในวัฒนธรรมการทำงานระดับสากล การถามแบบขวานผ่าซาก (Direct Question) เช่น *\"Where are the logs?\"* หรือ *\"Why did this fail?\"* บางครั้งอาจฟังดูกดดันหรือก้าวร้าวเกินไป\n**Indirect Question (คำถามทางอ้อม)** คือการซ้อนคำถามไว้หลังวลีเปิดที่สุภาพ นุ่มนวล และแสดงความเป็นมืออาชีพสูง\n\n---\n\n### 2. กฎเหล็กระดับ 5 ดาว: การเรียงประโยคกลับเป็นบอกเล่า\n⚠️ **กฎข้อที่สำคัญที่สุดในข้อสอบและชีวิตจริง:**\nเมื่อเปลี่ยนเป็น Indirect Question **โครงสร้างประโยคจะย้อนกลับมาเป็น \"ประธาน + กริยา\" (Statement Word Order)** ทันที!\n- ❌ **ห้ามใช้กริยาช่วย do / does / did ในส่วนหลังเด็ดขาด!**\n- ❌ **ห้ามสลับกริยามาไว้หน้าประธานเหมือนคำถามตรง!**\n\n| Direct Question (คำถามตรง) | ❌ คำถามทางอ้อมที่ผิด (ห้ามพูด) | ✔️ Indirect Question ที่ถูกต้อง |\n| *\"Where is the API documentation?\"* | ~~Could you tell me where is the API documentation?~~ | *\"Could you tell me **where the API documentation is**?\"* |\n| *\"When does the release start?\"* | ~~Do you know when does the release start?~~ | *\"Do you know **when the release starts**?\"* (ใช้ starts เติม s) |\n| *\"Why did the deployment fail?\"* | ~~Can you explain why did the deployment fail?~~ | *\"Can you explain **why the deployment failed**?\"* (ใช้ failed รูปอดีต) |\n| *\"Is the staging server ready?\"* | ~~Do you know is the staging server ready?~~ | *\"Do you know **if the staging server is ready**?\"* |\n\n---\n\n### 3. วลีเปิดประโยคสุดสุภาพที่ใช้บ่อยในที่ประชุม (Polite Question Starters)\n1. **Could you please tell me...** (คุณพอจะบอกฉันได้ไหมว่า...)\n2. **Do you happen to know...** (คุณบังเอิญทราบไหมว่า...)\n3. **I was wondering if you could clarify...** (ฉันกำลังสงสัยอยู่ว่าคุณพอจะช่วยขยายความได้ไหมว่า...)\n4. **Would you mind explaining...** (คุณจะรังเกียจไหมถ้าจะช่วยอธิบายว่า...)\n5. **Can you let me know when/where...** (รบกวนแจ้งให้ฉันทราบหน่อยได้ไหมว่าเมื่อไร/ที่ไหน...)\n\n💡 **สำหรับคำถามประเภท Yes/No Question ให้ใช้ IF หรือ WHETHER เชื่อม:**\n- Direct: *\"Has the pull request been approved?\"*\n- Indirect: *\"Could you check **whether** the pull request has been approved?\"*\n",
         "examples": [
           {
-            "en": "Could you please tell me where the API credentials are stored?",
-            "th": "ช่วยบอกฉันหน่อยได้ไหมครับว่าข้อมูลยืนยันตัวตนของ API ถูกเก็บไว้ที่ไหน?",
+            "en": "Could you please tell me where the latest API documentation is located?",
+            "th": "คุณพอจะช่วยบอกฉันได้ไหมว่าเอกสาร API เวอร์ชันล่าสุดจัดเก็บอยู่ที่ไหน?",
             "cat": "Tech"
           },
           {
-            "en": "Do you happen to know when the staging environment will be back up?",
-            "th": "คุณพอจะทราบไหมครับว่าระบบ Staging จะกลับมาใช้งานได้เมื่อไร?",
+            "en": "Do you happen to know when the staging maintenance window concludes?",
+            "th": "คุณพอจะทราบไหมว่าช่วงเวลาการบำรุงรักษาระบบ Staging จะเสร็จสิ้นลงเมื่อไร?",
             "cat": "Tech"
           },
           {
-            "en": "I was wondering if you could review my pull request today.",
-            "th": "ผมอยากสอบถามว่าวันนี้คุณพอจะมีเวลาตรวจ PR ให้ผมไหมครับ",
+            "en": "I was wondering if you could explain how the autoscaling policy triggers.",
+            "th": "ฉันอยากรบกวนสอบถามว่าคุณพอจะอธิบายได้ไหมว่ากฎการทำ Autoscaling ถูกสั่งให้ทำงานอย่างไร?",
+            "cat": "Tech"
+          },
+          {
+            "en": "Would you mind letting me know whether you can join our sprint retrospective?",
+            "th": "รบกวนแจ้งให้ฉันทราบได้ไหมว่าคุณจะสามารถเข้าร่วมการประชุม Retrospective ของเราได้หรือไม่?",
+            "cat": "Daily"
+          },
+          {
+            "en": "Can you confirm if the security patch has already been rolled out to production?",
+            "th": "คุณช่วยยืนยันหน่อยได้ไหมว่าแพตช์ความปลอดภัยได้รับการติดตั้งขึ้นสู่ Production แล้วหรือยัง?",
+            "cat": "Tech"
+          },
+          {
+            "en": "Could you tell me which conference room we booked for the quarterly review?",
+            "th": "คุณพอจะบอกฉันได้ไหมว่าพวกเราจองห้องประชุมห้องไหนไว้สำหรับการทบทวนผลงานประจำไตรมาส?",
             "cat": "Daily"
           }
         ],
@@ -1612,23 +1737,38 @@ window.grammarSyllabusData = [
       {
         "id": "neg-auxiliary",
         "title": "Unit 1: Standard Negative Sentences",
-        "summary": "การใช้ not ร่วมกับกริยาช่วย (do not, cannot, will not, is not)",
-        "formula": "Subject + Auxiliary Verb + not + Main Verb",
-        "explanation": "\n### กฎการสร้างประโยคปฏิเสธ\n1. **ถ้ามี Verb to be หรือ Modal Verbs อยู่แล้ว:** เติม **not** ด้านหลังได้ทันที\n   - is not (isn't), are not (aren't), cannot (can't), will not (won't)\n   - *\"The service **is not** available.\"* (ระบบยังไม่พร้อมใช้งาน)\n2. **ถ้าเป็นกริยาทั่วไป:** ต้องนำ **do / does / did** มาช่วย แล้วตามด้วยกริยาแท้รูปเดิม (Infinitive)\n   - *\"The script **does not require** root permissions.\"* (สคริปต์นี้ไม่ต้องการสิทธิ์ Root)\n   - *\"The tests **did not fail** yesterday.\"* (เทสต์ไม่ได้พังเมื่อวานนี้)\n        ",
+        "summary": "สร้างประโยคปฏิเสธที่ถูกต้องด้วย Auxiliary Verbs, คำปฏิเสธเชิงกึ่ง (Barely/Rarely) และเทคนิค Negative Inversion ขั้นสูง",
+        "formula": "Subject + Auxiliary Verb + not + Main Verb | Negative Word + Aux + Subject + Main Verb",
+        "explanation": "\n### 1. โครงสร้างปฏิเสธมาตรฐาน (Standard Negation)\nในภาษาอังกฤษ เราไม่สามารถวาง `not` เดี่ยวๆ หน้ากริยาแท้ได้ ต้องมี **Auxiliary Verb (กริยาช่วย)** เข้ามาร่วมเสมอ:\n`Subject + กริยาช่วย (do/does/did/is/am/are/can/will) + not + กริยาหลัก (V.inf)`\n\n#### ตารางการจับคู่กริยาช่วยในประโยคปฏิเสธ:\n| Tense / กริยา | รูปปฏิเสธเต็ม | รูปย่อ (Contraction) | ตัวอย่างประโยค |\n| Present Simple (นามพหูพจน์/I/You) | `do not` | `don't` | *\"We **don't** expose database credentials.\"* |\n| Present Simple (นามเอกพจน์ He/She/It) | `does not` | `doesn't` | *\"The script **doesn't** modify user passwords.\"* |\n| Past Simple (อดีตทุกประธาน) | `did not` | `didn't` | *\"The deployment **didn't** cause any downtime.\"* |\n| Present Continuous | `is/are not` | `isn't / aren't` | *\"The replica **isn't** syncing properly.\"* |\n| Present Perfect | `have/has not` | `haven't / hasn't` | *\"The QA team **hasn't** approved the build.\"* |\n| Future Simple | `will not` | `won't` | *\"The service **won't** accept deprecated tokens.\"* |\n\n---\n\n### 2. Negative Adverbs (คำที่มีความหมายเชิงปฏิเสธในตัวเอง)\nคำเหล่านี้แปลว่า **\"แทบจะไม่ / ไม่ค่อยจะ\"** มีความหมายเป็นปฏิเสธอยู่แล้วในตัว:\n- `rarely` (แทบจะไม่เคย), `seldom` (ไม่บ่อยนัก), `hardly` (แทบจะไม่), `scarcely` (แทบจะไม่มี), `barely` (เกือบจะไม่)\n- *\"The server **hardly** consumes any CPU during idle hours.\"* (เซิร์ฟเวอร์แทบไม่กิน CPU เลย)\n\n⚠️ **กับดัก Double Negative (ปฏิเสธซ้อนปฏิเสธ):**\nในภาษาอังกฤษมาตรฐาน **ห้ามใช้คำปฏิเสธสองตัวซ้อนกันในประโยคเดียว** เพราะจะกลายเป็นความหมายผิด:\n- ❌ *I don't know nothing.* ➔ ✔️ *\"I **don't know anything**.\"* หรือ *\"I **know nothing**.\"*\n- ❌ *We didn't see nobody.* ➔ ✔️ *\"We **didn't see anybody**.\"*\n\n---\n\n### 3. Negative Inversion (การสลับประธาน-กริยาขั้นสูงสำหรับงานเขียนมืออาชีพ)\nเมื่อนำ **Negative Adverb** ขึ้นต้นประโยคเพื่อเน้นย้ำความพิเศษ โครงสร้างจะต้อง **สลับเอากริยาช่วยมาไว้หน้าประธาน**:\n`Negative Adverb + Auxiliary Verb + Subject + Main Verb`\n- ปกติ: *\"We rarely see such a critical vulnerability.\"*\n- Inversion: *\"**Rarely do we see** such a critical vulnerability.\"* (ไพเราะและทรงพลังมากในรายงานเทคนิค)\n- *\"**Hardly had we initiated** the migration when the network connection dropped.\"*\n",
         "examples": [
           {
-            "en": "This microservice does not accept unauthenticated traffic.",
-            "th": "ไมโครเซอร์วิสนี้ไม่รับทราฟฟิกที่ไม่ผ่านการยืนยันตัวตน",
+            "en": "The microservice does not store sensitive authentication tokens in plain text.",
+            "th": "ไมโครเซอร์วิสไม่ได้จัดเก็บโทเคนยืนยันตัวตนที่สำคัญไว้เป็นข้อความธรรมดาที่ไม่เข้ารหัส",
             "cat": "Tech"
           },
           {
-            "en": "We cannot deploy during business hours.",
-            "th": "พวกเราไม่สามารถขึ้นระบบระหว่างชั่วโมงทำการได้",
+            "en": "We didn't notice any latency degradation during the database upgrade.",
+            "th": "พวกเราไม่พบปัญหาความหน่วงของระบบลดลงเลยในระหว่างการอัปเกรดฐานข้อมูล",
             "cat": "Tech"
           },
           {
-            "en": "I don't have access to the production logs.",
-            "th": "ฉันไม่มีสิทธิ์เข้าถึงล็อกของระบบ Production",
+            "en": "Rarely do we encounter an infrastructure outage caused by hardware failure.",
+            "th": "ไม่บ่อยนักที่พวกเราจะเผชิญกับการหยุดทำงานของระบบโครงสร้างพื้นฐานที่มีสาเหตุมาจากฮาร์ดแวร์ขัดข้อง",
+            "cat": "Tech"
+          },
+          {
+            "en": "She doesn't usually attend the daily standup when traveling abroad.",
+            "th": "ปกติเธอไม่ได้เข้าร่วมการประชุมสแตนด์อัปประจำวันเมื่อต้องเดินทางไปต่างประเทศ",
+            "cat": "Daily"
+          },
+          {
+            "en": "Hardly had the engineers pushed the release when the monitoring alert triggered.",
+            "th": "แทบจะทันทีที่วิศวกรทำการพุชเวอร์ชันใหม่ขึ้นสู่ระบบ สัญญาณแจ้งเตือนตรวจสอบก็ดังขึ้น",
+            "cat": "Tech"
+          },
+          {
+            "en": "I don't have anything further to add to the meeting minutes.",
+            "th": "ฉันไม่มีประเด็นใดเพิ่มเติมที่จะใส่ลงไปในบันทึกการประชุมแล้ว",
             "cat": "Daily"
           }
         ],
@@ -1758,23 +1898,38 @@ window.grammarSyllabusData = [
       {
         "id": "imp-commands",
         "title": "Unit 1: Command & Instruction Formulas",
-        "summary": "การขึ้นต้นด้วย V.inf โดยไม่ต้องมีประธาน และการสั่งห้ามด้วย Don't",
-        "formula": "Positive: [V.inf] + Object  |  Negative: Don't + [V.inf] + Object",
-        "explanation": "\n### กฎของ Imperative Sentences\n- ละประธาน 'You' ไว้ในฐานที่เข้าใจ\n- กริยาตัวแรกต้องเป็น **V.inf (รูปดั้งเดิม ไม่ผัน ไม่เติม s/es/ed)** เสมอ\n- หากต้องการห้าม ให้ขึ้นต้นด้วย **Do not (Don't)**\n- ถ้าต้องการเพิ่มความสุภาพ ให้เติม **Please** ไว้หน้าหรือหลังประโยค\n        ",
+        "summary": "เขียนคำสั่ง รันบุ๊ก และคู่มือขั้นตอนการทำงาน (Runbooks & Documentation) ด้วย Imperative Mood อย่างมืออาชีพ",
+        "formula": "Positive: Verb (Bare Infinitive) + Object | Negative: Do not / Never + Verb (Bare Infinitive)",
+        "explanation": "\n### 1. โครงสร้างประโยคคำสั่งและคู่มือปฏิบัติการ (Imperative Sentence)\nประโยค Imperative ใช้เพื่อ **สั่งการ, แนะนำขั้นตอน, ให้คำแนะนำ (Instructions), หรือแจ้งเตือนความปลอดภัย (Warnings)**\nจุดเด่นคือ **\"ไม่มีประธานปรากฏในประโยค\"** เพราะผู้ฟังหรือผู้อ่านรู้โดยอัตโนมัติว่าประธานคือ **YOU (คุณ/ผู้อ่าน)**\n\n#### โครงสร้างหลัก:\n1. **บอกให้ทำ (Positive Imperative):** ขึ้นต้นด้วย **Bare Infinitive (กริยารูปแท้ไม่ผัน ไม่เติม s/ed/ing)**\n   - *\"**Restart** the background worker container.\"*\n   - *\"**Clone** the repository from GitHub.\"*\n   - *\"**Review** the security guidelines before deployment.\"*\n2. **ห้ามทำ (Negative Imperative):** ขึ้นต้นด้วย **Do not (Don't)** หรือ **Never**\n   - *\"**Do not expose** API secret keys in public commits.\"*\n   - *\"**Never run** direct schema migrations on production without a backup.\"*\n\n---\n\n### 2. การประยุกต์ใช้ในสายงาน Tech & DevOps (Runbooks & CI/CD)\nในคู่มือปฏิบัติงานระบบ (SOPs, Runbooks, Readme, CLI Tools) การใช้ Imperative Sentence คือมาตรฐานสากล:\n| บริบททางเทคนิค | ตัวอย่างคำสั่ง Imperative ที่ถูกต้อง | คำแปล |\n| คำสั่ง Git & Terminal | *\"**Commit** your changes and **push** to the feature branch.\"* | คอมมิตโค้ดและพุชไปยังกิ่งฟีเจอร์ |\n| คู่มือแก้ไข Incident | *\"**Check** the error logs in the central dashboard.\"* | ตรวจสอบไฟล์ล็อกข้อผิดพลาดในแดชบอร์ดกลาง |\n| ข้อกำหนดความปลอดภัย | *\"**Rotate** your access credentials every ninety days.\"* | สลับเปลี่ยนรหัสผ่านและคีย์เข้าใช้งานทุกๆ 90 วัน |\n| การจัดการ Cloud | *\"**Scale down** unutilized test instances to reduce costs.\"* | ลดจำนวนอินสแตนซ์ทดสอบที่ไม่ได้ใช้งานเพื่อประหยัดค่าใช้จ่าย |\n\n---\n\n### 3. การปรับโทนเสียงให้สุภาพสำหรับการทำงานร่วมกัน (Polite Imperatives)\nการสั่งการเพื่อนร่วมงานหรือลูกค้าอย่างสุภาพ ไม่ควรใช้คำสั่งห้วนๆ ให้ใช้วลีช่วยปรับความนุ่มนวล:\n- **Please / Kindly:** *\"Please verify your email address to complete registration.\"*\n- **Make sure to... / Be sure to...:** *\"Make sure to run unit tests before creating a pull request.\"*\n- **Remember to...:** *\"Remember to update the changelog before tagging the release.\"*\n",
         "examples": [
           {
-            "en": "Run the database migration script before launching the app.",
-            "th": "รันสคริปต์ย้ายฐานข้อมูลก่อนที่จะเปิดแอปพลิเคชัน",
+            "en": "Verify the database connection strings before launching the microservice.",
+            "th": "ตรวจสอบค่าคอนฟิกเชื่อมต่อฐานข้อมูลให้ถูกต้องก่อนเริ่มเปิดใช้งานไมโครเซอร์วิส",
             "cat": "Tech"
           },
           {
-            "en": "Do not delete the production volume snapshots.",
-            "th": "อย่าลบภาพสแนปช็อตของดิสก์ Production เป็นอันขาด",
+            "en": "Do not commit sensitive API keys or credentials directly to the repository.",
+            "th": "ห้ามคอมมิตคีย์ API หรือข้อมูลลับสำหรับยืนยันตัวตนลงในคลังโค้ดโดยตรงเด็ดขาด",
             "cat": "Tech"
           },
           {
-            "en": "Please check your connection and try again.",
-            "th": "กรุณาตรวจสอบการเชื่อมต่อของคุณแล้วลองใหม่อีกครั้ง",
+            "en": "Make sure to back up all persistent volumes prior to initiating the cluster upgrade.",
+            "th": "อย่าลืมตรวจสอบให้แน่ใจว่าได้สำรองข้อมูล Persistent Volumes ทั้งหมดก่อนเริ่มอัปเกรดคลัสเตอร์",
+            "cat": "Tech"
+          },
+          {
+            "en": "Please review the proposed design document and leave your feedback by Friday.",
+            "th": "กรุณาตรวจทานเอกสารข้อเสนอการออกแบบระบบและฝากข้อคิดเห็นไว้ภายในวันศุกร์นี้",
+            "cat": "Daily"
+          },
+          {
+            "en": "Never bypass the automated linting checks during the code review process.",
+            "th": "อย่าข้ามขั้นตอนการตรวจสอบคุณภาพโค้ดอัตโนมัติ (Linting) ในระหว่างกระบวนการรีวิวโค้ด",
+            "cat": "Tech"
+          },
+          {
+            "en": "Remember to mute your microphone when you are not speaking during the conference call.",
+            "th": "อย่าลืมปิดไมโครโฟนของคุณเมื่อคุณไม่ได้กำลังพูดในระหว่างการประชุมสาย",
             "cat": "Daily"
           }
         ],
@@ -1904,24 +2059,39 @@ window.grammarSyllabusData = [
       {
         "id": "sva-rules",
         "title": "Unit 1: Core S-V Agreement Rules",
-        "summary": "ประธานเอกพจน์คู่กริยาเอกพจน์ และประธานพหูพจน์คู่กริยาพหูพจน์",
-        "formula": "Singular Subject + Verb(s/es/is/was/has)  vs  Plural Subject + Verb(base/are/were/have)",
-        "explanation": "\n### กฎข้อที่ 1: ประธานเอกพจน์ (1 สิ่ง) ➔ กริยาต้องเติม s/es\n- \"The server **restarts** every night.\" (เซิร์ฟเวอร์ 1 เครื่อง ➔ restarts)\n- \"Each developer **has** a dedicated test database.\" (Each = แต่ละคน = เอกพจน์ ➔ has)\n\n### กฎข้อที่ 2: ประธานพหูพจน์ (มากกว่า 1 สิ่ง) ➔ กริยารูปปกติ ไม่เติม s\n- \"The servers **restart** every night.\" (เซิร์ฟเวอร์หลายเครื่อง ➔ restart)\n- \"Both systems **are** running stably.\" (are)\n\n### ⚠️ กับดักคำขยายคั่นกลาง (Prepositional Phrase Trap)\nอย่าหลงกลคำที่มาขยายระหว่างประธานกับกริยา:\n- \"The list **of available services** [is / are] updated.\" ➔ ประธานที่แท้จริงคือ **The list (เอกพจน์)** ดังนั้นต้องใช้ **is**!\n        ",
+        "summary": "ความสอดคล้องของประธานและกริยา (Subject-Verb Agreement) กฎ 6 ข้อที่คนมักพลาดในข้อสอบและการทำงานจริง",
+        "formula": "Singular Subject + Singular Verb | Plural Subject + Plural Verb",
+        "explanation": "\n### 1. กฎพื้นฐานที่สุด: เอกพจน์คู่เอกพจน์ พหูพจน์คู่พหูพจน์\nประธานและกริยาต้องมีพจน์ (Number) ที่สอดคล้องกันเสมอใน Present Simple:\n- **ประธานเอกพจน์ (He / She / It / คำนามเดี่ยว):** กริยาต้อง **เติม -s หรือ -es** (หรือใช้ `is`, `was`, `has`)\n  - *\"The server **monitors** system performance.\"*\n- **ประธานพหูพจน์ (They / We / คำนามหลายชิ้น):** กริยาต้อง **รูปเดิมไม่เติม s** (หรือใช้ `are`, `were`, `have`)\n  - *\"The servers **monitor** system performance.\"*\n\n---\n\n### 2. กฎทอง 6 ข้อที่มักออกสอบและเป็นกับดักในชีวิตจริง\n\n#### กฎที่ 1: ส่วนขยายคั่นกลาง (Intervening Prepositional Phrases)\nอย่าหลงกลคำนามที่อยู่ในส่วนขยายบุพบท! ให้มองหา **\"ประธานตัวจริง\"** ที่อยู่ข้างหน้าสุด:\n- *\"The **box** of spare server components **is** ready.\"* (ประธานคือ box เอกพจน์ จึงใช้ `is` แม้ components จะเป็นพหูพจน์)\n- *\"The **configuration** for multiple microservices **requires** validation.\"* (ประธานคือ configuration เอกพจน์)\n\n#### กฎที่ 2: สรรพนามไม่เจาะจง (Indefinite Pronouns) ถือเป็นเอกพจน์เสมอ!\n`Everyone`, `everybody`, `someone`, `nobody`, `each`, `either of`, `neither of`\n- *\"**Everyone** on our engineering team **wants** to deploy on Friday.\"* (ใช้ `wants` เติม s)\n- *\"**Each** of the microservices **has** an independent database.\"* (ใช้ `has`)\n\n#### กฎที่ 3: ประธานเชื่อมด้วย AND vs OR / NOR\n- เชื่อมด้วย **AND** ➔ ถือเป็นพหูพจน์เสมอ: *\"The architect **and** the engineer **are** reviewing the PR.\"*\n- เชื่อมด้วย **Either...or / Neither...nor** ➔ ผันตาม **ประธานตัวที่อยู่ใกล้กริยาที่สุด (Proximity Rule)**:\n  - *\"Neither the manager nor the **developers were** aware of the bug.\"* (ผันตาม developers ➔ were)\n  - *\"Neither the developers nor the **manager was** aware of the bug.\"* (ผันตาม manager ➔ was)\n\n#### กฎที่ 4: คำบอกสัดส่วนและเปอร์เซ็นต์ (Fractions & Percentages)\nผันตาม **คำนามที่อยู่หลัง of**:\n- *\"Fifty percent of the **memory is** used.\"* (memory นามนับไม่ได้ ➔ is)\n- *\"Fifty percent of the **containers are** healthy.\"* (containers นามนับได้พหูพจน์ ➔ are)\n\n#### กฎที่ 5: โครงสร้าง There is / There are\nผันตาม **คำนามตัวแรกที่ตามหลัง**:\n- *\"There **is a** critical security vulnerability in the legacy library.\"*\n- *\"There **are three** critical security vulnerabilities in the legacy library.\"*\n\n#### กฎที่ 6: คำนามที่ลงท้ายด้วย -s แต่เป็นเอกพจน์\n`news` (ข่าวสาร), `mathematics` (คณิตศาสตร์), `physics` (ฟิสิกส์), `series` (ชุด)\n- *\"The **news** about the successful launch **is** encouraging.\"* (news เป็นเอกพจน์เสมอ!)\n",
         "examples": [
           {
-            "en": "The number of active users has increased significantly.",
-            "th": "จำนวนผู้ใช้งานที่กำลังออนไลน์เพิ่มขึ้นอย่างมีนัยสำคัญ (The number of... เป็นเอกพจน์ ใช้ has)",
+            "en": "The architecture of these microservices ensures high availability during peak traffic.",
+            "th": "สถาปัตยกรรมของไมโครเซอร์วิสเหล่านี้รับประกันความพร้อมใช้งานสูงในระหว่างช่วงทราฟฟิกสูงสุด",
             "cat": "Tech"
           },
           {
-            "en": "Neither the frontend nor the backend servers were affected.",
-            "th": "ทั้งเซิร์ฟเวอร์ฟรอนต์เอนด์และแบ็กเอนด์ไม่ได้รับผลกระทบ",
+            "en": "Everyone on the platform infrastructure team participates in the on-call rotation.",
+            "th": "ทุกคนในทีมโครงสร้างพื้นฐานของแพลตฟอร์มมีส่วนร่วมในการเข้าเวรรับมือเหตุฉุกเฉิน (On-call)",
             "cat": "Tech"
           },
           {
-            "en": "Everyone in our department works hard.",
-            "th": "ทุกคนในแผนกของเราทำงานอย่างหนัก (Everyone เป็นเอกพจน์ กริยาเติม s)",
+            "en": "Neither the cloud provider nor our local data centers were affected by the outage.",
+            "th": "ทั้งผู้ให้บริการคลาวด์และศูนย์ข้อมูลในพื้นที่ของเราต่างก็ไม่ได้รับผลกระทบจากเหตุการณ์ระบบล่ม",
+            "cat": "Tech"
+          },
+          {
+            "en": "A list of newly identified security vulnerabilities has been sent to all leads.",
+            "th": "รายชื่อช่องโหว่ความปลอดภัยที่ตรวจพบล่าสุดได้ถูกส่งไปยังหัวหน้าทีมทุกคนแล้ว",
+            "cat": "Tech"
+          },
+          {
+            "en": "There are several unresolved questions regarding the quarterly budget allocation.",
+            "th": "มีคำถามหลายข้อที่ยังไม่ได้ข้อสรุปเกี่ยวกับการจัดสรรงบประมาณประจำไตรมาส",
             "cat": "Daily"
+          },
+          {
+            "en": "Eighty percent of the database storage is currently occupied by log archives.",
+            "th": "แปดสิบเปอร์เซ็นต์ของพื้นที่จัดเก็บฐานข้อมูลกำลังถูกใช้งานโดยไฟล์ล็อกที่จัดเก็บถาวร",
+            "cat": "Tech"
           }
         ],
         "quickCheck": [
@@ -2050,19 +2220,39 @@ window.grammarSyllabusData = [
       {
         "id": "subj-formal",
         "title": "Unit 1: The Mandative Subjunctive",
-        "summary": "หลังคำว่า crucial, essential, recommend, insist ประธานจะตามด้วย V.inf เสมอ",
-        "formula": "It is essential that + Subject + [V.inf (ไม่เติม s ไม่ผัน)]",
-        "explanation": "\n### กฎของ Mandative Subjunctive ในที่ทำงาน\nเมื่อต้องการเสนอแนะหรือออกข้อกำหนดที่มีความสำคัญมาก มักใช้คำเหล่านี้:\n- **It is essential that...** (จำเป็นอย่างยิ่งที่...)\n- **It is crucial / vital that...** (สำคัญอย่างยิ่งยวดที่...)\n- **We recommend that...** (พวกเราขอแนะนำว่า...)\n- **The client requested that...** (ลูกค้าขอร้องให้...)\n\n> [!IMPORTANT]\n> **จุดสำคัญ:** กริยาที่ตามหลังประธานในอนุประโยค 'that' **จะต้องเป็นรูปกริยาดั้งเดิม (Bare Infinitive)** เสมอ ไม่ว่าประธานจะเป็น He, She, หรือ It ก็ห้ามเติม s/es!\n        ",
+        "summary": "โครงสร้าง Subjunctive สำหรับมติที่ประชุม คำสั่ง และข้อเสนอแนะทางการ (Mandative) พร้อมกฎกริยาไม่ผันรูป (Bare Infinitive)",
+        "formula": "S + recommend/insist/suggest + that + S + (should) + Bare Infinitive",
+        "explanation": "\n### 1. Mandative Subjunctive คืออะไร?\nในภาษาอังกฤษระดับสูง โดยเฉพาะ **มติที่ประชุมทางธุรกิจ, ข้อเสนอแนะของสถาปนิกซอฟต์แวร์, หรือนโยบายทางการ** เมื่อต้องการแสดงว่าบางสิ่ง **\"ควรจะเกิดขึ้น, เป็นเรื่องจำเป็น, หรือได้รับการร้องขอ\"** จะใช้โครงสร้าง Subjunctive\n\n#### โครงสร้างมหัศจรรย์ (กริยาห้ามผันเด็ดขาด!):\n`Subject 1 + กริยาทางการ + that + Subject 2 + [should] + Bare Infinitive (กริยาแท้รูปเดิม)`\n\n💡 **จุดสังเกตสำคัญที่สุดในข้อสอบระดับสากล:**\nกริยาหลัง Subject 2 **ต้องเป็น Bare Infinitive (รูปดั้งเดิม ไม่เติม s/es, ไม่เปลี่ยนรูปอดีต, และ Verb to be ต้องเป็น \"be\")** แม้ประธานจะเป็น He, She, It ก็ตาม!\n- *\"The architect recommended that he **deploy** (ไม่ใช่ deploys) the application to multiple zones.\"*\n- *\"The compliance policy requires that all data **be** (ไม่ใช่ is) encrypted at rest.\"*\n\n---\n\n### 2. กลุ่มคำกริยาและคำคุณศัพท์ที่บังคับใช้ Subjunctive\n#### 1) กริยาที่แสดงการขอร้อง แนะนำ สั่งการ (Verbs of Request & Demand):\n- `recommend` (แนะนำ)\n- `suggest` (เสนอแนะ)\n- `insist` (ยืนกราน)\n- `demand` (เรียกร้อง)\n- `require` (กำหนด/บังคับ)\n- `propose` (เสนอข้อคิดเห็น)\n- *\"We suggest that she **take** the lead on the migration project.\"*\n\n#### 2) คุณศัพท์ที่บอกความสำคัญอย่างยิ่งยวด (Adjectives of Necessity):\nโครงสร้าง: `It is + Adjective + that + S + Bare Infinitive`\n- `essential` (จำเป็นยิ่ง)\n- `crucial` (สำคัญยิ่งยวด)\n- `vital` (คอขาดบาดตาย)\n- `mandatory` (ต้องทำตามกฎ)\n- `important` (สำคัญ)\n- *\"It is **crucial** that the cluster **remain** accessible during updates.\"*\n\n---\n\n### 3. Unreal Subjunctive (การสมมติสิ่งที่ตรงข้ามกับความเป็นจริง)\nใช้กับโครงสร้าง `I wish...` หรือ `If only...` เพื่อบอกความปรารถนาในสิ่งที่เป็นไปไม่ได้:\n1. **ปรารถนาในปัจจุบัน (ใช้ Past Simple / were สำหรับทุกประธาน):**\n   - *\"I wish our servers **were** closer to our European users.\"* (ใช้ were แทน was)\n   - *\"If only we **had** more time to refactor this module.\"*\n2. **ปรารถนา/เสียดายสิ่งที่ผ่านไปแล้วในอดีต (ใช้ Past Perfect: had + V.3):**\n   - *\"I wish we **had run** the load tests before launching publicly.\"* (เสียดายที่ในอดีตไม่ได้รัน)\n",
         "examples": [
           {
-            "en": "It is crucial that every developer review the security policy.",
-            "th": "จำเป็นอย่างยิ่งที่นักพัฒนาทุกคนต้องตรวจทานนโยบายความปลอดภัย (developer คนเดียว แต่ใช้ review ไม่เติม s)",
+            "en": "The security team recommended that the engineer revoke the exposed API secret immediately.",
+            "th": "ทีมความปลอดภัยแนะนำให้วิศวกรทำการเพิกถอนคีย์ความลับ API ที่หลุดออกไปโดยทันที",
             "cat": "Tech"
           },
           {
-            "en": "The team lead recommended that he take a short break.",
-            "th": "หัวหน้าทีมแนะนำให้เขาหยุดพักสักครู่ (he แต่ใช้ take)",
+            "en": "It is crucial that every database write operation be logged to an immutable audit trail.",
+            "th": "เป็นเรื่องสำคัญอย่างยิ่งยวดที่การเขียนข้อมูลลงฐานข้อมูลทุกครั้งจะต้องถูกบันทึกลงใน Audit Trail ที่แก้ไขไม่ได้",
+            "cat": "Tech"
+          },
+          {
+            "en": "The CTO insisted that all developers write unit tests for every new feature.",
+            "th": "ประธานเจ้าหน้าที่ฝ่ายเทคโนโลยี (CTO) ยืนกรานให้นักพัฒนาทุกคนเขียน Unit Test สำหรับฟีเจอร์ใหม่ทุกตัว",
+            "cat": "Tech"
+          },
+          {
+            "en": "I wish our staging environment were an exact replica of the production infrastructure.",
+            "th": "ฉันอยากให้ระบบ Staging ของเราเป็นร่างโคลนที่เหมือนกับโครงสร้างพื้นฐานของ Production ทุกประการ",
+            "cat": "Tech"
+          },
+          {
+            "en": "It is mandatory that every employee complete the compliance training before next week.",
+            "th": "เป็นข้อบังคับตามระเบียบที่พนักงานทุกคนจะต้องผ่านการอบรมด้านการปฏิบัติตามกฎเกณฑ์ก่อนสัปดาห์หน้า",
             "cat": "Daily"
+          },
+          {
+            "en": "The committee proposed that we postpone the release until all security audits are signed off.",
+            "th": "คณะกรรมการเสนอแนะให้พวกเราเลื่อนการปล่อยระบบออกไปจนกว่าการตรวจสอบความปลอดภัยทั้งหมดจะได้รับการอนุมัติ",
+            "cat": "Tech"
           }
         ],
         "quickCheck": [
@@ -2191,19 +2381,39 @@ window.grammarSyllabusData = [
       {
         "id": "rep-backshift",
         "title": "Unit 1: Backshift Tenses in Reported Speech",
-        "summary": "การถอย Tense 1 จังหวะเมื่อรายงานสิ่งที่คนอื่นพูดในอดีต",
-        "formula": "Direct: Present Simple ➔ Reported: Past Simple  |  will ➔ would  |  can ➔ could",
-        "explanation": "\n### กฎการถอย Tense (Backshift Rule)\nเมื่อเรานำคำพูดของคนอื่นในอดีตมาเล่าต่อ (He said that..., She told me that...):\n- **is / am / are** ➔ เปลี่ยนเป็น **was / were**\n- **V.1 (Present)** ➔ เปลี่ยนเป็น **V.2 (Past)**\n- **will** ➔ เปลี่ยนเป็น **would**\n- **can** ➔ เปลี่ยนเป็น **could**\n- **have / has + V.3** ➔ เปลี่ยนเป็น **had + V.3**\n        ",
+        "summary": "ถ่ายทอดคำพูดและสรุปการประชุมอย่างแม่นยำด้วย Reported Speech พร้อมกฎ Tense Backshift และการเปลี่ยนสรรพนาม/เวลา",
+        "formula": "S + said (that) / told + Object + (that) + Backshifted Clause",
+        "explanation": "\n### 1. Direct Speech vs Reported (Indirect) Speech\n- **Direct Speech (คำพูดตรง):** ยกคำพูดของคนอื่นมาใส่ในเครื่องหมายคำพูด (\"...\") ทุกตัวอักษร:\n  - *Sarah said, \"I am investigating the database deadlock.\"*\n- **Reported Speech (การรายงานคำพูด):** การนำสาระสำคัญของคำพูดมาเล่าต่ออย่างเป็นธรรมชาติโดยไม่ต้องใส่เครื่องหมายคำพูด:\n  - *Sarah said that she **was investigating** the database deadlock.*\n\n---\n\n### 2. ตารางแม่บทการถอย Tense (Tense Backshift Rules)\nเมื่อกริยานำเป็นอดีต (`said`, `told`, `reported`, `explained`) กริยาในประโยคที่ถูกรายงานต้อง **\"ถอยหลัง 1 Tense (Backshift)\"** เสมอ:\n\n| Direct Speech (คำพูดเดิม) | Reported Speech (เมื่อนำมารายงาน) | ตัวอย่างประโยคเปรียบเทียบ |\n| Present Simple (`V.1`) | Past Simple (`V.2`) | *\"We monitor logs.\"* ➔ He said they **monitored** logs. |\n| Present Continuous (`is/am/are + V.ing`) | Past Continuous (`was/were + V.ing`) | *\"I am deploying.\"* ➔ She said she **was deploying**. |\n| Past Simple (`V.2`) | Past Perfect (`had + V.3`) | *\"We fixed the bug.\"* ➔ They said they **had fixed** the bug. |\n| Present Perfect (`have/has + V.3`) | Past Perfect (`had + V.3`) | *\"I have pushed the commit.\"* ➔ He said he **had pushed** the commit. |\n| Future Simple (`will + V.inf`) | Conditional (`would + V.inf`) | *\"We will release tomorrow.\"* ➔ They said they **would release** the next day. |\n| `can` | `could` | *\"I can reproduce it.\"* ➔ She said she **could reproduce** it. |\n| `must / have to` | `had to` | *\"We must restart.\"* ➔ He said they **had to restart**. |\n\n💡 **ข้อยกเว้นที่ไม่ต้องถอย Tense:**\nถ้าสิ่งที่รายงานเป็น **ข้อเท็จจริงทางวิทยาศาสตร์ สัจธรรม หรือเรื่องที่ยังคงเป็นจริงอยู่ในปัจจุบัน**:\n- *\"The architect said that light **travels** faster than sound.\"* (ไม่เปลี่ยนเป็น traveled)\n\n---\n\n### 3. การเปลี่ยนคำบอกเวลาและสถานที่ (Time & Place Shifts)\nเมื่อบริบทเวลาและสถานที่เปลี่ยนไป คำเหล่านี้ต้องปรับตาม:\n- `now` ➔ `then`\n- `today` ➔ `that day`\n- `yesterday` ➔ `the day before` หรือ `the previous day`\n- `tomorrow` ➔ `the next day` หรือ `the following day`\n- `here` ➔ `there`\n- `this / these` ➔ `that / those`\n\n---\n\n### 4. Say vs Tell ต่างกันอย่างไร?\n⚠️ **จุดผิดยอดนิยม:**\n- **Say:** ไม่ต้องมีกรรมมารับตามหลัง: *\"She **said that** the pipeline failed.\"* (หรือ say to someone)\n- **Tell:** **ต้องมีกรรม (ผู้ฟัง) มารับตามหลังเสมอ!**: *\"She **told me that** the pipeline failed.\"* (ห้ามพูด *She told that ❌)\n",
         "examples": [
           {
-            "en": "Direct: 'We will release tomorrow.' ➔ Reported: They said that they would release the following day.",
-            "th": "พวกเขาบอกว่าพวกเขาจะปล่อยเวอร์ชันในวันรุ่งขึ้น",
+            "en": "The lead architect said that the new cluster configuration would reduce latency by half.",
+            "th": "หัวหน้าสถาปนิกกล่าวว่าการกำหนดค่าคลัสเตอร์ใหม่จะช่วยลดความหน่วงลงได้ครึ่งหนึ่ง",
             "cat": "Tech"
           },
           {
-            "en": "Direct: 'I am debugging the API.' ➔ Reported: He mentioned that he was debugging the API.",
-            "th": "เขาบอกว่าเขากำลังดีบัก API อยู่",
+            "en": "She told the team that she had already verified all the database backups.",
+            "th": "เธอแจ้งให้ทีมทราบว่าเธอได้ตรวจสอบไฟล์สำรองฐานข้อมูลทั้งหมดเรียบร้อยแล้ว",
             "cat": "Tech"
+          },
+          {
+            "en": "Alex mentioned that he was taking a day off the following Monday.",
+            "th": "อเล็กซ์แจ้งให้ทราบว่าเขาจะลางานหนึ่งวันในวันจันทร์ที่จะถึงนี้",
+            "cat": "Daily"
+          },
+          {
+            "en": "The security engineer reported that the vulnerability had been patched in the previous release.",
+            "th": "วิศวกรความปลอดภัยรายงานว่าช่องโหว่นั้นได้รับการแพตช์แก้ไขไปแล้วในเวอร์ชันก่อนหน้า",
+            "cat": "Tech"
+          },
+          {
+            "en": "He asked me if I could help him configure the environment variables.",
+            "th": "เขาถามฉันว่าฉันพอจะช่วยเขาตั้งค่าตัวแปรสภาพแวดล้อม (Environment Variables) ได้หรือไม่",
+            "cat": "Tech"
+          },
+          {
+            "en": "They told us that the conference room had already been reserved for the quarterly review.",
+            "th": "พวกเขาแจ้งเราว่าห้องประชุมนั้นถูกจองไว้แล้วสำหรับการประชุมทบทวนผลงานประจำไตรมาส",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
@@ -2332,19 +2542,39 @@ window.grammarSyllabusData = [
       {
         "id": "rel-pronouns",
         "title": "Unit 1: Defining vs Non-Defining Relative Clauses",
-        "summary": "การใช้ who (คน), which (สิ่งของ), that (คนหรือสิ่งของ), where (สถานที่)",
-        "formula": "Noun + [who / which / that / where] + Clause",
-        "explanation": "\n### 1. Relative Pronouns พื้นฐาน\n- **Who:** ขยายคน (The developer **who** wrote this code)\n- **Which:** ขยายสิ่งของ/ระบบ (The server **which** hosts our database)\n- **That:** ขยายได้ทั้งคนและสิ่งของใน Defining clause (The bug **that** caused the crash)\n- **Where:** ขยายสถานที่หรือตำแหน่ง (The data center **where** our racks are located)\n        ",
+        "summary": "เชื่อมโยงและขยายความคำนามอย่างมืออาชีพด้วย Relative Clause (Who, Whom, Whose, Which, That, Where) และแยกแยะ Defining vs Non-defining",
+        "formula": "Noun + [Relative Pronoun + Clause] + Rest of Sentence",
+        "explanation": "\n### 1. Relative Clause คืออะไร?\nRelative Clause (ประพันธสรรพนาม) คือ **\"อนุประโยคที่ทำหน้าที่เหมือน Adjective ขนาดยาว\"** วางไว้ติดกับคำนามที่ต้องการขยายความ เพื่อให้ข้อมูลเพิ่มเติมโดยไม่ต้องตัดเป็นประโยคสั้นๆ หลายประโยค\n\n#### ตารางการเลือกใช้ Relative Pronoun:\n| คำสรรพนามเชื่อม | คำนามที่ขยาย | หน้าที่ใน Relative Clause | ตัวอย่างประโยค |\n| **Who** | คน | เป็นประธาน (Subject) | *\"The engineer **who designed this system** is presenting.\"* |\n| **Whom** | คน | เป็นกรรม (Object) | *\"The developer **whom we hired last month** solved the bug.\"* |\n| **Whose** | คน / สิ่งของ / องค์กร | แสดงความเป็นเจ้าของ (Possessive) | *\"The company **whose cloud servers we use** announced maintenance.\"* |\n| **Which** | สิ่งของ / สัตว์ / ระบบ | เป็นประธานหรือกรรม | *\"We need a database **which can scale horizontally**.\"* |\n| **That** | คน หรือ สิ่งของ | ใช้ใน Defining Clause | *\"The fix **that was deployed yesterday** works perfectly.\"* |\n| **Where** | สถานที่ | บอกพิกัด | *\"This is the repository **where we store documentation**.\"* |\n| **When** | เวลา | บอกจังหวะเวลา | *\"I remember the day **when our service went viral**.\"* |\n\n---\n\n### 2. Defining vs Non-Defining Relative Clauses (จุดออกสอบที่สำคัญที่สุด!)\n\n#### 1) Defining Relative Clause (อนุประโยคระบุชี้เฉพาะ):\n- **จำเป็นต่อความหมายของประโยค** หากตัดออก ผู้ฟังจะไม่รู้ว่าหมายถึงอันไหน\n- **❌ ห้ามใส่เครื่องหมาย Comma (,) คั่นเด็ดขาด!**\n- **✔️ สามารถใช้ `that` แทน who หรือ which ได้**\n- *\"The microservice **that handles payments** experienced high latency.\"* (จำเป็นต้องบอก ไม่งั้นไม่รู้ว่าไมโครเซอร์วิสตัวไหน)\n\n#### 2) Non-Defining Relative Clause (อนุประโยคให้ข้อมูลเสริม):\n- คำนามข้างหน้าชัดเจนในตัวเองอยู่แล้ว (เช่น เป็นชื่อเฉพาะ Proper Noun หรือสิ่งที่มีหนึ่งเดียว)\n- ข้อมูลใน clause เป็นเพียง **\"ของแถม\"** แม้ตัดทิ้งประโยคหลักก็ยังสมบูรณ์\n- **✔️ ต้องใส่เครื่องหมาย Comma (,) คั่นหัวท้ายเสมอ!**\n- **❌ ห้ามใช้ `that` เด็ดขาด! (ต้องใช้ who หรือ which เท่านั้น)**\n- *\"Kubernetes**, which was originally developed by Google,** is now maintained by the CNCF.\"*\n\n---\n\n### 3. การละ Relative Pronoun (Omission)\nเราสามารถ **\"ละ (ตัดทิ้ง)\"** Relative Pronoun (who, which, that) ได้ **เมื่อมันทำหน้าที่เป็น \"กรรม\" ของประโยคย่อยเท่านั้น**:\n- *\"The pull request **[that] you submitted** has been approved.\"* (you เป็นประธาน submitted เป็นกริยา that เป็นกรรม ➔ ละได้)\n- ❌ แต่ถ้าทำหน้าที่เป็นประธาน **ห้ามละเด็ดขาด!**: *\"The pull request **that was** approved...\"* (ห้ามตัด that)\n",
         "examples": [
           {
-            "en": "The engineer who designed this architecture has five years of AWS experience.",
-            "th": "วิศวกรผู้ออกแบบสถาปัตยกรรมนี้มีประสบการณ์ AWS ถึง 5 ปี",
+            "en": "The engineer who designed the distributed messaging architecture just received a promotion.",
+            "th": "วิศวกรผู้ออกแบบสถาปัตยกรรมระบบส่งข้อความแบบกระจายเพิ่งได้รับการเลื่อนตำแหน่ง",
             "cat": "Tech"
           },
           {
-            "en": "We patched the vulnerability that was discovered last week.",
-            "th": "พวกเราได้อุดช่องโหว่ความปลอดภัยที่ถูกค้นพบเมื่อสัปดาห์ที่แล้วเรียบร้อยแล้ว",
+            "en": "PostgreSQL, which is an open-source relational database, offers robust transactional integrity.",
+            "th": "PostgreSQL ซึ่งเป็นฐานข้อมูลเชิงสัมพันธ์แบบโอเพนซอร์ส มอบความถูกต้องสมบูรณ์ของการทำธุรกรรมที่แข็งแกร่ง",
             "cat": "Tech"
+          },
+          {
+            "en": "The configuration file that you uploaded yesterday contains a syntax error.",
+            "th": "ไฟล์กำหนดค่าคอนฟิกที่คุณอัปโหลดไปเมื่อวานนี้มีข้อผิดพลาดทางไวยากรณ์อยู่",
+            "cat": "Tech"
+          },
+          {
+            "en": "Sarah, whose team handles cloud infrastructure, presented the quarterly capacity report.",
+            "th": "ซาร่า ซึ่งทีมของเธอดูแลระบบโครงสร้างพื้นฐานบนคลาวด์ ได้นำเสนอรายงานการใช้ทรัพยากรประจำไตรมาส",
+            "cat": "Tech"
+          },
+          {
+            "en": "This is the conference room where we usually host our daily standup meetings.",
+            "th": "นี่คือห้องประชุมที่พวกเรามักจะใช้จัดประชุมสแตนด์อัปประจำวันอยู่เป็นประจำ",
+            "cat": "Daily"
+          },
+          {
+            "en": "The candidate whom we interviewed this morning demonstrated excellent problem-solving skills.",
+            "th": "ผู้สมัครงานที่เราสัมภาษณ์ไปเมื่อเช้านี้ได้แสดงให้เห็นถึงทักษะการแก้ปัญหาที่ยอดเยี่ยม",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
@@ -2473,18 +2703,38 @@ window.grammarSyllabusData = [
       {
         "id": "part-ing-ed",
         "title": "Unit 1: Participle Clauses in Technical Writing",
-        "summary": "ลดรูปประโยคเพื่อความกระชับในการเขียนรายงานทางเทคนิค",
-        "formula": "Active: [V.ing + Object], Main Clause  |  Passive: [V.3 + by...], Main Clause",
-        "explanation": "\n### 1. Present Participle (V.ing - ประธานทำเอง)\n- ย่อมาจากประโยค Active: \"Running on Linux, this service consumes very little RAM.\"\n  - (ความหมายเดิม: Because this service runs on Linux, it consumes...)\n\n### 2. Past Participle (V.3 - ประธานถูกกระทำ)\n- ย่อมาจากประโยค Passive: \"Configured properly, Kubernetes manages containers automatically.\"\n  - (ความหมายเดิม: When Kubernetes is configured properly, it manages...)\n        ",
+        "summary": "ทำความเข้าใจการใช้ Participle (V.ing vs V.3) ทั้งในฐานะ Adjective และการย่อประโยคขั้นสูง (Participle Clauses)",
+        "formula": "Present Participle (V.ing - Active/Cause) vs Past Participle (V.3 - Passive/Feeling)",
+        "explanation": "\n### 1. Participle คืออะไร?\nParticiple คือรูปคำกริยาที่แปลงร่างมาทำหน้าที่เป็น **Adjective (คำคุณศัพท์)** หรือใช้สร้าง **Participle Clauses (การย่อประโยค)** เพื่อความกระชับและสละสลวยในงานเขียน\n\n---\n\n### 2. V.ing (Present Participle) vs V.3 (Past Participle)\n\n#### 1) ในบทบาทการบอกความรู้สึก / คุณลักษณะ:\n- **V.ing:** มีความหมายว่า **\"น่า... / ก่อให้เกิดความรู้สึก\"** หรือประธาน **\"เป็นผู้กระทำเอง (Active)\"**\n  - `interesting` (น่าสนใจ)\n  - `confusing` (น่าสับสน)\n  - `exhausting` (น่าเหน็ดเหนื่อย)\n  - *\"The documentation is **confusing**.\"* (เอกสารนี้น่าสับสน)\n  - *\"a **running** container\"* (คอนเทนเนอร์ที่กำลังรันอยู่)\n- **V.3:** มีความหมายว่า **\"รู้สึก... / ถูกกระทำ (Passive)\"**\n  - `interested` (รู้สึกสนใจ)\n  - `confused` (รู้สึกสับสน)\n  - `exhausted` (รู้สึกเหน็ดเหนื่อย)\n  - *\"The new developer was **confused** by the legacy codebase.\"* (นักพัฒนารู้สึกสับสน)\n  - *\"a **deployed** container\"* (คอนเทนเนอร์ที่ถูกติดตั้งเรียบร้อยแล้ว)\n\n---\n\n### 3. Participle Clauses (การย่อประโยคขั้นสูงสำหรับมืออาชีพ)\nแทนที่จะเขียนประโยคยาวๆ ด้วยคำเชื่อม `When`, `Because`, หรือ `After` เราสามารถย่อประโยคหน้าให้เหลือเพียง Participle:\n\n#### กฎทองของการย่อประโยค:\n⚠️ **ประธานของทั้งสองประโยคต้องเป็น \"คน/สิ่งเดียวกัน\" เท่านั้น!**\n\n1. **ย่อประโยคที่เป็น Active (ประธานทำเอง) ➔ ใช้ V.ing:**\n   - ประโยคเต็ม: *\"**Because the engineer noticed** a memory leak, he restarted the pod.\"*\n   - ย่อเหลือ: *\"**Noticing** a memory leak, the engineer restarted the pod.\"*\n2. **ย่อประโยคที่เป็น Passive (ประธานถูกกระทำ) ➔ ใช้ V.3:**\n   - ประโยคเต็ม: *\"**Because the software was tested** thoroughly, it showed zero defects in production.\"*\n   - ย่อเหลือ: *\"**Tested** thoroughly, the software showed zero defects in production.\"*\n3. **ย่อสิ่งที่ทำเสร็จก่อนแล้วค่อยทำอีกสิ่ง (Perfect Participle) ➔ ใช้ Having + V.3:**\n   - *\"**Having resolved** the incident, the on-call engineer wrote the post-mortem report.\"*\n",
         "examples": [
           {
-            "en": "Deployed to three cloud regions, our service guarantees 99.99% uptime.",
-            "th": "เมื่อได้รับการติดตั้งใน 3 Cloud Regions บริการของเราจึงรับประกันความพร้อมใช้งานถึง 99.99%",
+            "en": "Noticing an unusual spike in database connections, the engineer investigated the connection pool.",
+            "th": "เมื่อสังเกตเห็นการพุ่งสูงขึ้นผิดปกติของการเชื่อมต่อฐานข้อมูล วิศวกรจึงเข้าตรวจสอบ Connection Pool ทันที",
             "cat": "Tech"
           },
           {
-            "en": "Knowing the deployment risks, we scheduled the update at midnight.",
-            "th": "ด้วยความที่รู้ถึงความเสี่ยงในการขึ้นระบบ พวกเราจึงกำหนดเวลาอัปเดตไว้ตอนเที่ยงคืน",
+            "en": "Tested under extreme load conditions, the microservice proved its exceptional resilience.",
+            "th": "เมื่อได้รับการทดสอบภายใต้สภาวะโหลดที่หนักหน่วง ไมโครเซอร์วิสก็ได้พิสูจน์ถึงความทนทานอันยอดเยี่ยม",
+            "cat": "Tech"
+          },
+          {
+            "en": "The architecture workshop was fascinating, and everyone felt deeply inspired.",
+            "th": "เวิร์กช็อปสถาปัตยกรรมระบบนั้นน่าสนใจมาก และทุกคนรู้สึกได้รับแรงบันดาลใจอย่างลึกซึ้ง",
+            "cat": "Daily"
+          },
+          {
+            "en": "Having completed the quarterly infrastructure audit, the DevOps team presented their findings.",
+            "th": "หลังจากเสร็จสิ้นการตรวจสอบโครงสร้างพื้นฐานประจำไตรมาส ทีม DevOps ก็ได้นำเสนอข้อค้นพบของพวกเขา",
+            "cat": "Tech"
+          },
+          {
+            "en": "Deploying applications without automated integration tests is a high-risk practice.",
+            "th": "การติดตั้งแอปพลิเคชันโดยไม่มีการทดสอบการเชื่อมต่อระบบอัตโนมัติเป็นการปฏิบัติที่มีความเสี่ยงสูง",
+            "cat": "Tech"
+          },
+          {
+            "en": "Exhausted from the long incident triage call, the team took a well-deserved break.",
+            "th": "ด้วยความเหน็ดเหนื่อยจากการประชุมคัดกรองปัญหาที่ยาวนาน ทีมงานจึงได้พักผ่อนอย่างเต็มที่",
             "cat": "Daily"
           }
         ],
@@ -2614,23 +2864,38 @@ window.grammarSyllabusData = [
       {
         "id": "voice-formula",
         "title": "Unit 1: Passive Voice Formula & Tech Context",
-        "summary": "ทำไมสายไอทีจึงใช้ Passive Voice บ่อยมาก? เน้น Action และสิ่งที่ถูกทำ",
-        "formula": "Passive Formula: Subject + Verb to be (ผันตาม Tense) + V.3 (+ by Agent)",
-        "explanation": "\n### ทำไมวงการไอทีและธุรกิจถึงชอบใช้ Passive Voice?\n1. **ไม่เน้นผู้กระทำ:** ไม่สำคัญว่าใครเป็นคนกดปุ่ม แต่สำคัญที่ **\"ผลลัพธ์ของระบบ\"**\n2. **เป็นทางการและเป็นกลาง:** ไม่ชี้เป้าหรือกล่าวโทษบุคคล (No Blame Culture)\n   - ไม่พูดว่า: *\"Somchai broke the database.\"* (สมชายทำฐานข้อมูลพัง)\n   - พูดอย่างมืออาชีพ: *\"The database **was corrupted** during migration.\"* (ฐานข้อมูลเกิดความเสียหายระหว่างการย้ายข้อมูล)\n\n### สูตรแปลง 3 สเต็ปง่ายๆ:\n1. นำกรรม (Object) ของประโยคเดิมมาเป็นประธาน\n2. ใส่ **Verb to be** ให้ตรงตาม Tense และประธานตัวใหม่\n3. เปลี่ยนกริยาแท้เป็น **V.3 (Past Participle)**\n\n#### ตัวอย่างผันตามแต่ละ Tense:\n- **Present Simple:** The code **is reviewed** before every merge.\n- **Past Simple:** The vulnerability **was patched** yesterday.\n- **Present Perfect:** The release **has been deployed** successfully.\n- **Future Simple:** The new cluster **will be provisioned** tomorrow.\n        ",
+        "summary": "เน้นผลลัพธ์ของระบบและรายงานเหตุการณ์ด้วย Passive Voice ครอบคลุม 12 Tenses พร้อมเกณฑ์การเลือกว่าเมื่อใดควรใช้",
+        "formula": "Subject + Verb to be + V.3 (Past Participle) + (by Agent)",
+        "explanation": "\n### 1. ทำไมวงการ Tech และวิทยาศาสตร์จึงนิยมใช้ Passive Voice?\n- **Active Voice:** เน้นว่า **\"ใครเป็นคนทำ\"** (*\"Sarah deployed the code.\"*)\n- **Passive Voice:** เน้นว่า **\"อะไรถูกทำ / เกิดอะไรขึ้นกับระบบ\"** (*\"The code was deployed.\"*)\n\nในเอกสารทางเทคนิค (Technical Documentation, Release Notes, Post-mortem Reports) เรามักไม่สนใจว่าใครกดปุ่ม แต่เราสนใจ **\"สถานะของระบบและผลลัพธ์ที่เกิดขึ้น\"**:\n1. เมื่อไม่รู้ว่าใครทำ หรือผู้กระทำไม่สำคัญ (*\"A security vulnerability was discovered.\"*)\n2. เพื่อเน้นความเป็นกลาง ไม่ชี้นิ้วกล่าวโทษบุคคล (No-blame Culture) (*\"A database table was accidentally deleted.\"*)\n3. ในกระบวนการทางวิศวกรรม (*\"Incoming requests are balanced across three replicas.\"*)\n\n---\n\n### 2. ตารางแม่บท Passive Voice ทุก Tense สำคัญ\nโครงสร้างสากลคือ: `Verb to be (ผันตาม Tense และประธาน) + V.3`\n\n| Tense | Active Voice | Passive Voice Formula | ตัวอย่างประโยคจริง |\n| Present Simple | `S + V.1` | `is / am / are + V.3` | *\"Sensitive data **is encrypted** at rest.\"* |\n| Present Continuous | `S + is/am/are + V.ing` | `is / am / are + being + V.3` | *\"The new release **is being tested**.\"* |\n| Past Simple | `S + V.2` | `was / were + V.3` | *\"The issue **was resolved** yesterday.\"* |\n| Past Continuous | `S + was/were + V.ing` | `was / were + being + V.3` | *\"The server **was being patched** during the downtime.\"* |\n| Present Perfect | `S + have/has + V.3` | `have / has + been + V.3` | *\"The build **has been approved** by the lead.\"* |\n| Past Perfect | `S + had + V.3` | `had + been + V.3` | *\"The backup **had been created** before the crash.\"* |\n| Future Simple | `S + will + V.inf` | `will + be + V.3` | *\"The feature **will be launched** next week.\"* |\n| Modals (can/must/should) | `Modal + V.inf` | `Modal + be + V.3` | *\"Passwords **must be changed** regularly.\"* |\n\n---\n\n### 3. เมื่อใดควรใส่ \"by + Agent\" (ผู้กระทำ)?\nใส่เมื่อ **ผู้กระทำเป็นบุคคลสำคัญ หรือข้อมูลนั้นมีค่าต่อการตัดสินใจ**:\n- *\"The pull request was reviewed **by the security team**.\"*\n- แต่ถ้าเป็นคนทั่วไปหรือเห็นชัดอยู่แล้ว ให้ **ตัดทิ้ง**:\n  - *\"The server was restarted.\"* (ไม่ต้องบอกว่า by someone)\n",
         "examples": [
           {
-            "en": "All production database backups are encrypted at rest.",
-            "th": "ข้อมูลสำรองทั้งหมดของ Production จะถูกเข้ารหัสไว้เสมอในขณะจัดเก็บ",
+            "en": "All customer passwords and access tokens are hashed and encrypted in the database.",
+            "th": "รหัสผ่านและโทเคนการเข้าถึงของลูกค้าทั้งหมดได้รับการแฮชและเข้ารหัสไว้ในฐานข้อมูล",
             "cat": "Tech"
           },
           {
-            "en": "The incident was resolved within fifteen minutes.",
-            "th": "เหตุขัดข้องได้รับการแก้ไขลุล่วงภายใน 15 นาที",
+            "en": "The critical zero-day security vulnerability was patched within two hours of discovery.",
+            "th": "ช่องโหว่ความปลอดภัยระดับ Zero-day ที่สำคัญได้รับการติดตั้งแพตช์แก้ไขภายในเวลาสองชั่วโมงหลังตรวจพบ",
             "cat": "Tech"
           },
           {
-            "en": "A new version of the app has been published to the App Store.",
-            "th": "แอปพลิเคชันเวอร์ชันใหม่ได้รับการเผยแพร่ลง App Store เรียบร้อยแล้ว",
+            "en": "A new staging environment is being set up to test the microservices migration.",
+            "th": "สภาพแวดล้อม Staging ใหม่กำลังถูกจัดเตรียมขึ้นเพื่อทดสอบการย้ายระบบไมโครเซอร์วิส",
+            "cat": "Tech"
+          },
+          {
+            "en": "The quarterly financial report has been approved by the board of directors.",
+            "th": "รายงานทางการเงินประจำไตรมาสได้รับการอนุมัติจากคณะกรรมการบริหารเรียบร้อยแล้ว",
+            "cat": "Daily"
+          },
+          {
+            "en": "Automated integration tests must be executed before any code can be merged.",
+            "th": "การทดสอบการเชื่อมต่อระบบอัตโนมัติจะต้องถูกเรียกทำงานก่อนที่โค้ดจะได้รับอนุญาตให้รวมเข้ากับกิ่งหลัก",
+            "cat": "Tech"
+          },
+          {
+            "en": "The team lunch venue was reserved by our office coordinator yesterday morning.",
+            "th": "สถานที่รับประทานอาหารกลางวันของทีมได้รับการสำรองที่นั่งไว้โดยผู้ประสานงานออฟฟิศเมื่อเช้าวานนี้",
             "cat": "Daily"
           }
         ],
@@ -2760,19 +3025,39 @@ window.grammarSyllabusData = [
       {
         "id": "comp-rules",
         "title": "Unit 1: Comparative & Superlative Structures",
-        "summary": "การใช้ -er than, more than, the -est, the most และ as...as",
-        "formula": "Comparative: Adj + -er than  |  more + Adj + than  --- Superlative: the + Adj + -est  |  the most + Adj",
-        "explanation": "\n### 1. Comparative (ขั้นกว่า - เปรียบเทียบ 2 สิ่ง)\n- คำพยางค์สั้น: เติม **-er than** (faster than, cheaper than, larger than)\n- คำ 2 พยางค์ขึ้นไป: ใช้ **more ... than** (more reliable than, more scalable than)\n\n### 2. Superlative (ขั้นสุด - ที่สุดในกลุ่ม)\n- คำพยางค์สั้น: **the ... -est** (the fastest, the cheapest)\n- คำหลายพยางค์: **the most ...** (the most efficient, the most secure)\n\n### 3. As ... as (เท่ากัน)\n- \"PostgreSQL is **as reliable as** MySQL for this workload.\" (เสถียรเท่ากัน)\n        ",
+        "summary": "เปรียบเทียบประสิทธิภาพ สถาปัตยกรรม และความเร็วด้วยขั้นปกติ ขั้นกว่า (Comparative) และขั้นสุด (Superlative)",
+        "formula": "Positive: as...as | Comparative: -er than / more...than | Superlative: the -est / the most",
+        "explanation": "\n### 1. 3 ระดับการเปรียบเทียบในภาษาอังกฤษ\nการเปรียบเทียบช่วยให้วิศวกรและผู้บริหารตัดสินใจเลือกเทคโนโลยี (Benchmark & Architecture Selection):\n1. **Positive Degree (ขั้นเท่ากัน):** `as + Adjective/Adverb + as`\n   - *\"PostgreSQL is **as reliable as** MySQL in this workload.\"*\n   - ปฏิเสธ: *\"The replica is **not as fast as** the primary node.\"*\n2. **Comparative Degree (ขั้นกว่า):** เปรียบเทียบ 2 สิ่ง\n   - `Adjective-er + than` หรือ `more + Adjective + than`\n   - *\"Redis is **faster than** disk-based storage.\"*\n3. **Superlative Degree (ขั้นสูงสุด):** เปรียบเทียบ 3 สิ่งขึ้นไป\n   - `the + Adjective-est` หรือ `the most + Adjective`\n   - *\"This is **the most secure** algorithm currently available.\"*\n\n---\n\n### 2. กฎการผันคำคุณศัพท์\n| ประเภทคำ | กฎขั้นกว่า (Comparative) | กฎขั้นสุด (Superlative) | ตัวอย่าง |\n| คำพยางค์เดียว | เติม `-er than` | เติม `the -est` | `fast` ➔ faster ➔ the fastest |\n| พยางค์เดียว ลงท้ายด้วย พยัญชนะ+สระตัวเดียว | เบิ้ลพยัญชนะท้าย + `-er` | เบิ้ลพยัญชนะท้าย + `-est` | `big` ➔ bigger ➔ the biggest |\n| 2 พยางค์ลงท้ายด้วย -y | เปลี่ยน y เป็น `-ier` | เปลี่ยน y เป็น `-iest` | `easy` ➔ easier ➔ the easiest |\n| 2 พยางค์ขึ้นไป | ใช้ `more ... than` | ใช้ `the most ...` | `scalable` ➔ more scalable ➔ the most scalable |\n\n#### ตารางกลุ่มคำเปลี่ยนรูปพิเศษ (Irregular Comparisons - ต้องจำ!):\n| รูปปกติ | ขั้นกว่า (Comparative) | ขั้นสุด (Superlative) |\n| `good / well` | **better** | **the best** |\n| `bad / badly` | **worse** | **the worst** |\n| `far` (ระยะทางจริง) | **farther** | **the farthest** |\n| `far` (ความลึกซึ้ง/เพิ่มเติม) | **further** | **the furthest** |\n| `little` (ปริมาณ) | **less** | **the least** |\n| `many / much` | **more** | **the most** |\n\n---\n\n### 3. โครงสร้างขั้นสูง: The more..., the more... (ยิ่ง...ก็ยิ่ง...)\nใช้แสดงความสัมพันธ์แบบแปรผันตรงหรือแปรผกผันในสถาปัตยกรรมระบบ:\n`The + ขั้นกว่า..., the + ขั้นกว่า...`\n- *\"**The larger** the cache size, **the lower** the database query latency.\"* (ยิ่งขนาดแคชใหญ่ ความหน่วงของคิวรีก็ยิ่งต่ำลง)\n- *\"**The more** automated tests we have, **the safer** our deployments become.\"*\n",
         "examples": [
           {
-            "en": "Go is generally faster than Python for CPU-intensive tasks.",
-            "th": "ภาษา Go โดยทั่วไปเร็วกว่า Python สำหรับงานที่ต้องประมวลผล CPU หนักๆ",
+            "en": "Redis provides significantly faster read latency than traditional disk-based databases.",
+            "th": "Redis มอบความหน่วงในการอ่านข้อมูลที่เร็วกว่าฐานข้อมูลแบบจัดเก็บบนดิสก์ดั้งเดิมอย่างเห็นได้ชัด",
             "cat": "Tech"
           },
           {
-            "en": "This is the most cost-effective cloud solution for our startup.",
-            "th": "นี่คือโซลูชันคลาวด์ที่คุ้มค่ากับต้นทุนมากที่สุดสำหรับสตาร์ทอัพของเรา",
+            "en": "This microservice architecture is much more scalable than our previous monolithic design.",
+            "th": "สถาปัตยกรรมไมโครเซอร์วิสนี้สามารถรองรับการขยายตัวได้ดีกว่าการออกแบบระบบแบบ Monolith เดิมของเรามาก",
             "cat": "Tech"
+          },
+          {
+            "en": "This is the most critical infrastructure vulnerability our security team has ever identified.",
+            "th": "นี่คือช่องโหว่ของโครงสร้างพื้นฐานที่วิกฤตที่สุดเท่าที่ทีมความปลอดภัยของเราเคยตรวจพบมา",
+            "cat": "Tech"
+          },
+          {
+            "en": "The more automated tests we execute in CI/CD, the fewer bugs reach our production users.",
+            "th": "ยิ่งเราเรียกทำงานการทดสอบอัตโนมัติใน CI/CD มากขึ้นเท่าไร บั๊กที่หลุดไปถึงผู้ใช้จริงบน Production ก็จะยิ่งน้อยลงเท่านั้น",
+            "cat": "Tech"
+          },
+          {
+            "en": "The morning express train is twice as fast as driving through downtown Bangkok traffic.",
+            "th": "รถไฟด่วนรอบเช้าเร็วกว่าการขับรถฝ่าการจราจรใจกลางกรุงเทพฯ ถึงสองเท่า",
+            "cat": "Daily"
+          },
+          {
+            "en": "Her presentation was clearer and better structured than any other proposal submitted today.",
+            "th": "การนำเสนอของเธอมีความชัดเจนและมีโครงสร้างที่ดีกว่าข้อเสนออื่นๆ ทั้งหมดที่ยื่นเข้ามาในวันนี้",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
@@ -2901,23 +3186,38 @@ window.grammarSyllabusData = [
       {
         "id": "if-type-0-1",
         "title": "Unit 1: Type 0 & Type 1 (ความจริง & ความเป็นไปได้ในอนาคต)",
-        "summary": "Type 0 (ความจริงแท้ทางระบบ) vs Type 1 (คาดการณ์สิ่งที่จะเกิดขึ้นจริง)",
-        "formula": "Type 0: If + Present Simple, Present Simple  |  Type 1: If + Present Simple, will + V.inf",
-        "explanation": "\n### 1. Zero Conditional (Type 0 - ข้อเท็จจริง กฎเกณฑ์ธรรมชาติและระบบ)\n- ใช้เมื่อสิ่งหนึ่งเกิดขึ้น อีกสิ่งหนึ่งจะเกิดขึ้นตามมาอย่างแน่นอน 100%\n- **สูตร:** If + Present Simple, Present Simple\n- ตัวอย่าง: \"If a container crashes, Kubernetes **restarts** it automatically.\" (ถ้าคอนเทนเนอร์ล่ม Kubernetes ก็จะรีสตาร์ทมันโดยอัตโนมัติ)\n\n### 2. First Conditional (Type 1 - เหตุการณ์ที่เป็นไปได้จริงในอนาคต)\n- ใช้เมื่อมีเงื่อนไขในปัจจุบัน และคาดว่าผลลัพธ์จะเกิดขึ้นในอนาคต\n- **สูตร:** If + Present Simple, **will / can / may + V.inf**\n- ตัวอย่าง: \"If we deploy on Friday afternoon, we **will encounter** production issues.\" (ถ้าเราขึ้นระบบเย็นวันศุกร์ เราจะต้องเจอปัญหาบน Production แน่ๆ)\n        ",
+        "summary": "ตรรกะเงื่อนไขความจริงทางวิทยาศาสตร์และโค้ด (Type 0) และการคาดการณ์สิ่งที่มีโอกาสเกิดขึ้นจริงในอนาคต (Type 1)",
+        "formula": "Type 0: If + Present Simple, Present Simple | Type 1: If + Present Simple, will + V.inf",
+        "explanation": "\n### 1. Conditionals (If-Clause) คือตรรกะพื้นฐานของทุกระบบ\nIf-Clause ประกอบด้วย 2 ส่วนเสมอ:\n1. **If-Clause (เงื่อนไข):** ขึ้นต้นด้วย `If` หรือคำเทียบเท่า\n2. **Main Clause (ผลลัพธ์):** สิ่งที่จะเกิดขึ้นตามมา\n\n---\n\n### 2. Type 0: Zero Conditional (ความจริงสากล & ตรรกะโปรแกรม)\nใช้กับ **กฎทางธรรมชาติ, กฎเกณฑ์ทางกายภาพ, หรือตรรกะระบบโค้ด** ที่เมื่อเหตุการณ์ A เกิด ผลลัพธ์ B จะเกิดขึ้น **100% แน่นอน**:\n`If + Present Simple (S + V.1), Present Simple (S + V.1)`\n- *\"If CPU temperature **exceeds** 90 degrees, the server **throttles** automatically.\"*\n- *\"If you **heat** water to 100 degrees Celsius, it **boils**.\"*\n- 💡 ใน Type 0 สามารถใช้คำว่า `When` แทนคำว่า `If` ได้โดยความหมายแทบไม่เปลี่ยน:\n  - *\"**When** the disk fills up, writes **fail**.\"*\n\n---\n\n### 3. Type 1: First Conditional (สิ่งที่เป็นไปได้จริงในอนาคต)\nใช้กับเหตุการณ์ที่มี **โอกาสเกิดขึ้นได้จริงในปัจจุบันหรืออนาคต (Real Possibility)**:\n`If + Present Simple (S + V.1), will / can / should + V.inf`\n⚠️ **กฎเหล็กข้อห้าม:** ห้ามใส่ `will` ไว้ในประโยคย่อยหลัง If เด็ดขาด! (ห้ามพูด *If it will rain ❌)\n- *\"If all automated tests **pass**, we **will deploy** the release tonight.\"*\n- *\"If you **need** any assistance with the API, I **can help** you.\"*\n\n---\n\n### 4. คำเชื่อมแทน IF ที่วิศวกรและมืออาชีพต้องรู้:\n1. **Unless (ถ้าไม่... = If not):**\n   - *\"**Unless** we optimize the database query, the server **will crash** under peak traffic.\"*\n   - (= If we do not optimize the database query, ...)\n2. **Provided that / As long as (ตราบใดที่ / มีเงื่อนไขว่า):**\n   - *\"We can deploy to production **as long as** the test coverage remains above 80%.\"*\n3. **In case (เผื่อว่า):**\n   - *\"Keep the rollback script ready **in case** the deployment fails.\"*\n",
         "examples": [
           {
-            "en": "If the CPU temperature exceeds 85°C, the server shuts down automatically.",
-            "th": "ถ้าอุณหภูมิ CPU เกิน 85 องศา เซิร์ฟเวอร์จะปิดตัวลงโดยอัตโนมัติ (Type 0)",
+            "en": "If the cluster memory consumption exceeds ninety percent, the autoscaler spawns new pods automatically.",
+            "th": "หากการใช้หน่วยความจำของคลัสเตอร์เกินเก้าสิบเปอร์เซ็นต์ ระบบขยายอัตโนมัติจะสร้างพ็อดใหม่โดยทันที",
             "cat": "Tech"
           },
           {
-            "en": "If you approve this PR now, I will merge it immediately.",
-            "th": "ถ้าคุณกดอนุมัติ PR นี้ตอนนี้ ฉันจะกด Merge ให้ทันที (Type 1)",
+            "en": "If all integration tests pass on the staging environment, we will trigger the production release tonight.",
+            "th": "หากการทดสอบการเชื่อมต่อระบบทั้งหมดผ่านบน Staging คืนนี้พวกเราจะเริ่มปล่อยระบบโปรดักชัน",
             "cat": "Tech"
           },
           {
-            "en": "If it rains tomorrow, we will have our meeting online.",
-            "th": "ถ้าพรุ่งนี้ฝนตก พวกเราจะประชุมกันทางออนไลน์ (Type 1)",
+            "en": "Unless we renew the TLS security certificates this week, users will encounter browser security warnings.",
+            "th": "หากพวกเราไม่ต่ออายุใบรับรองความปลอดภัย TLS ภายในสัปดาห์นี้ ผู้ใช้จะพบคำเตือนความปลอดภัยบนเบราว์เซอร์",
+            "cat": "Tech"
+          },
+          {
+            "en": "You can work remotely from anywhere as long as you maintain consistent communication with the team.",
+            "th": "คุณสามารถทำงานระยะไกลจากที่ใดก็ได้ ตราบใดที่คุณยังคงรักษาการสื่อสารกับทีมอย่างสม่ำเสมอ",
+            "cat": "Daily"
+          },
+          {
+            "en": "Keep a local database snapshot ready in case the cloud migration encounters unexpected corruption.",
+            "th": "สำรองไฟล์สแนปช็อตฐานข้อมูลไว้บนเครื่องตัวเองด้วย เผื่อว่าการย้ายระบบขึ้นคลาวด์จะเจอข้อมูลเสียหายที่ไม่คาดคิด",
+            "cat": "Tech"
+          },
+          {
+            "en": "If you finish your sprint deliverables early, feel free to explore the new monitoring tools.",
+            "th": "หากคุณทำงานส่งมอบประจำสปรินต์เสร็จก่อนเวลา คุณสามารถใช้เวลาสำรวจเครื่องมือตรวจสอบระบบตัวใหม่ได้อย่างเต็มที่",
             "cat": "Daily"
           }
         ],
@@ -3037,19 +3337,39 @@ window.grammarSyllabusData = [
       {
         "id": "if-type-2-3",
         "title": "Unit 2: Type 2 & Type 3 (สมมติตรงข้ามความจริง & เสียดายในอดีต)",
-        "summary": "Type 2 (สมมติในปัจจุบันที่ยังไม่จริง) vs Type 3 (เหตุการณ์ในอดีตที่ผ่านไปแล้วและกลับไปแก้ไม่ได้)",
-        "formula": "Type 2: If + Past Simple, would + V.inf  |  Type 3: If + had + V.3, would have + V.3",
-        "explanation": "\n### 1. Second Conditional (Type 2 - สมมติสิ่งที่ตรงข้ามกับความจริงปัจจุบัน)\n- ใช้จินตนาการถึงสิ่งที่แทบไม่มีทางเป็นจริงในตอนนี้\n- **สูตร:** If + Past Simple (V.2), **would + V.inf**\n  *(หมายเหตุ: ในภาษาอังกฤษทางการ Verb to be ใน if-clause จะนิยมใช้ were กับประธานทุกตัว)*\n- ตัวอย่าง: \"If I **had** root access, I **would inspect** the hidden system logs.\" (ถ้าฉันมีสิทธิ์ Root นะ ฉันจะเข้าไปดู Log ลับทันที — แต่ความจริงตอนนี้ไม่มีสิทธิ์)\n\n### 2. Third Conditional (Type 3 - เสียดายสิ่งที่เกิดขึ้นไปแล้วในอดีต)\n- ย้อนเวลากลับไปไม่ได้ พูดถึงสิ่งที่เกิดขึ้นไปแล้วและอยากให้ผลลัพธ์เป็นอีกอย่าง\n- **สูตร:** If + **had + V.3**, **would have + V.3**\n- ตัวอย่าง: \"If we **had written** unit tests, we **would not have introduced** this critical bug.\" (ถ้าตอนนั้นพวกเราเขียน Unit tests นะ เราก็คงไม่ปล่อยให้บั๊กวิกฤตินี้หลุดออกไป — แต่ความจริงคือตอนนั้นไม่ได้เขียน บั๊กเลยหลุด)\n        ",
+        "summary": "การสมมติตรงข้ามปัจจุบัน (Type 2) และการวิเคราะห์บทเรียนความผิดพลาด/เสียดายในอดีต (Type 3 & Post-mortem Analysis)",
+        "formula": "Type 2: If + Past Simple (were), would + V.inf | Type 3: If + Past Perfect, would have + V.3",
+        "explanation": "\n### 1. Type 2: Second Conditional (สมมติตรงข้ามกับความจริงในปัจจุบัน)\nใช้กับเหตุการณ์ที่ **เป็นไปไม่ได้ในปัจจุบัน หรือโอกาสเกิดขึ้นน้อยมาก (Hypothetical & Unreal Present)**:\n`If + Past Simple (V.2), would / could / might + V.inf`\n\n💡 **กฎพิเศษของ Verb to be:**\nในภาษาทางการหรือข้อสอบมาตรฐาน ให้ใช้ **WERE** กับประธานทุกตัว (รวมถึง I, He, She, It):\n- *\"If I **were** the CTO, I **would migrate** our infrastructure to Kubernetes.\"*\n- *\"If our legacy database **supported** real-time streaming, we **would build** the feature immediately.\"* (แต่ความจริงปัจจุบันฐานข้อมูลไม่รองรับ)\n- ใช้ในการให้คำแนะนำ: *\"If I **were** you, I **would consult** the senior architect.\"*\n\n---\n\n### 2. Type 3: Third Conditional (สมมติตรงข้ามกับอดีต / เสียดายในอดีต)\nใช้ในการวิเคราะห์เหตุการณ์ที่ **ผ่านไปแล้วในอดีต และไม่สามารถกลับไปแก้ไขได้แล้ว (Unreal Past & Regret)** หัวใจสำคัญของการเขียนรายงานวิเคราะห์ปัญหา (Post-mortem Analysis):\n`If + Past Perfect (had + V.3), would / could / might + have + V.3`\n\n- *\"If we **had configured** the database alerts properly, we **would have detected** the outage sooner.\"*\n  - (ความจริงในอดีต: ตอนนั้นไม่ได้ตั้งค่าการแจ้งเตือนไว้ดีพอ ➔ จึงตรวจจับปัญหาได้ช้า)\n- *\"If she **had attended** the standup meeting, she **would have known** about the deployment freeze.\"*\n  - (ความจริงในอดีต: เธอไม่ได้เข้าประชุม ➔ เลยไม่รู้เรื่องการระงับการปล่อยระบบ)\n\n---\n\n### 3. ตารางสรุปเปรียบเทียบ If-Clause ครบทั้ง 4 ประเภท\n| ประเภท If-Clause | Tense ใน If-Clause | Tense ใน Main Clause | มิติความเป็นจริง |\n| **Type 0** | Present Simple (`V.1`) | Present Simple (`V.1`) | จริงแท้ 100% / ตรรกะโค้ด |\n| **Type 1** | Present Simple (`V.1`) | `will + V.inf` | มีโอกาสเกิดขึ้นจริงในอนาคต |\n| **Type 2** | Past Simple (`V.2 / were`) | `would + V.inf` | จินตนาการ / ตรงข้ามกับปัจจุบัน |\n| **Type 3** | Past Perfect (`had + V.3`) | `would have + V.3` | ย้อนอดีต / เสียดาย / แก้ไขไม่ได้แล้ว |\n\n---\n\n### 4. Mixed Conditionals (เงื่อนไขผสมอดีตส่งผลถึงปัจจุบัน)\nเมื่อ **เหตุการณ์ในอดีต (Past)** ส่งผลกระทบต่อ **สถานะในปัจจุบัน (Present)**:\n`If + Past Perfect (อดีต), would + V.inf (ปัจจุบัน)`\n- *\"If we **had backed up** the database yesterday, our website **would be** online right now.\"*\n  - (เมื่อวานไม่ได้แบ็กอัป ➔ ตอนนี้เว็บเลยยังล่มอยู่)\n",
         "examples": [
           {
-            "en": "If we had more budget, we would hire two more SRE engineers.",
-            "th": "ถ้าเรามีงบประมาณมากกว่านี้ เราก็คงจ้างวิศวกร SRE เพิ่มอีกสองคนแล้ว (Type 2)",
+            "en": "If I were the lead architect, I would redesign our monolithic billing service into event-driven microservices.",
+            "th": "หากฉันเป็นหัวหน้าสถาปนิก ฉันจะออกแบบระบบเรียกเก็บเงินที่เป็น Monolith ใหม่ให้กลายเป็นไมโครเซอร์วิสแบบขับเคลื่อนด้วย Event",
             "cat": "Tech"
           },
           {
-            "en": "If we had monitored the database latency, the outage would not have happened.",
-            "th": "ถ้าตอนนั้นเราคอยเฝ้าดูกราฟ Latency ของฐานข้อมูล เหตุการณ์ระบบดับก็คงไม่เกิดขึ้น (Type 3)",
+            "en": "If we had performed comprehensive load testing before launch, the server wouldn't have crashed on Black Friday.",
+            "th": "หากพวกเราได้ทำการทดสอบการรับโหลดอย่างครอบคลุมก่อนเปิดตัว เซิร์ฟเวอร์ก็คงไม่ล่มในวัน Black Friday",
             "cat": "Tech"
+          },
+          {
+            "en": "If our team had more senior frontend engineers, we could complete this dashboard in two sprints.",
+            "th": "หากทีมของเรามีวิศวกร Frontend ระดับซีเนียร์มากกว่านี้ พวกเราคงจะทำแดชบอร์ดนี้เสร็จได้ภายในสองสปรินต์",
+            "cat": "Tech"
+          },
+          {
+            "en": "If she had received the calendar invite on time, she would have joined the executive quarterly briefing.",
+            "th": "หากเธอได้รับคำเชิญบนปฏิทินตรงเวลา เธอคงจะได้เข้าร่วมการประชุมสรุปภาพรวมประจำไตรมาสของผู้บริหารไปแล้ว",
+            "cat": "Daily"
+          },
+          {
+            "en": "If the DevOps team had automated the certificate renewal, the HTTPS connection would not have expired.",
+            "th": "หากทีม DevOps ได้ตั้งค่าต่ออายุใบรับรองความปลอดภัยแบบอัตโนมัติ การเชื่อมต่อแบบ HTTPS ก็คงไม่หมดอายุลง",
+            "cat": "Tech"
+          },
+          {
+            "en": "If I were in your position, I would take advantage of the international cloud certification sponsorship.",
+            "th": "หากฉันอยู่ในจุดเดียวกับคุณ ฉันจะคว้าโอกาสรับทุนสอบใบรับรองคลาวด์ระดับสากลนี้ไว้อย่างแน่นอน",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
@@ -3178,29 +3498,39 @@ window.grammarSyllabusData = [
       {
         "id": "modal-verbs-core",
         "title": "Unit 1: Modal Verbs Mastery (กริยาช่วยและระดับความสุภาพในการทำงาน)",
-        "summary": "เข้าใจเจตนา ความจำเป็น และการขอร้องอย่างสุภาพระดับสากล (Workplace & Tech)",
-        "formula": "Subject + Modal Verb (Can / Could / Should / Must / Would) + Verb (Infinitive ไม่ผัน)",
-        "explanation": "\n### 1. กฎเหล็กของ Modal Verbs (The Golden Rules)\nModal Verbs คือกริยาช่วยพิเศษที่นำมาวางหน้ากริยาแท้เพื่อ **\"บอกเจตนา อารมณ์ ความเป็นไปได้ หรือระดับความจำเป็น\"**\n- **กฎข้อที่ 1:** หลัง Modal Verb ต้องตามด้วย **Base Form (Infinitive ไม่ผัน)** เสมอ! ห้ามเติม -s, -es, -ed, -ing และไม่มี to\n  - *ถูก:* He **can configure** the server.\n  - *ผิด:* He cans configure / He can to configure.\n- **กฎข้อที่ 2:** ประธานทุกตัว (I, You, We, They, He, She, It) ใช้ Modal Verb รูปเดียวกันหมด ไม่มีการเติม -s ที่ตัว Modal\n\n---\n\n### 2. แยกตามเจตนาการใช้งาน (Core Functions)\n\n#### 1. Ability & Permission (ความสามารถและการขออนุญาต)\n- **Can:** สามารถทำได้ในปัจจุบัน / ขออนุญาตแบบเป็นกันเอง (*\"Can I check the logs?\"*)\n- **Could:** ความสามารถในอดีต หรือการขออนุญาต/ขอร้องอย่างสุภาพมาก (*\"Could you please review my PR?\"*)\n- **May:** ขออนุญาตอย่างเป็นทางการ (*\"May I deploy the patch now?\"*)\n\n#### 2. Advice & Obligation (คำแนะนำและความจำเป็น)\n- **Should:** ควรจะทำ (คำแนะนำที่ดี): *\"We should add automated tests.\"*\n- **Must:** ต้องทำ (กฎเหล็ก/ข้อบังคับสำคัญ): *\"All endpoints must use HTTPS.\"*\n- **Have to:** จำเป็นต้องทำ (ตามสถานการณ์หรือกฎระเบียบภายนอก): *\"I have to renew the SSL certificate.\"*\n\n> [!WARNING]\n> **จุดตายที่คนสับสนบ่อยที่สุด:**\n> - **Must not:** แปลว่า **\"ห้ามทำโดยเด็ดขาด\"** (Prohibition) -> *\"You must not commit secrets to Git.\"*\n> - **Don't have to:** แปลว่า **\"ไม่จำเป็นต้องทำ (จะทำหรือไม่ก็ได้)\"** (No obligation) -> *\"You don't have to join the optional call.\"*\n\n#### 3. Probability & Deduction (การคาดเดาความเป็นไปได้)\n- **Must be:** ต้องเป็นแบบนั้นแน่ๆ (มั่นใจ 95-100%): *\"The server is silent; it must be offline.\"*\n- **Can't be:** เป็นไปไม่ได้เด็ดขาด (มั่นใจเชิงปฏิเสธ): *\"The credentials can't be wrong; I just copied them.\"*\n- **Might / May:** อาจจะเกิดขึ้น (โอกาส 30-50%): *\"The deployment might cause brief latency.\"*\n\n---\n\n### 3. ตารางความสุภาพในการขอร้องในที่ทำงาน (Polite Requests)\n1. **เป็นกันเอง:** *Can you check this?*\n2. **สุภาพระดับมาตรฐาน:** *Could you please check this when you have time?*\n3. **สุภาพระดับสูงสุด:** *Would you mind checking this pull request?* (ตอบรับด้วย: *Not at all, I'd be happy to.*)\n",
+        "summary": "แม่บทกริยาช่วย Modal Verbs (Can, Could, May, Might, Must, Should, Would) และ Modal Perfects เพื่อการสื่อสารอย่างมืออาชีพ",
+        "formula": "Subject + Modal Verb + Bare Infinitive (V.inf) | Modal + have + V.3",
+        "explanation": "\n### 1. กฎทองสากลของ Modal Verbs\nModal Verbs (กริยาช่วยแสดงทัศนคติ ความจำเป็น หรือความสามารถ) มีกฎเหล็ก 3 ข้อที่ไม่เคยเปลี่ยนแปลง:\n1. **ตามด้วย Bare Infinitive (กริยาแท้รูปเดิม) เสมอ:** ห้ามเติม `-s`, `-ed`, `-ing` หรือมี `to` คั่น\n   - *\"The server **can handle** 10,000 requests per second.\"* (ไม่ใช่ can handles หรือ can to handle)\n2. **ห้ามเติม s ที่ตัว Modal:** แม้ประธานจะเป็น He/She/It (He can, She must)\n3. **ทำเป็นปฏิเสธและคำถามได้ทันที:** โดยไม่ต้องใช้ do/does/did (*\"You **should not** commit passwords.\"*, *\"**Can** you review this?\"*)\n\n---\n\n### 2. ตารางเจาะลึก 7 Modal Verbs และระดับการใช้งานจริง\n| Modal Verb | การใช้งานหลัก | ระดับความเป็นไปได้ / ความสุภาพ | ตัวอย่างประโยคจริง |\n| **Can** | • ความสามารถ (Ability)<br>• การอนุญาตแบบเป็นกันเอง | ความสามารถ 100% / ไม่เป็นทางการ | *\"Our service **can process** bulk transactions.\"* |\n| **Could** | • ความสามารถในอดีต<br>• การขอร้องอย่างสุภาพมาก | สุภาพระดับธุรกิจ (Polite Request) | *\"**Could** you please review my pull request?\"* |\n| **May** | • การขออนุญาตทางการ<br>• ความเป็นไปได้ระดับ 50% | ทางการสูง / อาจจะ | *\"**May** I ask a clarifying question about the schema?\"* |\n| **Might** | • ความเป็นไปได้ระดับ 30-40% (น้อยกว่า may) | มีโอกาสเกิดขึ้นไม่มาก | *\"The latency **might** spike during the data migration.\"* |\n| **Must** | • ข้อบังคับเด็ดขาด (Obligation)<br>• การอนุมานที่มั่นใจ 95%+ | จำเป็นต้องทำ 100% (กฎหมาย/ระบบ) | *\"All API endpoints **must** authenticate with a token.\"* |\n| **Should** | • ข้อเสนอแนะ / คำแนะนำที่ดี (Advice)<br>• ความคาดหวัง | ควรทำ / สิ่งที่น่าจะเกิดตามแผน | *\"You **should** add unit tests for edge cases.\"* |\n| **Would** | • การยื่นข้อเสนอสุภาพ<br>• สมมติใน If-Clause Type 2 | สุภาพและนุ่มนวล | *\"**Would** you like to lead the technical demonstration?\"* |\n\n---\n\n### 3. Must vs Have to ต่างกันอย่างไร?\n- **Must:** ความจำเป็นที่เกิดจาก **ความรู้สึกของผู้พูดเอง หรือเป็นกฎเกณฑ์เด็ดขาดของระบบ**:\n  - *\"I **must** finish this security patch before going to bed.\"*\n  - ปฏิเสธ **Must not (ห้ามทำเด็ดขาด!):** *\"You **must not** share production database access.\"*\n- **Have to:** ความจำเป็นที่มาจาก **ปัจจัยภายนอก (กฎระเบียบบริษัท / กฎหมาย)**:\n  - *\"We **have to** comply with GDPR data privacy regulations.\"*\n  - ปฏิเสธ **Don't have to (ไม่จำเป็นต้องทำ แต่จะทำก็ได้):** *\"You **don't have to** work overtime tonight.\"*\n\n---\n\n### 4. Modal Perfects: การวิเคราะห์และประเมินสิ่งที่ผ่านไปแล้วในอดีต\nเมื่อนำ Modal มารวมกับ `have + V.3` จะกลายเป็นการแสดงความคิดเห็นต่อเหตุการณ์ในอดีต:\n1. **Should have + V.3 (น่าจะได้ทำ... แต่ไม่ได้ทำ):**\n   - *\"We **should have backed up** the database before upgrading.\"* (เสียดาย ตอนนั้นไม่ได้แบ็กอัป)\n2. **Could have + V.3 (ทำได้ในตอนนั้น... แต่ไม่ได้เลือกทำ):**\n   - *\"We **could have scaled up** the server, but we chose to optimize queries instead.\"*\n3. **Must have + V.3 (ต้องเป็นแบบนั้นแน่ๆ ในอดีต - มั่นใจสูงมาก):**\n   - *\"The deployment **must have failed** because the notification never arrived.\"*\n",
         "examples": [
           {
-            "en": "Could you please review my pull request when you have a moment?",
-            "th": "รบกวนช่วยตรวจทาน Pull Request ให้หน่อยได้ไหมครับเมื่อคุณสะดวก",
+            "en": "All engineers must verify their two-factor authentication credentials every ninety days.",
+            "th": "วิศวกรทุกคนต้องทำการยืนยันตัวตนแบบสองปัจจัย (2FA) ใหม่ทุกๆ เก้าสิบวันตามระเบียบบังคับ",
             "cat": "Tech"
           },
           {
-            "en": "We must backup the production database before running any migration.",
-            "th": "พวกเราต้องสำรองข้อมูลฐานข้อมูลก่อนรันสคริปต์ไมเกรตเสมอ",
+            "en": "Could you please review the architectural design diagram before our client presentation?",
+            "th": "คุณพอจะช่วยตรวจทานแผนภาพการออกแบบสถาปัตยกรรมระบบก่อนการนำเสนอต่อลูกค้าได้ไหม?",
             "cat": "Tech"
           },
           {
-            "en": "You don't have to attend the optional retrospective meeting today.",
-            "th": "คุณไม่จำเป็นต้องเข้าร่วมการประชุมสรุปงานที่ไม่บังคับในวันนี้ก็ได้",
+            "en": "We should have executed comprehensive integration tests before rolling out the release to production.",
+            "th": "พวกเราน่าจะได้ทำการทดสอบการเชื่อมต่อระบบอย่างครอบคลุมก่อนที่จะปล่อยเวอร์ชันนี้ขึ้นสู่ Production",
+            "cat": "Tech"
+          },
+          {
+            "en": "The database connection might experience minor intermittent latency during the scheduled index rebuild.",
+            "th": "การเชื่อมต่อฐานข้อมูลอาจมีอาการหน่วงเป็นระยะๆ เล็กน้อยในระหว่างการสร้างดัชนีข้อมูลใหม่ตามกำหนดการ",
+            "cat": "Tech"
+          },
+          {
+            "en": "You don't have to stay late at the office if you have already completed all your sprint tasks.",
+            "th": "คุณไม่จำเป็นต้องอยู่ดึกที่ออฟฟิศหากคุณทำงานส่งมอบประจำสปรินต์เสร็จสิ้นหมดแล้ว",
             "cat": "Daily"
           },
           {
-            "en": "The microservice might experience brief latency during rollout.",
-            "th": "ไมโครเซอร์วิสอาจจะมีความหน่วงสั้นๆ ระหว่างการทยอยติดตั้งระบบ",
-            "cat": "Tech"
+            "en": "Would you like me to schedule a brief technical alignment call for tomorrow morning?",
+            "th": "คุณต้องการให้ฉันนัดหมายการประชุมปรึกษาหารือเชิงเทคนิคสั้นๆ สำหรับช่วงเช้าวันพรุ่งนี้หรือไม่?",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
@@ -3329,29 +3659,39 @@ window.grammarSyllabusData = [
       {
         "id": "grammar-capstone-test",
         "title": "Unit 1: Final Grammar Mastery Exam (รวมแบบทดสอบ 10 ข้อ ท้ายบท)",
-        "summary": "ทบทวนสรุปภาพรวมโครงสร้างภาษาอังกฤษ พร้อมทำแบบทดสอบประมวลผลความรู้ 10 ข้อ ท้ายบท",
-        "formula": "Core Grammar Mastery = Accuracy + Context + Confidence",
-        "explanation": "\n### 🎓 ยินดีต้อนรับสู่บทความสรุปและแบบทดสอบประมวลผลความรู้ท้ายบท!\nหลังจากที่คุณได้เรียนรู้ไวยากรณ์ครบทุกหมวดหมู่ ตั้งแต่ชนิดของคำ (Parts of Speech), การชี้เฉพาะ (Determiners), กาลเวลาทั้ง 12 Tenses, โครงสร้างประโยค, การถาม, เงื่อนไข (If-Clauses) ไปจนถึง Modal Verbs \n\nนี่คือ **5 กฎเหล็กที่ทรงพลังที่สุด** ที่คุณต้องพกติดตัวไปใช้ในการเขียนและพูดภาษาอังกฤษจริง:\n\n---\n\n### 1. กฎ Subject-Verb Agreement (ประธานและกริยาต้องสอดคล้องกัน)\n- อย่าหลงกลส่วนขยาย: มองหา **\"ประธานแท้\"** ให้เจอเสมอ\n  - *The list of 500 servers **is** ready.* (ประธานคือ The list ไม่ใช่ servers)\n- Indefinite Pronouns เป็นเอกพจน์เสมอ: *Everyone **has** a login account.*\n\n---\n\n### 2. กฎการเลือก Tense (Past Simple vs Present Perfect)\n- **Past Simple (V.2):** ใช้เมื่อมี **เวลาในอดีตเจาะจง** (yesterday, last year, two hours ago)\n- **Present Perfect (have/has + V.3):** ใช้เมื่อ **ผลลัพธ์ยังส่งผลถึงปัจจุบัน** หรือเชื่อมโยงอดีตถึงตอนนี้ด้วย **since / for**\n  - *We deployed the fix yesterday.* (อดีตจบแล้ว)\n  - *We have deployed 10 versions this month.* (เดือนนี้ยังไม่จบ)\n\n---\n\n### 3. กฎ Indirect Questions (คำถามทางอ้อมต้องเรียงแบบบอกเล่า)\n- เมื่อนำคำถามไปซ้อนหลังวลีสุภาพ (Could you tell me... / Do you know...)\n- **ต้องเรียงแบบบอกเล่า (Subject + Verb) เสมอ** และตัดกริยาช่วย do/does ออก\n  - *Could you tell me **where the server is**?* (ห้าม where is the server)\n\n---\n\n### 4. กฎ If-Clauses (ห้ามมี will ในประโยคหลัง If)\n- Type 1: *If it **rains**, the event will be postponed.* (ห้าม If it will rain)\n- Type 2: *If I **were** you, I would take the offer.* (สมมติตรงข้ามความจริงปัจจุบัน ใช้ were)\n- Type 3: *If we **had tested** earlier, we would not have caused the outage.* (เสียดายในอดีต)\n\n---\n\n### 5. กฎ Modal Verbs (ตามด้วย Base Verb เปลือยๆ)\n- หลัง can, could, may, might, must, should, would -> ตามด้วย **Infinitive ไม่ผัน** เสมอ\n- ระวังความแตกต่างระหว่าง **Must not (ห้ามเด็ดขาด)** และ **Don't have to (ไม่จำเป็นต้องทำ)**\n\n---\n\n### 📝 แบบทดสอบประมวลผลความรู้ 10 ข้อ ท้ายบท\nด้านล่างนี้คือแบบทดสอบ 10 ข้อที่คัดสรรจากสถานการณ์จริง ทดสอบความแม่นยำของคุณได้ทันทีครับ!\n",
+        "summary": "ประมวลผลความรู้ไวยากรณ์ภาษาอังกฤษ 16 หัวข้อ สู่ทักษะการสื่อสารที่ถูกต้อง มั่นใจ และพร้อมใช้งานจริง",
+        "formula": "Universal Grammar Architecture: Syntax + Tenses + Clauses + Voice + Modals",
+        "explanation": "\n### 1. ยินดีด้วย! คุณเดินทางมาถึงบทสรุปภาพรวมของ Grammar Mastery\nการเรียนรู้ไวยากรณ์ไม่ใช่การท่องจำกฎเกณฑ์ที่แห้งแล้ง แต่คือการ **\"เข้าใจสถาปัตยกรรมของภาษา (Language Architecture)\"** เพื่อถ่ายทอดความคิด โค้ด ตรรกะ และวิสัยทัศน์ของคุณออกไปสู่ระดับสากลได้อย่างแม่นยำ ไร้ข้อผิดพลาด\n\n---\n\n### 2. แผนที่สถาปัตยกรรมไวยากรณ์ (The 5 Core Pillars Review)\n\n#### เสาหลักที่ 1: Building Blocks (ชนิดของคำและคำนำหน้านาม)\n- **Nouns & Pronouns:** แยกแยะนามนับได้/ไม่ได้ (`information`, `software` ห้ามเติม s), สรรพนามประธาน/กรรม/แสดงเจ้าของ (`my` vs `mine`), และสรรพนามสะท้อนกลับ (`itself`)\n- **Determiners:** กฎเสียงสระของ `an` (`an hour`, `an API`) vs `a` (`a user`), และความแตกต่างของ `some` vs `any`, `few` vs `little`\n\n#### เสาหลักที่ 2: Tenses & Time Logic (มิติกาลเวลา)\n- **Present Simple vs Continuous:** ข้อเท็จจริง/กิจวัตร (`V.1`) vs กำลังทำ/ชั่วคราว (`is/am/are + V.ing`) พร้อมกฎห้ามใช้ V.ing กับ Stative Verbs (`know`, `contain`)\n- **Past Simple vs Present Perfect:** อดีตจบแล้วระบุเวลาชัดเจน (`yesterday`) vs ผลลัพธ์เชื่อมโยงถึงปัจจุบัน (`since`, `for`, `already`)\n\n#### เสาหลักที่ 3: Sentence Mechanics & Questions (โครงสร้างและคำถาม)\n- **Compound & Complex Sentences:** การเชื่อมด้วย FANBOYS พร้อมเครื่องหมาย Comma, และคำเชื่อมสาเหตุ/เงื่อนไข (`because`, `although`)\n- **Questions:** โครงสร้างคำถามตรง `WH + Aux + S + V?` และ Indirect Questions สุภาพ `Could you tell me where the server is?` (ไม่สลับกริยา)\n\n#### เสาหลักที่ 4: Advanced Synthesis (การสังเคราะห์ขั้นสูง)\n- **Subject-Verb Agreement:** กฎการจับคู่ประธานและกริยา โดยเฉพาะการไม่หลงกลส่วนขยายคั่นกลาง และ Indefinite Pronouns (`everyone is`)\n- **Active vs Passive Voice:** การเน้นผลลัพธ์ของระบบ `be + V.3` ในรายงานเทคนิค\n- **Relative Clauses:** `who`, `which`, `that` และการใช้ Comma ใน Non-defining clause\n\n#### เสาหลักที่ 5: Logic & Modals (ตรรกะและกริยาช่วย)\n- **Conditionals (If-Clause):** Type 0 (จริง 100%), Type 1 (อนาคตเป็นไปได้), Type 2 (สมมติปัจจุบัน were), Type 3 (ย้อนอดีต had + V.3)\n- **Modal Verbs:** `must` vs `have to`, และ Modal Perfects เพื่อการวิเคราะห์สิ่งที่ผ่านไปแล้ว (`should have done`)\n\n---\n\n### 3. เช็กลิสต์ตรวจทานงานเขียนก่อนกดส่ง (The Pre-flight Writing Checklist)\nก่อนกดส่ง Pull Request, ส่งอีเมลหาผู้บริหาร หรือโพสต์ข้อความลง Slack/Teams ให้ตรวจสอบ 4 ข้อนี้:\n1. ✔️ **Subject-Verb Match:** ประธานเอกพจน์ กริยาเติม s หรือยัง?\n2. ✔️ **Uncountable Nouns:** เผลอเติม s ให้คำอย่าง `information`, `software`, `feedback` หรือไม่?\n3. ✔️ **Pronoun Case:** สรรพนามหลังบุพบทเป็นรูปกรรมหรือไม่? (`Between you and me`)\n4. ✔️ **Indirect Question:** ในคำถามสุภาพ ได้เรียงคำเป็น ประธาน + กริยา (ไม่ใส่ did/do) แล้วหรือยัง?\n\n---\n\n### 4. ก้าวต่อไป: ฝึกทำแบบทดสอบ Capstone 10 ข้อด้านล่างนี้!\nแบบทดสอบด้านล่างรวบรวมโจทย์ประมวลความรู้ครอบคลุมทุกเสาหลัก ลองทดสอบความแม่นยำของคุณได้ทันที!\n",
         "examples": [
           {
-            "en": "The list of microservices is updated every morning by the CI pipeline.",
-            "th": "รายชื่อไมโครเซอร์วิสได้รับการอัปเดตทุกเช้าโดยไปป์ไลน์ CI (S-V Agreement & Passive)",
+            "en": "The lead architect recommended that our team deploy the containerized microservices to multiple cloud regions.",
+            "th": "หัวหน้าสถาปนิกแนะนำให้ทีมของเราติดตั้งไมโครเซอร์วิสในรูปแบบคอนเทนเนอร์ขึ้นสู่คลาวด์หลายภูมิภาค",
             "cat": "Tech"
           },
           {
-            "en": "If we had monitored memory usage, the outage could have been prevented.",
-            "th": "หากเรามอนิเตอร์การใช้แรมตั้งแต่แรก ระบบก็คงไม่ล่ม (Conditional Type 3)",
+            "en": "If we had performed rigorous load testing, we would have discovered the database deadlock before the launch.",
+            "th": "หากพวกเราได้ทำการทดสอบการรับโหลดอย่างเข้มงวด พวกเราคงจะตรวจพบปัญหา Deadlock ในฐานข้อมูลก่อนการเปิดตัว",
             "cat": "Tech"
           },
           {
-            "en": "Could you please tell me where the configuration file is located?",
-            "th": "ช่วยบอกผมหน่อยได้ไหมครับว่าไฟล์คอนฟิกเก็บอยู่ที่ไหน (Indirect Question)",
+            "en": "Could you please let me know whether the automated security scanning pipeline has completed its audit?",
+            "th": "คุณช่วยแจ้งให้ฉันทราบหน่อยได้ไหมว่าไปป์ไลน์การสแกนความปลอดภัยอัตโนมัติได้ดำเนินการตรวจสอบเสร็จสิ้นแล้วหรือยัง?",
+            "cat": "Tech"
+          },
+          {
+            "en": "Between you and me, the new continuous delivery framework is much more efficient than our legacy scripts.",
+            "th": "รู้กันแค่ระหว่างคุณกับฉันนะ เฟรมเวิร์กการส่งมอบซอฟต์แวร์แบบต่อเนื่องตัวใหม่นี้มีประสิทธิภาพมากกว่าสคริปต์เก่าของเรามาก",
+            "cat": "Tech"
+          },
+          {
+            "en": "Everyone in the organization is required to complete the annual cybersecurity awareness certification.",
+            "th": "ทุกคนในองค์กรจำเป็นต้องผ่านการรับรองการตระหนักรู้ด้านความปลอดภัยทางไซเบอร์ประจำปีให้เสร็จสิ้น",
             "cat": "Daily"
           },
           {
-            "en": "Sensitive customer data must be encrypted at rest and in transit.",
-            "th": "ข้อมูลลูกค้าที่สำคัญต้องถูกเข้ารหัสเสมอทั้งขณะพักและส่งผ่านเครือข่าย (Modal Passive)",
-            "cat": "Tech"
+            "en": "The conference presentation was fascinating, and it inspired the engineers to adopt modern DevOps practices.",
+            "th": "การนำเสนอในงานสัมมนานั้นน่าประทับใจมาก และได้สร้างแรงบันดาลใจให้วิศวกรนำแนวปฏิบัติด้าน DevOps สมัยใหม่มาปรับใช้",
+            "cat": "Daily"
           }
         ],
         "quickCheck": [
