@@ -43,7 +43,7 @@ class EngMasteryApp {
 
     // --- State for Lessons Hub & Grammar Syllabus ---
     this.lessonsHubTrack = null; // null for Hub landing, or 'grammar', 'core'
-    this.grammarViewMode = "blog"; // 'blog' for 15-topics blog listing, 'reader' for unit reader
+    this.grammarViewMode = "blog"; // 'blog' for topics blog listing, 'reader' for unit reader
     this.grammarBlogFilter = "all";
     this.grammarBlogSearch = "";
     this.activeGrammarTopicId = "parts-of-speech";
@@ -55,7 +55,7 @@ class EngMasteryApp {
     try {
       const savedVocabs = JSON.parse(localStorage.getItem("engmastery_reviewed_vocabs") || "[]");
       this.reviewedVocabIds = new Set(savedVocabs);
-      this.grammarQuizAnswers = {};
+      this.grammarQuizAnswers = JSON.parse(localStorage.getItem("engmastery_grammar_quiz_answers") || "{}");
       this.grammarQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_grammar_quizzes") || "{}");
       this.completedGrammarUnits = new Set(JSON.parse(localStorage.getItem("engmastery_completed_grammar_units") || "[]"));
       this.articleQuizAnswers = {};
@@ -797,7 +797,7 @@ class EngMasteryApp {
             </h1>
 
             <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
-              พัฒนาทักษะภาษาอังกฤษอย่างเป็นระบบและตรงจุด เลือกเจาะลึกไวยากรณ์ 15 หมวดหมู่ หรือเริ่มปูพื้นฐาน 6 ระดับตามมาตรฐานสากล CEFR จากระดับเริ่มต้นสู่ระดับสูง
+              พัฒนาทักษะภาษาอังกฤษอย่างเป็นระบบและตรงจุด เลือกเจาะลึกไวยากรณ์ ${syllabus.length} หมวดหมู่ หรือเริ่มปูพื้นฐาน 6 ระดับตามมาตรฐานสากล CEFR จากระดับเริ่มต้นสู่ระดับสูง
             </p>
 
             <!-- Learning Quick Summary Stats -->
@@ -827,7 +827,7 @@ class EngMasteryApp {
         <!-- 2 Main Course Blocks -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           
-          <!-- BLOCK 1: 📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ) -->
+          <!-- BLOCK 1: 📘 คอร์สไวยากรณ์ (Grammar Mastery - ${syllabus.length} หัวข้อ) -->
           <div onclick="window.app.enterLessonsTrack('grammar')"
             class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
             
@@ -840,7 +840,7 @@ class EngMasteryApp {
                   📘
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                  15 หมวดหมู่หลัก
+                  ${syllabus.length} หมวดหมู่หลัก
                 </span>
               </div>
 
@@ -849,7 +849,7 @@ class EngMasteryApp {
                   <span>คอร์สไวยากรณ์ (Grammar Mastery)</span>
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2.5 leading-relaxed">
-                  เจาะลึก 15 หมวดหมู่วิเคราะห์ตามสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมกล่องสูตรไวยากรณ์ ตัวอย่างประโยคจริงในชีวิตประจำวัน & สายงานไอที/DevOps ระบบทดสอบออกเสียง AI และแบบฝึกหัดทบทวนทันที
+                  เจาะลึก ${syllabus.length} หมวดหมู่วิเคราะห์ตามสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมกล่องสูตรไวยากรณ์ ตัวอย่างประโยคจริงในชีวิตประจำวัน & สายงานไอที/DevOps ระบบทดสอบออกเสียง AI และแบบฝึกหัดทบทวนทันที
                 </p>
               </div>
 
@@ -857,9 +857,9 @@ class EngMasteryApp {
               <div class="flex flex-wrap gap-1.5 text-[11px] pt-1">
                 <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1. Parts of Speech</span>
                 <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3. Tenses</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">5. WH-Questions</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">15. If-Clause</span>
-                <span class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">+11 หมวด</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">16. Modal Verbs</span>
+                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">17. แบบทดสอบท้ายบท</span>
+                <span class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">+${Math.max(0, syllabus.length - 4)} หมวด</span>
               </div>
 
               <!-- Progress bar for Grammar -->
@@ -877,7 +877,7 @@ class EngMasteryApp {
             <!-- Block Action Footer -->
             <div class="pt-6 mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
               <span class="text-xs font-bold text-slate-400">
-                15 หัวข้อ • 22+ บทย่อย
+                ${syllabus.length} หัวข้อ • ${totalGrammarUnits} บทย่อย
               </span>
               <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('grammar')"
                 class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 group-hover:translate-x-1 transition-all flex items-center gap-2">
@@ -981,7 +981,7 @@ class EngMasteryApp {
             <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
               <button onclick="window.app.switchLessonsTrack('grammar')"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
-                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ)</span>
+                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - ${(window.grammarSyllabusData || []).length} หัวข้อ)</span>
               </button>
               <button onclick="window.app.switchLessonsTrack('core')"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
@@ -1140,7 +1140,7 @@ class EngMasteryApp {
   }
 
   // =========================================================================
-  // VIEW: GRAMMAR MASTERY BLOG CATALOG (15 TOPICS WITH OVERVIEWS & UNITS)
+  // VIEW: GRAMMAR MASTERY BLOG CATALOG (GRAMMAR TOPICS WITH OVERVIEWS & UNITS)
   // =========================================================================
   renderGrammarBlogView(container) {
     this.activeLevelId = null;
@@ -1195,7 +1195,7 @@ class EngMasteryApp {
             <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
               <button onclick="window.app.switchLessonsTrack('grammar')"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
-                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - 15 หัวข้อ)</span>
+                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - ${(window.grammarSyllabusData || []).length} หัวข้อ)</span>
               </button>
               <button onclick="window.app.switchLessonsTrack('core')"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
@@ -1204,7 +1204,7 @@ class EngMasteryApp {
             </div>
 
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
-              <span>📚 15 Core Grammar Topics</span>
+              <span>📚 ${syllabus.length} Core Grammar Topics</span>
               <span class="text-indigo-400">•</span>
               <span>Blog Catalog & Masterclass</span>
             </div>
@@ -1214,7 +1214,7 @@ class EngMasteryApp {
             </h1>
 
             <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed max-w-3xl">
-              รวมเนื้อหาไวยากรณ์ครบครัน 15 หมวดหมู่หลัก อธิบายละเอียดด้วยภาษาง่ายๆ พร้อมกล่องสูตรโครงสร้างประโยค 
+              รวมเนื้อหาไวยากรณ์ครบครัน ${syllabus.length} หมวดหมู่หลัก อธิบายละเอียดด้วยภาษาง่ายๆ พร้อมกล่องสูตรโครงสร้างประโยค 
               ตัวอย่างประโยคจริงทั้งในชีวิตประจำวันและสายงานไอที/DevOps เลือกลุยทีละหมวดตามสารบัญได้เลย!
             </p>
 
@@ -1232,7 +1232,7 @@ class EngMasteryApp {
               <div class="flex items-center gap-3">
                 <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
                   <div class="text-[10px] text-indigo-200">หมวดหมู่</div>
-                  <div class="text-base font-black text-white">15 หัวข้อ</div>
+                  <div class="text-base font-black text-white">${syllabus.length} หัวข้อ</div>
                 </div>
                 <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
                   <div class="text-[10px] text-indigo-200">XP สะสม</div>
@@ -1255,7 +1255,7 @@ class EngMasteryApp {
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
               }">
-              ทั้งหมด (15)
+              ทั้งหมด (${syllabus.length})
             </button>
             <button onclick="window.app.setGrammarBlogFilter('foundation')"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
@@ -1286,7 +1286,7 @@ class EngMasteryApp {
           <!-- Search Input & Count -->
           <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
             <span id="grammar-blog-count" class="text-xs font-bold text-slate-400 whitespace-nowrap hidden sm:inline">
-              15 หัวข้อ
+              ${syllabus.length} หัวข้อ
             </span>
             <div class="relative w-full md:w-72">
               <input type="text"
@@ -1302,7 +1302,7 @@ class EngMasteryApp {
           </div>
         </div>
 
-        <!-- 15 Grammar Topics Blog Grid -->
+        <!-- Grammar Topics Blog Grid -->
         <div id="grammar-blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           ${syllabus.map((topic, topicIdx) => {
             const topicCategory = getTopicCategory(topic.badge);
@@ -1520,7 +1520,7 @@ class EngMasteryApp {
           <button onclick="window.app.returnToGrammarBlog()"
             class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>← กลับสู่หน้ารวมบทความไวยากรณ์ (15 หมวด)</span>
+            <span>← กลับสู่หน้ารวมบทความไวยากรณ์ (${syllabus.length} หมวด)</span>
           </button>
 
           <div class="flex items-center gap-2">
@@ -1688,68 +1688,163 @@ class EngMasteryApp {
             </div>
           </div>
 
-          <!-- Section 4: Quick Check Quiz (แบบทดสอบทบทวนทันที) -->
-          ${activeUnit.quickCheck ? `
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-9 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                  <span class="text-xl">🎯</span>
-                  <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                    แบบฝึกหัดทบทวนทันที (Quick Check Quiz)
-                  </h2>
-                </div>
-                <span class="text-xs font-bold text-amber-500">+10 XP</span>
-              </div>
+          <!-- Section 4: Quick Check Quiz (แบบทดสอบทบทวนทันที 10 ข้อ) -->
+          ${(() => {
+            const rawQuiz = activeUnit.quickCheck;
+            if (!rawQuiz) return '';
+            const quizList = Array.isArray(rawQuiz) ? rawQuiz : [rawQuiz];
+            const userAnswers = (this.grammarQuizAnswers && this.grammarQuizAnswers[activeUnit.id]) || {};
+            const answeredCount = Object.keys(userAnswers).length;
+            const correctCount = quizList.filter((q, idx) => userAnswers[idx] === q.correctIndex).length;
+            const isAllCompleted = answeredCount >= quizList.length;
 
-              <p class="text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
-                ${activeUnit.quickCheck.question}
-              </p>
-
-              <div class="space-y-2 pt-2">
-                ${activeUnit.quickCheck.options.map((opt, optIdx) => {
-                  const isSubmitted = !!currentQuizRecord;
-                  const isChosen = isSubmitted && currentQuizRecord.selectedIdx === optIdx;
-                  const isCorrect = isSubmitted && optIdx === activeUnit.quickCheck.correctIndex;
-                  const isWrong = isSubmitted && isChosen && !currentQuizRecord.isCorrect;
-
-                  let optClasses = 'border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-slate-200';
-                  if (isCorrect) {
-                    optClasses = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-bold';
-                  } else if (isWrong) {
-                    optClasses = 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200 font-bold';
-                  }
-
-                  return `
-                    <button onclick="window.app.submitGrammarQuiz('${activeUnit.id}', ${optIdx})"
-                      ${isSubmitted ? 'disabled' : ''}
-                      class="w-full text-left p-3.5 sm:p-4 rounded-2xl border ${optClasses} transition-all flex items-center justify-between gap-3 text-xs sm:text-sm ${
-                        isSubmitted ? 'cursor-default' : 'cursor-pointer active:scale-98'
-                      }">
-                      <span>${opt}</span>
-                      ${isCorrect ? '<span class="text-emerald-500 font-bold text-sm">✓ ถูกต้อง</span>' : ''}
-                      ${isWrong ? '<span class="text-red-500 font-bold text-sm">✕ ไม่ถูกต้อง</span>' : ''}
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-
-              <!-- Explanation Slot after quiz submission -->
-              ${currentQuizRecord ? `
-                <div class="mt-4 p-4 rounded-2xl ${
-                  currentQuizRecord.isCorrect
-                    ? 'bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-200'
-                    : 'bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-200'
-                } text-xs space-y-1.5 animate-fadeIn">
-                  <div class="flex items-center gap-2 font-bold">
-                    <span>${currentQuizRecord.isCorrect ? '🎉 ถูกต้องครับ!' : '💡 เฉลยและคำอธิบาย'}</span>
+            return `
+              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-9 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
+                <!-- Quiz Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-2xl">🎯</span>
+                      <h2 class="text-base sm:text-xl font-black text-slate-900 dark:text-white">
+                        แบบฝึกหัดทบทวนทันที (Quick Check Quiz)
+                      </h2>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      ทดสอบความแม่นยำ ${quizList.length} ข้อ ตอบทันที รู้ผลและคำอธิบายเฉลยทันที (+2 XP ต่อข้อ)
+                    </p>
                   </div>
-                  <p class="leading-relaxed text-xs">
-                    ${currentQuizRecord.explanation || activeUnit.quickCheck.explanation}
-                  </p>
+                  <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                      ทำแล้ว ${answeredCount} / ${quizList.length} ข้อ
+                    </span>
+                    ${answeredCount > 0 ? `
+                      <button onclick="window.app.resetGrammarQuiz('${activeUnit.id}')"
+                        class="px-2.5 py-1 rounded-xl text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                        title="เริ่มทำข้อสอบใหม่ทั้งหมด">
+                        🔄 ทำใหม่
+                      </button>
+                    ` : ''}
+                  </div>
                 </div>
-              ` : ''}
-            </div>
-          ` : ''}
+
+                <!-- Questions List -->
+                <div class="space-y-6">
+                  ${quizList.map((q, qIdx) => {
+                    const chosenOpt = userAnswers[qIdx];
+                    const isAnswered = chosenOpt !== undefined;
+                    const isUserCorrect = isAnswered && chosenOpt === q.correctIndex;
+
+                    return `
+                      <div class="p-5 sm:p-6 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border ${
+                        isAnswered
+                          ? (isUserCorrect ? 'border-emerald-300 dark:border-emerald-800/60' : 'border-rose-300 dark:border-rose-800/60')
+                          : 'border-slate-200/80 dark:border-slate-800'
+                      } space-y-4 transition-all">
+                        
+                        <div class="flex items-start gap-3">
+                          <span class="px-2.5 py-0.5 rounded-lg text-xs font-black shrink-0 ${
+                            isAnswered
+                              ? (isUserCorrect ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300')
+                              : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
+                          }">
+                            ข้อ ${qIdx + 1}
+                          </span>
+                          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+                            ${q.question}
+                          </h3>
+                        </div>
+
+                        <!-- 4 Option Buttons -->
+                        <div class="space-y-2">
+                          ${q.options.map((opt, optIdx) => {
+                            const isChosen = isAnswered && chosenOpt === optIdx;
+                            const isCorrectOpt = optIdx === q.correctIndex;
+
+                            let optClasses = "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 dark:hover:bg-slate-700";
+                            
+                            if (isAnswered) {
+                              if (isCorrectOpt) {
+                                optClasses = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs";
+                              } else if (isChosen && !isUserCorrect) {
+                                optClasses = "border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200 font-bold shadow-xs";
+                              } else {
+                                optClasses = "border-slate-100 dark:border-slate-800/60 bg-white/60 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500 opacity-60";
+                              }
+                            }
+
+                            return `
+                              <button onclick="window.app.answerGrammarQuizQuestion('${activeUnit.id}', ${qIdx}, ${optIdx})"
+                                ${isAnswered ? 'disabled' : ''}
+                                class="w-full text-left p-3.5 sm:p-4 rounded-xl border ${optClasses} transition-all flex items-center justify-between gap-3 text-xs sm:text-sm ${
+                                  isAnswered ? 'cursor-default' : 'cursor-pointer active:scale-98'
+                                }">
+                                <div class="flex items-center gap-2.5">
+                                  <span class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                                    isAnswered && isCorrectOpt
+                                      ? 'bg-emerald-500 text-white'
+                                      : (isAnswered && isChosen ? 'bg-rose-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300')
+                                  }">
+                                    ${String.fromCharCode(65 + optIdx)}
+                                  </span>
+                                  <span>${opt}</span>
+                                </div>
+                                ${isAnswered && isCorrectOpt ? '<span class="text-emerald-600 dark:text-emerald-400 font-black text-xs shrink-0">✓ ถูกต้อง</span>' : ''}
+                                ${isAnswered && isChosen && !isUserCorrect ? '<span class="text-rose-600 dark:text-rose-400 font-black text-xs shrink-0">✕ ไม่ถูกต้อง</span>' : ''}
+                              </button>
+                            `;
+                          }).join('')}
+                        </div>
+
+                        <!-- Instant Explanation per question -->
+                        ${isAnswered ? `
+                          <div class="p-3.5 rounded-xl ${
+                            isUserCorrect
+                              ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 text-emerald-900 dark:text-emerald-200'
+                              : 'bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-amber-900 dark:text-amber-200'
+                          } text-xs space-y-1 animate-fadeIn">
+                            <div class="flex items-center gap-1.5 font-bold">
+                              <span>${isUserCorrect ? '🎉 ถูกต้องครับ!' : '💡 คำอธิบายเฉลย:'}</span>
+                            </div>
+                            <p class="leading-relaxed">
+                              ${q.explanation}
+                            </p>
+                          </div>
+                        ` : ''}
+
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+
+                <!-- Quiz Completion Banner -->
+                ${isAllCompleted ? `
+                  <div class="p-6 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-500/30 text-center space-y-3 animate-fadeIn">
+                    <div class="text-3xl">🎉</div>
+                    <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                      ยอดเยี่ยมมาก! คุณทำแบบทดสอบครบทั้ง ${quizList.length} ข้อแล้ว
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                      คะแนนที่คุณทำได้: <strong class="text-emerald-600 dark:text-emerald-400 font-black text-base">${correctCount} / ${quizList.length}</strong> คะแนน (+${correctCount * 2} XP สะสม)
+                    </p>
+                    <div class="pt-2 flex items-center justify-center gap-3">
+                      <button onclick="window.app.resetGrammarQuiz('${activeUnit.id}')"
+                        class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition-all">
+                        🔄 ลองทำใหม่อีกครั้ง
+                      </button>
+                      ${nextUnitItem ? `
+                        <button onclick="window.app.selectGrammarUnit('${nextUnitItem.topicId}', '${nextUnitItem.unitId}')"
+                          class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+                          <span>ไปต่อบทความถัดไป</span>
+                          <span>➔</span>
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                ` : ''}
+
+              </div>
+            `;
+          })()}
 
           <!-- Bottom Navigation Bar (Previous / Next Article) -->
           <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -1766,7 +1861,7 @@ class EngMasteryApp {
 
             <button onclick="window.app.returnToGrammarBlog()"
               class="px-4 py-2.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 font-bold text-xs border border-indigo-200 dark:border-indigo-800 transition-all">
-              📑 ดูสารบัญบทความทั้งหมด (15 หมวด)
+              📑 ดูสารบัญบทความทั้งหมด (${syllabus.length} หมวด)
             </button>
 
             ${nextUnitItem ? `
@@ -1788,7 +1883,7 @@ class EngMasteryApp {
           <div class="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center text-slate-500 border border-slate-200 dark:border-slate-800">
             <p class="text-base font-bold">กรุณาเลือกบทความจากสารบัญ</p>
             <button onclick="window.app.returnToGrammarBlog()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
-              กลับไปดูสารบัญ 15 หมวด
+              กลับไปดูสารบัญ ${syllabus.length} หมวด
             </button>
           </div>
         `}
@@ -1918,16 +2013,72 @@ class EngMasteryApp {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  submitGrammarQuiz(unitId, selectedIndex) {
+  answerGrammarQuizQuestion(unitId, qIdx, selectedOptIdx) {
+    if (!this.grammarQuizAnswers) this.grammarQuizAnswers = {};
+    if (!this.grammarQuizAnswers[unitId]) this.grammarQuizAnswers[unitId] = {};
+
+    const alreadyAnswered = this.grammarQuizAnswers[unitId][qIdx] !== undefined;
+    this.grammarQuizAnswers[unitId][qIdx] = selectedOptIdx;
+    localStorage.setItem("engmastery_grammar_quiz_answers", JSON.stringify(this.grammarQuizAnswers));
+
+    // Find unit
     const syllabus = window.grammarSyllabusData || [];
     let targetUnit = null;
     for (const t of syllabus) {
       const u = (t.units || []).find(x => x.id === unitId);
       if (u) { targetUnit = u; break; }
     }
+
     if (targetUnit && targetUnit.quickCheck) {
-      this.submitGrammarQuickCheck(unitId, selectedIndex, targetUnit.quickCheck.correctIndex, targetUnit.quickCheck.explanation);
+      const quizList = Array.isArray(targetUnit.quickCheck) ? targetUnit.quickCheck : [targetUnit.quickCheck];
+      const q = quizList[qIdx];
+      const isCorrect = q && selectedOptIdx === q.correctIndex;
+
+      if (!alreadyAnswered) {
+        if (isCorrect) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(2);
+          window.storageManager.recordQuestProgress("completeQuiz", 1);
+        } else {
+          window.soundFx.playIncorrect();
+        }
+        this.renderHeaderStats();
+      } else {
+        window.soundFx.playClick();
+      }
+
+      // Check if all answered
+      const answeredCount = Object.keys(this.grammarQuizAnswers[unitId]).length;
+      if (answeredCount >= quizList.length) {
+        if (!this.completedGrammarUnits.has(unitId)) {
+          this.completedGrammarUnits.add(unitId);
+          localStorage.setItem("engmastery_completed_grammar_units", JSON.stringify([...this.completedGrammarUnits]));
+          window.storageManager.recordQuestProgress("readArticles", 1);
+          this.showToast(`🎉 ยอดเยี่ยม! ทำแบบทดสอบครบ ${quizList.length} ข้อแล้ว`, "success");
+        }
+      }
     }
+
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "level-detail" && this.grammarViewMode === "reader") {
+      this.renderGrammarCourseView(container);
+    }
+  }
+
+  resetGrammarQuiz(unitId) {
+    window.soundFx.playClick();
+    if (this.grammarQuizAnswers && this.grammarQuizAnswers[unitId]) {
+      delete this.grammarQuizAnswers[unitId];
+      localStorage.setItem("engmastery_grammar_quiz_answers", JSON.stringify(this.grammarQuizAnswers));
+    }
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "level-detail" && this.grammarViewMode === "reader") {
+      this.renderGrammarCourseView(container);
+    }
+  }
+
+  submitGrammarQuiz(unitId, selectedIndex) {
+    this.answerGrammarQuizQuestion(unitId, 0, selectedIndex);
   }
 
   markGrammarUnitComplete(unitId) {
