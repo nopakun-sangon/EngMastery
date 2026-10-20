@@ -16,28 +16,48 @@ window.grammarSyllabusData = [
       {
         "id": "pos-nouns-pronouns",
         "title": "Unit 1: Nouns & Pronouns (คำนามและสรรพนาม)",
-        "summary": "เข้าใจคำเรียกชื่อคน สัตว์ สิ่งของ ระบบ และคำใช้แทนประธาน/กรรม",
+        "summary": "เจาะลึกคำนาม (Countable/Uncountable/Plural) และสรรพนามแม่บท 5 รูปแบบ พร้อมจุดระวังที่คนใช้ผิดบ่อย",
         "formula": "Subject (Noun/Pronoun) + Verb + Object (Noun/Pronoun)",
-        "explanation": "\n### 1. Noun (คำนาม) คืออะไร?\nคำนามคือ **\"ชื่อเรียก\"** ของทุกสิ่งทุกอย่างรอบตัวเรา ไม่ว่าจะเป็นคน สัตว์ สิ่งของ สถานที่ หรือแม้กระทั่งสิ่งของที่จับต้องไม่ได้ เช่น แนวคิด หรือระบบคอมพิวเตอร์\n- **Common Noun (นามทั่วไป ไม่เจาะจง):** user (ผู้ใช้), server (เซิร์ฟเวอร์), meeting (การประชุม), coffee (กาแฟ)\n- **Proper Noun (นามเฉพาะ ต้องขึ้นต้นด้วยตัวพิมพ์ใหญ่เสมอ):** John, Bangkok, Linux, Docker, Google\n\n### 2. Pronoun (คำสรรพนาม) คืออะไร?\nคำสรรพนามคือคำที่ใช้ **\"แทนคำนาม\"** เพื่อจะได้ไม่ต้องพูดชื่อเดิมซ้ำๆ ให้เยิ่นเย้อ\n- **รูปประธาน (Subject):** I (ฉัน), You (คุณ), We (พวกเรา), They (พวกเขา), He (เขา), She (เธอ), It (มัน/ระบบ)\n- **รูปกรรม (Object):** me, you, us, them, him, her, it\n- **แสดงความเป็นเจ้าของ (Possessive):** my/mine, your/yours, our/ours, their/theirs, his, her/hers, its\n\n> [!TIP]\n> **เคล็ดลับจำง่าย:** ในประโยคภาษาอังกฤษ ประธานต้องเป็น **Noun** หรือ **Pronoun** เสมอ!\n        ",
+        "explanation": "\n### 1. Noun (คำนาม) คืออะไรและทำหน้าที่อะไรในประโยค?\nคำนาม (Noun) คือ **\"ชื่อเรียก\"** ของทุกสิ่งทุกอย่างรอบตัวเรา ไม่ว่าจะเป็นบุคคล สัตว์ สิ่งของ สถานที่ ระบบดิจิทัล ข้อมูล หรือแนวคิดนามธรรมที่จับต้องไม่ได้\nคำนามทำหน้าที่สำคัญ 4 ประการในโครงสร้างประโยคภาษาอังกฤษ:\n1. **Subject (ประธานของประโยค):** อยู่หน้ากริยาหลัก เช่น *\"The server restarts automatically.\"*\n2. **Direct Object (กรรมตรง):** สิ่งหรือคนที่ถูกกระทำโดยตรง อยู่หลังกริยา เช่น *\"The engineer deployed the application.\"*\n3. **Indirect Object (กรรมรอง):** ผู้รับผลจากการกระทำ อยู่ระหว่างกริยาและกรรมตรง เช่น *\"She sent the client an email.\"*\n4. **Object of Preposition (กรรมของบุพบท):** คำนามที่ตามหลังบุพบท เช่น *\"We stored logs in the database.\"*\n\n### 2. การจำแนกประเภทคำนาม 4 มิติสำคัญ (Noun Classifications)\n\n#### มิติที่ 1: Common Nouns vs Proper Nouns (นามทั่วไป vs นามเฉพาะ)\n- **Common Noun (นามทั่วไป):** ใช้เรียกสิ่งทั่วไป ไม่ชี้เฉพาะ เขียนด้วยตัวพิมพ์เล็กเสมอ เช่น `developer`, `computer`, `city`, `system`\n- **Proper Noun (นามเฉพาะ):** ใช้เรียกชื่อเฉพาะของคน สถานที่ บริษัท ซอฟต์แวร์ หรือองค์กร **ต้องขึ้นต้นด้วยตัวพิมพ์ใหญ่ (Capital Letter) เสมอ** เช่น `Sarah`, `London`, `Google`, `Kubernetes`, `PostgreSQL`\n- *\"Sarah deployed PostgreSQL on Google Cloud.\"* (Sarah, PostgreSQL และ Google Cloud เป็น Proper Noun จึงต้องขึ้นต้นด้วยตัวพิมพ์ใหญ่)\n\n#### มิติที่ 2: Countable vs Uncountable Nouns (นามนับได้ vs นามนับไม่ได้)\n💡 **จุดสังเกตสำคัญ:** เป็นข้อสอบและจุดผิดที่พบบ่อยที่สุดในการทำงานและการเขียนภาษาอังกฤษ!\n- **Countable Noun (นามนับได้):**\n  - **รูปเอกพจน์ (Singular):** ห้ามปล่อยโดดเดี่ยว ต้องมี `a`, `an`, หรือ `the` นำหน้าเสมอ เช่น `a laptop`, `an issue`, `the server`\n  - **รูปพหูพจน์ (Plural):** เติม `-s` หรือ `-es` เพื่อบอกว่ามีหลายชิ้น เช่น `three laptops`, `many issues`, `servers`\n- **Uncountable Noun (นามนับไม่ได้):** สิ่งที่ไม่สามารถนับเป็นชิ้นๆ ได้ เป็นกลุ่มก้อน ของเหลว หรือแนวคิดนามธรรม\n  - ❌ **กฎเหล็ก 1:** ห้ามเติม `-s` หรือ `-es` ท้ายคำเด็ดขาด\n  - ❌ **กฎเหล็ก 2:** ห้ามใช้ `a` หรือ `an` นำหน้าเด็ดขาด\n  - ✔️ **กฎเหล็ก 3:** เมื่อทำหน้าที่เป็นประธาน ต้องใช้กริยาเอกพจน์ (Singular Verb เช่น is, has, verb เติม s)\n\n| คำศัพท์นามนับไม่ได้ (Tech & Daily) | ความหมาย | ❌ รูปที่ห้ามใช้ (ผิดไวยากรณ์) | ✔️ วิธีบอกปริมาณที่ถูกต้อง |\n| `information` | ข้อมูล | an information / informations | some information / a piece of information |\n| `software` | ซอฟต์แวร์ | a software / softwares | software / software tools / applications |\n| `equipment` | อุปกรณ์เครื่องมือ | an equipment / equipments | equipment / pieces of equipment |\n| `advice` | คำแนะนำ | an advice / advices | some advice / a piece of advice |\n| `feedback` | คำติชม/ผลตอบรับ | a feedback / feedbacks | some feedback / valuable feedback |\n| `hardware` | อุปกรณ์ฮาร์ดแวร์ | a hardware / hardwares | hardware components / devices |\n| `progress` | ความคืบหน้า | a progress / progresses | good progress / steady progress |\n| `knowledge` | องค์ความรู้ | a knowledge / knowledges | specialized knowledge / deep knowledge |\n\n#### มิติที่ 3: Regular vs Irregular Plurals (กฎการเปลี่ยนรูปพหูพจน์)\n| รูปแบบการเปลี่ยน | กฎเกณฑ์ | รูปเอกพจน์ (Singular) | รูปพหูพจน์ (Plural) |\n| ทั่วไป | เติม `-s` ท้ายคำ | `server`, `project`, `client` | `servers`, `projects`, `clients` |\n| ลงท้าย -s, -sh, -ch, -x, -z | เติม `-es` | `process`, `branch`, `box` | `processes`, `branches`, `boxes` |\n| พยัญชนะ + y | เปลี่ยน y เป็น `-ies` | `repository`, `policy`, `city` | `repositories`, `policies`, `cities` |\n| สระ (a,e,i,o,u) + y | เติม `-s` ได้เลย | `key`, `delay`, `day` | `keys`, `delays`, `days` |\n| ลงท้าย -f หรือ -fe | เปลี่ยนเป็น `-ves` | `leaf`, `life`, `half` | `leaves`, `lives`, `halves` |\n| เปลี่ยนรูปสระภายใน | Irregular Vowels | `man`, `woman`, `foot`, `tooth` | `men`, `women`, `feet`, `teeth` |\n| คำยืมกรีก/ละติน (Tech/Academic) | -is เปลี่ยนเป็น `-es`, -on เปลี่ยนเป็น `-a` | `analysis`, `basis`, `criterion` | `analyses`, `bases`, `criteria` |\n| รูปคงเดิมทั้งเอกและพหูพจน์ | No Change | `species`, `series`, `data` | `species`, `series`, `data` |\n\n#### มิติที่ 4: Collective Noun (คำนามกลุ่มก้อน)\nคำนามที่เรียกกลุ่มคน เช่น `team`, `committee`, `family`, `staff`, `audience`\n- หากมองเป็น **หน่วยเดียวกัน (Single Unit)** ➔ ใช้กริยาเอกพจน์: *\"The DevOps team has completed the migration.\"*\n- หากมอง **สมาชิกแต่ละคนแยกย้ายกันทำ (Individual Members)** ➔ ใช้กริยาพหูพจน์: *\"The team are working on their separate tasks.\"*\n\n---\n\n### 3. Pronoun (คำสรรพนาม) คืออะไร?\nคำสรรพนาม (Pronoun) คือคำที่ใช้ **\"แทนคำนาม\"** เพื่อหลีกเลี่ยงการพูดชื่อเดิมซ้ำๆ ช่วยให้ประโยคกระชับและลื่นไหลเป็นธรรมชาติ\n\n#### ตารางแม่บทสรรพนาม 5 รูปแบบ (Master Pronoun Matrix)\n| Person (บุรุษ) | Subject (ประธาน) | Object (กรรม) | Possessive Adj. (+Noun) | Possessive Pronoun (วางเดี่ยว) | Reflexive (สะท้อนกลับ) |\n| บุรุษที่ 1 เอกพจน์ | `I` (ฉัน) | `me` | `my` (+นาม) | `mine` | `myself` (ตัวฉันเอง) |\n| บุรุษที่ 1 พหูพจน์ | `we` (พวกเรา) | `us` | `our` (+นาม) | `ours` | `ourselves` (พวกเราเอง) |\n| บุรุษที่ 2 (เอก/พหู) | `you` (คุณ/พวกคุณ) | `you` | `your` (+นาม) | `yours` | `yourself` / `yourselves` |\n| บุรุษที่ 3 เพศชาย | `he` (เขา) | `him` | `his` (+นาม) | `his` | `himself` |\n| บุรุษที่ 3 เพศหญิง | `she` (เธอ) | `her` | `her` (+นาม) | `hers` | `herself` |\n| บุรุษที่ 3 สิ่งของ/ระบบ | `it` (มัน/ระบบ) | `it` | `its` (+นาม) | `its` (ไม่นิยมใช้) | `itself` |\n| บุรุษที่ 3 พหูพจน์ | `they` (พวกเขา/พวกมัน) | `them` | `their` (+นาม) | `theirs` | `themselves` |\n\n#### เจาะลึกความแตกต่างที่คนมักสับสน:\n1. **Possessive Adjective vs Possessive Pronoun:**\n   - **Possessive Adjective (`my`, `your`, `our`, `their`, `his`, `her`):** ต้องมีคำนามตามหลังเสมอ เช่น *\"This is my laptop.\"*\n   - **Possessive Pronoun (`mine`, `yours`, `ours`, `theirs`, `hers`):** วางโดดเดี่ยวท้ายประโยคได้เลย ห้ามใส่คำนามตามหลังเด็ดขาด เช่น *\"This laptop is mine.\"* (ไม่ใช่ *mine laptop)\n2. **Reflexive Pronoun (`myself`, `itself`, `themselves`):**\n   - ใช้เมื่อ **ประธานและกรรมเป็นบุคคล/สิ่งเดียวกัน**: *\"The cluster automatically heals itself.\"*\n   - ใช้เพื่อ **เน้นย้ำประธาน (Emphatic)**: *\"The CTO himself approved the release.\"*\n3. **Indefinite Pronouns (สรรพนามไม่เจาะจง):**\n   - เช่น `everyone`, `everybody`, `someone`, `nobody`, `everything`, `something`\n   - 💡 **กฎสำคัญ:** แม้ความหมายจะฟังดูเหมือนมีหลายคน แต่ในทางไวยากรณ์ถือเป็น **เอกพจน์ (Singular)** เสมอ! กริยาต้องผันตามประธานเอกพจน์ เช่น:\n   - *\"Everyone is excited about the new release.\"* (ใช้ `is` ห้ามใช้ are)\n   - *\"Nobody knows the root cause of this incident.\"* (ใช้ `knows` เติม s)\n\n---\n\n### 4. จุดผิดที่พบบ่อยและข้อควรระวัง (Common Pitfalls)\n⚠️ **ข้อควรระวัง 1: สับสนระหว่าง `its` และ `it's`**\n- `it's` (มี apostrophe) = ย่อมาจาก `it is` หรือ `it has` เช่น *\"It's a high-priority bug.\"*\n- `its` (ไม่มี apostrophe) = แสดงความเป็นเจ้าของของระบบ/สิ่งของ เช่น *\"The server restarted its background service.\"*\n\n⚠️ **ข้อควรระวัง 2: สรรพนามที่อยู่หลังคำบุพบท (Preposition + Object Pronoun)**\n- หลังคำบุพบท เช่น `to`, `for`, `with`, `between`, `about` ต้องใช้รูปกรรม (Object Pronoun) เสมอ\n- *\"Between you and me, the deployment was delayed.\"* ✔️ (ไม่ใช่ *Between you and I ❌)\n- *\"The architect explained the architecture to him and us.\"* ✔️\n\n⚠️ **ข้อควรระวัง 3: เผลอเติม -s ให้คำนามนับไม่ได้ (Uncountable Nouns)**\n- ❌ ห้ามพูด: *We received many feedbacks and advices.*\n- ✔️ ต้องพูด: *\"We received a lot of feedback and advice.\"*\n",
         "examples": [
           {
-            "en": "The server restarts automatically every midnight.",
-            "th": "เซิร์ฟเวอร์จะรีสตาร์ทตัวเองโดยอัตโนมัติทุกเที่ยงคืน",
+            "en": "The microservice restarts itself whenever memory usage exceeds ninety percent.",
+            "th": "ไมโครเซอร์วิสจะรีสตาร์ทตัวเองทุกครั้งที่การใช้งานหน่วยความจำเกินเก้าสิบเปอร์เซ็นต์",
             "cat": "Tech"
           },
           {
-            "en": "Sarah loves drinking hot green tea in the morning.",
-            "th": "ซาร่าชอบดื่มชาเขียวร้อนในตอนเช้า",
+            "en": "Sarah bought a new smartphone because hers stopped working during the trip.",
+            "th": "ซาร่าซื้อสมาร์ตโฟนเครื่องใหม่เพราะเครื่องของเธอหยุดทำงานระหว่างการเดินทาง",
             "cat": "Daily"
           },
           {
-            "en": "We invited them to our sprint retrospective meeting.",
-            "th": "พวกเราชวนพวกเขามาเข้าร่วมการประชุมสรุปการทำงาน",
+            "en": "The senior architect shared valuable advice on database partitioning.",
+            "th": "สถาปนิกอาวุโสได้แบ่งปันคำแนะนำที่มีค่ายิ่งเกี่ยวกับการทำ Partitioning บนฐานข้อมูล",
             "cat": "Tech"
           },
           {
-            "en": "He forgot his laptop charger at the office.",
-            "th": "เขาลืมสายชาร์จแล็ปท็อปไว้ที่ออฟฟิศ",
+            "en": "Everyone in our department is invited to the company celebration dinner.",
+            "th": "ทุกคนในแผนกของเราได้รับเชิญไปร่วมงานเลี้ยงอาหารค่ำฉลองความสำเร็จของบริษัท",
+            "cat": "Daily"
+          },
+          {
+            "en": "Our engineering team updated its incident response policy yesterday.",
+            "th": "ทีมวิศวกรของเราได้อัปเดตนโยบายการรับมือกับอุบัติการณ์ของทีมไปเมื่อวานนี้",
+            "cat": "Tech"
+          },
+          {
+            "en": "Between you and me, I think the project deadline is too tight.",
+            "th": "รู้กันแค่ระหว่างคุณกับฉันนะ ฉันคิดว่ากำหนดส่งโปรเจกต์กระชั้นชิดเกินไปหน่อย",
+            "cat": "Daily"
+          },
+          {
+            "en": "The DevOps engineers deployed three new microservices to Kubernetes.",
+            "th": "วิศวกร DevOps ได้ติดตั้งไมโครเซอร์วิสใหม่สามตัวขึ้นสู่ระบบ Kubernetes",
+            "cat": "Tech"
+          },
+          {
+            "en": "He lost his access badge, so the security guard gave him a temporary one.",
+            "th": "เขาทำบัตรผ่านเข้าตึกหาย เจ้าหน้าที่รักษาความปลอดภัยจึงออกบัตรชั่วคราวให้เขา",
             "cat": "Daily"
           }
         ],
