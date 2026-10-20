@@ -305,7 +305,7 @@ class EngMasteryApp {
     const completedCount = state.completedLevels.length;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Hero Banner -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 text-white p-6 sm:p-8 shadow-xl">
           <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -782,7 +782,7 @@ class EngMasteryApp {
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Hero Header -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-10 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
@@ -960,7 +960,7 @@ class EngMasteryApp {
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-6xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Return Navigation Bar -->
         <div class="flex items-center justify-between pb-1">
           <button onclick="window.app.enterLessonsTrack('hub')"
@@ -1174,7 +1174,7 @@ class EngMasteryApp {
     };
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn w-full max-w-[1600px] mx-auto pb-28 sm:pb-20">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Return Navigation Bar -->
         <div class="flex items-center justify-between pb-1">
           <button onclick="window.app.enterLessonsTrack('hub')"
@@ -1303,7 +1303,7 @@ class EngMasteryApp {
         </div>
 
         <!-- 15 Grammar Topics Blog Grid -->
-        <div id="grammar-blog-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+        <div id="grammar-blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           ${syllabus.map((topic, topicIdx) => {
             const topicCategory = getTopicCategory(topic.badge);
             const units = topic.units || [];
@@ -1514,7 +1514,7 @@ class EngMasteryApp {
     const currentQuizRecord = activeUnit ? this.grammarQuizSubmitted[activeUnit.id] : null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-28 sm:pb-20">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-20 w-full">
         <!-- Back Navigation & Top Progress Bar -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 flex-wrap gap-2">
           <button onclick="window.app.returnToGrammarBlog()"
@@ -2078,7 +2078,7 @@ class EngMasteryApp {
     const nextCourse = courseIndex < courses.length - 1 ? courses[courseIndex + 1] : null;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         <!-- Level Navigation Bar & Breadcrumbs -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
@@ -3009,7 +3009,7 @@ class EngMasteryApp {
     const phrases = phraseMap[activeCatId] || phraseMap.standup;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header Banner -->
         <div class="text-center space-y-2 max-w-2xl mx-auto">
           <span class="px-3.5 py-1 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
@@ -3076,10 +3076,10 @@ class EngMasteryApp {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
                   </button>
                 </div>
-                <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug font-serif">
+                <p class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
                   "${p.en}"
                 </p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                   ${p.th}
                 </p>
               </div>
@@ -3269,7 +3269,7 @@ class EngMasteryApp {
     });
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto pb-16">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Hub Top Banner -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 via-amber-700 to-indigo-900 text-white p-6 sm:p-8 shadow-xl">
           <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -3847,7 +3847,7 @@ class EngMasteryApp {
     const completedCount = state.completedLevels.length;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-2xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         <!-- Profile Card -->
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
           <div class="flex items-center gap-4">
@@ -3954,7 +3954,7 @@ class EngMasteryApp {
     const progressPercent = totalVocabs > 0 ? Math.round((learnedCount / totalVocabs) * 100) : 0;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
@@ -5029,7 +5029,7 @@ class EngMasteryApp {
     const paginatedItems = list.slice(startIndex, startIndex + itemsPerPage);
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header Banner -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-700 to-indigo-900 text-white p-6 sm:p-8 shadow-xl">
           <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -5286,7 +5286,7 @@ class EngMasteryApp {
     }[fontSize] || "text-base leading-relaxed sm:text-lg sm:leading-loose";
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         <!-- Top Navigation & Breadcrumbs -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('reading-lab')"
@@ -5436,7 +5436,7 @@ class EngMasteryApp {
             <div id="reading-para-${p.id}"
               class="reading-paragraph-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm transition-all space-y-3">
               <div class="flex items-start justify-between gap-3">
-                <p class="${fontClasses} font-serif text-slate-800 dark:text-slate-100 leading-relaxed">
+                <p class="${fontClasses} text-slate-800 dark:text-slate-100 leading-relaxed">
                   ${this.formatClickableReadingText(p.en, p.th)}
                 </p>
                 <button onclick="window.app.playReadingParagraphTts('${p.id}', '${p.en.replace(/'/g, "\\'")}')"
@@ -6124,7 +6124,7 @@ class EngMasteryApp {
         ${entry.exampleEn ? `
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 space-y-2">
             <div class="flex items-start justify-between gap-3">
-              <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 font-serif leading-relaxed italic">
+              <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed italic">
                 "${entry.exampleEn}"
               </p>
               <button onclick="window.speechEngine.speak('${entry.exampleEn.replace(/'/g, "\\'")}')"
@@ -6290,7 +6290,7 @@ class EngMasteryApp {
 
   renderArticleListing(container, articles) {
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header -->
         <div class="pb-4 border-b border-slate-200 dark:border-slate-800">
           <div class="flex items-center gap-2">
@@ -6305,7 +6305,7 @@ class EngMasteryApp {
         </div>
 
         <!-- Articles Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           ${articles.map(art => {
             const quizRecord = this.articleQuizSubmitted[art.id];
             const isPassed = quizRecord && quizRecord.passed;
@@ -6378,7 +6378,7 @@ class EngMasteryApp {
     const quizResult = this.articleQuizSubmitted[article.id] || null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-3xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         <!-- Back Navigation & Header -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('articles', { articleId: null })"
@@ -6817,7 +6817,7 @@ class EngMasteryApp {
 
   renderMasterclassListing(container, masterclasses) {
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-4xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
@@ -6911,7 +6911,7 @@ class EngMasteryApp {
     const quizResult = this.masterclassQuizSubmitted[topic.id] || null;
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         <!-- Back Navigation & Top Bar -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <button onclick="window.app.navigateTo('masterclass', { masterclassId: null })"
@@ -8042,7 +8042,7 @@ class EngMasteryApp {
     const percentOverall = totalDrills > 0 ? Math.round((completedDrills / totalDrills) * 100) : 0;
 
     container.innerHTML = `
-      <div class="space-y-6 animate-fadeIn max-w-5xl mx-auto">
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
@@ -8157,7 +8157,7 @@ class EngMasteryApp {
     }
 
     container.innerHTML = `
-      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-12">
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
         
         <!-- Breadcrumb & Back Button -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
