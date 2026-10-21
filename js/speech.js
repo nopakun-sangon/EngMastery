@@ -56,9 +56,21 @@ class SpeechEngine {
    * @param {function} onEnd - Callback when audio ends
    */
   speak(text, onStart = null, onEnd = null) {
+    let actualOnStart = onStart;
+    let actualOnEnd = onEnd;
+    let customRate = this.rate;
+
+    if (onStart && typeof onStart === "object" && !Array.isArray(onStart)) {
+      actualOnStart = onStart.onStart || null;
+      actualOnEnd = onStart.onEnd || null;
+      if (typeof onStart.rate === "number") {
+        customRate = onStart.rate;
+      }
+    }
+
     if (!this.synth) {
       console.warn("Speech Synthesis not supported by this browser.");
-      if (onEnd) onEnd();
+      if (actualOnEnd) actualOnEnd();
       return;
     }
 
@@ -66,7 +78,7 @@ class SpeechEngine {
     this.synth.cancel();
 
     if (!text || !text.trim()) {
-      if (onEnd) onEnd();
+      if (actualOnEnd) actualOnEnd();
       return;
     }
 
@@ -74,7 +86,7 @@ class SpeechEngine {
     const utterance = new SpeechSynthesisUtterance(cleanText);
     this.currentUtterance = utterance;
 
-    utterance.rate = this.rate;
+    utterance.rate = customRate;
     utterance.pitch = 1.0;
     utterance.lang = this.accent;
 
@@ -85,18 +97,18 @@ class SpeechEngine {
     }
 
     utterance.onstart = () => {
-      if (onStart) onStart();
+      if (actualOnStart) actualOnStart();
     };
 
     utterance.onend = () => {
       this.currentUtterance = null;
-      if (onEnd) onEnd();
+      if (actualOnEnd) actualOnEnd();
     };
 
     utterance.onerror = (err) => {
       console.warn("Speech synthesis error:", err);
       this.currentUtterance = null;
-      if (onEnd) onEnd();
+      if (actualOnEnd) actualOnEnd();
     };
 
     this.synth.speak(utterance);

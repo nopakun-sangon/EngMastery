@@ -6344,6 +6344,7 @@ class EngMasteryApp {
   }
 
   renderNewsArticleDetail(container, article) {
+    this.activeNewsArticleId = article.id;
     const newsList = this.getNewsList();
     const artIndex = newsList.findIndex(a => a.id === article.id);
     const prevArt = artIndex > 0 ? newsList[artIndex - 1] : null;
@@ -6500,7 +6501,7 @@ class EngMasteryApp {
                   </div>
                   <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">${v.th}</p>
                 </div>
-                <button onclick="window.soundFx.speak('${v.word.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 hover:bg-cyan-100 transition-all text-xs shrink-0" title="ฟังการออกเสียง">
+                <button onclick="window.speechEngine.speak('${v.word.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 hover:bg-cyan-100 transition-all text-xs shrink-0" title="ฟังการออกเสียง">
                   🔊
                 </button>
               </div>
@@ -6523,7 +6524,7 @@ class EngMasteryApp {
                   <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 uppercase">
                     ย่อหน้าที่ ${idx + 1}
                   </span>
-                  <button onclick="window.soundFx.speak('${p.en.replace(/'/g, "\\'")}')"
+                  <button onclick="window.app.playNewsParagraphTts(${idx})"
                     class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-cyan-600 transition-all text-xs" title="ฟังเสียงย่อหน้านี้">
                     🔊 ฟังย่อหน้านี้
                   </button>
@@ -6531,7 +6532,7 @@ class EngMasteryApp {
 
                 <!-- English Interactive Text (tap any word to view definition) -->
                 <div class="${fontClasses} text-slate-800 dark:text-slate-100 font-normal select-text">
-                  ${this.wrapWordsWithClickableSpans(p.en)}
+                  ${this.formatClickableReadingText(p.en, p.th)}
                 </div>
 
                 <!-- Thai Translation -->
@@ -6639,6 +6640,30 @@ class EngMasteryApp {
     `;
   }
 
+  playNewsParagraphTts(paraIdx) {
+    this.stopNewsTts();
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === this.activeNewsArticleId);
+    if (!article || !article.paragraphs || !article.paragraphs[paraIdx]) return;
+    const p = article.paragraphs[paraIdx];
+
+    document.querySelectorAll('[id^="news-paragraph-"]').forEach(el => {
+      el.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+    });
+
+    const pEl = document.getElementById(`news-paragraph-${paraIdx}`);
+    if (pEl) {
+      pEl.classList.add("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+    }
+
+    if (window.speechEngine) {
+      if (this.newsTtsRate) window.speechEngine.setRate(this.newsTtsRate);
+      window.speechEngine.speak(p.en, null, () => {
+        if (pEl) pEl.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+      });
+    }
+  }
+
   toggleNewsTts(articleId) {
     if (this.newsTtsPlaying) {
       this.stopNewsTts();
@@ -6670,26 +6695,25 @@ class EngMasteryApp {
       }
 
       if (window.speechEngine) {
-        window.speechEngine.speak(p.en, {
-          rate: this.newsTtsRate || 1.0,
-          onEnd: () => {
-            if (pEl) {
-              pEl.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
-            }
-            if (this.newsTtsPlaying) {
-              this.newsTtsIndex++;
-              setTimeout(playNextParagraph, 300);
-            }
-          },
-          onError: () => {
-            this.stopNewsTts();
+        if (this.newsTtsRate) window.speechEngine.setRate(this.newsTtsRate);
+        window.speechEngine.speak(p.en, null, () => {
+          if (pEl) {
+            pEl.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+          }
+          if (this.newsTtsPlaying) {
+            this.newsTtsIndex++;
+            setTimeout(playNextParagraph, 300);
           }
         });
       } else {
-        window.soundFx.speak(p.en);
         setTimeout(() => {
-          this.newsTtsIndex++;
-          playNextParagraph();
+          if (pEl) {
+            pEl.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+          }
+          if (this.newsTtsPlaying) {
+            this.newsTtsIndex++;
+            playNextParagraph();
+          }
         }, 4000);
       }
     };
@@ -6709,6 +6733,9 @@ class EngMasteryApp {
     if (window.speechEngine && window.speechEngine.stop) {
       window.speechEngine.stop();
     }
+    document.querySelectorAll('[id^="news-paragraph-"]').forEach(el => {
+      el.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+    });
     const btnEl = document.getElementById("news-play-all-btn");
     if (btnEl) {
       btnEl.classList.remove("bg-amber-500", "hover:bg-amber-600");
@@ -6774,6 +6801,9 @@ class EngMasteryApp {
       return;
     }
 
+    const previousRecord = this.newsQuizSubmitted[articleId];
+    const alreadyEarned = previousRecord && previousRecord.passed;
+
     let correctCount = 0;
     article.quiz.forEach((q, idx) => {
       if (answers[idx] === q.correctIndex) {
@@ -6797,12 +6827,28 @@ class EngMasteryApp {
     } catch (e) {}
 
     if (isPassed) {
-      window.soundFx.playCorrect();
-      this.addXP(xpReward);
-      this.showToast(`🎉 ยินดีด้วย! สอบผ่านความเข้าใจข่าว ได้รับ +${xpReward} XP`, "success");
+      if (window.soundFx && window.soundFx.playVictory) {
+        window.soundFx.playVictory();
+      } else if (window.soundFx && window.soundFx.playCorrect) {
+        window.soundFx.playCorrect();
+      }
+
+      if (!alreadyEarned) {
+        if (window.storageManager && window.storageManager.addXP) {
+          window.storageManager.addXP(xpReward);
+        }
+        if (typeof this.renderHeaderStats === "function") {
+          this.renderHeaderStats();
+        }
+        this.showToast(`🎉 ยินดีด้วย! สอบผ่านความเข้าใจข่าว ได้รับ +${xpReward} XP`, "success");
+      } else {
+        this.showToast(`🎉 ยอดเยี่ยมมาก! คุณทำแบบทดสอบได้ ${correctCount}/${totalQuestions} ข้อ`, "info");
+      }
     } else {
-      window.soundFx.playIncorrect();
-      this.showToast(`ยังไม่ผ่านเกณฑ์ (ได้ ${correctCount}/${totalQuestions}) ได้รับปลอบใจ +${xpReward} XP`, "info");
+      if (window.soundFx && window.soundFx.playIncorrect) {
+        window.soundFx.playIncorrect();
+      }
+      this.showToast(`ยังไม่ผ่านเกณฑ์ (ได้ ${correctCount}/${totalQuestions}) ลองทบทวนเนื้อข่าวและทำใหม่อีกครั้งนะ`, "info");
     }
 
     const container = document.getElementById("main-content-view");
