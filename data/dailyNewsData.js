@@ -1,334 +1,447 @@
 /**
  * EngMastery: Daily Graded News Database (dailyNewsData.js)
  * Automatically fetched, graded, bilingual-translated, and quiz-equipped news.
- * Categories: Tech & DevOps, World & Business, Daily Life & Science, Sport (Man United).
+ * Categories: DevOps & Cloud Native, Tech & AI Innovation, World & Business.
  */
 
 window.dailyNewsData = [
   {
-    "id": "news-sport-01",
+    "id": "news-devops-01",
     "collection": "daily-news",
-    "category": "sport",
-    "categoryLabel": "Sport (Man United)",
-    "categoryTh": "กีฬา & แมนเชสเตอร์ ยูไนเต็ด",
-    "categoryEmoji": "⚽",
-    "level": "B1",
-    "levelTitle": "Daily News • Sport (Man United)",
-    "levelBadge": "B1 • Intermediate",
-    "levelColor": "rose",
-    "coverEmoji": "⚽",
-    "title": "Man Utd fans set for rainy night in Como",
-    "titleTh": "แฟนแมนฯ ยูไนเต็ด เตรียมพบกับค่ำคืนฝนตกที่โคโม",
+    "category": "devops",
+    "categoryLabel": "DevOps & Cloud Native",
+    "categoryTh": "ข่าวสารและบทความ DevOps, Kubernetes, CI/CD & Cloud",
+    "categoryEmoji": "🛠️",
+    "level": "B2",
+    "levelTitle": "Daily News • DevOps & Cloud Native",
+    "levelBadge": "B2 • Cloud Native",
+    "levelColor": "cyan",
+    "coverEmoji": "🛠️",
+    "title": "Before you evaluate an AI SRE, give your existing agent context",
+    "titleTh": "ก่อนที่คุณจะประเมิน AI SRE ให้ระบุบริบทตัวแทนที่มีอยู่ของคุณ",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 51,
+    "estimatedTime": "3 นาที",
+    "readTime": "3 นาที",
+    "wordCount": 119,
     "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/sport/football/videos/cw5ynpxy0dx7o?at_medium=RSS&at_campaign=rss",
-    "summary": "แฟนบอลแมนเชสเตอร์ ยูไนเต็ด กำลังเตรียมตัวสำหรับค่ำคืนแชมเปี้ยนส์ลีกที่ฝนตกในเมืองโคโม โดยมีคำเตือนสภาพอากาศสีส้ม",
+    "sourceUrl": "https://www.cncf.io/blog/2026/10/21/before-you-evaluate-an-ai-sre-give-your-existing-agent-context/",
+    "sourceName": "CNCF Blog",
+    "summary": "หากคุณกำลังประเมินผลิตภัณฑ์ AI SRE คุณอาจเป็นเจ้าของผลิตภัณฑ์ส่วนใหญ่แล้ว เอเจนต์การเขียนโค้ดที่วิศวกรของคุณใช้ ไม่ว่าจะเป็น Claude Code, Codex หรือ Cursor ก็สามารถตรวจสอบคลัสเตอร์ Kubernetes ได้แล...",
     "tags": [
-      "Sport (Man United)",
+      "DevOps & Cloud Native",
       "Daily News",
-      "B1"
+      "B2"
     ],
     "keyVocab": [
       {
-        "word": "manchester",
-        "ipa": "/manchester/",
+        "ipa": "/ˌk(j)uːbərˈnɛtiːz/",
         "pos": "n.",
-        "th": "แมนเชสเตอร์",
-        "chunk": "manchester in context"
+        "th": "ระบบจัดการ Container (K8s)",
+        "chunk": "Kubernetes cluster orchestration",
+        "word": "kubernetes"
       },
       {
-        "word": "united",
-        "ipa": "/united/",
+        "word": "evaluating",
+        "ipa": "/evaluating/",
         "pos": "n.",
-        "th": "สห",
-        "chunk": "united in context"
+        "th": "กำลังประเมิน",
+        "chunk": "evaluating in context"
       },
       {
-        "word": "preparing",
-        "ipa": "/preparing/",
+        "word": "products",
+        "ipa": "/products/",
         "pos": "n.",
-        "th": "การเตรียมการ",
-        "chunk": "preparing in context"
+        "th": "สินค้า",
+        "chunk": "products in context"
       },
       {
-        "word": "champions",
-        "ipa": "/champions/",
+        "word": "probably",
+        "ipa": "/probably/",
         "pos": "n.",
-        "th": "แชมเปี้ยนส์",
-        "chunk": "champions in context"
+        "th": "อาจจะ",
+        "chunk": "probably in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "Manchester United fans are preparing for a rainy Champions League night in Como with an orange weather warning in place.",
-        "th": "แฟนบอลแมนเชสเตอร์ ยูไนเต็ด กำลังเตรียมตัวสำหรับค่ำคืนแชมเปี้ยนส์ลีกที่ฝนตกในเมืองโคโม โดยมีคำเตือนสภาพอากาศสีส้ม"
+        "en": "If you’re evaluating AI SRE products, you probably own most of one already. The coding agent your engineers use, whether that’s Claude Code, Codex or Cursor, can already investigate a Kubernetes cluster. What it usually lacks...",
+        "th": "หากคุณกำลังประเมินผลิตภัณฑ์ AI SRE คุณอาจเป็นเจ้าของผลิตภัณฑ์ส่วนใหญ่แล้ว เอเจนต์การเขียนโค้ดที่วิศวกรของคุณใช้ ไม่ว่าจะเป็น Claude Code, Codex หรือ Cursor ก็สามารถตรวจสอบคลัสเตอร์ Kubernetes ได้แล้ว สิ่งที่มักจะขาด..."
       },
       {
         "id": "p2",
-        "en": "Close400Manchester United fans are preparing for a rainy Champions League night in Como with an orange weather warning in place.",
-        "th": "แฟนบอลแมนเชสเตอร์ ยูไนเต็ด 400 คนกำลังเตรียมพร้อมสำหรับค่ำคืนแชมเปี้ยนส์ลีกที่ฝนตกในโคโม โดยมีคำเตือนสภาพอากาศสีส้ม"
+        "en": "If you’re evaluating AI SRE products, you probably own most of one already. The coding agent your engineers use, whether that’s Claude Code, Codex or Cursor, can already investigate a Kubernetes cluster. What it usually lacks is context: what’s failing right now, and what changed before it broke.",
+        "th": "หากคุณกำลังประเมินผลิตภัณฑ์ AI SRE คุณอาจเป็นเจ้าของผลิตภัณฑ์ส่วนใหญ่แล้ว เอเจนต์การเขียนโค้ดที่วิศวกรของคุณใช้ ไม่ว่าจะเป็น Claude Code, Codex หรือ Cursor ก็สามารถตรวจสอบคลัสเตอร์ Kubernetes ได้แล้ว สิ่งที่มักจะขาดคือบริบท สิ่งที่ล้มเหลวในขณะนี้ และสิ่งที่เปลี่ยนแปลงก่อนที่จะพัง"
       },
       {
         "id": "p3",
-        "en": "Shareclose panelShare pageCopy linkAbout sharingRelated topicsUEFA Champions LeagueFollow UEFA Champions League",
-        "th": "แชร์ปิดแผงแชร์เพจคัดลอกลิงก์เกี่ยวกับการแชร์หัวข้อที่เกี่ยวข้องยูฟ่าแชมเปียนส์ลีกติดตามยูฟ่าแชมเปียนส์ลีก"
+        "en": "We measured how much that gap matters. The same agent and model worked through 50 broken clusters twice, once with a shell and raw kubectl, and once with read-only MCP tools that return that context:",
+        "th": "เราวัดว่าช่องว่างนั้นมีความสำคัญมากเพียงใด เอเจนต์และโมเดลเดียวกันทำงานผ่านคลัสเตอร์ที่ใช้งานไม่ได้ 50 คลัสเตอร์สองครั้ง ครั้งแรกด้วยเชลล์และ kubectl แบบดิบ และอีกครั้งด้วยเครื่องมือ MCP แบบอ่านอย่างเดียวที่ส่งคืนบริบทนั้น:"
       }
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Sport (Man United) news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Before you evaluate an AI SRE, give your existing ...\"?",
         "options": [
-          "Man Utd fans set for rainy night in Como",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "The engineering team postponed all deployments indefinitely due to license expiration.",
+          "No technical adjustments were required as existing CI/CD tools handled the entire process seamlessly.",
+          "If you’re evaluating AI SRE products, you probably own most of one already.",
+          "All cloud clusters were intentionally deprecated and replaced by physical tapes."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Man Utd fans set for rainy night in Como'"
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หากคุณกำลังประเมินผลิตภัณฑ์ AI SRE คุณอาจเป็นเจ้าของผลิตภัณฑ์ส่วนใหญ่แล้ว เอเจนต์การเขียนโค้ดที่วิศวกรของคุณใช้ ไม่ว่าจะ..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What operational nuance or engineering detail is emphasized in the technical discussion?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Man Utd fans set for rainy night in Como...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Microservices architecture was declared completely obsolete for enterprise systems.",
+          "If you’re evaluating AI SRE products, you probably own most of one already.",
+          "Manual FTP uploads were recommended over automated GitOps pipelines.",
+          "Memory leaks and CPU throttling should be ignored until customer complaints arise."
         ],
         "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: หากคุณกำลังประเมินผลิตภัณฑ์ AI SRE คุณอาจเป็นเจ้าของผลิตภัณฑ์ส่วนใหญ่แล้ว เอเจนต์การเขียนโค้ดที่วิศวกรของคุณใช้ ไม่ว่าจะ..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What key takeaway or strategic guidance should DevOps engineers and teams take away from this?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Rely strictly on single-threaded synchronous batch jobs for all mission-critical APIs.",
+          "Disregard security vulnerability scanning in container registries before deployment.",
+          "We measured how much that gap matters.",
+          "Avoid implementing observability tools or alerting systems in production environments."
         ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "correctIndex": 2,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: เราวัดว่าช่องว่างนั้นมีความสำคัญมากเพียงใด เอเจนต์และโมเดลเดียวกันทำงานผ่านคลัสเตอร์ที่ใช้งานไม่ได้ 50 คลัสเตอร์สองครั้ง..."
       }
     ]
   },
   {
-    "id": "news-sport-02",
+    "id": "news-devops-02",
     "collection": "daily-news",
-    "category": "sport",
-    "categoryLabel": "Sport (Man United)",
-    "categoryTh": "กีฬา & แมนเชสเตอร์ ยูไนเต็ด",
-    "categoryEmoji": "⚽",
-    "level": "B1",
-    "levelTitle": "Daily News • Sport (Man United)",
-    "levelBadge": "B1 • Intermediate",
-    "levelColor": "rose",
-    "coverEmoji": "⚽",
-    "title": "Fabregas and Como prepare for historic Man Utd tie",
-    "titleTh": "ฟาเบรกัสและโคโมเตรียมตัวสำหรับเกมประวัติศาสตร์กับแมนฯ ยูไนเต็ด",
+    "category": "devops",
+    "categoryLabel": "DevOps & Cloud Native",
+    "categoryTh": "ข่าวสารและบทความ DevOps, Kubernetes, CI/CD & Cloud",
+    "categoryEmoji": "🛠️",
+    "level": "B2",
+    "levelTitle": "Daily News • DevOps & Cloud Native",
+    "levelBadge": "B2 • Cloud Native",
+    "levelColor": "cyan",
+    "coverEmoji": "🛠️",
+    "title": "How AI workloads are reshaping Kubernetes autoscaling",
+    "titleTh": "วิธีที่ปริมาณงาน AI ปรับโฉมการปรับขนาดอัตโนมัติของ Kubernetes",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 95,
+    "estimatedTime": "6 นาที",
+    "readTime": "6 นาที",
+    "wordCount": 287,
     "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/sport/football/articles/cmpwg17ev9xxo?at_medium=RSS&at_campaign=rss",
-    "summary": "เรื่องราวความสำเร็จในกัลโช่ เซเรีย อา โคโมได้ย้ายจากเซเรีย อา ไปสู่แชมเปี้ยนส์ลีก - ตอนนี้พวกเขาพร้อมแล้วสำหรับค่ำคืนประวัติศาสตร์ในการพบกับแมนเชสเตอร์ ยูไนเ...",
+    "sourceUrl": "https://www.cncf.io/blog/2026/10/19/how-ai-workloads-are-reshaping-kubernetes-autoscaling/",
+    "sourceName": "CNCF Blog",
+    "summary": "Kubernetes ใช้งานซอฟต์แวร์คอนเทนเนอร์ส่วนใหญ่ของโลกอย่างเงียบๆ โดยแบ่งการทำงานระหว่างลูปควบคุม 2 ลูปที่แทบไม่ต้องพูดคุยกัน ตัวกำหนดเวลาจะวางแต่ละพ็อดบนโหนดที่...",
     "tags": [
-      "Sport (Man United)",
+      "DevOps & Cloud Native",
       "Daily News",
-      "B1"
+      "B2"
     ],
     "keyVocab": [
       {
-        "word": "success",
-        "ipa": "/success/",
+        "ipa": "/ˌk(j)uːbərˈnɛtiːz/",
         "pos": "n.",
-        "th": "ความสำเร็จ",
-        "chunk": "success in context"
+        "th": "ระบบจัดการ Container (K8s)",
+        "chunk": "Kubernetes cluster orchestration",
+        "word": "kubernetes"
       },
       {
-        "word": "champions",
-        "ipa": "/champions/",
+        "word": "quietly",
+        "ipa": "/quietly/",
         "pos": "n.",
-        "th": "แชมเปี้ยนส์",
-        "chunk": "champions in context"
+        "th": "อย่างเงียบ ๆ",
+        "chunk": "quietly in context"
       },
       {
-        "word": "league",
-        "ipa": "/league/",
+        "word": "containerized",
+        "ipa": "/containerized/",
         "pos": "n.",
-        "th": "ลีก",
-        "chunk": "league in context"
+        "th": "บรรจุในภาชนะ",
+        "chunk": "containerized in context"
       },
       {
-        "word": "historic",
-        "ipa": "/historic/",
+        "word": "software",
+        "ipa": "/software/",
         "pos": "n.",
-        "th": "ประวัติศาสตร์",
-        "chunk": "historic in context"
+        "th": "ซอฟต์แวร์",
+        "chunk": "software in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "Serie A success story Como have gone from Serie A to the Champions League - now they are ready for a historic night against Manchester United.",
-        "th": "เรื่องราวความสำเร็จในกัลโช่ เซเรีย อา โคโมได้ย้ายจากเซเรีย อา ไปสู่แชมเปี้ยนส์ลีก - ตอนนี้พวกเขาพร้อมแล้วสำหรับค่ำคืนประวัติศาสตร์ในการพบกับแมนเชสเตอร์ ยูไนเต็ด"
+        "en": "Kubernetes has quietly run much of the world’s containerized software on a division of labor between two control loops that rarely had to talk to each other. The scheduler places each pod on a node that...",
+        "th": "Kubernetes ใช้งานซอฟต์แวร์คอนเทนเนอร์ส่วนใหญ่ของโลกอย่างเงียบๆ โดยแบ่งการทำงานระหว่างลูปควบคุม 2 ลูปที่แทบไม่ต้องพูดคุยกัน ตัวกำหนดเวลาจะวางแต่ละพ็อดบนโหนดที่..."
       },
       {
         "id": "p2",
-        "en": "Chief football news reporter in ComoPublished21 October 2026, 06:26 BST\"It's Manchester United. We are only just getting our heads around the fact we are playing Inter, Milan and Juventus.",
-        "th": "หัวหน้านักข่าวข่าวฟุตบอลในโคโมเผยแพร่เมื่อ 21 ตุลาคม 2569 เวลา 06:26 น. BST \"นี่คือแมนเชสเตอร์ ยูไนเต็ด เราแค่มาทำความเข้าใจกับความจริงที่ว่าเรากำลังเล่นกับอินเตอร์ มิลาน และยูเวนตุส\""
+        "en": "Kubernetes has quietly run much of the world’s containerized software on a division of labor between two control loops that rarely had to talk to each other. The scheduler places each pod on a node that already exists; the autoscaler adds nodes when pods have nowhere to fit. For a decade that separation was a sound design, because compute was largely interchangeable and either loop could work without knowing much about the other’s decisions. AI workloads, and the accelerators they run on, changed the terms; the clean split still serves most work well, and the pace of AI is what makes its edges worth revisiting.",
+        "th": "Kubernetes ใช้งานซอฟต์แวร์คอนเทนเนอร์ส่วนใหญ่ของโลกอย่างเงียบๆ โดยแบ่งการทำงานระหว่างลูปควบคุม 2 ลูปที่แทบไม่ต้องพูดคุยกัน ตัวกำหนดเวลาจะวางแต่ละพ็อดบนโหนดที่มีอยู่แล้ว ตัวปรับขนาดอัตโนมัติจะเพิ่มโหนดเมื่อพ็อดไม่มีที่พอดี เป็นเวลากว่าทศวรรษแล้วที่การแยกเป็นการออกแบบที่ดี เนื่องจากการประมวลผลส่วนใหญ่ใช้แทนกันได้ และลูปใดลูปหนึ่งก็สามารถทำงานได้โดยไม่ต้องรู้อะไรมากนักเกี่ยวกับการตัดสินใจของอีกฝ่าย ปริมาณงาน AI และตัวเร่งความเร็วที่ทำงานอยู่ ได้เปลี่ยนแปลงเงื่อนไข การแบ่งแยกที่ชัดเจนยังคงทำงานได้ดีที่สุด และการก้าวของ AI คือสิ่งที่ทำให้ความได้เปรียบของมันคุ้มค่าแก่การกลับมาเยี่ยมชมอีกครั้ง"
       },
       {
         "id": "p3",
-        "en": "United may not be the force they once were and travel to Italy on the brink of a full-blown crisis after six games without a win, their worst run since 2018-19. But, in terms of global stature, they are immense.",
-        "th": "ยูไนเต็ดอาจไม่ใช่พลังอย่างที่พวกเขาเคยเป็นและเดินทางไปอิตาลีท่ามกลางวิกฤตครั้งใหญ่หลังจากหกเกมที่ไม่ชนะใคร ซึ่งถือเป็นผลงานที่แย่ที่สุดนับตั้งแต่ปี 2018-19 แต่ในแง่ของความสูงระดับโลก พวกมันยิ่งใหญ่มาก"
+        "en": "It surfaces in a situation anyone running GPUs will recognize. A pod that should schedule simply will not, even though the cluster is not truly out of capacity, and the delay can leave costly accelerator capacity unused. The instinct is to assume the region has run dry, and sometimes it has. In other cases, the capacity is available and the pod still stays pending, because the node the autoscaler is willing to add is not one the scheduler is willing to use. The autoscaler answers the question it was built for, whether to add a node, when the real question is whether that node is even the right shape for the work. The rest of this piece examines how the community has closed part of it, how it plans to close the rest, and how the autoscaler is likely to grow into a more scheduler-aware partner.",
+        "th": "มันจะปรากฏขึ้นในสถานการณ์ที่ใครก็ตามที่ใช้ GPU จะรับรู้ได้ พ็อดที่ควรกำหนดเวลาจะไม่สามารถทำได้ แม้ว่าคลัสเตอร์จะไม่ได้ความจุไม่เพียงพอจริงๆ และความล่าช้าอาจทำให้ความจุตัวเร่งที่มีค่าใช้จ่ายสูงไม่ได้ใช้ สัญชาตญาณคือการคิดว่าภูมิภาคนี้แห้งแล้ง และบางครั้งก็เป็นเช่นนั้น ในกรณีอื่นๆ ความจุจะพร้อมใช้งานและพ็อดยังคงค้างอยู่ เนื่องจากโหนดที่ตัวปรับขนาดอัตโนมัติยินดีเพิ่มไม่ใช่โหนดที่ตัวกำหนดเวลายินดีใช้ ตัวปรับขนาดอัตโนมัติจะตอบคำถามที่สร้างขึ้นมาว่าจะเพิ่มโหนดหรือไม่ เมื่อคำถามที่แท้จริงคือโหนดนั้นมีรูปร่างที่เหมาะสมสำหรับงานหรือไม่ ส่วนที่เหลือของบทความนี้จะตรวจสอบว่าชุมชนปิดส่วนใดส่วนหนึ่งของชุมชนอย่างไร มีแผนจะปิดส่วนที่เหลืออย่างไร และตัวปรับขนาดอัตโนมัติมีแนวโน้มที่จะเติบโตเป็นพันธมิตรที่ตระหนักถึงตัวกำหนดเวลามากขึ้นได้อย่างไร"
       }
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Sport (Man United) news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"How AI workloads are reshaping Kubernetes autoscal...\"?",
         "options": [
-          "Fabregas and Como prepare for historic Man Utd tie",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Kubernetes has quietly run much of the world’s containerized software on a division of labor between two control loops that rarely had to talk to each other.",
+          "All cloud clusters were intentionally deprecated and replaced by physical tapes.",
+          "The engineering team postponed all deployments indefinitely due to license expiration.",
+          "No technical adjustments were required as existing CI/CD tools handled the entire process seamlessly."
         ],
         "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Fabregas and Como prepare for historic Man Utd tie'"
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: Kubernetes ใช้งานซอฟต์แวร์คอนเทนเนอร์ส่วนใหญ่ของโลกอย่างเงียบๆ โดยแบ่งการทำงานระหว่างลูปควบคุม 2 ลูปที่แทบไม่ต้องพูดคุยก..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What operational nuance or engineering detail is emphasized in the technical discussion?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Fabregas and Como prepare for historic M...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Microservices architecture was declared completely obsolete for enterprise systems.",
+          "Manual FTP uploads were recommended over automated GitOps pipelines.",
+          "Memory leaks and CPU throttling should be ignored until customer complaints arise.",
+          "Kubernetes has quietly run much of the world’s containerized software on a division of labor between two control loops that rarely had to talk to each other."
         ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "correctIndex": 3,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: Kubernetes ใช้งานซอฟต์แวร์คอนเทนเนอร์ส่วนใหญ่ของโลกอย่างเงียบๆ โดยแบ่งการทำงานระหว่างลูปควบคุม 2 ลูปที่แทบไม่ต้องพูดคุยก..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What key takeaway or strategic guidance should DevOps engineers and teams take away from this?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Rely strictly on single-threaded synchronous batch jobs for all mission-critical APIs.",
+          "Disregard security vulnerability scanning in container registries before deployment.",
+          "Avoid implementing observability tools or alerting systems in production environments.",
+          "It surfaces in a situation anyone running GPUs will recognize."
         ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "correctIndex": 3,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: มันจะปรากฏขึ้นในสถานการณ์ที่ใครก็ตามที่ใช้ GPU จะรับรู้ได้ พ็อดที่ควรกำหนดเวลาจะไม่สามารถทำได้ แม้ว่าคลัสเตอร์จะไม่ได้คว..."
       }
     ]
   },
   {
-    "id": "news-sport-03",
+    "id": "news-devops-03",
     "collection": "daily-news",
-    "category": "sport",
-    "categoryLabel": "Sport (Man United)",
-    "categoryTh": "กีฬา & แมนเชสเตอร์ ยูไนเต็ด",
-    "categoryEmoji": "⚽",
-    "level": "B1",
-    "levelTitle": "Daily News • Sport (Man United)",
-    "levelBadge": "B1 • Intermediate",
-    "levelColor": "rose",
-    "coverEmoji": "⚽",
-    "title": "Carrick wants more clean sheets to turn season around",
-    "titleTh": "คาร์ริคต้องการคลีนชีตเพิ่มเพื่อพลิกฤดูกาล",
+    "category": "devops",
+    "categoryLabel": "DevOps & Cloud Native",
+    "categoryTh": "ข่าวสารและบทความ DevOps, Kubernetes, CI/CD & Cloud",
+    "categoryEmoji": "🛠️",
+    "level": "B2",
+    "levelTitle": "Daily News • DevOps & Cloud Native",
+    "levelBadge": "B2 • Cloud Native",
+    "levelColor": "cyan",
+    "coverEmoji": "🛠️",
+    "title": "Deploying, maintaining, and migrating production n8n on EKS",
+    "titleTh": "การปรับใช้ การบำรุงรักษา และการย้ายการผลิต n8n บน EKS",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 67,
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 176,
     "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/sport/football/articles/cje362v35175o?at_medium=RSS&at_campaign=rss",
-    "summary": "ไมเคิล คาร์ริค นายใหญ่แมนเชสเตอร์ ยูไนเต็ด ต้องการคลีนชีตมากกว่านี้ ในขณะที่เขามองหาการเปลี่ยนแปลงโชคชะตาของทีม เมื่อพวกเขาเจอกับโคโมในแชมเปี้ยนส์ลีก",
+    "sourceUrl": "https://www.cncf.io/blog/2026/10/16/deploying-maintaining-and-migrating-production-n8n-on-eks/",
+    "sourceName": "CNCF Blog",
+    "summary": "n8n นั้นง่ายต่อการลองและยากกว่าในการรันภายใต้ปริมาณการใช้งานจริง คอนเทนเนอร์เดียวที่มี SQLite ใช้งานได้ดีสำหรับการสาธิตอย่างรวดเร็ว การผลิตเป็นเรื่องราวที่แตกต่างอย่างสิ้นเชิง คุณต้องการคนทำงาน, โป...",
     "tags": [
-      "Sport (Man United)",
+      "DevOps & Cloud Native",
       "Daily News",
-      "B1"
+      "B2"
     ],
     "keyVocab": [
       {
-        "word": "manchester",
-        "ipa": "/manchester/",
+        "ipa": "/kənˈteɪnər/",
         "pos": "n.",
-        "th": "แมนเชสเตอร์",
-        "chunk": "manchester in context"
+        "th": "คอนเทนเนอร์สำหรับรันแอปพลิเคชัน",
+        "chunk": "Docker container",
+        "word": "container"
       },
       {
-        "word": "united",
-        "ipa": "/united/",
+        "word": "harder",
+        "ipa": "/harder/",
         "pos": "n.",
-        "th": "สห",
-        "chunk": "united in context"
+        "th": "ยากขึ้น",
+        "chunk": "harder in context"
       },
       {
-        "word": "michael",
-        "ipa": "/michael/",
+        "word": "production",
+        "ipa": "/production/",
         "pos": "n.",
-        "th": "ไมเคิล",
-        "chunk": "michael in context"
+        "th": "การผลิต",
+        "chunk": "production in context"
       },
       {
-        "word": "carrick",
-        "ipa": "/carrick/",
+        "word": "traffic",
+        "ipa": "/traffic/",
         "pos": "n.",
-        "th": "คาร์ริค",
-        "chunk": "carrick in context"
+        "th": "การจราจร",
+        "chunk": "traffic in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "Manchester United boss Michael Carrick needs more clean sheets as he looks to change his team's fortunes, as they take on Como in the Champions League.",
-        "th": "ไมเคิล คาร์ริค นายใหญ่แมนเชสเตอร์ ยูไนเต็ด ต้องการคลีนชีตมากกว่านี้ ในขณะที่เขามองหาการเปลี่ยนแปลงโชคชะตาของทีม เมื่อพวกเขาเจอกับโคโมในแชมเปี้ยนส์ลีก"
+        "en": "n8n is easy to try and harder to run under production traffic. A single container with SQLite works great for a quick demo. Production is a different story entirely. You need workers, webhook processors, PostgreSQL, Redis,...",
+        "th": "n8n นั้นง่ายต่อการลองและยากกว่าในการรันภายใต้ปริมาณการใช้งานจริง คอนเทนเนอร์เดียวที่มี SQLite ใช้งานได้ดีสำหรับการสาธิตอย่างรวดเร็ว การผลิตเป็นเรื่องราวที่แตกต่างอย่างสิ้นเชิง คุณต้องการคนทำงาน, โปรเซสเซอร์ webhook, PostgreSQL, Redis,..."
       },
       {
         "id": "p2",
-        "en": "Chief football news reporter in ComoPublished20 October 2026\"You're dead right. I can't argue with that.\"",
-        "th": "หัวหน้านักข่าวข่าวฟุตบอลในโคโมเผยแพร่เมื่อ 20 ตุลาคม 2569 “คุณตายแล้ว ฉันไม่สามารถเถียงกับเรื่องนั้นได้”"
+        "en": "n8n is easy to try and harder to run under production traffic. A single container with SQLite works great for a quick demo. Production is a different story entirely. You need workers, webhook processors, PostgreSQL, Redis, object storage, external secrets, ingress routing, and an upgrade plan that preserves workflow history.",
+        "th": "n8n นั้นง่ายต่อการลองและยากกว่าในการรันภายใต้ปริมาณการใช้งานจริง คอนเทนเนอร์เดียวที่มี SQLite ใช้งานได้ดีสำหรับการสาธิตอย่างรวดเร็ว การผลิตเป็นเรื่องราวที่แตกต่างอย่างสิ้นเชิง คุณต้องการผู้ปฏิบัติงาน, ตัวประมวลผล Webhook, PostgreSQL, Redis, พื้นที่จัดเก็บอ็อบเจ็กต์, ข้อมูลลับภายนอก, การกำหนดเส้นทางขาเข้า และแผนการอัปเกรดที่จะรักษาประวัติเวิร์กโฟลว์"
       },
       {
         "id": "p3",
-        "en": "The question that prompted it in his pre-match news conference at a rain-lashed Giuseppe Sinigaglia stadium in Como concerned his side's failure to keep clean sheets.",
-        "th": "คำถามที่เกิดขึ้นในการแถลงข่าวก่อนการแข่งขันที่สนามกีฬาจูเซปเป้ ซินิกัลยา ในเมืองโคโมซึ่งมีฝนตกลงมา เกี่ยวข้องกับความล้มเหลวของฝ่ายเขาในการรักษาคลีนชีต"
+        "en": "Engineering teams rely on n8n to connect internal systems, process webhooks, and automate critical business data pipelines. It is also showing up in AI workloads, including self-hosted agents and RAG pipelines. Those workloads can put more pressure on workers, secrets management, and state handling. We deployed n8n on Amazon EKS, ran it under real traffic, and later moved from a community Helm chart to n8n’s official Helm chart . The platform stayed in place, and we kept the database, queue, object storage, IAM role, and secrets intact through the cutover.",
+        "th": "ทีมวิศวกรพึ่งพา n8n เพื่อเชื่อมต่อระบบภายใน ประมวลผลเว็บฮุค และทำให้ไปป์ไลน์ข้อมูลธุรกิจที่สำคัญเป็นอัตโนมัติ นอกจากนี้ยังปรากฏในปริมาณงาน AI รวมถึงตัวแทนที่โฮสต์เองและไปป์ไลน์ RAG ปริมาณงานเหล่านั้นสามารถสร้างแรงกดดันต่อพนักงาน การจัดการความลับ และการจัดการของรัฐได้มากขึ้น เราปรับใช้ n8n บน Amazon EKS รันภายใต้การรับส่งข้อมูลจริง และต่อมาได้ย้ายจากแผนภูมิ Helm ชุมชนไปยังแผนภูมิ Helm อย่างเป็นทางการของ n8n แพลตฟอร์มยังคงอยู่ที่เดิม และเรารักษาฐานข้อมูล คิว พื้นที่จัดเก็บอ็อบเจ็กต์ บทบาท IAM และความลับไว้ครบถ้วนผ่านการตัดส่วน"
       }
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Sport (Man United) news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Deploying, maintaining, and migrating production n...\"?",
         "options": [
-          "Carrick wants more clean sheets to turn season around",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "n8n is easy to try and harder to run under production traffic.",
+          "No technical adjustments were required as existing CI/CD tools handled the entire process seamlessly.",
+          "The engineering team postponed all deployments indefinitely due to license expiration.",
+          "All cloud clusters were intentionally deprecated and replaced by physical tapes."
         ],
         "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Carrick wants more clean sheets to turn season around'"
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: n8n นั้นง่ายต่อการลองและยากกว่าในการรันภายใต้ปริมาณการใช้งานจริง คอนเทนเนอร์เดียวที่มี SQLite ใช้งานได้ดีสำหรับการสาธิตอ..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What operational nuance or engineering detail is emphasized in the technical discussion?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Carrick wants more clean sheets to turn ...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Microservices architecture was declared completely obsolete for enterprise systems.",
+          "n8n is easy to try and harder to run under production traffic.",
+          "Manual FTP uploads were recommended over automated GitOps pipelines.",
+          "Memory leaks and CPU throttling should be ignored until customer complaints arise."
         ],
         "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: n8n นั้นง่ายต่อการลองและยากกว่าในการรันภายใต้ปริมาณการใช้งานจริง คอนเทนเนอร์เดียวที่มี SQLite ใช้งานได้ดีสำหรับการสาธิตอ..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What key takeaway or strategic guidance should DevOps engineers and teams take away from this?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Engineering teams rely on n8n to connect internal systems, process webhooks, and automate critical business data pipelines.",
+          "Avoid implementing observability tools or alerting systems in production environments.",
+          "Rely strictly on single-threaded synchronous batch jobs for all mission-critical APIs.",
+          "Disregard security vulnerability scanning in container registries before deployment."
+        ],
+        "correctIndex": 0,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: ทีมวิศวกรพึ่งพา n8n เพื่อเชื่อมต่อระบบภายใน ประมวลผลเว็บฮุค และทำให้ไปป์ไลน์ข้อมูลธุรกิจที่สำคัญเป็นอัตโนมัติ นอกจากนี้ย..."
+      }
+    ]
+  },
+  {
+    "id": "news-devops-04",
+    "collection": "daily-news",
+    "category": "devops",
+    "categoryLabel": "DevOps & Cloud Native",
+    "categoryTh": "ข่าวสารและบทความ DevOps, Kubernetes, CI/CD & Cloud",
+    "categoryEmoji": "🛠️",
+    "level": "B2",
+    "levelTitle": "Daily News • DevOps & Cloud Native",
+    "levelBadge": "B2 • Cloud Native",
+    "levelColor": "cyan",
+    "coverEmoji": "🛠️",
+    "title": "Putting Nepal on the CNCF Golden Kubestronaut map",
+    "titleTh": "วางเนปาลไว้ในแผนที่ CNCF Golden Kubestronaut",
+    "publishedDate": "2026-10-22",
+    "estimatedTime": "3 นาที",
+    "readTime": "3 นาที",
+    "wordCount": 99,
+    "xpReward": 60,
+    "sourceUrl": "https://www.cncf.io/blog/2026/10/16/putting-nepal-on-the-cncf-golden-kubestronaut-map/",
+    "sourceName": "CNCF Blog",
+    "summary": "ในบล็อกนี้ ฉันจะแบ่งปันการเดินทางของ Golden Kubestronaut ของฉัน วิธีที่ฉันเป็น Golden Kubestronaut คนแรกและอายุน้อยที่สุดจากเนปาล อะไรเป็นแรงบันดาลใจให้ฉันเดินตามเส้นทางนี้ และสิ่งที่ต้องทำจริงๆ เพ...",
+    "tags": [
+      "DevOps & Cloud Native",
+      "Daily News",
+      "B2"
+    ],
+    "keyVocab": [
+      {
+        "word": "golden",
+        "ipa": "/golden/",
+        "pos": "n.",
+        "th": "ทอง",
+        "chunk": "golden in context"
+      },
+      {
+        "word": "kubestronaut",
+        "ipa": "/kubestronaut/",
+        "pos": "n.",
+        "th": "คูเบสโตรนอท",
+        "chunk": "kubestronaut in context"
+      },
+      {
+        "word": "journey",
+        "ipa": "/journey/",
+        "pos": "n.",
+        "th": "การเดินทาง",
+        "chunk": "journey in context"
+      },
+      {
+        "word": "became",
+        "ipa": "/became/",
+        "pos": "n.",
+        "th": "กลายเป็น",
+        "chunk": "became in context"
+      }
+    ],
+    "paragraphs": [
+      {
+        "id": "p1",
+        "en": "In this blog, I will share my Golden Kubestronaut journey, how I became the first and youngest Golden Kubestronaut from Nepal, what motivated me to pursue this path, and what it actually takes to earn the...",
+        "th": "ในบล็อกนี้ ฉันจะแบ่งปันการเดินทางของ Golden Kubestronaut ของฉัน วิธีที่ฉันเป็น Golden Kubestronaut คนแรกและอายุน้อยที่สุดจากเนปาล อะไรเป็นแรงบันดาลใจให้ฉันเดินตามเส้นทางนี้ และสิ่งที่ต้องทำจริงๆ เพื่อรับ..."
+      },
+      {
+        "id": "p2",
+        "en": "In this blog, I will share my Golden Kubestronaut journey, how I became the first and youngest Golden Kubestronaut from Nepal, what motivated me to pursue this path, and what it actually takes to earn the title.",
+        "th": "ในบล็อกนี้ ฉันจะแบ่งปันการเดินทางของ Golden Kubestronaut ของฉัน วิธีที่ฉันเป็น Golden Kubestronaut คนแรกและอายุน้อยที่สุดจากเนปาล อะไรเป็นแรงบันดาลใจให้ฉันเดินตามเส้นทางนี้ และสิ่งที่ต้องทำจริงๆ เพื่อให้ได้รับตำแหน่งนี้"
+      },
+      {
+        "id": "p3",
+        "en": "Golden Kubestronaut is the highest honor in the Kubestronaut program, awarded by the Linux Foundation and CNCF to those who complete all 16 CNCF certifications .",
+        "th": "Golden Kubestronaut ถือเป็นเกียรติสูงสุดในโครงการ Kubestronaut ซึ่งมอบให้โดย Linux Foundation และ CNCF สำหรับผู้ที่ผ่านการรับรอง CNCF ทั้ง 16 รายการ"
+      }
+    ],
+    "quiz": [
+      {
+        "question": "According to the report, what is the central development or challenge regarding \"Putting Nepal on the CNCF Golden Kubestronaut map...\"?",
+        "options": [
+          "All cloud clusters were intentionally deprecated and replaced by physical tapes.",
+          "No technical adjustments were required as existing CI/CD tools handled the entire process seamlessly.",
+          "The engineering team postponed all deployments indefinitely due to license expiration.",
+          "In this blog, I will share my Golden Kubestronaut journey, how I became the first and youngest Golden Kubestronaut from Nepal, what motivated me to pursue this path, and what it actually takes to earn the."
+        ],
+        "correctIndex": 3,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: ในบล็อกนี้ ฉันจะแบ่งปันการเดินทางของ Golden Kubestronaut ของฉัน วิธีที่ฉันเป็น Golden Kubestronaut คนแรกและอายุน้อยที่สุ..."
+      },
+      {
+        "question": "What operational nuance or engineering detail is emphasized in the technical discussion?",
+        "options": [
+          "Manual FTP uploads were recommended over automated GitOps pipelines.",
+          "In this blog, I will share my Golden Kubestronaut journey, how I became the first and youngest Golden Kubestronaut from Nepal, what motivated me to pursue this path, and what it actually takes to earn the title.",
+          "Memory leaks and CPU throttling should be ignored until customer complaints arise.",
+          "Microservices architecture was declared completely obsolete for enterprise systems."
         ],
         "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: ในบล็อกนี้ ฉันจะแบ่งปันการเดินทางของ Golden Kubestronaut ของฉัน วิธีที่ฉันเป็น Golden Kubestronaut คนแรกและอายุน้อยที่สุ..."
+      },
+      {
+        "question": "What key takeaway or strategic guidance should DevOps engineers and teams take away from this?",
+        "options": [
+          "Golden Kubestronaut is the highest honor in the Kubestronaut program, awarded by the Linux Foundation and CNCF to those who complete all 16 CNCF certifications.",
+          "Rely strictly on single-threaded synchronous batch jobs for all mission-critical APIs.",
+          "Disregard security vulnerability scanning in container registries before deployment.",
+          "Avoid implementing observability tools or alerting systems in production environments."
+        ],
+        "correctIndex": 0,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: Golden Kubestronaut ถือเป็นเกียรติสูงสุดในโครงการ Kubestronaut ซึ่งมอบให้โดย Linux Foundation และ CNCF สำหรับผู้ที่ผ่านก..."
       }
     ]
   },
@@ -336,63 +449,64 @@ window.dailyNewsData = [
     "id": "news-tech-01",
     "collection": "daily-news",
     "category": "tech",
-    "categoryLabel": "Tech & DevOps",
-    "categoryTh": "ข่าวไอที, AI, คลาวด์ & DevOps",
+    "categoryLabel": "Tech & AI Innovation",
+    "categoryTh": "ข่าวเทคโนโลยี, AI, ซอฟต์แวร์ & นวัตกรรม",
     "categoryEmoji": "💻",
     "level": "B1",
-    "levelTitle": "Daily News • Tech & DevOps",
-    "levelBadge": "B1 • Intermediate",
+    "levelTitle": "Daily News • Tech & AI Innovation",
+    "levelBadge": "B1 • Tech & AI",
     "levelColor": "indigo",
     "coverEmoji": "💻",
     "title": "Just Eat apologises for AI food mistakes after social media ridicule",
     "titleTh": "Just Eat ขอโทษสำหรับข้อผิดพลาดด้านอาหาร AI หลังจากการเยาะเย้ยโซเชียลมีเดีย",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 67,
+    "estimatedTime": "3 นาที",
+    "readTime": "3 นาที",
+    "wordCount": 155,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/crz981p0klvgo?at_medium=RSS&at_campaign=rss",
-    "summary": "โฆษกกล่าวว่ากำลังลบภาพ AI ที่ไม่ถูกต้องและหยุดการเปิดตัวเครื่องมือชั่วคราว",
+    "sourceName": "BBC Technology",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเดินทาง เพลงในอนาคต เสียงสภาพอากาศของทีวี เมนูเพิ่มเติม ค้นหา BBC หน้าแรกข่าว ...",
     "tags": [
-      "Tech & DevOps",
+      "Tech & AI Innovation",
       "Daily News",
       "B1"
     ],
     "keyVocab": [
       {
-        "ipa": "/ˈplætfɔːm/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "แพลตฟอร์ม, ระบบ",
-        "chunk": "online platform",
-        "word": "platform"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "spokesperson",
-        "ipa": "/spokesperson/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "โฆษก",
-        "chunk": "spokesperson in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       },
       {
-        "word": "removing",
-        "ipa": "/removing/",
+        "word": "accessibility",
+        "ipa": "/accessibility/",
         "pos": "n.",
-        "th": "การถอด",
-        "chunk": "removing in context"
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
       },
       {
-        "word": "inaccurate",
-        "ipa": "/inaccurate/",
+        "word": "account",
+        "ipa": "/account/",
         "pos": "n.",
-        "th": "ไม่ถูกต้อง",
-        "chunk": "inaccurate in context"
+        "th": "บัญชี",
+        "chunk": "account in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "A spokesperson said it was removing inaccurate AI images and pausing the rollout of the tool.",
-        "th": "โฆษกกล่าวว่ากำลังลบภาพ AI ที่ไม่ถูกต้องและหยุดการเปิดตัวเครื่องมือชั่วคราว"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Just Eat apologises for AI food mistakes after social media ridicule Image caption, A chip muffin and bacon and egg soda - menu items well known in parts of the UK, but not to the AI which made this",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเดินทาง เพลงในอนาคต เสียงสภาพอากาศของทีวี เมนูเพิ่มเติม ค้นหา BBC หน้าแรกข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเดินทาง เพลงในอนาคต เสียงสภาพอากาศของทีวี ปิดเมนู ข่าว BBC เมนู หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร เทคโนโลยีธุรกิจ วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบ Newsbeat Tech Just Eat ขออภัยสำหรับข้อผิดพลาดด้านอาหารของ AI หลังจากการเยาะเย้ยทางโซเชียลมีเดีย คำบรรยายภาพ มัฟฟินชิป เบคอน และโซดาไข่ - รายการเมนูที่รู้จักกันดีในบางส่วนของสหราชอาณาจักร แต่ไม่ใช่ ถึง AI ที่สร้างสิ่งนี้"
       },
       {
         "id": "p2",
@@ -407,37 +521,37 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Tech & DevOps news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Just Eat apologises for AI food mistakes after soc...\"?",
         "options": [
-          "Just Eat apologises for AI food mistakes after social media ridicule",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "The product was completely removed from the global market without regulatory explanation.",
+          "The technology company decided to discontinue all artificial intelligence research.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Just Eat apologises for AI food mistakes after social media ridicule Image caption, A chip muffin and bacon and egg soda - menu items well known in parts of the UK, but not to the AI which made this.",
+          "All users were instructed to downgrade to legacy operating systems from two decades ago."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Just Eat apologises for AI food mistakes after social media ridicule'"
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเ..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What specific technical or behavioral finding was uncovered in the investigation?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Just Eat apologises for AI food mistakes...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Hardware limitations were identified as the sole reason for the algorithmic discrepancy.",
+          "Software algorithms are no longer used in digital platform recommendations.",
+          "The machine learning model functioned with 100% mathematical certainty without human oversight.",
+          "Just Eat has apologised after it was ridiculed online over a series of mistakes with AI-generated pictures for some of its restaurants' food items."
         ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "correctIndex": 3,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: Just Eat ขออภัยหลังจากถูกเยาะเย้ยทางออนไลน์เกี่ยวกับข้อผิดพลาดต่างๆ ที่เกิดขึ้นกับรูปภาพอาหารของร้านอาหารบางแห่งที่สร้าง..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What broader implication does this development carry for industry practitioners and users?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Data privacy concerns have been universally resolved across all digital platforms.",
+          "The online food delivery platform had been testing out the tech to showcase food which didn't have images yet - but not all turned out as planned.",
+          "Autonomous systems require zero human validation or verification safeguards.",
+          "Future technological adoption is expected to decline sharply worldwide."
         ],
         "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: แพลตฟอร์มส่งอาหารออนไลน์กำลังทดสอบเทคโนโลยีเพื่อแสดงอาหารที่ยังไม่มีรูปภาพ แต่ไม่ได้เป็นไปตามที่วางแผนไว้ทั้งหมด..."
       }
     ]
   },
@@ -445,63 +559,64 @@ window.dailyNewsData = [
     "id": "news-tech-02",
     "collection": "daily-news",
     "category": "tech",
-    "categoryLabel": "Tech & DevOps",
-    "categoryTh": "ข่าวไอที, AI, คลาวด์ & DevOps",
+    "categoryLabel": "Tech & AI Innovation",
+    "categoryTh": "ข่าวเทคโนโลยี, AI, ซอฟต์แวร์ & นวัตกรรม",
     "categoryEmoji": "💻",
     "level": "B1",
-    "levelTitle": "Daily News • Tech & DevOps",
-    "levelBadge": "B1 • Intermediate",
+    "levelTitle": "Daily News • Tech & AI Innovation",
+    "levelBadge": "B1 • Tech & AI",
     "levelColor": "indigo",
     "coverEmoji": "💻",
     "title": "Websites taken down worldwide as critical cyber-security update issued",
     "titleTh": "เว็บไซต์ถูกลบทั่วโลกเนื่องจากมีการออกการอัปเดตความปลอดภัยทางไซเบอร์ที่สำคัญ",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 73,
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 179,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/cmly0lg3w5x2o?at_medium=RSS&at_campaign=rss",
-    "summary": "ช่องโหว่ของ PHP ซึ่งเป็นภาษาโปรแกรมที่ใช้กันอย่างแพร่หลายบนอินเทอร์เน็ต ได้รับการอธิบายว่าเป็นจุดอ่อนที่สำคัญที่สุดที่ AI เคยพบมา",
+    "sourceName": "BBC Technology",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต เสียงสภาพอากาศของทีวี เมนูเพิ่มเติม ค้นหา BB...",
     "tags": [
-      "Tech & DevOps",
+      "Tech & AI Innovation",
       "Daily News",
       "B1"
     ],
     "keyVocab": [
       {
-        "ipa": "/sɪˈkjʊərəti/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "ความปลอดภัย",
-        "chunk": "cyber security",
-        "word": "security"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "vulnerabilities",
-        "ipa": "/vulnerabilities/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "ช่องโหว่",
-        "chunk": "vulnerabilities in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       },
       {
-        "word": "programming",
-        "ipa": "/programming/",
+        "word": "accessibility",
+        "ipa": "/accessibility/",
         "pos": "n.",
-        "th": "การเขียนโปรแกรม",
-        "chunk": "programming in context"
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
       },
       {
-        "word": "language",
-        "ipa": "/language/",
+        "word": "account",
+        "ipa": "/account/",
         "pos": "n.",
-        "th": "ภาษา",
-        "chunk": "language in context"
+        "th": "บัญชี",
+        "chunk": "account in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "The vulnerabilities with PHP, a programming language widely used across the internet, have been described as the most significant ever found by AI.",
-        "th": "ช่องโหว่ของ PHP ซึ่งเป็นภาษาโปรแกรมที่ใช้กันอย่างแพร่หลายบนอินเทอร์เน็ต ได้รับการอธิบายว่าเป็นจุดอ่อนที่สำคัญที่สุดที่ AI เคยพบมา"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Websites taken down worldwide as critical cyber-security update issued Image source, Getty Images By Tom Gerken and Laura Cress , Technology reporters and Joe Tidy , Cyber correspondent, BBC World Service Published 21 October 2026, 13:09 BST Updated 2 hours ago International governments and agencies have urged websites to address two critical cyber-security flaws in a programming language which powers much of the internet.",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต เสียงสภาพอากาศของทีวี เมนูเพิ่มเติม ค้นหา BBC Home News กีฬา Earth Reel Worklife วัฒนธรรมการเดินทาง ดนตรีแห่งอนาคต เสียงสภาพอากาศของทีวี ปิดเมนู BBC News Menu หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร เทคโนโลยีธุรกิจ วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบ Newsbeat Tech เว็บไซต์ที่ถูกลบทั่วโลกเนื่องจากมีการอัปเดตความปลอดภัยทางไซเบอร์ที่สำคัญ ออกแหล่งรูปภาพ Getty Images โดย Tom Gerken และ Laura Cress นักข่าวเทคโนโลยี และ Joe Tidy ผู้สื่อข่าวไซเบอร์ BBC World Service เผยแพร่เมื่อ 21 ตุลาคม 2569 เวลา 13:09 น. BST อัปเดตเมื่อ 2 ชั่วโมงที่แล้ว รัฐบาลและหน่วยงานระหว่างประเทศได้เรียกร้องให้เว็บไซต์แก้ไขข้อบกพร่องด้านความปลอดภัยทางไซเบอร์ที่สำคัญสองประการในภาษาการเขียนโปรแกรมซึ่งขับเคลื่อนอินเทอร์เน็ตเป็นส่วนใหญ่"
       },
       {
         "id": "p2",
@@ -516,37 +631,37 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Tech & DevOps news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Websites taken down worldwide as critical cyber-se...\"?",
         "options": [
-          "Websites taken down worldwide as critical cyber-security update issued",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "The technology company decided to discontinue all artificial intelligence research.",
+          "All users were instructed to downgrade to legacy operating systems from two decades ago.",
+          "The product was completely removed from the global market without regulatory explanation.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Websites taken down worldwide as critical cyber-security update issued Image source, Getty Images By Tom Gerken and Laura Cress , Technology reporters and Joe Tidy , Cyber correspondent, BBC World Service Published 21 October 2026, 13:09 BST Updated 2 hours ago International governments and agencies have urged websites to address two critical cyber-security flaws in a programming language which powers much of the internet."
+        ],
+        "correctIndex": 3,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่..."
+      },
+      {
+        "question": "What specific technical or behavioral finding was uncovered in the investigation?",
+        "options": [
+          "The machine learning model functioned with 100% mathematical certainty without human oversight.",
+          "Software algorithms are no longer used in digital platform recommendations.",
+          "Hardware limitations were identified as the sole reason for the algorithmic discrepancy.",
+          "The vulnerabilities were found within the PHP programming language, with a fix issued on Wednesday afternoon."
+        ],
+        "correctIndex": 3,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: พบช่องโหว่ในภาษาการเขียนโปรแกรม PHP โดยมีการแก้ไขในบ่ายวันพุธ..."
+      },
+      {
+        "question": "What broader implication does this development carry for industry practitioners and users?",
+        "options": [
+          "Multiple cyber-security agencies have urged organisations unable to apply fixes in time to consider taking their sites down, leaving bodies such as the Finnish government, Edinburgh council and the BBC to take pages offline.",
+          "Future technological adoption is expected to decline sharply worldwide.",
+          "Data privacy concerns have been universally resolved across all digital platforms.",
+          "Autonomous systems require zero human validation or verification safeguards."
         ],
         "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Websites taken down worldwide as critical cyber-security update issued'"
-      },
-      {
-        "question": "Which of the following statements best aligns with the report?",
-        "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Websites taken down worldwide as critica...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
-        ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: หน่วยงานรักษาความปลอดภัยทางไซเบอร์หลายแห่งได้เรียกร้องให้องค์กรต่างๆ ไม่สามารถใช้การแก้ไขได้ทันเวลาเพื่อพิจารณาปิดไซต์ขอ..."
       }
     ]
   },
@@ -554,63 +669,64 @@ window.dailyNewsData = [
     "id": "news-tech-03",
     "collection": "daily-news",
     "category": "tech",
-    "categoryLabel": "Tech & DevOps",
-    "categoryTh": "ข่าวไอที, AI, คลาวด์ & DevOps",
+    "categoryLabel": "Tech & AI Innovation",
+    "categoryTh": "ข่าวเทคโนโลยี, AI, ซอฟต์แวร์ & นวัตกรรม",
     "categoryEmoji": "💻",
     "level": "B1",
-    "levelTitle": "Daily News • Tech & DevOps",
-    "levelBadge": "B1 • Intermediate",
+    "levelTitle": "Daily News • Tech & AI Innovation",
+    "levelBadge": "B1 • Tech & AI",
     "levelColor": "indigo",
     "coverEmoji": "💻",
     "title": "Elon Musk confirms he is considering merging Tesla and SpaceX",
     "titleTh": "Elon Musk ยืนยันว่าเขากำลังพิจารณารวม Tesla และ SpaceX เข้าด้วยกัน",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 57,
+    "estimatedTime": "3 นาที",
+    "readTime": "3 นาที",
+    "wordCount": 131,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/cmlyl09xjke4o?at_medium=RSS&at_campaign=rss",
-    "summary": "Musk กล่าวว่ามีการจัดตั้งคณะกรรมการพิเศษภายในทั้งสองบริษัทขึ้นเพื่อตรวจสอบการควบรวมกิจการขนาดใหญ่ที่เป็นไปได้",
+    "sourceName": "BBC Technology",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC Home N...",
     "tags": [
-      "Tech & DevOps",
+      "Tech & AI Innovation",
       "Daily News",
       "B1"
     ],
     "keyVocab": [
       {
-        "word": "special",
-        "ipa": "/special/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "พิเศษ",
-        "chunk": "special in context"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "committees",
-        "ipa": "/committees/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "คณะกรรมการ",
-        "chunk": "committees in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       },
       {
-        "word": "within",
-        "ipa": "/within/",
+        "word": "accessibility",
+        "ipa": "/accessibility/",
         "pos": "n.",
-        "th": "ภายใน",
-        "chunk": "within in context"
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
       },
       {
-        "word": "companies",
-        "ipa": "/companies/",
+        "word": "account",
+        "ipa": "/account/",
         "pos": "n.",
-        "th": "บริษัท",
-        "chunk": "companies in context"
+        "th": "บัญชี",
+        "chunk": "account in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "Musk says special committees within both companies have been formed to look at a possible mega-merger.",
-        "th": "Musk กล่าวว่ามีการจัดตั้งคณะกรรมการพิเศษภายในทั้งสองบริษัทขึ้นเพื่อตรวจสอบการควบรวมกิจการขนาดใหญ่ที่เป็นไปได้"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Elon Musk confirms he is considering merging Tesla and SpaceX Image source, Courtesy/X Image caption, Elon Musk is chief executive of both SpaceX and Tesla",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC Home News กีฬา Earth Reel Worklife วัฒนธรรมการเดินทาง ดนตรีแห่งอนาคต เสียงสภาพอากาศทางทีวี ปิดเมนู BBC News Menu หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร เทคโนโลยีธุรกิจ วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบ Newsbeat Tech Elon Musk ยืนยันว่าเขากำลังพิจารณาที่จะรวม Tesla และ SpaceX แหล่งที่มาของรูปภาพ ความอนุเคราะห์/X คำบรรยายภาพ Elon Musk เป็นผู้บริหารระดับสูงของทั้ง SpaceX และ Tesla"
       },
       {
         "id": "p2",
@@ -625,37 +741,147 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Tech & DevOps news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Elon Musk confirms he is considering merging Tesla...\"?",
         "options": [
-          "Elon Musk confirms he is considering merging Tesla and SpaceX",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "The technology company decided to discontinue all artificial intelligence research.",
+          "All users were instructed to downgrade to legacy operating systems from two decades ago.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Elon Musk confirms he is considering merging Tesla and SpaceX Image source, Courtesy/X Image caption, Elon Musk is chief executive of both SpaceX and Tesla.",
+          "The product was completely removed from the global market without regulatory explanation."
+        ],
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ย..."
+      },
+      {
+        "question": "What specific technical or behavioral finding was uncovered in the investigation?",
+        "options": [
+          "Hardware limitations were identified as the sole reason for the algorithmic discrepancy.",
+          "The machine learning model functioned with 100% mathematical certainty without human oversight.",
+          "Elon Musk has said he is actively considering merging Tesla and SpaceX, his two biggest companies.",
+          "Software algorithms are no longer used in digital platform recommendations."
+        ],
+        "correctIndex": 2,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: Elon Musk กล่าวว่าเขากำลังพิจารณาที่จะรวม Tesla และ SpaceX ซึ่งเป็นบริษัทที่ใหญ่ที่สุดสองแห่งของเขาเข้าด้วยกัน..."
+      },
+      {
+        "question": "What broader implication does this development carry for industry practitioners and users?",
+        "options": [
+          "Data privacy concerns have been universally resolved across all digital platforms.",
+          "Future technological adoption is expected to decline sharply worldwide.",
+          "\"Do I think it would be a good idea? Yes,\" Musk said during a call with financial analysts to discuss SpaceX's latest results on Tuesday.",
+          "Autonomous systems require zero human validation or verification safeguards."
+        ],
+        "correctIndex": 2,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: \"ฉันคิดว่ามันจะเป็นความคิดที่ดีหรือไม่ ใช่\" มัสก์กล่าวระหว่างสนทนาทางโทรศัพท์กับนักวิเคราะห์ทางการเงินเพื่อหารือเกี่ยวกั..."
+      }
+    ]
+  },
+  {
+    "id": "news-tech-04",
+    "collection": "daily-news",
+    "category": "tech",
+    "categoryLabel": "Tech & AI Innovation",
+    "categoryTh": "ข่าวเทคโนโลยี, AI, ซอฟต์แวร์ & นวัตกรรม",
+    "categoryEmoji": "💻",
+    "level": "B1",
+    "levelTitle": "Daily News • Tech & AI Innovation",
+    "levelBadge": "B1 • Tech & AI",
+    "levelColor": "indigo",
+    "coverEmoji": "💻",
+    "title": "Why is Elon Musk plotting a mega-merger of SpaceX and Tesla?",
+    "titleTh": "เหตุใด Elon Musk จึงวางแผนที่จะควบรวมกิจการ SpaceX และ Tesla ขนาดใหญ่",
+    "publishedDate": "2026-10-22",
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 180,
+    "xpReward": 60,
+    "sourceUrl": "https://www.bbc.co.uk/news/articles/cr93z1e87e0do?at_medium=RSS&at_campaign=rss",
+    "sourceName": "BBC Technology",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC...",
+    "tags": [
+      "Tech & AI Innovation",
+      "Daily News",
+      "B1"
+    ],
+    "keyVocab": [
+      {
+        "ipa": "/ɪnˈtelɪdʒəns/",
+        "pos": "n.",
+        "th": "เชาวน์ปัญญา, ระบบอัจฉริยะ",
+        "chunk": "artificial intelligence",
+        "word": "intelligence"
+      },
+      {
+        "word": "homepage",
+        "ipa": "/homepage/",
+        "pos": "n.",
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
+      },
+      {
+        "word": "content",
+        "ipa": "/content/",
+        "pos": "n.",
+        "th": "เนื้อหา",
+        "chunk": "content in context"
+      },
+      {
+        "word": "accessibility",
+        "ipa": "/accessibility/",
+        "pos": "n.",
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
+      }
+    ],
+    "paragraphs": [
+      {
+        "id": "p1",
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Why is Elon Musk plotting a mega-merger of SpaceX and Tesla? Image source, Getty Images/Reuters By Osmond Chia Business reporter Published 21 October 2026, 05:13 BST Updated 07:36 BST Elon Musk has spent years building Tesla and SpaceX into a pair of trillion-dollar technology empires. Now, he is considering bringing them together .",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเดินทาง ดนตรีแห่งอนาคต เสียงสภาพอากาศในทีวี ปิดเมนู ข่าว BBC เมนู หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร ธุรกิจเทคโนโลยี วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบธุรกิจ Newsbeat เทคโนโลยีเศรษฐกิจเทคโนโลยีใหม่ของธุรกิจ ปัญญาประดิษฐ์ เส้นทางสู่ความสำเร็จ เหตุใด Elon Musk จึงวางแผนการควบรวมกิจการขนาดใหญ่ของ SpaceX และ Tesla แหล่งที่มาของรูปภาพ Getty Images/Reuters โดย Osmond Chia นักข่าวธุรกิจ เผยแพร่เมื่อ 21 ตุลาคม 2569 เวลา 05:13 น. BST อัปเดต 07:36 น. BST Elon Musk ใช้เวลาหลายปีในการสร้าง Tesla และ SpaceX ให้เป็นอาณาจักรเทคโนโลยีมูลค่าล้านล้านดอลลาร์ ตอนนี้เขากำลังพิจารณาที่จะนำพวกเขามารวมกัน"
+      },
+      {
+        "id": "p2",
+        "en": "Asked on Tuesday whether a merger would be a good idea, Musk was clear: \"Yes.\"",
+        "th": "เมื่อถูกถามเมื่อวันอังคารว่าการควบรวมกิจการจะเป็นความคิดที่ดีหรือไม่ มัสก์ก็ตอบชัดเจนว่า \"ใช่\""
+      },
+      {
+        "id": "p3",
+        "en": "The prospect is more than hypothetical. Musk said special committees have been formed to assess a potential deal, although he stressed that there is no guarantee a merger will happen and that nothing has been agreed.",
+        "th": "โอกาสเป็นมากกว่าสมมุติ มัสก์กล่าวว่ามีการจัดตั้งคณะกรรมการพิเศษขึ้นมาเพื่อประเมินข้อตกลงที่อาจเกิดขึ้น แม้ว่าเขาจะเน้นย้ำว่าไม่มีการรับประกันว่าจะมีการควบรวมกิจการเกิดขึ้น และไม่มีการตกลงกันใดๆ ก็ตาม"
+      }
+    ],
+    "quiz": [
+      {
+        "question": "According to the report, what is the central development or challenge regarding \"Why is Elon Musk plotting a mega-merger of SpaceX ...\"?",
+        "options": [
+          "All users were instructed to downgrade to legacy operating systems from two decades ago.",
+          "The technology company decided to discontinue all artificial intelligence research.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Why is Elon Musk plotting a mega-merger of SpaceX and Tesla? Image source, Getty Images/Reuters By Osmond Chia Business reporter Published 21 October 2026, 05:13 BST Updated 07:36 BST Elon Musk has spent years building Tesla and SpaceX into a pair of trillion-dollar technology empires.",
+          "The product was completely removed from the global market without regulatory explanation."
+        ],
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่..."
+      },
+      {
+        "question": "What specific technical or behavioral finding was uncovered in the investigation?",
+        "options": [
+          "The machine learning model functioned with 100% mathematical certainty without human oversight.",
+          "Hardware limitations were identified as the sole reason for the algorithmic discrepancy.",
+          "Asked on Tuesday whether a merger would be a good idea, Musk was clear: \"Yes.",
+          "Software algorithms are no longer used in digital platform recommendations."
+        ],
+        "correctIndex": 2,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: เมื่อถูกถามเมื่อวันอังคารว่าการควบรวมกิจการจะเป็นความคิดที่ดีหรือไม่ มัสก์ก็ตอบชัดเจนว่า \"ใช่\"..."
+      },
+      {
+        "question": "What broader implication does this development carry for industry practitioners and users?",
+        "options": [
+          "The prospect is more than hypothetical.",
+          "Data privacy concerns have been universally resolved across all digital platforms.",
+          "Autonomous systems require zero human validation or verification safeguards.",
+          "Future technological adoption is expected to decline sharply worldwide."
         ],
         "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Elon Musk confirms he is considering merging Tesla and SpaceX'"
-      },
-      {
-        "question": "Which of the following statements best aligns with the report?",
-        "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Elon Musk confirms he is considering mer...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
-        ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: โอกาสเป็นมากกว่าสมมุติ มัสก์กล่าวว่ามีการจัดตั้งคณะกรรมการพิเศษขึ้นมาเพื่อประเมินข้อตกลงที่อาจเกิดขึ้น แม้ว่าเขาจะเน้นย้..."
       }
     ]
   },
@@ -664,22 +890,23 @@ window.dailyNewsData = [
     "collection": "daily-news",
     "category": "business",
     "categoryLabel": "World & Business",
-    "categoryTh": "เศรษฐกิจ, ธุรกิจ & รอบโลก",
+    "categoryTh": "เศรษฐกิจ, ธุรกิจ & ข่าวสารรอบโลก",
     "categoryEmoji": "🌐",
     "level": "B2",
     "levelTitle": "Daily News • World & Business",
-    "levelBadge": "B2 • Professional",
+    "levelBadge": "B2 • Business",
     "levelColor": "amber",
     "coverEmoji": "🌐",
     "title": "Faisal Islam: Inflation and borrowing figures illustrate chancellor's Budget challenge",
     "titleTh": "ไฟซาลอิสลาม: ตัวเลขเงินเฟ้อและการกู้ยืมแสดงให้เห็นถึงความท้าทายด้านงบประมาณของนายกรัฐมนตรี",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 63,
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 176,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/cm3wv9pn22e5o?at_medium=RSS&at_campaign=rss",
-    "summary": "ตัวเลขทางเศรษฐกิจที่เผยแพร่เมื่อวันพุธแสดงให้เห็นถึงข้อจำกัดของ John Healey ในขณะที่เขาจัดงบประมาณขั้นสุดท้าย",
+    "sourceName": "BBC Business",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC...",
     "tags": [
       "World & Business",
       "Daily News",
@@ -687,39 +914,39 @@ window.dailyNewsData = [
     ],
     "keyVocab": [
       {
+        "ipa": "/ɪnˈtelɪdʒəns/",
+        "pos": "n.",
+        "th": "เชาวน์ปัญญา, ระบบอัจฉริยะ",
+        "chunk": "artificial intelligence",
+        "word": "intelligence"
+      },
+      {
         "ipa": "/ɪnˈfleɪʃn/",
         "pos": "n.",
         "th": "ภาวะเงินเฟ้อ",
-        "chunk": "rising inflation",
+        "chunk": "rising inflation rate",
         "word": "inflation"
       },
       {
-        "word": "economic",
-        "ipa": "/economic/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "ทางเศรษฐกิจ",
-        "chunk": "economic in context"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "figures",
-        "ipa": "/figures/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "ตัวเลข",
-        "chunk": "figures in context"
-      },
-      {
-        "word": "released",
-        "ipa": "/released/",
-        "pos": "n.",
-        "th": "ปล่อยแล้ว",
-        "chunk": "released in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "The economic figures released on Wednesday show the constraints for John Healey as he puts the finishing touches to his Budget.",
-        "th": "ตัวเลขทางเศรษฐกิจที่เผยแพร่เมื่อวันพุธแสดงให้เห็นถึงข้อจำกัดของ John Healey ในขณะที่เขาจัดงบประมาณขั้นสุดท้าย"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Faisal Islam: Inflation and borrowing figures illustrate chancellor's Budget challenge Image source, Getty Images By Faisal Islam Economics editor Published 21 October 2026, 11:03 BST Updated 8 hours ago The chancellor was on an early flight to North East Scotland on Wednesday to announce new North Sea energy approvals as the last set of major economic figures dropped.",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC Home News กีฬา Earth Reel Worklife วัฒนธรรมการเดินทาง ดนตรีแห่งอนาคต เสียงสภาพอากาศในทีวี ปิดเมนู BBC News Menu หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร ธุรกิจเทคโนโลยี วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบธุรกิจ Newsbeat เศรษฐกิจเทคโนโลยีใหม่ เทคโนโลยีของธุรกิจ ปัญญาประดิษฐ์ เส้นทางสู่ความสำเร็จ ไฟซาลอิสลาม: ตัวเลขเงินเฟ้อและการยืมแสดงให้เห็นถึงความท้าทายด้านงบประมาณของนายกรัฐมนตรี แหล่งที่มาของรูปภาพ Getty Images โดย Faisal บรรณาธิการเศรษฐศาสตร์อิสลาม เผยแพร่เมื่อ 21 ตุลาคม 2569, 11:03 น. BST อัปเดตเมื่อ 8 ชั่วโมงที่แล้ว นายกรัฐมนตรีกำลังบินเที่ยวแรกไปยังสกอตแลนด์ตะวันออกเฉียงเหนือในวันพุธเพื่อประกาศการอนุมัติพลังงานในทะเลเหนือใหม่ เนื่องจากตัวเลขทางเศรษฐกิจหลักชุดสุดท้ายลดลง"
       },
       {
         "id": "p2",
@@ -734,37 +961,37 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this World & Business news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Faisal Islam: Inflation and borrowing figures illu...\"?",
         "options": [
-          "Faisal Islam: Inflation and borrowing figures illustrate chancellor's Budget challenge",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Central banks voted unanimously to eliminate interest rates permanently.",
+          "Global trade agreements remained entirely unaffected by domestic market fluctuations.",
+          "Corporate investments ceased across all international markets simultaneously.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Faisal Islam: Inflation and borrowing figures illustrate chancellor's Budget challenge Image source, Getty Images By Faisal Islam Economics editor Published 21 October 2026, 11:03 BST Updated 8 hours ago The chancellor was on an early flight to North East Scotland on Wednesday to announce new North Sea energy approvals as the last set of major economic figures dropped."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Faisal Islam: Inflation and borrowing figures illustrate chancellor's Budget challenge'"
+        "correctIndex": 3,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What underlying economic indicator or financial dynamic is highlighted in the analysis?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Faisal Islam: Inflation and borrowing fi...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Borrowing costs and inflation figures hit their lowest point in thirty years.",
+          "Market volatility ceased completely following government policy announcements.",
+          "Consumer spending shifted exclusively to physical cash transactions.",
+          "From a mile high, as well as close up, the figures for inflation and for the public finances set out his Budget balancing act in clear terms."
         ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "correctIndex": 3,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: จากความสูงหนึ่งไมล์และในระยะใกล้ ตัวเลขของภาวะเงินเฟ้อและการเงินสาธารณะได้กำหนดการดำเนินการสมดุลงบประมาณของเขาอย่างชัดเจ..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What is the expected broader consequence for businesses and economic decision-makers?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Enterprise organizations will no longer monitor macroeconomic trends or regulatory changes.",
+          "Financial institutions are advised to eliminate risk assessment protocols entirely.",
+          "Market conditions are projected to stay static without any further policy revisions.",
+          "The National Debt has topped £3 trillion for the first time in the official figures."
         ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "correctIndex": 3,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: หนี้แห่งชาติมีมูลค่าสูงถึง 3 ล้านล้านปอนด์เป็นครั้งแรกในตัวเลขอย่างเป็นทางการ..."
       }
     ]
   },
@@ -773,22 +1000,23 @@ window.dailyNewsData = [
     "collection": "daily-news",
     "category": "business",
     "categoryLabel": "World & Business",
-    "categoryTh": "เศรษฐกิจ, ธุรกิจ & รอบโลก",
+    "categoryTh": "เศรษฐกิจ, ธุรกิจ & ข่าวสารรอบโลก",
     "categoryEmoji": "🌐",
     "level": "B2",
     "levelTitle": "Daily News • World & Business",
-    "levelBadge": "B2 • Professional",
+    "levelBadge": "B2 • Business",
     "levelColor": "amber",
     "coverEmoji": "🌐",
     "title": "Inflation and government borrowing highest for a year ahead of next week's Budget",
     "titleTh": "อัตราเงินเฟ้อและการกู้ยืมของรัฐบาลสูงสุดในรอบหนึ่งปีก่อนงบประมาณสัปดาห์หน้า",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 72,
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 191,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/c6gel2xv4493o?at_medium=RSS&at_campaign=rss",
-    "summary": "อัตราเงินเฟ้อเร่งตัวขึ้นเป็น 3.5% จาก 3.1% ในปีถึงเดือนกันยายน ตามข้อมูลของสำนักงานสถิติแห่งชาติ (สทนช.)",
+    "sourceName": "BBC Business",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC Home N...",
     "tags": [
       "World & Business",
       "Daily News",
@@ -796,39 +1024,39 @@ window.dailyNewsData = [
     ],
     "keyVocab": [
       {
+        "ipa": "/ɪnˈtelɪdʒəns/",
+        "pos": "n.",
+        "th": "เชาวน์ปัญญา, ระบบอัจฉริยะ",
+        "chunk": "artificial intelligence",
+        "word": "intelligence"
+      },
+      {
         "ipa": "/ɪnˈfleɪʃn/",
         "pos": "n.",
         "th": "ภาวะเงินเฟ้อ",
-        "chunk": "rising inflation",
+        "chunk": "rising inflation rate",
         "word": "inflation"
       },
       {
-        "word": "accelerated",
-        "ipa": "/accelerated/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "เร่ง",
-        "chunk": "accelerated in context"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "september",
-        "ipa": "/september/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "กันยายน",
-        "chunk": "september in context"
-      },
-      {
-        "word": "according",
-        "ipa": "/according/",
-        "pos": "n.",
-        "th": "ตาม",
-        "chunk": "according in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "Inflation accelerated to 3.5% from 3.1% in the year to September, according to the Office for National Statistics (ONS).",
-        "th": "อัตราเงินเฟ้อเร่งตัวขึ้นเป็น 3.5% จาก 3.1% ในปีถึงเดือนกันยายน ตามข้อมูลของสำนักงานสถิติแห่งชาติ (สทนช.)"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Inflation and government borrowing highest for a year ahead of next week's Budget Image source, Getty Images By Tom Espiner Business reporter Published 21 October 2026, 07:08 BST Updated 8 hours ago UK inflation and government borrowing both hit their highest in a year on Wednesday, adding to the pressure on Chancellor John Healey ahead of his first Budget in a week.",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีแห่งอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC Home News กีฬา Earth Reel Worklife วัฒนธรรมการเดินทาง เพลงแห่งอนาคต เสียงสภาพอากาศในทีวี ปิดเมนู ข่าว BBC เมนู หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร ธุรกิจเทคโนโลยี วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบธุรกิจ Newsbeat เทคโนโลยีเศรษฐกิจใหม่ เทคโนโลยีของธุรกิจ ปัญญาประดิษฐ์ เส้นทางสู่ความสำเร็จ อัตราเงินเฟ้อและการกู้ยืมของรัฐบาลสูงสุดในหนึ่งปีข้างหน้า แหล่งที่มาของภาพ Getty Images โดย Tom Espiner Business นักข่าว เผยแพร่เมื่อ 21 ตุลาคม 2569, 07:08 BST อัปเดตเมื่อ 8 ชั่วโมงที่แล้ว อัตราเงินเฟ้อของสหราชอาณาจักรและการกู้ยืมของรัฐบาลทั้งสองพุ่งแตะระดับสูงสุดในรอบปีในวันพุธ ซึ่งเพิ่มความกดดันให้กับนายกรัฐมนตรีจอห์น ฮีลีย์ ก่อนงบประมาณแรกของเขาในรอบสัปดาห์"
       },
       {
         "id": "p2",
@@ -843,37 +1071,37 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this World & Business news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Inflation and government borrowing highest for a y...\"?",
         "options": [
-          "Inflation and government borrowing highest for a year ahead of next week's Budget",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Corporate investments ceased across all international markets simultaneously.",
+          "Central banks voted unanimously to eliminate interest rates permanently.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Inflation and government borrowing highest for a year ahead of next week's Budget Image source, Getty Images By Tom Espiner Business reporter Published 21 October 2026, 07:08 BST Updated 8 hours ago UK inflation and government borrowing both hit their highest in a year on Wednesday, adding to the pressure on Chancellor John Healey ahead of his first Budget in a week.",
+          "Global trade agreements remained entirely unaffected by domestic market fluctuations."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Inflation and government borrowing highest for a year ahead of next week's Budget'"
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การเข้าถึง ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ย..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What underlying economic indicator or financial dynamic is highlighted in the analysis?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Inflation and government borrowing highe...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
+          "Consumer spending shifted exclusively to physical cash transactions.",
+          "The pace of UK price rises accelerated to 3.",
+          "Borrowing costs and inflation figures hit their lowest point in thirty years.",
+          "Market volatility ceased completely following government policy announcements."
         ],
         "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: อัตราการเพิ่มขึ้นของราคาในสหราชอาณาจักรเร่งขึ้นเป็น 3.5% ในปีถึงเดือนกันยายน โดยได้แรงหนุนจากราคาน้ำมันเบนซินและดีเซลที่..."
       },
       {
-        "question": "What is the recommended takeaway for English learners reading this article?",
+        "question": "What is the expected broader consequence for businesses and economic decision-makers?",
         "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Market conditions are projected to stay static without any further policy revisions.",
+          "The inflation figures came as UK government borrowing jumped to nearly £25bn in September, which means borrowing for the financial year to date is running £6bn above official forecasts.",
+          "Financial institutions are advised to eliminate risk assessment protocols entirely.",
+          "Enterprise organizations will no longer monitor macroeconomic trends or regulatory changes."
         ],
         "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: ตัวเลขเงินเฟ้อเกิดขึ้นในขณะที่การกู้ยืมของรัฐบาลสหราชอาณาจักรเพิ่มขึ้นเป็นเกือบ 25 พันล้านปอนด์ในเดือนกันยายน ซึ่งหมายคว..."
       }
     ]
   },
@@ -882,22 +1110,23 @@ window.dailyNewsData = [
     "collection": "daily-news",
     "category": "business",
     "categoryLabel": "World & Business",
-    "categoryTh": "เศรษฐกิจ, ธุรกิจ & รอบโลก",
+    "categoryTh": "เศรษฐกิจ, ธุรกิจ & ข่าวสารรอบโลก",
     "categoryEmoji": "🌐",
     "level": "B2",
     "levelTitle": "Daily News • World & Business",
-    "levelBadge": "B2 • Professional",
+    "levelBadge": "B2 • Business",
     "levelColor": "amber",
     "coverEmoji": "🌐",
     "title": "Meta fined $25bn for 'lies' over user data privacy",
     "titleTh": "Meta ถูกปรับ 25 พันล้านดอลลาร์ฐาน 'โกหก' เรื่องความเป็นส่วนตัวของข้อมูลผู้ใช้",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 78,
+    "estimatedTime": "3 นาที",
+    "readTime": "3 นาที",
+    "wordCount": 150,
     "xpReward": 60,
     "sourceUrl": "https://www.bbc.co.uk/news/articles/cqdr8zxrr3dxo?at_medium=RSS&at_campaign=rss",
-    "summary": "ค่าปรับดังกล่าวถือเป็นค่าปรับที่ใหญ่ที่สุดในปัจจุบันสำหรับเจ้าของ Facebook ซึ่งมากกว่าข้อตกลงมูลค่า 18,000 ล้านดอลลาร์กับแคลิฟอร์เนีย",
+    "sourceName": "BBC Business",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีในอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC ห...",
     "tags": [
       "World & Business",
       "Daily News",
@@ -905,39 +1134,39 @@ window.dailyNewsData = [
     ],
     "keyVocab": [
       {
-        "word": "largest",
-        "ipa": "/largest/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "ใหญ่ที่สุด",
-        "chunk": "largest in context"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "against",
-        "ipa": "/against/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "ขัดต่อ",
-        "chunk": "against in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       },
       {
-        "word": "facebook",
-        "ipa": "/facebook/",
+        "word": "accessibility",
+        "ipa": "/accessibility/",
         "pos": "n.",
-        "th": "เฟสบุ๊ค",
-        "chunk": "facebook in context"
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
       },
       {
-        "word": "larger",
-        "ipa": "/larger/",
+        "word": "account",
+        "ipa": "/account/",
         "pos": "n.",
-        "th": "ใหญ่กว่า",
-        "chunk": "larger in context"
+        "th": "บัญชี",
+        "chunk": "account in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "The fine is the largest to date against Facebook's owner, larger than an $18bn deal with California.",
-        "th": "ค่าปรับดังกล่าวถือเป็นค่าปรับที่ใหญ่ที่สุดในปัจจุบันสำหรับเจ้าของ Facebook ซึ่งมากกว่าข้อตกลงมูลค่า 18,000 ล้านดอลลาร์กับแคลิฟอร์เนีย"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Meta fined $25bn for 'lies' over user data privacy Image source, EPA Image caption, Meta has been hit with numerous legal fines this year",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีในอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน วัฒนธรรมการเดินทาง ดนตรีในอนาคต เสียงสภาพอากาศทีวี ปิดเมนู ข่าว BBC เมนู หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร ธุรกิจเทคโนโลยี วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบ Newsbeat Tech Meta ปรับ $25 พันล้านสำหรับ 'โกหก' เกี่ยวกับความเป็นส่วนตัวของข้อมูลผู้ใช้ แหล่งที่มาของภาพ, EPA คำบรรยายภาพ, Meta ได้รับผลกระทบจากค่าปรับทางกฎหมายจำนวนมากในปีนี้"
       },
       {
         "id": "p2",
@@ -952,364 +1181,147 @@ window.dailyNewsData = [
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this World & Business news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Meta fined $25bn for 'lies' over user data privacy...\"?",
         "options": [
-          "Meta fined $25bn for 'lies' over user data privacy",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Global trade agreements remained entirely unaffected by domestic market fluctuations.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Tech Meta fined $25bn for 'lies' over user data privacy Image source, EPA Image caption, Meta has been hit with numerous legal fines this year.",
+          "Corporate investments ceased across all international markets simultaneously.",
+          "Central banks voted unanimously to eliminate interest rates permanently."
+        ],
+        "correctIndex": 1,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่..."
+      },
+      {
+        "question": "What underlying economic indicator or financial dynamic is highlighted in the analysis?",
+        "options": [
+          "Market volatility ceased completely following government policy announcements.",
+          "Consumer spending shifted exclusively to physical cash transactions.",
+          "Borrowing costs and inflation figures hit their lowest point in thirty years.",
+          "Meta, the company behind Facebook, Instagram and WhatsApp has been hit with the largest ever fine against it for its business practices."
+        ],
+        "correctIndex": 3,
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: Meta บริษัทที่อยู่เบื้องหลัง Facebook, Instagram และ WhatsApp ได้รับผลกระทบจากการดำเนินธุรกิจครั้งใหญ่ที่สุดเท่าที่เคยมี..."
+      },
+      {
+        "question": "What is the expected broader consequence for businesses and economic decision-makers?",
+        "options": [
+          "A judge in New Mexico on Wednesday ordered the company to pay $25bn (£18.",
+          "Market conditions are projected to stay static without any further policy revisions.",
+          "Financial institutions are advised to eliminate risk assessment protocols entirely.",
+          "Enterprise organizations will no longer monitor macroeconomic trends or regulatory changes."
         ],
         "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Meta fined $25bn for 'lies' over user data privacy'"
-      },
-      {
-        "question": "Which of the following statements best aligns with the report?",
-        "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Meta fined $25bn for 'lies' over user da...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
-        ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: ผู้พิพากษาในรัฐนิวเม็กซิโกเมื่อวันพุธสั่งให้บริษัทจ่ายเงิน 25,000 ล้านดอลลาร์ (18.6 พันล้านปอนด์) ภายหลังการพิจารณาคดีสอ..."
       }
     ]
   },
   {
-    "id": "news-life_science-01",
+    "id": "news-business-04",
     "collection": "daily-news",
-    "category": "life_science",
-    "categoryLabel": "Daily Life & Science",
-    "categoryTh": "ชีวิตประจำวัน, วิทยาศาสตร์ & นวัตกรรม",
-    "categoryEmoji": "🔬",
-    "level": "A2",
-    "levelTitle": "Daily News • Daily Life & Science",
-    "levelBadge": "A2 • Elementary",
-    "levelColor": "emerald",
-    "coverEmoji": "🔬",
-    "title": "Fuel leak which killed fish in River Taff stopped",
-    "titleTh": "น้ำมันรั่วที่คร่าชีวิตปลาในแม่น้ำทาฟหยุดแล้ว",
+    "category": "business",
+    "categoryLabel": "World & Business",
+    "categoryTh": "เศรษฐกิจ, ธุรกิจ & ข่าวสารรอบโลก",
+    "categoryEmoji": "🌐",
+    "level": "B2",
+    "levelTitle": "Daily News • World & Business",
+    "levelBadge": "B2 • Business",
+    "levelColor": "amber",
+    "coverEmoji": "🌐",
+    "title": "Burnham proposes plan to cut standing charges from gas bills",
+    "titleTh": "เบิร์นแฮมเสนอแผนลดค่าธรรมเนียมยืนจากบิลค่าน้ำมัน",
     "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 70,
+    "estimatedTime": "4 นาที",
+    "readTime": "4 นาที",
+    "wordCount": 188,
     "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/news/articles/c6y8lvxzp59vo?at_medium=RSS&at_campaign=rss",
-    "summary": "ก่อนหน้านี้ GE Aerospace ยืนยันว่าเชื้อเพลิงลงสู่แม่น้ำในขณะที่มีการซ่อมแซมในบริเวณใกล้เคียง",
+    "sourceUrl": "https://www.bbc.co.uk/news/articles/cw0541p65dyzo?at_medium=RSS&at_campaign=rss",
+    "sourceName": "BBC Business",
+    "summary": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีในอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC ห...",
     "tags": [
-      "Daily Life & Science",
+      "World & Business",
       "Daily News",
-      "A2"
+      "B2"
     ],
     "keyVocab": [
       {
-        "word": "aerospace",
-        "ipa": "/aerospace/",
+        "ipa": "/ɪnˈtelɪdʒəns/",
         "pos": "n.",
-        "th": "การบินและอวกาศ",
-        "chunk": "aerospace in context"
+        "th": "เชาวน์ปัญญา, ระบบอัจฉริยะ",
+        "chunk": "artificial intelligence",
+        "word": "intelligence"
       },
       {
-        "word": "previously",
-        "ipa": "/previously/",
+        "word": "homepage",
+        "ipa": "/homepage/",
         "pos": "n.",
-        "th": "ก่อนหน้านี้",
-        "chunk": "previously in context"
+        "th": "หน้าแรก",
+        "chunk": "homepage in context"
       },
       {
-        "word": "confirmed",
-        "ipa": "/confirmed/",
+        "word": "content",
+        "ipa": "/content/",
         "pos": "n.",
-        "th": "ยืนยันแล้ว",
-        "chunk": "confirmed in context"
+        "th": "เนื้อหา",
+        "chunk": "content in context"
       },
       {
-        "word": "repair",
-        "ipa": "/repair/",
+        "word": "accessibility",
+        "ipa": "/accessibility/",
         "pos": "n.",
-        "th": "ซ่อมแซม",
-        "chunk": "repair in context"
+        "th": "การเข้าถึง",
+        "chunk": "accessibility in context"
       }
     ],
     "paragraphs": [
       {
         "id": "p1",
-        "en": "GE Aerospace previously confirmed fuel got into the river while repair work took place nearby.",
-        "th": "ก่อนหน้านี้ GE Aerospace ยืนยันว่าเชื้อเพลิงลงสู่แม่น้ำในขณะที่มีการซ่อมแซมในบริเวณใกล้เคียง"
+        "en": "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Burnham proposes plan to cut standing charges from gas bills Image source, Getty Images By Tom Espiner , Ben King , Business reporters and Kevin Peachey , Cost of living correspondent Published 54 minutes ago Prime Minister Andy Burnham has asked ministers to develop a plan to remove standing charges from gas bills.",
+        "th": "หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่องเที่ยว วัฒนธรรม ดนตรีในอนาคต ทีวี สภาพอากาศ เสียง เมนูเพิ่มเติม ค้นหา BBC หน้าแรก ข่าว กีฬา Earth Reel Worklife วัฒนธรรมการเดินทาง ดนตรีในอนาคต เสียงสภาพอากาศทีวี ปิดเมนู ข่าว BBC เมนู หน้าแรก สภาพภูมิอากาศ โลก เอเชีย สหราชอาณาจักร ธุรกิจเทคโนโลยี วิทยาศาสตร์ ความบันเทิงและศิลปะ สุขภาพ เพิ่มเติมในรูปภาพ BBC ตรวจสอบธุรกิจ Newsbeat เทคโนโลยีเศรษฐกิจเทคโนโลยีใหม่ เส้นทางสู่ความสำเร็จ ปัญญาประดิษฐ์ Burnham เสนอแผนเพื่อลดค่าใช้จ่ายยืนจากบิลค่าก๊าซ ผู้สื่อข่าว และ เควิน พีชชีย์ นักข่าวค่าครองชีพ เผยแพร่เมื่อ 54 นาทีที่แล้ว นายกรัฐมนตรี แอนดี เบิร์นแฮม ได้ขอให้บรรดารัฐมนตรีพัฒนาแผนยกเลิกค่าธรรมเนียมยืนออกจากบิลค่าน้ำมัน"
       },
       {
         "id": "p2",
-        "en": "A fuel leak in the River Taff which killed fish and sparked a warning for people to shut their windows has now stopped, official have said.",
-        "th": "เจ้าหน้าที่เผยว่า เหตุน้ำมันเชื้อเพลิงรั่วในแม่น้ำทาฟฟ์ ซึ่งทำให้ปลาตายและเตือนให้ประชาชนปิดหน้าต่างได้หยุดแล้ว"
+        "en": "These are fixed daily fees that cover the costs of connecting to a supply. They vary by region and households must still pay them even when energy is not being used.",
+        "th": "เหล่านี้เป็นค่าธรรมเนียมรายวันคงที่ซึ่งครอบคลุมค่าใช้จ่ายในการเชื่อมต่อกับแหล่งจ่าย โดยจะแตกต่างกันไปตามภูมิภาค และครัวเรือนยังคงต้องจ่ายแม้ว่าจะไม่ได้ใช้พลังงานก็ตาม"
       },
       {
         "id": "p3",
-        "en": "Officers from Natural Resources Wales (NRW) on Wedneaday the source of the pollution affecting the Taff in places such as Nantgarw, Treforest and Taffs Well since 16 October over.",
-        "th": "เจ้าหน้าที่จากทรัพยากรธรรมชาติเวลส์ (NRW) ในวันพุธแหล่งที่มาของมลพิษที่ส่งผลกระทบต่อ Taff ในสถานที่เช่น Nantgarw, Treforest และ Taffs Well ตั้งแต่วันที่ 16 ตุลาคมเป็นต้นไป"
+        "en": "Industry body Energy UK said whether the proposed changes would make a difference to bills would depend on how or where the charges were reallocated on the bill.",
+        "th": "หน่วยงานอุตสาหกรรม Energy UK กล่าวว่าการเปลี่ยนแปลงที่เสนอจะสร้างความแตกต่างให้กับใบเรียกเก็บเงินหรือไม่นั้นขึ้นอยู่กับวิธีการหรือตำแหน่งที่ค่าธรรมเนียมถูกจัดสรรใหม่ในใบเรียกเก็บเงิน"
       }
     ],
     "quiz": [
       {
-        "question": "What is the main subject discussed in this Daily Life & Science news report?",
+        "question": "According to the report, what is the central development or challenge regarding \"Burnham proposes plan to cut standing charges from...\"?",
         "options": [
-          "Fuel leak which killed fish in River Taff stopped",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Central banks voted unanimously to eliminate interest rates permanently.",
+          "Global trade agreements remained entirely unaffected by domestic market fluctuations.",
+          "BBC Homepage Skip to content Accessibility Help Your account Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds More menu More menu Search BBC Home News Sport Earth Reel Worklife Travel Culture Future Music TV Weather Sounds Close menu BBC News Menu Home Climate World Asia UK Business Tech Science Entertainment & Arts Health More In Pictures BBC Verify Newsbeat Business New Tech Economy Technology of Business Artificial Intelligence Paths to Success Burnham proposes plan to cut standing charges from gas bills Image source, Getty Images By Tom Espiner , Ben King , Business reporters and Kevin Peachey , Cost of living correspondent Published 54 minutes ago Prime Minister Andy Burnham has asked ministers to develop a plan to remove standing charges from gas bills.",
+          "Corporate investments ceased across all international markets simultaneously."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Fuel leak which killed fish in River Taff stopped'"
+        "correctIndex": 2,
+        "explanation": "ตามเนื้อหาข่าวในส่วนแรกระบุว่า: หน้าแรกของ BBC ข้ามไปที่เนื้อหา การช่วยเหลือพิเศษ ช่วยเหลือ บัญชีของคุณ หน้าแรก ข่าว กีฬา Earth Reel ชีวิตการทำงาน การท่..."
       },
       {
-        "question": "Which of the following statements best aligns with the report?",
+        "question": "What underlying economic indicator or financial dynamic is highlighted in the analysis?",
         "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Fuel leak which killed fish in River Taf...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
+          "Borrowing costs and inflation figures hit their lowest point in thirty years.",
+          "These are fixed daily fees that cover the costs of connecting to a supply.",
+          "Consumer spending shifted exclusively to physical cash transactions.",
+          "Market volatility ceased completely following government policy announcements."
         ],
         "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
-      }
-    ]
-  },
-  {
-    "id": "news-life_science-02",
-    "collection": "daily-news",
-    "category": "life_science",
-    "categoryLabel": "Daily Life & Science",
-    "categoryTh": "ชีวิตประจำวัน, วิทยาศาสตร์ & นวัตกรรม",
-    "categoryEmoji": "🔬",
-    "level": "A2",
-    "levelTitle": "Daily News • Daily Life & Science",
-    "levelBadge": "A2 • Elementary",
-    "levelColor": "emerald",
-    "coverEmoji": "🔬",
-    "title": "Will Jackdaw cut your energy bills?",
-    "titleTh": "Jackdaw จะลดค่าไฟของคุณหรือไม่?",
-    "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 64,
-    "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/news/videos/cqvg0ke2v9njo?at_medium=RSS&at_campaign=rss",
-    "summary": "Ben Chu จาก BBC Verify อธิบายว่าทำไมราคาพลังงานถึงสูงมาก และ Jackdaw อาจมีความหมายต่อค่าใช้จ่ายของคุณอย่างไร",
-    "tags": [
-      "Daily Life & Science",
-      "Daily News",
-      "A2"
-    ],
-    "keyVocab": [
-      {
-        "word": "verify",
-        "ipa": "/verify/",
-        "pos": "n.",
-        "th": "ตรวจสอบ",
-        "chunk": "verify in context"
+        "explanation": "จากรายละเอียดเชิงลึกในบทความระบุว่า: เหล่านี้เป็นค่าธรรมเนียมรายวันคงที่ซึ่งครอบคลุมค่าใช้จ่ายในการเชื่อมต่อกับแหล่งจ่าย โดยจะแตกต่างกันไปตามภูมิภาค และครัวเ..."
       },
       {
-        "word": "explains",
-        "ipa": "/explains/",
-        "pos": "n.",
-        "th": "อธิบาย",
-        "chunk": "explains in context"
-      },
-      {
-        "word": "energy",
-        "ipa": "/energy/",
-        "pos": "n.",
-        "th": "พลังงาน",
-        "chunk": "energy in context"
-      },
-      {
-        "word": "prices",
-        "ipa": "/prices/",
-        "pos": "n.",
-        "th": "ราคา",
-        "chunk": "prices in context"
-      }
-    ],
-    "paragraphs": [
-      {
-        "id": "p1",
-        "en": "BBC Verify's Ben Chu explains why energy prices are so high, and what Jackdaw could mean for your bills.",
-        "th": "Ben Chu จาก BBC Verify อธิบายว่าทำไมราคาพลังงานถึงสูงมาก และ Jackdaw อาจมีความหมายต่อค่าใช้จ่ายของคุณอย่างไร"
-      },
-      {
-        "id": "p2",
-        "en": "CloseThe UK government has approved production from the Jackdaw gas field in the North Sea.",
-        "th": "Closeรัฐบาลสหราชอาณาจักรได้อนุมัติการผลิตจากแหล่งก๊าซ Jackdaw ในทะเลเหนือ"
-      },
-      {
-        "id": "p3",
-        "en": "Ministers said the first gas could be produced by the end of this month, helping heat millions of homes, and also announced the creation of a new energy wealth fund.",
-        "th": "บรรดารัฐมนตรีกล่าวว่าก๊าซชนิดแรกสามารถผลิตได้ภายในสิ้นเดือนนี้ ซึ่งจะช่วยให้บ้านเรือนหลายล้านหลังได้รับความร้อน และยังประกาศจัดตั้งกองทุนความมั่งคั่งด้านพลังงานใหม่อีกด้วย"
-      }
-    ],
-    "quiz": [
-      {
-        "question": "What is the main subject discussed in this Daily Life & Science news report?",
+        "question": "What is the expected broader consequence for businesses and economic decision-makers?",
         "options": [
-          "Will Jackdaw cut your energy bills?",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
+          "Financial institutions are advised to eliminate risk assessment protocols entirely.",
+          "Enterprise organizations will no longer monitor macroeconomic trends or regulatory changes.",
+          "Industry body Energy UK said whether the proposed changes would make a difference to bills would depend on how or where the charges were reallocated on the bill.",
+          "Market conditions are projected to stay static without any further policy revisions."
         ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Will Jackdaw cut your energy bills?'"
-      },
-      {
-        "question": "Which of the following statements best aligns with the report?",
-        "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Will Jackdaw cut your energy bills?...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
-        ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
-      }
-    ]
-  },
-  {
-    "id": "news-life_science-03",
-    "collection": "daily-news",
-    "category": "life_science",
-    "categoryLabel": "Daily Life & Science",
-    "categoryTh": "ชีวิตประจำวัน, วิทยาศาสตร์ & นวัตกรรม",
-    "categoryEmoji": "🔬",
-    "level": "A2",
-    "levelTitle": "Daily News • Daily Life & Science",
-    "levelBadge": "A2 • Elementary",
-    "levelColor": "emerald",
-    "coverEmoji": "🔬",
-    "title": "Orionid meteor shower to peak in UK skies into Thursday",
-    "titleTh": "ฝนดาวตกโอไรโอนิดส์ ปกคลุมท้องฟ้าอังกฤษถึงวันพฤหัสบดี",
-    "publishedDate": "2026-10-22",
-    "estimatedTime": "2 นาที",
-    "readTime": "2 นาที",
-    "wordCount": 69,
-    "xpReward": 60,
-    "sourceUrl": "https://www.bbc.co.uk/weather/articles/cm17knj9kpv8o?at_medium=RSS&at_campaign=rss",
-    "summary": "ท้องฟ้าแจ่มใส นักดูท้องฟ้าสามารถมองเห็นอุกกาบาตได้มากถึง 10-20 ดวงต่อชั่วโมงในช่วงที่ฝนจะตกสูงสุดในสัปดาห์นี้",
-    "tags": [
-      "Daily Life & Science",
-      "Daily News",
-      "A2"
-    ],
-    "keyVocab": [
-      {
-        "word": "permitting",
-        "ipa": "/permitting/",
-        "pos": "n.",
-        "th": "อนุญาต",
-        "chunk": "permitting in context"
-      },
-      {
-        "word": "skygazers",
-        "ipa": "/skygazers/",
-        "pos": "n.",
-        "th": "นักดูท้องฟ้า",
-        "chunk": "skygazers in context"
-      },
-      {
-        "word": "meteors",
-        "ipa": "/meteors/",
-        "pos": "n.",
-        "th": "อุกกาบาต",
-        "chunk": "meteors in context"
-      },
-      {
-        "word": "shower",
-        "ipa": "/shower/",
-        "pos": "n.",
-        "th": "อาบน้ำ",
-        "chunk": "shower in context"
-      }
-    ],
-    "paragraphs": [
-      {
-        "id": "p1",
-        "en": "Clear skies permitting, skygazers could be able to spot as many as 10-20 meteors per hour as the shower peaks this week.",
-        "th": "ท้องฟ้าแจ่มใส นักดูท้องฟ้าสามารถมองเห็นอุกกาบาตได้มากถึง 10-20 ดวงต่อชั่วโมงในช่วงที่ฝนจะตกสูงสุดในสัปดาห์นี้"
-      },
-      {
-        "id": "p2",
-        "en": "Skygazers could spot between 10 and 20 meteors per hour as the celestial spectacle reaches its zenith.",
-        "th": "Skygazers สามารถมองเห็นอุกกาบาตได้ประมาณ 10 ถึง 20 ดวงต่อชั่วโมงเมื่อปรากฏการณ์ท้องฟ้ามาถึงจุดสุดยอด"
-      },
-      {
-        "id": "p3",
-        "en": "However clear skies will be needed to see the display and, while some parts of the UK should get a glimpse, cloud and rain may bring frustration in some areas.",
-        "th": "อย่างไรก็ตาม แม้ว่าท้องฟ้าจะต้องสดใสจึงจะสามารถมองเห็นจอแสดงผลได้ และแม้ว่าบางส่วนของสหราชอาณาจักรควรจะได้มองเห็นบ้าง แต่เมฆและฝนก็อาจทำให้บางพื้นที่เกิดความคับข้องใจได้"
-      }
-    ],
-    "quiz": [
-      {
-        "question": "What is the main subject discussed in this Daily Life & Science news report?",
-        "options": [
-          "Orionid meteor shower to peak in UK skies into Thursday",
-          "An unrelated historical documentary",
-          "A technical breakdown of space exploration",
-          "A personal travel blog entry"
-        ],
-        "correctIndex": 0,
-        "explanation": "ประเด็นหลักของข่าวนี้คือเรื่อง 'Orionid meteor shower to peak in UK skies into Thursday'"
-      },
-      {
-        "question": "Which of the following statements best aligns with the report?",
-        "options": [
-          "The event had zero impact on the organization or public",
-          "Key developments occurred recently regarding Orionid meteor shower to peak in UK skie...",
-          "All activities have been permanently terminated without explanation",
-          "The report mentions no factual details or current status"
-        ],
-        "correctIndex": 1,
-        "explanation": "เนื้อหาข่าวรายงานถึงความคืบหน้าและเหตุการณ์สำคัญที่เพิ่งเกิดขึ้น"
-      },
-      {
-        "question": "What is the recommended takeaway for English learners reading this article?",
-        "options": [
-          "Memorize only isolated grammatical suffixes",
-          "Notice sentence connectors and specialized vocabulary in context",
-          "Ignore the factual context and read word-for-word",
-          "Avoid practicing pronunciation with audio"
-        ],
-        "correctIndex": 1,
-        "explanation": "การฝึกอ่านข่าวช่วยให้เราสังเกตการใช้คำเชื่อมและคำศัพท์เฉพาะทางในบริบทจริงได้อย่างเป็นธรรมชาติ"
+        "correctIndex": 2,
+        "explanation": "บทสรุปและข้อคิดสำคัญระบุไว้ว่า: หน่วยงานอุตสาหกรรม Energy UK กล่าวว่าการเปลี่ยนแปลงที่เสนอจะสร้างความแตกต่างให้กับใบเรียกเก็บเงินหรือไม่นั้นขึ้นอยู่กับว..."
       }
     ]
   }

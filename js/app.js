@@ -81,6 +81,19 @@ class EngMasteryApp {
       this.readingFontSize = "base";
       this.readingQuizAnswers = {};
       this.readingQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_reading_quizzes") || "{}");
+      // Dedicated Daily News State
+      this.activeNewsArticleId = null;
+      this.newsCategoryFilter = "all";
+      this.newsSearchQuery = "";
+      this.newsPage = 1;
+      this.newsItemsPerPage = 9;
+      this.newsTtsPlaying = false;
+      this.newsTtsIndex = null;
+      this.newsTtsRate = 1.0;
+      this.showNewsThai = true;
+      this.newsFontSize = "base";
+      this.newsQuizAnswers = {};
+      this.newsQuizSubmitted = JSON.parse(localStorage.getItem("engmastery_news_quizzes") || "{}");
       this.onlineVocabCache = JSON.parse(localStorage.getItem("engmastery_online_vocab_cache") || "{}");
       this.vocabIndex = null;
     } catch (e) {
@@ -111,6 +124,19 @@ class EngMasteryApp {
       this.readingFontSize = "base";
       this.readingQuizAnswers = {};
       this.readingQuizSubmitted = {};
+      // Dedicated Daily News State
+      this.activeNewsArticleId = null;
+      this.newsCategoryFilter = "all";
+      this.newsSearchQuery = "";
+      this.newsPage = 1;
+      this.newsItemsPerPage = 9;
+      this.newsTtsPlaying = false;
+      this.newsTtsIndex = null;
+      this.newsTtsRate = 1.0;
+      this.showNewsThai = true;
+      this.newsFontSize = "base";
+      this.newsQuizAnswers = {};
+      this.newsQuizSubmitted = {};
       this.onlineVocabCache = {};
       this.vocabIndex = null;
     }
@@ -240,6 +266,9 @@ class EngMasteryApp {
     if (viewName === "reading-lab") {
       this.activeReadingArticleId = params.articleId !== undefined ? params.articleId : null;
     }
+    if (viewName === "news") {
+      this.activeNewsArticleId = params.articleId !== undefined ? params.articleId : null;
+    }
     if (viewName === "articles") {
       this.activeArticleId = params.articleId !== undefined ? params.articleId : null;
     }
@@ -252,6 +281,7 @@ class EngMasteryApp {
 
     // Stop active audio if switching away or to another article
     this.stopReadingTts();
+    this.stopNewsTts();
 
     this.renderView(viewName);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -273,6 +303,9 @@ class EngMasteryApp {
         break;
       case "reading-lab":
         this.renderReadingLabView(container, this.activeReadingArticleId);
+        break;
+      case "news":
+        this.renderNewsView(container, this.activeNewsArticleId);
         break;
       case "articles":
         this.renderArticlesView(container, this.activeArticleId);
@@ -5077,19 +5110,12 @@ class EngMasteryApp {
   getReadingList() {
     const base = window.readingData || [];
     const stories = window.shortStoriesData || [];
-    const news = window.dailyNewsData || [];
     const idSet = new Set(base.map(a => a.id));
     const merged = [...base];
     for (const s of stories) {
       if (!idSet.has(s.id)) {
         merged.push(s);
         idSet.add(s.id);
-      }
-    }
-    for (const n of news) {
-      if (!idSet.has(n.id)) {
-        merged.push(n);
-        idSet.add(n.id);
       }
     }
     return merged;
@@ -5124,14 +5150,6 @@ class EngMasteryApp {
     if (container) this.renderReadingListing(container, this.getReadingList());
   }
 
-  setReadingNewsCategory(cat) {
-    this.readingNewsCategoryFilter = cat;
-    this.readingPage = 1;
-    window.soundFx.playClick();
-    const container = document.getElementById("main-content-view");
-    if (container) this.renderReadingListing(container, this.getReadingList());
-  }
-
   setReadingSearch(query) {
     this.readingSearchQuery = query;
     this.readingPage = 1;
@@ -5155,21 +5173,15 @@ class EngMasteryApp {
 
   renderReadingListing(container, readingList) {
     const collectionFilter = this.readingCollectionFilter || "all";
-    const newsCategoryFilter = this.readingNewsCategoryFilter || "all";
     const levelFilter = this.selectedReadingLevel || "all";
     const searchQuery = (this.readingSearchQuery || "").trim().toLowerCase();
 
-    // 1. Filter by collection & category
+    // 1. Filter by collection
     let list = readingList;
     if (collectionFilter === "100-short-stories") {
       list = list.filter(a => a.collection === "100-short-stories");
     } else if (collectionFilter === "tech-cefr") {
-      list = list.filter(a => a.collection !== "100-short-stories" && a.collection !== "daily-news");
-    } else if (collectionFilter === "daily-news") {
-      list = list.filter(a => a.collection === "daily-news");
-      if (newsCategoryFilter !== "all") {
-        list = list.filter(a => a.category === newsCategoryFilter);
-      }
+      list = list.filter(a => a.collection !== "100-short-stories");
     }
 
     // 2. Filter by level
@@ -5191,8 +5203,7 @@ class EngMasteryApp {
     // Counts for UI badges
     const totalAll = readingList.length;
     const storiesCount = readingList.filter(a => a.collection === "100-short-stories").length;
-    const techCount = readingList.filter(a => a.collection !== "100-short-stories" && a.collection !== "daily-news").length;
-    const newsCount = readingList.filter(a => a.collection === "daily-news").length;
+    const techCount = readingList.filter(a => a.collection !== "100-short-stories").length;
     const completedCount = Object.values(this.readingQuizSubmitted).filter(r => r && r.passed).length;
     const totalXPFromReading = Object.values(this.readingQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
 
@@ -5211,7 +5222,7 @@ class EngMasteryApp {
           <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="max-w-xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-3">
-                <span>📖 Graded Reading, Short Stories & Daily News</span>
+                <span>📖 Graded Reading & 100 Short Stories</span>
                 <span>•</span>
                 <span>${totalAll} เรื่อง & บทความ</span>
               </div>
@@ -5219,7 +5230,7 @@ class EngMasteryApp {
                 ห้องฝึกการอ่าน (Reading Lab)
               </h1>
               <p class="mt-2 text-emerald-100 text-xs sm:text-sm leading-relaxed">
-                ฝึกอ่านเรื่องสั้นและข่าวสรุปภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! อัปเดตข่าวจริง 4 หมวด (Tech & DevOps, World & Business, Daily Life & Science, Sport แมนยู), นิทาน <strong>100 Short Stories</strong> และบทความ CEFR พร้อมระบบเสียงอ่าน Audio TTS, คำแปลไทย และควิซสะสม XP
+                ฝึกอ่านเรื่องสั้นภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! ครอบคลุมทั้งชุด <strong>100 English Short Stories</strong> สอดแทรกคำศัพท์ใช้งานจริง และบทความ CEFR A1–C2 พร้อมระบบเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซสะสม XP
               </p>
             </div>
 
@@ -5254,14 +5265,6 @@ class EngMasteryApp {
               }">
               🌟 ทั้งหมด (${totalAll})
             </button>
-            <button onclick="window.app.setReadingCollection('daily-news')"
-              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
-                collectionFilter === 'daily-news'
-                  ? 'bg-rose-600 text-white shadow-md'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }">
-              📰 ข่าวสรุปประจำวัน (${newsCount})
-            </button>
             <button onclick="window.app.setReadingCollection('100-short-stories')"
               class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
                 collectionFilter === '100-short-stories'
@@ -5279,29 +5282,6 @@ class EngMasteryApp {
               💼 Tech & Workplace CEFR (${techCount})
             </button>
           </div>
-
-          <!-- Daily News Sub-Category Chips -->
-          ${collectionFilter === 'daily-news' ? `
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0 mr-1">หมวดข่าว:</span>
-              ${[
-                { id: "all", label: "📰 ทั้งหมด", count: newsCount },
-                { id: "tech", label: "💻 Tech & DevOps", count: readingList.filter(a => a.collection === "daily-news" && a.category === "tech").length },
-                { id: "business", label: "🌐 World & Business", count: readingList.filter(a => a.collection === "daily-news" && a.category === "business").length },
-                { id: "life_science", label: "🔬 Life & Science", count: readingList.filter(a => a.collection === "daily-news" && a.category === "life_science").length },
-                { id: "sport", label: "⚽ Sport (แมนยู)", count: readingList.filter(a => a.collection === "daily-news" && a.category === "sport").length }
-              ].map(cat => `
-                <button onclick="window.app.setReadingNewsCategory('${cat.id}')"
-                  class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
-                    newsCategoryFilter === cat.id
-                      ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-400/40'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                  }">
-                  ${cat.label} (${cat.count})
-                </button>
-              `).join("")}
-            </div>
-          ` : ''}
 
           <!-- Level Filter & Search Bar in one row -->
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800/80">
@@ -6053,6 +6033,798 @@ class EngMasteryApp {
     const article = articles.find(a => a.id === articleId);
     if (container && article) {
       this.renderReadingArticleDetail(container, article);
+    }
+  }
+
+  // =========================================================================
+  // VIEW: DAILY NEWS (DEVOPS, TECH & WORLD BUSINESS)
+  // =========================================================================
+  getNewsList() {
+    return window.dailyNewsData || [];
+  }
+
+  setNewsCategory(cat) {
+    this.newsCategoryFilter = cat;
+    this.newsPage = 1;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderNewsListing(container);
+  }
+
+  setNewsSearch(query) {
+    this.newsSearchQuery = query;
+    this.newsPage = 1;
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderNewsListing(container);
+    const searchInput = document.getElementById("news-search-input");
+    if (searchInput) {
+      searchInput.focus();
+      const valLen = searchInput.value.length;
+      searchInput.setSelectionRange(valLen, valLen);
+    }
+  }
+
+  setNewsPage(page) {
+    this.newsPage = page;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderNewsListing(container);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  renderNewsView(container, articleId) {
+    const newsList = this.getNewsList();
+    if (articleId) {
+      const article = newsList.find(a => a.id === articleId) || newsList[0];
+      this.renderNewsArticleDetail(container, article);
+    } else {
+      this.renderNewsListing(container);
+    }
+  }
+
+  renderNewsListing(container) {
+    const newsList = this.getNewsList();
+    const catFilter = this.newsCategoryFilter || "all";
+    const searchQuery = (this.newsSearchQuery || "").trim().toLowerCase();
+
+    // 1. Filter by category
+    let list = newsList;
+    if (catFilter !== "all") {
+      list = list.filter(a => a.category === catFilter);
+    }
+
+    // 2. Filter by search query
+    if (searchQuery) {
+      list = list.filter(a => {
+        const titleMatch = (a.title || "").toLowerCase().includes(searchQuery);
+        const titleThMatch = (a.titleTh || "").toLowerCase().includes(searchQuery);
+        const summaryMatch = (a.summary || "").toLowerCase().includes(searchQuery);
+        const vocabMatch = (a.keyVocab || []).some(v => (v.word || "").toLowerCase().includes(searchQuery) || (v.th || "").toLowerCase().includes(searchQuery));
+        return titleMatch || titleThMatch || summaryMatch || vocabMatch;
+      });
+    }
+
+    // Counts for UI
+    const totalAll = newsList.length;
+    const devopsCount = newsList.filter(a => a.category === "devops").length;
+    const techCount = newsList.filter(a => a.category === "tech").length;
+    const businessCount = newsList.filter(a => a.category === "business").length;
+    const completedCount = Object.values(this.newsQuizSubmitted).filter(r => r && r.passed).length;
+    const totalXPFromNews = Object.values(this.newsQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
+
+    // Pagination
+    const itemsPerPage = this.newsItemsPerPage || 9;
+    const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+    const currentPage = Math.max(1, Math.min(this.newsPage || 1, totalPages));
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = list.slice(startIndex, startIndex + itemsPerPage);
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
+        <!-- Header Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-8 shadow-xl">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-400/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-3">
+                <span>📰 Daily Technical & Global News</span>
+                <span>•</span>
+                <span>${totalAll} บทความข่าวเจาะลึก</span>
+              </div>
+              <h1 class="text-2xl sm:text-3xl font-black tracking-tight">
+                ข่าวสรุปภาษาอังกฤษรายวัน (Daily News)
+              </h1>
+              <p class="mt-2 text-cyan-100 text-xs sm:text-sm leading-relaxed">
+                อัปเดตข่าวจริงเชิงลึก 3 หมวดหมู่หลัก: <strong>🛠️ DevOps & Cloud Native</strong> (CNCF, Dev.to, Reddit), <strong>💻 Tech & AI Innovation</strong> และ <strong>🌐 World & Business</strong> พร้อมคำแปลไทยคู่ขนาน เสียงอ่าน Audio TTS คำศัพท์เฉพาะทาง และแบบทดสอบความเข้าใจอิงเนื้อหาจริง
+              </p>
+            </div>
+
+            <!-- Stats Box -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl md:w-56 shrink-0 flex flex-col justify-between">
+              <div>
+                <span class="text-xs uppercase text-cyan-200 font-medium">ความคืบหน้าการอ่านข่าว</span>
+                <div class="text-2xl font-black mt-1 text-white flex items-center gap-2">
+                  <span>${completedCount} / ${totalAll}</span>
+                  <span class="text-xs font-normal px-2 py-0.5 rounded bg-cyan-500/80 text-white">ข่าว</span>
+                </div>
+                <p class="text-xs text-cyan-200 mt-1">รับไปแล้ว +${totalXPFromNews} XP</p>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/10">
+                <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+                  <div class="bg-cyan-400 h-full rounded-full transition-all duration-500" style="width: ${Math.round((completedCount / (totalAll || 1)) * 100)}%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Control Panel -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
+          <!-- Category Tabs -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1">
+              <button onclick="window.app.setNewsCategory('all')"
+                class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                  catFilter === 'all'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }">
+                🌟 ทั้งหมด (${totalAll})
+              </button>
+              <button onclick="window.app.setNewsCategory('devops')"
+                class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                  catFilter === 'devops'
+                    ? 'bg-cyan-600 text-white shadow-md ring-2 ring-cyan-400/40'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }">
+                🛠️ DevOps & Cloud Native (${devopsCount})
+              </button>
+              <button onclick="window.app.setNewsCategory('tech')"
+                class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                  catFilter === 'tech'
+                    ? 'bg-indigo-600 text-white shadow-md ring-2 ring-indigo-400/40'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }">
+                💻 Tech & AI (${techCount})
+              </button>
+              <button onclick="window.app.setNewsCategory('business')"
+                class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                  catFilter === 'business'
+                    ? 'bg-amber-600 text-white shadow-md ring-2 ring-amber-400/40'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }">
+                🌐 World & Business (${businessCount})
+              </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative min-w-[240px] md:w-64">
+              <input type="text" id="news-search-input"
+                placeholder="🔍 ค้นหาหัวข้อข่าว, เครื่องมือ..."
+                value="${this.newsSearchQuery || ''}"
+                oninput="window.app.setNewsSearch(this.value)"
+                class="w-full px-3.5 py-1.5 pl-8 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">🔍</span>
+              ${this.newsSearchQuery ? `
+                <button onclick="window.app.setNewsSearch('')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs">✕</button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Status -->
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+          <span>พบ <strong>${list.length}</strong> บทความข่าว ${list.length > 0 ? `(${startIndex + 1} - ${Math.min(startIndex + itemsPerPage, list.length)} จากทั้งหมด ${list.length})` : ''}</span>
+          ${totalPages > 1 ? `<span>หน้า ${currentPage} / ${totalPages}</span>` : ''}
+        </div>
+
+        <!-- News Articles Grid -->
+        ${list.length === 0 ? `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <span class="text-4xl">🔍</span>
+            <h3 class="text-base font-bold text-slate-700 dark:text-slate-200">ไม่พบบทความข่าวที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-400">ลองค้นหาด้วยคำอื่น หรือกด "ทั้งหมด" เพื่อดูข่าวทั้งหมด</p>
+            <button onclick="window.app.setNewsSearch(''); window.app.setNewsCategory('all');"
+              class="px-4 py-2 rounded-xl bg-cyan-600 text-white text-xs font-bold shadow-md hover:bg-cyan-700 transition-all">
+              ล้างการค้นหา
+            </button>
+          </div>
+        ` : `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            ${paginatedItems.map(art => {
+              const quizRecord = this.newsQuizSubmitted[art.id];
+              const isPassed = quizRecord && quizRecord.passed;
+
+              const badgeColors = {
+                devops: "bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800",
+                tech: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800",
+                business: "bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800"
+              }[art.category] || "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200";
+
+              return `
+                <div onclick="window.app.navigateTo('news', { articleId: '${art.id}' })"
+                  class="bg-white dark:bg-slate-900 border ${isPassed ? 'border-emerald-300 dark:border-emerald-800/80 shadow-emerald-500/5' : 'border-slate-200 dark:border-slate-800'} rounded-3xl p-6 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer flex flex-col justify-between space-y-4 group">
+                  
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-2xl">${art.coverEmoji || '📰'}</span>
+                        <span class="px-2 py-0.5 rounded-xl text-[10px] font-bold border ${badgeColors}">
+                          ${art.categoryLabel}
+                        </span>
+                        ${art.sourceName ? `
+                          <span class="px-2 py-0.5 rounded-xl text-[9px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                            ${art.sourceName}
+                          </span>
+                        ` : ''}
+                      </div>
+
+                      ${isPassed ? `
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800 shrink-0">
+                          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                          <span>ผ่านแล้ว</span>
+                        </span>
+                      ` : `
+                        <span class="px-2 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 text-[10px] font-bold shrink-0">
+                          ✨ +${art.xpReward || 60} XP
+                        </span>
+                      `}
+                    </div>
+
+                    <div>
+                      <h2 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors line-clamp-2">
+                        ${art.title}
+                      </h2>
+                      <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 line-clamp-2">
+                        ${art.titleTh}
+                      </p>
+                    </div>
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                      ${art.summary}
+                    </p>
+
+                    <!-- Key vocab tags -->
+                    <div class="flex flex-wrap gap-1 pt-1">
+                      ${(art.keyVocab || []).slice(0, 3).map(v => `
+                        <span class="px-2 py-0.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[10px] font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                          🔑 ${v.word} (${v.th})
+                        </span>
+                      `).join("")}
+                    </div>
+                  </div>
+
+                  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                    <div class="flex items-center gap-2">
+                      <span>⏱️ ${art.estimatedTime || art.readTime || '3 นาที'}</span>
+                      <span>•</span>
+                      <span>📝 ${art.wordCount} คำ</span>
+                    </div>
+                    <span class="font-bold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span>อ่านข่าวเจาะลึก</span>
+                      <span>➔</span>
+                    </span>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `}
+
+        <!-- Pagination Controls -->
+        ${totalPages > 1 ? `
+          <div class="flex items-center justify-center gap-2 pt-4">
+            <button onclick="window.app.setNewsPage(${currentPage - 1})"
+              ${currentPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-400"' : 'class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95"'}>
+              ← หน้าก่อนหน้า
+            </button>
+
+            <div class="flex items-center gap-1">
+              ${Array.from({ length: totalPages }, (_, i) => i + 1)
+                .map(item => `
+                  <button onclick="window.app.setNewsPage(${item})"
+                    class="w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                      currentPage === item
+                        ? 'bg-cyan-600 text-white shadow-md'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }">
+                    ${item}
+                  </button>
+                `).join("")}
+            </div>
+
+            <button onclick="window.app.setNewsPage(${currentPage + 1})"
+              ${currentPage === totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-400"' : 'class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95"'}>
+              หน้าถัดไป →
+            </button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderNewsArticleDetail(container, article) {
+    const newsList = this.getNewsList();
+    const artIndex = newsList.findIndex(a => a.id === article.id);
+    const prevArt = artIndex > 0 ? newsList[artIndex - 1] : null;
+    const nextArt = artIndex < newsList.length - 1 ? newsList[artIndex + 1] : null;
+
+    const quizRecord = this.newsQuizSubmitted[article.id];
+    const isPassed = quizRecord && quizRecord.passed;
+    const currentRate = this.newsTtsRate || 1.0;
+    const showThai = this.showNewsThai !== false;
+    const fontSize = this.newsFontSize || "base";
+    const answers = this.newsQuizAnswers[article.id] || {};
+    const isQuizSubmitted = !!quizRecord;
+
+    const fontClasses = {
+      sm: "text-sm leading-relaxed",
+      base: "text-base leading-relaxed sm:text-lg sm:leading-loose",
+      lg: "text-lg leading-loose sm:text-xl sm:leading-loose"
+    }[fontSize] || "text-base leading-relaxed sm:text-lg sm:leading-loose";
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
+        <!-- Top Navigation & Breadcrumbs -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <button onclick="window.app.navigateTo('news')"
+            class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1.5 active:scale-95">
+            <span>←</span>
+            <span>กลับสู่หน้ารวมข่าว (All News)</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            ${prevArt ? `
+              <button onclick="window.app.navigateTo('news', { articleId: '${prevArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ข่าวก่อนหน้า">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+            ${nextArt ? `
+              <button onclick="window.app.navigateTo('news', { articleId: '${nextArt.id}' })"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ข่าวถัดไป">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+              ${article.categoryLabel}
+            </span>
+            ${isPassed ? `
+              <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1 border border-emerald-300 dark:border-emerald-800">
+                <span>✓ ผ่านแล้ว</span>
+              </span>
+            ` : `
+              <span class="px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-900/40">
+                ✨ +${article.xpReward || 60} XP
+              </span>
+            `}
+          </div>
+        </div>
+
+        <!-- Article Title & Meta -->
+        <div class="space-y-2">
+          <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span>${article.coverEmoji || '📰'}</span>
+            <span class="font-bold uppercase tracking-wider">${article.sourceName || 'International Media'}</span>
+            <span>•</span>
+            <span>📅 ${article.publishedDate}</span>
+            <span>•</span>
+            <span>⏱️ ${article.estimatedTime || article.readTime || '3 นาที'}</span>
+            <span>•</span>
+            <span>📝 ${article.wordCount} คำ</span>
+            ${article.sourceUrl ? `
+              <span>•</span>
+              <a href="${article.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-1 font-semibold">
+                <span>🌐 ข่าวต้นฉบับ</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            ` : ''}
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            ${article.title}
+          </h1>
+          <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">
+            ${article.titleTh}
+          </p>
+        </div>
+
+        <!-- Interactive Control Bar -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <!-- Audio Playback Controls -->
+          <div class="flex items-center gap-2">
+            <button id="news-play-all-btn" onclick="window.app.toggleNewsTts('${article.id}')"
+              class="px-4 py-2 rounded-2xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm ${
+                this.newsTtsPlaying
+                  ? 'bg-amber-500 hover:bg-amber-600 text-white'
+                  : 'bg-cyan-600 hover:bg-cyan-700 text-white active:scale-95'
+              }">
+              <span>${this.newsTtsPlaying ? '⏸️' : '🎧'}</span>
+              <span>${this.newsTtsPlaying ? 'หยุดเสียงอ่าน' : 'ฟังเสียงอ่านทั้งบทความ'}</span>
+            </button>
+
+            <!-- Speed selector -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 text-xs font-bold text-slate-600 dark:text-slate-300">
+              ${[0.75, 1.0, 1.25].map(spd => `
+                <button onclick="window.app.setNewsTtsSpeed(${spd}, '${article.id}')"
+                  class="px-2 py-1 rounded-lg transition-all ${
+                    currentRate === spd
+                      ? 'bg-white dark:bg-slate-700 text-cyan-600 dark:text-cyan-400 shadow-sm'
+                      : 'hover:text-slate-900 dark:hover:text-white'
+                  }">
+                  ${spd}x
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Reading Display Options -->
+          <div class="flex items-center gap-2">
+            <!-- Toggle Thai Translation -->
+            <button onclick="window.app.toggleNewsThai('${article.id}')"
+              class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
+                showThai
+                  ? 'bg-cyan-50 dark:bg-cyan-950/50 border-cyan-200 dark:border-cyan-800 text-cyan-600 dark:text-cyan-400'
+                  : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+              }">
+              <span>👁️</span>
+              <span>${showThai ? 'คำแปลไทย: เปิดอยู่' : 'คำแปลไทย: ซ่อน'}</span>
+            </button>
+
+            <!-- Font Size Toggle -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 text-xs font-bold text-slate-600 dark:text-slate-300">
+              <button onclick="window.app.setNewsFontSize('sm', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'sm' ? 'bg-white dark:bg-slate-700 text-cyan-600 shadow-sm' : ''}">A-</button>
+              <button onclick="window.app.setNewsFontSize('base', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'base' ? 'bg-white dark:bg-slate-700 text-cyan-600 shadow-sm' : ''}">A</button>
+              <button onclick="window.app.setNewsFontSize('lg', '${article.id}')" class="px-2 py-1 rounded-lg ${fontSize === 'lg' ? 'bg-white dark:bg-slate-700 text-cyan-600 shadow-sm' : ''}">A+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Vocabulary Summary Box -->
+        <div class="bg-gradient-to-br from-cyan-50/60 to-indigo-50/60 dark:from-cyan-950/20 dark:to-indigo-950/20 border border-cyan-100 dark:border-cyan-900/40 rounded-3xl p-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🔑</span>
+            <h3 class="text-xs font-black uppercase tracking-wider text-cyan-900 dark:text-cyan-200">
+              คำศัพท์สำคัญจากข่าว (Key Technical Vocabulary)
+            </h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            ${(article.keyVocab || []).map(v => `
+              <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-cyan-200/50 dark:border-cyan-800/50 rounded-2xl p-3 flex items-start justify-between gap-2 shadow-xs">
+                <div>
+                  <div class="flex items-baseline gap-2">
+                    <span class="font-bold text-sm text-slate-900 dark:text-white">${v.word}</span>
+                    <span class="text-[11px] text-slate-400 font-mono">${v.ipa || ''}</span>
+                    <span class="text-[10px] font-bold text-cyan-600 dark:text-cyan-400">${v.pos || ''}</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">${v.th}</p>
+                </div>
+                <button onclick="window.soundFx.speak('${v.word.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 hover:bg-cyan-100 transition-all text-xs shrink-0" title="ฟังการออกเสียง">
+                  🔊
+                </button>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <!-- Detailed News Paragraphs with Word-Tap Dictionaries -->
+        <div class="space-y-6">
+          ${(article.paragraphs || []).map((p, idx) => {
+            const isPlayingThis = this.newsTtsPlaying && this.newsTtsIndex === idx;
+            return `
+              <div id="news-paragraph-${idx}"
+                class="rounded-3xl p-6 transition-all duration-300 ${
+                  isPlayingThis
+                    ? 'bg-cyan-50 dark:bg-cyan-950/40 border-2 border-cyan-400 dark:border-cyan-600 shadow-lg'
+                    : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs'
+                }">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                  <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 uppercase">
+                    ย่อหน้าที่ ${idx + 1}
+                  </span>
+                  <button onclick="window.soundFx.speak('${p.en.replace(/'/g, "\\'")}')"
+                    class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-cyan-600 transition-all text-xs" title="ฟังเสียงย่อหน้านี้">
+                    🔊 ฟังย่อหน้านี้
+                  </button>
+                </div>
+
+                <!-- English Interactive Text (tap any word to view definition) -->
+                <div class="${fontClasses} text-slate-800 dark:text-slate-100 font-normal select-text">
+                  ${this.wrapWordsWithClickableSpans(p.en)}
+                </div>
+
+                <!-- Thai Translation -->
+                ${showThai && p.th ? `
+                  <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+                    ${p.th}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join("")}
+        </div>
+
+        <!-- Comprehension Quiz Section -->
+        <div id="news-quiz-section" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">แบบทดสอบวัดความเข้าใจจากข่าวจริง</span>
+              <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
+                Reading Comprehension Quiz (${(article.quiz || []).length} ข้อ)
+              </h3>
+            </div>
+            <span class="px-3 py-1 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 font-black text-xs">
+              +${article.xpReward || 60} XP
+            </span>
+          </div>
+
+          <!-- Questions List -->
+          <div class="space-y-6">
+            ${(article.quiz || []).map((q, qIdx) => {
+              const selectedOpt = answers[qIdx];
+              return `
+                <div class="space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+                  <div class="flex items-start gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-cyan-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+                      ${qIdx + 1}
+                    </span>
+                    <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+                      ${q.question}
+                    </p>
+                  </div>
+
+                  <div class="space-y-2 pt-1 pl-8">
+                    ${q.options.map((opt, optIdx) => {
+                      const isChosen = selectedOpt === optIdx;
+                      const isCorrect = isQuizSubmitted && optIdx === q.correctIndex;
+                      const isWrong = isQuizSubmitted && isChosen && optIdx !== q.correctIndex;
+
+                      let optClass = "border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-300";
+                      if (isQuizSubmitted) {
+                        if (isCorrect) optClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 font-bold";
+                        else if (isWrong) optClass = "border-red-500 bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-200 line-through";
+                      } else if (isChosen) {
+                        optClass = "border-cyan-500 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-200 font-bold shadow-xs";
+                      }
+
+                      return `
+                        <label class="w-full flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition-all ${optClass}">
+                          <input type="radio" name="news-quiz-q-${qIdx}"
+                            ${isChosen ? 'checked' : ''}
+                            ${isQuizSubmitted ? 'disabled' : ''}
+                            onchange="window.app.selectNewsQuizOption('${article.id}', ${qIdx}, ${optIdx})"
+                            class="text-cyan-600 focus:ring-cyan-500 shrink-0" />
+                          <span class="flex-1">${opt}</span>
+                          ${isCorrect ? '<span class="text-emerald-600 text-sm font-bold shrink-0">✓ ถูกต้อง</span>' : ''}
+                          ${isWrong ? '<span class="text-red-500 text-sm font-bold shrink-0">✕ ผิด</span>' : ''}
+                        </label>
+                      `;
+                    }).join("")}
+                  </div>
+
+                  ${isQuizSubmitted && q.explanation ? `
+                    <div class="mt-2 pl-8 text-xs text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 leading-relaxed">
+                      💡 <strong>คำอธิบาย:</strong> ${q.explanation}
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <!-- Submit / Retry Bar -->
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            ${isQuizSubmitted ? `
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold ${quizRecord.passed ? 'text-emerald-600' : 'text-red-500'}">
+                  ${quizRecord.passed ? `🎉 ยอดเยี่ยม! คุณตอบถูก (${quizRecord.score}/${quizRecord.total})` : `ยังไม่ผ่านเกณฑ์ (${quizRecord.score}/${quizRecord.total}) ลองทบทวนดูอีกครั้ง`}
+                </span>
+                <button onclick="window.app.retryNewsQuiz('${article.id}')"
+                  class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-xl transition-all">
+                  ทำควิซใหม่อีกครั้ง
+                </button>
+              </div>
+            ` : `
+              <span class="text-xs text-slate-400">เลือกคำตอบให้ครบทั้ง 3 ข้อเพื่อส่งคำตอบ</span>
+              <button onclick="window.app.submitNewsQuiz('${article.id}')"
+                class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+                <span>ส่งคำตอบ & รับ XP</span>
+                <span>➔</span>
+              </button>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  toggleNewsTts(articleId) {
+    if (this.newsTtsPlaying) {
+      this.stopNewsTts();
+    } else {
+      this.playNewsArticleTts(articleId);
+    }
+  }
+
+  playNewsArticleTts(articleId) {
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (!article || !article.paragraphs || article.paragraphs.length === 0) return;
+
+    this.stopNewsTts();
+    this.newsTtsPlaying = true;
+    this.newsTtsIndex = 0;
+
+    const playNextParagraph = () => {
+      if (!this.newsTtsPlaying || this.newsTtsIndex >= article.paragraphs.length) {
+        this.stopNewsTts();
+        return;
+      }
+
+      const p = article.paragraphs[this.newsTtsIndex];
+      const pEl = document.getElementById(`news-paragraph-${this.newsTtsIndex}`);
+      if (pEl) {
+        pEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        pEl.classList.add("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+      }
+
+      if (window.speechEngine) {
+        window.speechEngine.speak(p.en, {
+          rate: this.newsTtsRate || 1.0,
+          onEnd: () => {
+            if (pEl) {
+              pEl.classList.remove("ring-2", "ring-cyan-500", "bg-cyan-50", "dark:bg-cyan-950/40");
+            }
+            if (this.newsTtsPlaying) {
+              this.newsTtsIndex++;
+              setTimeout(playNextParagraph, 300);
+            }
+          },
+          onError: () => {
+            this.stopNewsTts();
+          }
+        });
+      } else {
+        window.soundFx.speak(p.en);
+        setTimeout(() => {
+          this.newsTtsIndex++;
+          playNextParagraph();
+        }, 4000);
+      }
+    };
+
+    playNextParagraph();
+    const btnEl = document.getElementById("news-play-all-btn");
+    if (btnEl) {
+      btnEl.classList.remove("bg-cyan-600", "hover:bg-cyan-700");
+      btnEl.classList.add("bg-amber-500", "hover:bg-amber-600");
+      btnEl.innerHTML = `<span>⏸️</span><span>หยุดเสียงอ่าน</span>`;
+    }
+  }
+
+  stopNewsTts() {
+    this.newsTtsPlaying = false;
+    this.newsTtsIndex = null;
+    if (window.speechEngine && window.speechEngine.stop) {
+      window.speechEngine.stop();
+    }
+    const btnEl = document.getElementById("news-play-all-btn");
+    if (btnEl) {
+      btnEl.classList.remove("bg-amber-500", "hover:bg-amber-600");
+      btnEl.classList.add("bg-cyan-600", "hover:bg-cyan-700");
+      btnEl.innerHTML = `<span>🎧</span><span>ฟังเสียงอ่านทั้งบทความ</span>`;
+    }
+  }
+
+  toggleNewsThai(articleId) {
+    this.showNewsThai = !this.showNewsThai;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderNewsArticleDetail(container, article);
+    }
+  }
+
+  setNewsFontSize(size, articleId) {
+    this.newsFontSize = size;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderNewsArticleDetail(container, article);
+    }
+  }
+
+  setNewsTtsSpeed(speed, articleId) {
+    this.newsTtsRate = speed;
+    if (window.speechEngine) {
+      window.speechEngine.setRate(speed);
+    }
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderNewsArticleDetail(container, article);
+    }
+  }
+
+  selectNewsQuizOption(articleId, qIdx, optIdx) {
+    window.soundFx.playClick();
+    if (!this.newsQuizAnswers[articleId]) {
+      this.newsQuizAnswers[articleId] = {};
+    }
+    this.newsQuizAnswers[articleId][qIdx] = optIdx;
+  }
+
+  submitNewsQuiz(articleId) {
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (!article) return;
+
+    const answers = this.newsQuizAnswers[articleId] || {};
+    const totalQuestions = (article.quiz || []).length;
+
+    if (Object.keys(answers).length < totalQuestions) {
+      alert("กรุณาตอบคำถามให้ครบทุกข้อก่อนส่งคำตอบครับ");
+      return;
+    }
+
+    let correctCount = 0;
+    article.quiz.forEach((q, idx) => {
+      if (answers[idx] === q.correctIndex) {
+        correctCount++;
+      }
+    });
+
+    const isPassed = correctCount >= Math.ceil(totalQuestions * 0.6);
+    const xpReward = isPassed ? (article.xpReward || 60) : 10;
+
+    this.newsQuizSubmitted[articleId] = {
+      score: correctCount,
+      total: totalQuestions,
+      passed: isPassed,
+      xpEarned: xpReward,
+      submittedAt: new Date().toISOString()
+    };
+
+    try {
+      localStorage.setItem("engmastery_news_quizzes", JSON.stringify(this.newsQuizSubmitted));
+    } catch (e) {}
+
+    if (isPassed) {
+      window.soundFx.playCorrect();
+      this.addXP(xpReward);
+      this.showToast(`🎉 ยินดีด้วย! สอบผ่านความเข้าใจข่าว ได้รับ +${xpReward} XP`, "success");
+    } else {
+      window.soundFx.playIncorrect();
+      this.showToast(`ยังไม่ผ่านเกณฑ์ (ได้ ${correctCount}/${totalQuestions}) ได้รับปลอบใจ +${xpReward} XP`, "info");
+    }
+
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "news") {
+      this.renderNewsArticleDetail(container, article);
+      const quizSection = document.getElementById("news-quiz-section");
+      if (quizSection) quizSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  retryNewsQuiz(articleId) {
+    delete this.newsQuizAnswers[articleId];
+    delete this.newsQuizSubmitted[articleId];
+    try {
+      localStorage.setItem("engmastery_news_quizzes", JSON.stringify(this.newsQuizSubmitted));
+    } catch (e) {}
+
+    const container = document.getElementById("main-content-view");
+    const newsList = this.getNewsList();
+    const article = newsList.find(a => a.id === articleId);
+    if (container && article) {
+      this.renderNewsArticleDetail(container, article);
     }
   }
 
