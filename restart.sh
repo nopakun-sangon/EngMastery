@@ -15,3 +15,4 @@ if [ -n "$PORT" ]; then
 else
     "$DIR/start.sh"
 fi
+

@@ -64,3 +64,4 @@ if [ "$STOPPED" = true ]; then
 else
     echo "ℹ️  No running EngMastery server found on port $PORT."
 fi
+

@@ -70,6 +70,7 @@ class EngMasteryApp {
       this.activeReadingArticleId = null;
       this.selectedReadingLevel = "all";
       this.readingCollectionFilter = "all";
+      this.readingNewsCategoryFilter = "all";
       this.readingSearchQuery = "";
       this.readingPage = 1;
       this.readingItemsPerPage = 12;
@@ -99,6 +100,7 @@ class EngMasteryApp {
       this.activeReadingArticleId = null;
       this.selectedReadingLevel = "all";
       this.readingCollectionFilter = "all";
+      this.readingNewsCategoryFilter = "all";
       this.readingSearchQuery = "";
       this.readingPage = 1;
       this.readingItemsPerPage = 12;
@@ -5075,12 +5077,19 @@ class EngMasteryApp {
   getReadingList() {
     const base = window.readingData || [];
     const stories = window.shortStoriesData || [];
+    const news = window.dailyNewsData || [];
     const idSet = new Set(base.map(a => a.id));
     const merged = [...base];
     for (const s of stories) {
       if (!idSet.has(s.id)) {
         merged.push(s);
         idSet.add(s.id);
+      }
+    }
+    for (const n of news) {
+      if (!idSet.has(n.id)) {
+        merged.push(n);
+        idSet.add(n.id);
       }
     }
     return merged;
@@ -5115,6 +5124,14 @@ class EngMasteryApp {
     if (container) this.renderReadingListing(container, this.getReadingList());
   }
 
+  setReadingNewsCategory(cat) {
+    this.readingNewsCategoryFilter = cat;
+    this.readingPage = 1;
+    window.soundFx.playClick();
+    const container = document.getElementById("main-content-view");
+    if (container) this.renderReadingListing(container, this.getReadingList());
+  }
+
   setReadingSearch(query) {
     this.readingSearchQuery = query;
     this.readingPage = 1;
@@ -5138,15 +5155,21 @@ class EngMasteryApp {
 
   renderReadingListing(container, readingList) {
     const collectionFilter = this.readingCollectionFilter || "all";
+    const newsCategoryFilter = this.readingNewsCategoryFilter || "all";
     const levelFilter = this.selectedReadingLevel || "all";
     const searchQuery = (this.readingSearchQuery || "").trim().toLowerCase();
 
-    // 1. Filter by collection
+    // 1. Filter by collection & category
     let list = readingList;
     if (collectionFilter === "100-short-stories") {
       list = list.filter(a => a.collection === "100-short-stories");
     } else if (collectionFilter === "tech-cefr") {
-      list = list.filter(a => a.collection !== "100-short-stories");
+      list = list.filter(a => a.collection !== "100-short-stories" && a.collection !== "daily-news");
+    } else if (collectionFilter === "daily-news") {
+      list = list.filter(a => a.collection === "daily-news");
+      if (newsCategoryFilter !== "all") {
+        list = list.filter(a => a.category === newsCategoryFilter);
+      }
     }
 
     // 2. Filter by level
@@ -5168,7 +5191,8 @@ class EngMasteryApp {
     // Counts for UI badges
     const totalAll = readingList.length;
     const storiesCount = readingList.filter(a => a.collection === "100-short-stories").length;
-    const techCount = readingList.filter(a => a.collection !== "100-short-stories").length;
+    const techCount = readingList.filter(a => a.collection !== "100-short-stories" && a.collection !== "daily-news").length;
+    const newsCount = readingList.filter(a => a.collection === "daily-news").length;
     const completedCount = Object.values(this.readingQuizSubmitted).filter(r => r && r.passed).length;
     const totalXPFromReading = Object.values(this.readingQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
 
@@ -5187,7 +5211,7 @@ class EngMasteryApp {
           <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="max-w-xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-3">
-                <span>📖 Graded Reading & 100 Short Stories</span>
+                <span>📖 Graded Reading, Short Stories & Daily News</span>
                 <span>•</span>
                 <span>${totalAll} เรื่อง & บทความ</span>
               </div>
@@ -5195,7 +5219,7 @@ class EngMasteryApp {
                 ห้องฝึกการอ่าน (Reading Lab)
               </h1>
               <p class="mt-2 text-emerald-100 text-xs sm:text-sm leading-relaxed">
-                ฝึกอ่านเรื่องสั้นภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! ครอบคลุมทั้งชุด <strong>100 English Short Stories</strong> สอดแทรกคำศัพท์ใช้งานจริง และบทความ CEFR A1–C2 พร้อมระบบเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซสะสม XP
+                ฝึกอ่านเรื่องสั้นและข่าวสรุปภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! อัปเดตข่าวจริง 4 หมวด (Tech & DevOps, World & Business, Daily Life & Science, Sport แมนยู), นิทาน <strong>100 Short Stories</strong> และบทความ CEFR พร้อมระบบเสียงอ่าน Audio TTS, คำแปลไทย และควิซสะสม XP
               </p>
             </div>
 
@@ -5230,6 +5254,14 @@ class EngMasteryApp {
               }">
               🌟 ทั้งหมด (${totalAll})
             </button>
+            <button onclick="window.app.setReadingCollection('daily-news')"
+              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                collectionFilter === 'daily-news'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }">
+              📰 ข่าวสรุปประจำวัน (${newsCount})
+            </button>
             <button onclick="window.app.setReadingCollection('100-short-stories')"
               class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
                 collectionFilter === '100-short-stories'
@@ -5247,6 +5279,29 @@ class EngMasteryApp {
               💼 Tech & Workplace CEFR (${techCount})
             </button>
           </div>
+
+          <!-- Daily News Sub-Category Chips -->
+          ${collectionFilter === 'daily-news' ? `
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0 mr-1">หมวดข่าว:</span>
+              ${[
+                { id: "all", label: "📰 ทั้งหมด", count: newsCount },
+                { id: "tech", label: "💻 Tech & DevOps", count: readingList.filter(a => a.collection === "daily-news" && a.category === "tech").length },
+                { id: "business", label: "🌐 World & Business", count: readingList.filter(a => a.collection === "daily-news" && a.category === "business").length },
+                { id: "life_science", label: "🔬 Life & Science", count: readingList.filter(a => a.collection === "daily-news" && a.category === "life_science").length },
+                { id: "sport", label: "⚽ Sport (แมนยู)", count: readingList.filter(a => a.collection === "daily-news" && a.category === "sport").length }
+              ].map(cat => `
+                <button onclick="window.app.setReadingNewsCategory('${cat.id}')"
+                  class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
+                    newsCategoryFilter === cat.id
+                      ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-400/40'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }">
+                  ${cat.label} (${cat.count})
+                </button>
+              `).join("")}
+            </div>
+          ` : ''}
 
           <!-- Level Filter & Search Bar in one row -->
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800/80">
@@ -5315,7 +5370,14 @@ class EngMasteryApp {
                   
                   <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                      <span class="text-3xl">${art.coverEmoji}</span>
+                      <div class="flex items-center gap-2">
+                        <span class="text-3xl">${art.coverEmoji || '📖'}</span>
+                        ${art.collection === 'daily-news' ? `
+                          <span class="px-2 py-0.5 rounded-xl text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60">
+                            ${art.categoryEmoji || '📰'} ${art.categoryLabel || 'Daily News'}
+                          </span>
+                        ` : ''}
+                      </div>
                       <div class="flex items-center gap-2">
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                           ${art.levelBadge}
@@ -5358,7 +5420,7 @@ class EngMasteryApp {
 
                   <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
                     <div class="flex items-center gap-3">
-                      <span>⏱️ ${art.estimatedTime}</span>
+                      <span>⏱️ ${art.estimatedTime || art.readTime || '3 นาที'}</span>
                       <span>•</span>
                       <span>📝 ${art.wordCount} คำ</span>
                     </div>
@@ -5461,6 +5523,11 @@ class EngMasteryApp {
                 <span>→</span>
               </button>
             ` : ''}
+            ${article.collection === 'daily-news' ? `
+              <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+                ${article.categoryEmoji || '📰'} ${article.categoryLabel || 'Daily News'}
+              </span>
+            ` : ''}
             <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
               ${article.levelBadge}
             </span>
@@ -5478,13 +5545,20 @@ class EngMasteryApp {
 
         <!-- Article Title & Meta -->
         <div class="space-y-2">
-          <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
             <span>${article.coverEmoji}</span>
             <span class="font-bold uppercase tracking-wider">${article.levelTitle}</span>
             <span>•</span>
-            <span>⏱️ ${article.estimatedTime}</span>
+            <span>⏱️ ${article.estimatedTime || article.readTime || '3 นาที'}</span>
             <span>•</span>
             <span>📝 ${article.wordCount} คำ</span>
+            ${article.sourceUrl ? `
+              <span>•</span>
+              <a href="${article.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-rose-600 dark:text-rose-400 hover:underline inline-flex items-center gap-1 font-semibold">
+                <span>🌐 แหล่งข่าวต้นฉบับ</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            ` : ''}
           </div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             ${article.title}

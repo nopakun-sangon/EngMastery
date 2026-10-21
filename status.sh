@@ -29,3 +29,4 @@ else
     echo "🔴 EngMastery server is STOPPED"
     echo "💡 Start with: ./start.sh"
 fi
+
