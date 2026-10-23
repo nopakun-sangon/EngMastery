@@ -7332,24 +7332,75 @@ class EngMasteryApp {
   }
 
   renderArticleListing(container, articles) {
+    const activeCat = this.articleCategoryFilter || "all";
+    const categories = [
+      { id: "all", label: "ทั้งหมด", emoji: "🌟" },
+      { id: "grammar", label: "กริยา & ไวยากรณ์", emoji: "⚡" },
+      { id: "workplace", label: "การสื่อสารในงานเทค", emoji: "💼" },
+      { id: "global", label: "ทักษะสากล & Mindset", emoji: "🌐" }
+    ];
+
+    const filtered = articles.filter(art => {
+      if (activeCat === "all") return true;
+      if (activeCat === "grammar") {
+        return art.category === "Core Grammar & Mechanics" ||
+               art.category === "Auxiliary Verbs & Tenses" ||
+               art.category === "Auxiliary & Perfect Tenses" ||
+               art.category === "Core Foundation & Passive Voice" ||
+               art.category === "Modal Auxiliaries & Nuances";
+      }
+      if (activeCat === "workplace") {
+        return art.category === "Workplace & Engineering Communication" ||
+               art.category === "Engineering Best Practices" ||
+               art.category === "Tech & Industry";
+      }
+      if (activeCat === "global") {
+        return art.category === "Mindset & Fluency" ||
+               art.category === "Professional Writing" ||
+               art.category === "Listening & Accents" ||
+               art.category === "Global Collaboration";
+      }
+      return true;
+    });
+
     container.innerHTML = `
       <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
         <!-- Header -->
-        <div class="pb-4 border-b border-slate-200 dark:border-slate-800">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">📚</span>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-              คลังบทความเชิงลึก (Articles Library & Reader)
-            </h1>
+        <div class="pb-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">📚</span>
+              <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                คลังบทความเชิงลึก (Articles Library & Reader)
+              </h1>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              คู่มือสื่อสารวิศวกรรม, คัมภีร์กริยา 3 ช่อง, กริยาช่วย Do/Have/Be/Modals, และเทคนิคทำงานร่วมกับทีมทั่วโลก พร้อมควิซวัดความเข้าใจ
+            </p>
           </div>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            ฝึกคิดเป็นภาษาอังกฤษ, ถอดรหัสสำเนียงสากล, และเทคนิคการเขียนอีเมล & แชท Slack ให้ได้ใจทีมงานระดับโลก พร้อมเสียง AI อ่านบทความและควิซวัดความเข้าใจ
-          </p>
+          <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+            แสดง ${filtered.length} จาก ${articles.length} บทความ
+          </span>
+        </div>
+
+        <!-- Category Filter Navigation Pills -->
+        <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-inner">
+          ${categories.map(c => `
+            <button onclick="window.app.switchArticleCategory('${c.id}')"
+              class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+                activeCat === c.id
+                  ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }">
+              <span>${c.emoji}</span>
+              <span>${c.label}</span>
+            </button>
+          `).join("")}
         </div>
 
         <!-- Articles Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          ${articles.map(art => {
+          ${filtered.map(art => {
             const quizRecord = this.articleQuizSubmitted[art.id];
             const isPassed = quizRecord && quizRecord.passed;
 
@@ -7375,10 +7426,10 @@ class EngMasteryApp {
 
                   <div>
                     <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">${art.categoryTh}</span>
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mt-1">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mt-1 leading-snug">
                       ${art.title}
                     </h2>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 font-medium italic mt-0.5">
+                    <p class="text-xs text-slate-400 dark:text-slate-500 font-medium italic mt-0.5 line-clamp-1">
                       ${art.titleEn}
                     </p>
                   </div>
@@ -7388,7 +7439,7 @@ class EngMasteryApp {
                   </p>
 
                   <div class="flex flex-wrap gap-1 pt-1">
-                    ${art.tags.map(t => `
+                    ${(art.tags || []).map(t => `
                       <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-medium">
                         #${t}
                       </span>
@@ -7397,8 +7448,8 @@ class EngMasteryApp {
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                  <span class="text-slate-400 text-[11px]">${art.author}</span>
-                  <span class="font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span class="text-slate-400 text-[11px] truncate max-w-[150px]">${art.author}</span>
+                  <span class="font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform shrink-0">
                     <span>อ่านบทความ & ควิซ</span>
                     <span>➔</span>
                   </span>
@@ -7409,6 +7460,15 @@ class EngMasteryApp {
         </div>
       </div>
     `;
+  }
+
+  switchArticleCategory(catId) {
+    if (window.soundFx) window.soundFx.playClick();
+    this.articleCategoryFilter = catId;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "articles") {
+      this.renderArticlesView(container);
+    }
   }
 
   renderArticleDetail(container, article) {
@@ -7505,8 +7565,8 @@ class EngMasteryApp {
                 <span>${sec.heading}</span>
               </h2>
 
-              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-3 leading-relaxed whitespace-pre-line">
-                ${this.formatRichContent(sec.content)}
+              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-4 leading-relaxed">
+                ${this.formatMarkdownContent(sec.content)}
               </div>
 
               <!-- Key Phrases Callout Box -->
@@ -8114,40 +8174,27 @@ class EngMasteryApp {
 
   formatRichContent(content) {
     if (!content) return "";
-
-    // 1. Convert backticks `code` into highlighted orange badge
-    let html = content.replace(/`([^`]+)`/g, (match, code) => {
-      return `<code class="px-2 py-0.5 mx-0.5 rounded-lg text-xs font-mono font-black text-orange-600 dark:text-orange-400 bg-orange-100/80 dark:bg-orange-950/70 border border-orange-200 dark:border-orange-800/80 shadow-xs">${code}</code>`;
-    });
-
-    // 2. Bold text **...** with intelligent formula highlighting
-    html = html.replace(/\*\*(.*?)\*\*/g, (match, text) => {
-      // If it is a Tense header like **🟢 A. Present Simple Tense (S + V.1 -s/-es)**
-      if (/^[🟢🔵🟣]/.test(text)) {
-        const highlighted = text.replace(/\(([^)]+)\)/g, '(<span class="text-orange-600 dark:text-orange-400 font-black font-mono">$1</span>)');
-        return `<strong class="text-slate-900 dark:text-white font-extrabold text-sm sm:text-base">${highlighted}</strong>`;
-      }
-
-      // If it contains grammar/formula elements
-      if (/\b(Subject|S)\s*\+|V\.1|V\.2|V\.3|V\.ing|V\.inf|will have been|will have|will be|had been|has\/have been|had \+|has \+|have \+|was\/were|is\/am\/are|don't|doesn't|did not|didn't|will not|won't|be \+ going to/i.test(text)) {
-        return `<strong class="px-2 py-0.5 mx-0.5 rounded-lg font-mono font-black text-orange-600 dark:text-orange-400 bg-orange-100/70 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800/80 inline-block text-xs sm:text-[13px] shadow-xs">${text}</strong>`;
-      }
-
-      return `<strong class="text-slate-900 dark:text-white font-bold">${text}</strong>`;
-    });
-
-    return html;
+    return this.formatMarkdownContent(content);
   }
 
   formatInlineContent(str) {
     if (!str) return "";
     let s = str;
-    // Code badge
+    // 1. Convert backticks `code` into highlighted orange badge
     s = s.replace(/`([^`]+)`/g, `<code class="px-2 py-0.5 mx-0.5 rounded-lg text-xs font-mono font-black text-orange-600 dark:text-orange-400 bg-orange-100/80 dark:bg-orange-950/70 border border-orange-200 dark:border-orange-800/80 shadow-xs">$1</code>`);
-    // Bold
-    s = s.replace(/\*\*(.*?)\*\*/g, `<strong class="text-slate-900 dark:text-white font-bold">$1</strong>`);
-    // Italic
-    s = s.replace(/\*([^*]+)\*/g, `<em class="text-indigo-600 dark:text-indigo-400 font-medium not-italic">$1</em>`);
+    // 2. Bold with formula highlighting
+    s = s.replace(/\*\*(.*?)\*\*/g, (match, text) => {
+      if (/^[🟢🔵🟣]/.test(text)) {
+        const highlighted = text.replace(/\(([^)]+)\)/g, '(<span class="text-orange-600 dark:text-orange-400 font-black font-mono">$1</span>)');
+        return `<strong class="text-slate-900 dark:text-white font-extrabold text-xs sm:text-sm">${highlighted}</strong>`;
+      }
+      if (/\b(Subject|S)\s*\+|V\.1|V\.2|V\.3|V\.ing|V\.inf|will have been|will have|will be|had been|has\/have been|had \+|has \+|have \+|was\/were|is\/am\/are|don't|doesn't|did not|didn't|will not|won't|be \+ going to/i.test(text)) {
+        return `<strong class="px-2 py-0.5 mx-0.5 rounded-lg font-mono font-black text-orange-600 dark:text-orange-400 bg-orange-100/70 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800/80 inline-block text-xs shadow-xs">${text}</strong>`;
+      }
+      return `<strong class="text-slate-900 dark:text-white font-bold">${text}</strong>`;
+    });
+    // 3. Italic / English quote
+    s = s.replace(/\*([^*]+)\*/g, `<em class="text-indigo-600 dark:text-indigo-400 font-semibold not-italic">$1</em>`);
     return s;
   }
 
@@ -8164,26 +8211,29 @@ class EngMasteryApp {
       const rows = tableLines.filter(l => !l.trim().match(/^\|(\s*:?-+:?\s*\|)+$/));
       if (rows.length === 0) return;
 
-      let html = `<div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 my-4 shadow-sm bg-white dark:bg-slate-900">\n`;
-      html += `  <table class="w-full text-left border-collapse min-w-[550px] text-xs sm:text-sm">\n`;
+      let html = `<div class="my-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">\n`;
+      html += `  <div class="overflow-x-auto">\n`;
+      html += `    <table class="w-full text-left border-collapse min-w-[560px] text-xs sm:text-sm">\n`;
 
       const headerCols = rows[0].split("|").map(c => c.trim()).filter((c, i, a) => i > 0 && i < a.length - 1);
-      html += `    <thead>\n      <tr class="bg-indigo-50/80 dark:bg-indigo-950/60 border-b border-slate-200 dark:border-slate-800 text-indigo-950 dark:text-indigo-200 font-bold">\n`;
+      html += `      <thead>\n        <tr class="bg-gradient-to-r from-indigo-50/90 via-slate-50 to-indigo-50/70 dark:from-slate-800 dark:via-slate-850 dark:to-slate-800 border-b-2 border-indigo-200 dark:border-indigo-900/60 text-indigo-950 dark:text-indigo-200 font-black">\n`;
       headerCols.forEach(col => {
-        html += `        <th class="p-3.5">${this.formatInlineContent(col)}</th>\n`;
+        html += `          <th class="px-4 py-3.5 tracking-wide border-r border-indigo-100/80 dark:border-slate-700/80 last:border-r-0">${this.formatInlineContent(col)}</th>\n`;
       });
-      html += `      </tr>\n    </thead>\n    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">\n`;
+      html += `        </tr>\n      </thead>\n      <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">\n`;
 
       for (let r = 1; r < rows.length; r++) {
         const cols = rows[r].split("|").map(c => c.trim()).filter((c, i, a) => i > 0 && i < a.length - 1);
-        html += `      <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">\n`;
-        cols.forEach(col => {
-          html += `        <td class="p-3.5 align-top text-slate-700 dark:text-slate-300">${this.formatInlineContent(col)}</td>\n`;
+        const zebra = r % 2 === 0 ? "bg-slate-50/50 dark:bg-slate-850/30" : "bg-white dark:bg-slate-900";
+        html += `        <tr class="${zebra} hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30 transition-colors">\n`;
+        cols.forEach((col, cIdx) => {
+          const isFirstCol = cIdx === 0;
+          html += `          <td class="px-4 py-3.5 align-top border-r border-slate-100 dark:border-slate-800/60 last:border-r-0 ${isFirstCol ? "font-bold text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-300"}">${this.formatInlineContent(col)}</td>\n`;
         });
-        html += `      </tr>\n`;
+        html += `        </tr>\n`;
       }
 
-      html += `    </tbody>\n  </table>\n</div>`;
+      html += `      </tbody>\n    </table>\n  </div>\n</div>`;
       result.push(html);
       tableLines = [];
       inTable = false;
@@ -8202,6 +8252,12 @@ class EngMasteryApp {
       }
 
       if (!trimmed) continue;
+
+      // Raw HTML blocks pass-through
+      if (trimmed.startsWith("<div") || trimmed.startsWith("</div") || trimmed.startsWith("<table") || trimmed.startsWith("</table") || trimmed.startsWith("<button")) {
+        result.push(trimmed);
+        continue;
+      }
 
       if (trimmed === "---") {
         result.push(`<hr class="my-6 border-slate-200 dark:border-slate-800" />`);
@@ -8623,7 +8679,7 @@ class EngMasteryApp {
               <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>${sec.heading}</span>
               </h3>
-              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed whitespace-pre-line">
+              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed">
                 ${this.formatRichContent(sec.content)}
               </div>
             </div>
@@ -8702,7 +8758,7 @@ class EngMasteryApp {
               <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>${sec.heading}</span>
               </h3>
-              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed whitespace-pre-line">
+              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed">
                 ${this.formatRichContent(sec.content)}
               </div>
             </div>
@@ -8766,7 +8822,7 @@ class EngMasteryApp {
               <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>${sec.heading}</span>
               </h3>
-              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed whitespace-pre-line">
+              <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed">
                 ${this.formatRichContent(sec.content)}
               </div>
             </div>
