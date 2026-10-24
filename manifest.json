@@ -1,0 +1,108 @@
+{
+  "name": "EngMastery: English for Developers & SRE",
+  "short_name": "EngMastery",
+  "description": "แพลตฟอร์มฝึกภาษาอังกฤษสำหรับโปรแกรมเมอร์ DevOps & SRE พร้อมข่าววิศวกรรม ไวยากรณ์ กริยา 3 ช่อง และ Standup Generator",
+  "id": "/",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0891b2",
+  "categories": [
+    "education",
+    "productivity",
+    "developer tools"
+  ],
+  "lang": "th",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ข่าวสรุปประจำวัน (Daily News)",
+      "short_name": "Daily News",
+      "description": "ข่าวเจาะลึก DevOps & SRE พร้อมควิซ CEFR 200 ข้อ",
+      "url": "./index.html?view=news",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "ซ้อมเดลี่ & Standup Generator",
+      "short_name": "Standup Gen",
+      "description": "เครื่องมือช่วยร่างบท Daily Standup ภาษาอังกฤษ",
+      "url": "./index.html?view=speaking-lab",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "สรุปไวยากรณ์ & กริยา 3 ช่อง",
+      "short_name": "Grammar",
+      "description": "แผ่นสรุปไวยากรณ์ ตาราง Do/Does/Did Has/Have/Had Is/Am/Are",
+      "url": "./index.html?view=cheat-sheet",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "คลังคำศัพท์ & Flashcards",
+      "short_name": "Vocab",
+      "description": "Oxford 3000 และคำศัพท์เฉพาะทางสำหรับสายเทค",
+      "url": "./index.html?view=vocabulary",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

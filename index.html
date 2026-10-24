@@ -2,11 +2,34 @@
 <html lang="th" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>EngMastery: Zero to Pro | แพลตฟอร์มเรียนภาษาอังกฤษสากล CEFR A1-C1</title>
   
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <!-- PWA & Mobile Meta Tags (Cross-Platform: PC, iOS, Android) -->
+  <meta name="application-name" content="EngMastery">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EngMastery">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0891b2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <meta name="msapplication-TileColor" content="#0f172a">
+  <meta name="msapplication-TileImage" content="icons/icon-192.png">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+  <link rel="shortcut icon" href="icons/favicon.ico">
+
+  <!-- Apple Touch Icons for iOS Safari Home Screen -->
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+
+  <!-- Web App Manifest (PWA) -->
+  <link rel="manifest" href="manifest.json">
 
   <!-- Local Fonts: Inter & Prompt (100% Offline) -->
   <link rel="stylesheet" href="css/fonts/fonts.css">
@@ -91,6 +114,12 @@
           <span>✨</span>
           <span id="header-xp-count">0 XP</span>
         </div>
+
+        <!-- PWA Install Button (Dynamic: PC / Android / iOS) -->
+        <button id="header-install-app-btn" onclick="window.pwaManager.installApp()" class="hidden items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 text-white text-[11px] sm:text-xs font-bold shadow-md hover:shadow-cyan-500/25 transition-all active:scale-95 shrink-0" title="ติดตั้งแอป EngMastery บนอุปกรณ์นี้ (Install PWA)">
+          <span class="animate-bounce text-xs sm:text-sm">📲</span>
+          <span class="hidden sm:inline">ติดตั้งแอป</span>
+        </button>
 
         <!-- Divider -->
         <div class="hidden min-[380px]:block h-4 sm:h-5 w-px bg-slate-200 dark:bg-slate-800 shrink-0"></div>
@@ -184,6 +213,12 @@
         <button data-nav-target="profile" class="w-full flex items-center justify-center lg:justify-start gap-3 px-3 lg:px-4 py-3 rounded-2xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group" title="โปรไฟล์ผู้เรียน (Profile)">
           <svg class="w-5 h-5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           <span class="hidden lg:inline truncate">โปรไฟล์ผู้เรียน (Profile)</span>
+        </button>
+
+        <!-- 10. Install App Button (PWA for PC / Mobile) -->
+        <button id="sidebar-install-app-btn" onclick="window.pwaManager.installApp()" class="w-full hidden items-center justify-center lg:justify-start gap-3 px-3 lg:px-4 py-3 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 shadow-md transition-all text-left group" title="ติดตั้งแอป EngMastery บนอุปกรณ์นี้ (Install App)">
+          <span class="text-base shrink-0 animate-bounce">📲</span>
+          <span class="hidden lg:inline truncate">ติดตั้งแอป (Install App)</span>
         </button>
 
         <!-- CEFR Quick Reference Helper (Desktop Only) -->
@@ -298,6 +333,10 @@
           <button data-nav-target="profile" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
             <span>👤 โปรไฟล์ผู้เรียน (Profile)</span>
           </button>
+          <!-- 11. Install App (PWA) -->
+          <button id="drawer-install-app-btn" onclick="window.pwaManager.installApp()" class="w-full hidden items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 shadow-md transition-all active:scale-95 text-left">
+            <span>📲 ติดตั้งแอป EngMastery</span>
+          </button>
         </nav>
       </div>
 
@@ -347,5 +386,7 @@
   <script src="js/storage.js"></script>
   <script src="js/app.js"></script>
   <script src="js/standupLab.js"></script>
+  <!-- PWA & Cross-Platform Installation -->
+  <script src="js/pwa.js"></script>
 </body>
 </html>
