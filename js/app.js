@@ -162,10 +162,12 @@ class EngMasteryApp {
     this.setupNavigation();
     this.renderHeaderStats();
     this.initRouter();
+    this.initGlobalInstantVocabAndSelection();
     if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           this.closeReadingWordPopup();
+          this.hideSelectionTranslateTooltip();
         }
       });
     }
@@ -5121,6 +5123,9 @@ class EngMasteryApp {
     const state = window.storageManager.state;
     const courses = window.courseData || [];
     const completedCount = state.completedLevels.length;
+    const isInstantVocab = !state.preferences || state.preferences.instantVocab !== false;
+    const isSelectionTranslate = !state.preferences || state.preferences.selectionTranslate !== false;
+    const isSfx = !state.preferences || state.preferences.sfx !== false;
 
     container.innerHTML = `
       <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-14 w-full">
@@ -5153,8 +5158,176 @@ class EngMasteryApp {
             </div>
           </div>
         </div>
+
+        <!-- System & Learning Settings Card (ส่วนตั้งค่าระบบ & เครื่องมือช่วยแปล) -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⚙️</span>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                การตั้งค่าระบบ & เครื่องมือช่วยแปล (Learning & Translation Settings)
+              </h3>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">บันทึกอัตโนมัติ</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            <!-- Setting 1: Instant Word Lookup (แตะแปลคำศัพท์ทันที) -->
+            <div class="py-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1 max-w-xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-base">📖</span>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white">แตะแปลคำศัพท์ทันที (Instant Word Lookup)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    isInstantVocab ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                  }">
+                    ${isInstantVocab ? 'เปิดใช้งาน (ON)' : 'ปิด (OFF)'}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  คลิกหรือแตะคำภาษาอังกฤษใดๆ ในทุกหน้าของแอป (บทเรียน, ข่าว, คลังบทความ, เดลี่, แกรมม่าร์) เพื่อเปิด Popup ดูคำแปล คำอ่าน ฟังเสียง และบันทึกคำศัพท์เข้า My Vocab ได้ทันที
+                </p>
+              </div>
+              <button type="button"
+                      onclick="window.app.toggleInstantVocabPreference()"
+                      class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        isInstantVocab ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'
+                      }"
+                      role="switch"
+                      aria-checked="${isInstantVocab}">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  isInstantVocab ? 'translate-x-5' : 'translate-x-0'
+                }"></span>
+              </button>
+            </div>
+
+            <!-- Setting 2: Drag & Select Sentence Translation (ลากคลุมเพื่อแปลประโยค) -->
+            <div class="py-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1 max-w-xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-base">📝</span>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white">ลากคลุมเพื่อแปลประโยค (Selection & Phrase Translate)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    isSelectionTranslate ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                  }">
+                    ${isSelectionTranslate ? 'เปิดใช้งาน (ON)' : 'ปิด (OFF)'}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  ลากคลุมกลุ่มคำ สำนวน หรือทั้งประโยค เพื่อแสดงปุ่มบอลลูนลอย <span class="font-mono text-indigo-500 font-semibold">[📖 แปลประโยคนี้]</span> พร้อมคำแปลภาษาไทยเต็มประโยคและเสียงอ่าน TTS
+                </p>
+              </div>
+              <button type="button"
+                      onclick="window.app.toggleSelectionTranslatePreference()"
+                      class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        isSelectionTranslate ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'
+                      }"
+                      role="switch"
+                      aria-checked="${isSelectionTranslate}">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  isSelectionTranslate ? 'translate-x-5' : 'translate-x-0'
+                }"></span>
+              </button>
+            </div>
+
+            <!-- Setting 3: Sound Effects (เสียงประกอบเอฟเฟกต์) -->
+            <div class="py-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1 max-w-xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-base">🔔</span>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white">เสียงประกอบเกม & เอฟเฟกต์ (Sound Effects)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    isSfx ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                  }">
+                    ${isSfx ? 'เปิดใช้งาน (ON)' : 'ปิด (OFF)'}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  เล่นเสียงเอฟเฟกต์เมื่อตอบคำถามถูกต้อง (+XP), การคลิกปุ่ม, หรือบรรลุภารกิจรายวัน
+                </p>
+              </div>
+              <button type="button"
+                      onclick="window.app.toggleSoundEffectsPreference()"
+                      class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        isSfx ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'
+                      }"
+                      role="switch"
+                      aria-checked="${isSfx}">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  isSfx ? 'translate-x-5' : 'translate-x-0'
+                }"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Management & Backup Card (จัดการข้อมูล & สำรองข้อมูล) -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">💾</span>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                จัดการข้อมูล & สำรองประวัติการเรียน (Data Backup & Reset)
+              </h3>
+            </div>
+            <span class="text-xs text-slate-400">ปลอดภัย 100% ในเครื่องคุณ</span>
+          </div>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            ข้อมูล XP, คำศัพท์ที่บันทึก, ประวัติการสอบ CEFR, และภารกิจทั้งหมดจะถูกจัดเก็บไว้ในเบราว์เซอร์ของคุณ คุณสามารถดาวน์โหลดไฟล์สำรองข้อมูล JSON เก็บไว้ หรือนำไปเปิดใช้งานบนอุปกรณ์เครื่องอื่นได้ตลอดเวลา
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button onclick="window.storageManager.exportBackupJSON()"
+                    class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>ส่งออกไฟล์สำรอง (Export JSON)</span>
+            </button>
+
+            <label class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs border border-slate-200 dark:border-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              <span>กู้คืนข้อมูลจากไฟล์ (Restore JSON)</span>
+              <input type="file" accept=".json" onchange="window.app.handleRestoreFile(event)" class="hidden">
+            </label>
+
+            <button onclick="window.app.confirmResetAll()"
+                    class="px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 font-bold text-xs border border-rose-200 dark:border-rose-900/50 shadow-xs active:scale-95 transition-all ml-auto flex items-center gap-1.5">
+              <span>⚠️ รีเซ็ตข้อมูลทั้งหมด</span>
+            </button>
+          </div>
+        </div>
       </div>
     `;
+  }
+
+  toggleInstantVocabPreference() {
+    const val = window.storageManager.toggleInstantVocab();
+    window.soundFx.playClick();
+    this.showToast(val ? "📖 เปิดระบบแตะแปลคำศัพท์ทันทีแล้ว" : "ปิดระบบแตะแปลคำศัพท์แล้ว", "info");
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "profile") {
+      this.renderProfileAndBackupView(container);
+    }
+  }
+
+  toggleSelectionTranslatePreference() {
+    const val = window.storageManager.toggleSelectionTranslate();
+    window.soundFx.playClick();
+    this.showToast(val ? "📝 เปิดระบบลากคลุมแปลประโยคแล้ว" : "ปิดระบบลากคลุมแปลประโยคแล้ว", "info");
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "profile") {
+      this.renderProfileAndBackupView(container);
+    }
+  }
+
+  toggleSoundEffectsPreference() {
+    const val = window.storageManager.toggleSoundEffects();
+    if (val) window.soundFx.playClick();
+    this.showToast(val ? "🔔 เปิดเสียงเอฟเฟกต์แล้ว" : "ปิดเสียงเอฟเฟกต์แล้ว", "info");
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "profile") {
+      this.renderProfileAndBackupView(container);
+    }
   }
 
   updateAvatarEmoji(emoji) {
@@ -8310,37 +8483,52 @@ class EngMasteryApp {
   }
 
   async lookupReadingWord(rawWord, sentenceEn = "", sentenceTh = "") {
-    const cleanWord = (rawWord || "").replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
+    const trimmedRaw = (rawWord || "").trim();
+    if (!trimmedRaw) return null;
+
+    // Detect if this is a multi-word phrase or sentence
+    const wordTokens = trimmedRaw.split(/\s+/).filter(Boolean);
+    const isPhraseOrSentence = wordTokens.length > 1;
+
+    // For single words, strip non-alphanumeric at boundaries
+    const cleanWord = isPhraseOrSentence
+      ? trimmedRaw.replace(/^[^a-zA-Z0-9"']+|[^a-zA-Z0-9"'.!?]+$/g, '').trim()
+      : trimmedRaw.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
+
     if (!cleanWord) return null;
 
-    const map = this.getVocabIndex();
-    const lemma = this.lemmatizeWord(cleanWord);
+    const cacheKey = cleanWord.toLowerCase();
 
-    // 1. Check local Oxford 3000 / Tech vocabulary database (100% Offline)
-    if (map.has(lemma)) {
-      const v = map.get(lemma);
-      return {
-        word: v.word,
-        ipa: v.ipa || "",
-        pos: v.pos || "word",
-        th: v.th || "",
-        definition: v.definition || "",
-        exampleEn: v.exampleEn || sentenceEn || "",
-        exampleTh: v.exampleTh || sentenceTh || "",
-        source: "local"
-      };
+    // 1. Check local Oxford 3000 / Tech vocabulary database (100% Offline) - for single words
+    if (!isPhraseOrSentence) {
+      const map = this.getVocabIndex();
+      const lemma = this.lemmatizeWord(cacheKey);
+
+      if (map.has(lemma)) {
+        const v = map.get(lemma);
+        return {
+          word: v.word,
+          ipa: v.ipa || "",
+          pos: v.pos || "word",
+          th: v.th || "",
+          definition: v.definition || "",
+          exampleEn: v.exampleEn || sentenceEn || "",
+          exampleTh: v.exampleTh || sentenceTh || "",
+          source: "local"
+        };
+      }
     }
 
     // 2. Check cached online translations
-    if (this.onlineVocabCache && this.onlineVocabCache[cleanWord]) {
+    if (this.onlineVocabCache && this.onlineVocabCache[cacheKey]) {
       return {
-        word: cleanWord,
+        word: isPhraseOrSentence ? trimmedRaw : cleanWord,
         ipa: "",
-        pos: "vocabulary",
-        th: this.onlineVocabCache[cleanWord],
-        definition: "คำแปลจากระบบแปลภาษา (Google Translate)",
-        exampleEn: sentenceEn || "",
-        exampleTh: sentenceTh || "",
+        pos: isPhraseOrSentence ? (cleanWord.includes(".") || cleanWord.includes("?") || cleanWord.includes("!") ? "sentence" : "phrase") : "vocabulary",
+        th: this.onlineVocabCache[cacheKey],
+        definition: isPhraseOrSentence ? "คำแปลประโยค/ข้อความจากการเลือก (Google Translate)" : "คำแปลจากระบบแปลภาษา (Google Translate)",
+        exampleEn: sentenceEn || (isPhraseOrSentence ? trimmedRaw : ""),
+        exampleTh: sentenceTh || (isPhraseOrSentence ? this.onlineVocabCache[cacheKey] : ""),
         source: "online"
       };
     }
@@ -8351,19 +8539,25 @@ class EngMasteryApp {
       const resp = await fetch(url);
       if (resp.ok) {
         const data = await resp.json();
-        const translated = (data && data[0] && data[0][0] && data[0][0][0]) || cleanWord;
-        this.onlineVocabCache[cleanWord] = translated;
+        let translated = "";
+        if (data && Array.isArray(data[0])) {
+          translated = data[0].map(s => (s && s[0]) || "").join("").trim();
+        }
+        if (!translated) translated = cleanWord;
+
+        this.onlineVocabCache[cacheKey] = translated;
         try {
           localStorage.setItem("engmastery_online_vocab_cache", JSON.stringify(this.onlineVocabCache));
         } catch (e) {}
+
         return {
-          word: cleanWord,
+          word: isPhraseOrSentence ? trimmedRaw : cleanWord,
           ipa: "",
-          pos: "vocabulary",
+          pos: isPhraseOrSentence ? (cleanWord.includes(".") || cleanWord.includes("?") || cleanWord.includes("!") ? "sentence" : "phrase") : "vocabulary",
           th: translated,
-          definition: "คำแปลจากระบบแปลภาษา (Google Translate)",
-          exampleEn: sentenceEn || "",
-          exampleTh: sentenceTh || "",
+          definition: isPhraseOrSentence ? "คำแปลประโยค/ข้อความจากการเลือก (Google Translate)" : "คำแปลจากระบบแปลภาษา (Google Translate)",
+          exampleEn: sentenceEn || (isPhraseOrSentence ? trimmedRaw : ""),
+          exampleTh: sentenceTh || (isPhraseOrSentence ? translated : ""),
           source: "online"
         };
       }
@@ -8373,12 +8567,12 @@ class EngMasteryApp {
 
     // 4. Offline fallback if word is outside 3,000 database and no connection
     return {
-      word: cleanWord,
+      word: isPhraseOrSentence ? trimmedRaw : cleanWord,
       ipa: "",
-      pos: "word",
-      th: "คำศัพท์นี้นอกฐานข้อมูลหลัก (กรุณาเชื่อมต่ออินเทอร์เน็ตเพื่อดูคำแปลสด)",
-      definition: "This term is outside the local 3,000 core vocabulary database.",
-      exampleEn: sentenceEn || "",
+      pos: isPhraseOrSentence ? "phrase" : "word",
+      th: isPhraseOrSentence ? "ไม่สามารถแปลข้อความยาวนี้ขณะออฟไลน์ได้ (กรุณาเชื่อมต่ออินเทอร์เน็ต)" : "คำศัพท์นี้นอกฐานข้อมูลหลัก (กรุณาเชื่อมต่ออินเทอร์เน็ตเพื่อดูคำแปลสด)",
+      definition: isPhraseOrSentence ? "This sentence or phrase requires internet connection to translate." : "This term is outside the local 3,000 core vocabulary database.",
+      exampleEn: sentenceEn || (isPhraseOrSentence ? trimmedRaw : ""),
       exampleTh: sentenceTh || "",
       source: "offline"
     };
@@ -8405,16 +8599,18 @@ class EngMasteryApp {
 
   async handleReadingWordClick(event, rawWord, sentenceEn, sentenceTh) {
     if (event) {
-      event.stopPropagation();
-      event.preventDefault();
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+      if (typeof event.preventDefault === "function") event.preventDefault();
     }
-    const cleanWord = (rawWord || "").replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
+    const cleanWord = (rawWord || "").trim();
     if (!cleanWord) return;
 
     window.soundFx.playClick();
-    this.openReadingWordModalLoading(cleanWord);
+    this.openReadingWordModalLoading(cleanWord.length > 25 ? cleanWord.substring(0, 22) + "..." : cleanWord);
     const entry = await this.lookupReadingWord(cleanWord, sentenceEn, sentenceTh);
-    this.renderReadingWordModalContent(entry);
+    if (entry) {
+      this.renderReadingWordModalContent(entry);
+    }
   }
 
   openReadingWordModalLoading(word) {
@@ -8441,41 +8637,64 @@ class EngMasteryApp {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
 
+    const wordTokens = (entry.word || "").trim().split(/\s+/).filter(Boolean);
+    const isPhraseOrSentence = wordTokens.length > 2 || (entry.word || "").length > 28;
+    const isSingleWord = wordTokens.length === 1;
+
+    const titleClass = wordTokens.length > 7 || (entry.word || "").length > 60
+      ? "text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-relaxed"
+      : (isPhraseOrSentence ? "text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug" : "text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight");
+
+    const thClass = isPhraseOrSentence
+      ? "text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400 leading-relaxed"
+      : "text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400 leading-snug tracking-tight";
+
+    const showExample = entry.exampleEn && entry.exampleEn.toLowerCase().trim() !== entry.word.toLowerCase().trim();
+
     card.innerHTML = `
       <div class="space-y-4">
-        <!-- Top Bar: Word, IPA, POS and Audio Speaker Button + Close -->
-        <div class="flex items-center justify-between gap-3">
-          <div class="flex items-baseline flex-wrap gap-2">
-            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              ${entry.word}
-            </h3>
-            ${entry.ipa ? `
-              <span class="text-sm sm:text-base font-mono text-slate-400 font-normal">
-                ${entry.ipa}
-              </span>
-            ` : ''}
-            ${entry.pos ? `
-              <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
-                ${entry.pos}
-              </span>
-            ` : ''}
+        <!-- Top Bar: Word/Sentence, IPA, POS and Action Buttons + Close -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1 min-w-0 pr-1">
+            <div class="flex items-baseline flex-wrap gap-2">
+              <h3 class="${titleClass} break-words">
+                ${entry.word}
+              </h3>
+              ${entry.ipa ? `
+                <span class="text-sm sm:text-base font-mono text-slate-400 font-normal">
+                  ${entry.ipa}
+                </span>
+              ` : ''}
+              ${entry.pos ? `
+                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                  ${entry.pos}
+                </span>
+              ` : ''}
+            </div>
           </div>
 
-          <div class="flex items-center gap-1">
-            <button id="reading-word-save-btn" onclick="window.app.toggleSaveWordFromPopup('${entry.word.replace(/'/g, "\\'")}')"
-              class="w-10 h-10 rounded-full ${window.storageManager.isWordSaved(entry.word) ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40'} flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
-              title="${window.storageManager.isWordSaved(entry.word) ? 'บันทึกแล้ว (คลิกเพื่อยกเลิก)' : 'บันทึกคำศัพท์นี้ (Save to My Vocab)'}">
-              <span class="text-base">${window.storageManager.isWordSaved(entry.word) ? '⭐' : '☆'}</span>
-            </button>
+          <div class="flex items-center gap-1 shrink-0">
+            ${isSingleWord ? `
+              <button id="reading-word-save-btn" onclick="window.app.toggleSaveWordFromPopup('${entry.word.replace(/'/g, "\\'")}')"
+                class="w-10 h-10 rounded-full ${window.storageManager.isWordSaved(entry.word) ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40'} flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+                title="${window.storageManager.isWordSaved(entry.word) ? 'บันทึกแล้ว (คลิกเพื่อยกเลิก)' : 'บันทึกคำศัพท์นี้ (Save to My Vocab)'}">
+                <span class="text-base">${window.storageManager.isWordSaved(entry.word) ? '⭐' : '☆'}</span>
+              </button>
+            ` : ''}
             <button onclick="window.speechEngine.speak('${entry.word.replace(/'/g, "\\'")}')"
               class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
-              title="ฟังเสียงอ่านคำศัพท์ (Pronounce)">
+              title="ฟังเสียงอ่าน (Pronounce)">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-4.72 4.72H2.5A1.5 1.5 0 001 9.19v1.62c0 .83.67 1.5 1.5 1.5h1.5l4.72 4.72A.75.75 0 0010 16.5V3.5zm3.78 3.22a.75.75 0 011.06 0 6.5 6.5 0 010 9.19.75.75 0 01-1.06-1.06 5 5 0 000-7.07.75.75 0 010-1.06z"/></svg>
             </button>
             <button id="reading-word-mic-btn" onclick="window.pronunciationLab.open('${entry.word.replace(/'/g, "\\'")}', '${(entry.ipa || '').replace(/'/g, "\\'")}', '${(entry.exampleEn || '').replace(/'/g, "\\'")}')"
               class="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/80 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
-              title="ทดสอบออกเสียงคำนี้ (Pronunciation Lab)">
+              title="ทดสอบออกเสียง (Pronunciation Lab)">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </button>
+            <button onclick="window.app.copyTextToClipboard('${entry.word.replace(/'/g, "\\'")}', 'คัดลอกข้อความแล้ว')"
+              class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-300 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+              title="คัดลอกข้อความ (Copy)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
             </button>
             <button onclick="window.app.closeReadingWordPopup()"
               class="w-9 h-9 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-sm font-bold transition-all ml-1"
@@ -8488,9 +8707,9 @@ class EngMasteryApp {
         <!-- Divider Line -->
         <div class="border-b border-slate-100 dark:border-slate-800/80"></div>
 
-        <!-- Thai Meaning (Prominent Bold Purple/Indigo Text) -->
+        <!-- Thai Meaning -->
         <div class="space-y-2">
-          <div class="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400 leading-snug tracking-tight">
+          <div class="${thClass}">
             ${entry.th}
           </div>
           ${entry.definition ? `
@@ -8501,8 +8720,8 @@ class EngMasteryApp {
           <div id="reading-word-voice-result-box" class="empty:hidden pt-1"></div>
         </div>
 
-        <!-- Example Sentence Card (if present) -->
-        ${entry.exampleEn ? `
+        <!-- Example Sentence Card (if present and distinct) -->
+        ${showExample ? `
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 space-y-2">
             <div class="flex items-start justify-between gap-3">
               <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed italic">
@@ -8649,10 +8868,346 @@ class EngMasteryApp {
   }
 
   closeReadingWordPopup() {
+    this.hideSelectionTranslateTooltip();
     const modal = document.getElementById("reading-word-modal");
     if (modal) {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
+    }
+  }
+
+  // =========================================================================
+  // GLOBAL INSTANT VOCAB LOOKUP & DRAG SELECTION TRANSLATE ENGINE
+  // =========================================================================
+  initGlobalInstantVocabAndSelection() {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+
+    // 1. Click listener for instant single word lookup across the whole app
+    document.addEventListener("click", (e) => {
+      this.handleGlobalWordClick(e);
+    });
+
+    // 2. Selection listeners for drag-to-select phrase/sentence translation
+    let selectionTimeout = null;
+    const handleSelectionChange = (e) => {
+      if (selectionTimeout) clearTimeout(selectionTimeout);
+      selectionTimeout = setTimeout(() => {
+        this.handleGlobalTextSelection(e);
+      }, 180);
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+    document.addEventListener("mouseup", (e) => {
+      setTimeout(() => this.handleGlobalTextSelection(e), 50);
+    });
+    document.addEventListener("touchend", (e) => {
+      setTimeout(() => this.handleGlobalTextSelection(e), 150);
+    });
+
+    // Dismiss floating tooltip on scroll or window resize
+    window.addEventListener("scroll", () => {
+      this.hideSelectionTranslateTooltip();
+    }, { passive: true });
+    window.addEventListener("resize", () => {
+      this.hideSelectionTranslateTooltip();
+    }, { passive: true });
+  }
+
+  isInteractiveOrExcludedElement(target) {
+    if (!target || !(target instanceof Element)) return true;
+
+    const excludedSelector = [
+      'button',
+      'a',
+      'input',
+      'textarea',
+      'select',
+      'label',
+      'option',
+      '[role="button"]',
+      '[role="tab"]',
+      '[role="checkbox"]',
+      '[role="switch"]',
+      '.reading-word-token',
+      '#reading-word-modal',
+      '#reading-word-modal *',
+      '#selection-translate-tooltip',
+      '#selection-translate-tooltip *',
+      '#pronunciation-lab-modal',
+      '#pronunciation-lab-modal *',
+      '#quiz-modal',
+      '#quiz-modal *',
+      '.word-chip',
+      '.interactive-chip',
+      '.clickable-chip',
+      '.no-instant-vocab',
+      'audio',
+      'video',
+      'svg',
+      'path',
+      'code',
+      'pre',
+      '[contenteditable="true"]'
+    ].join(',');
+
+    try {
+      if (target.closest(excludedSelector)) return true;
+    } catch (e) {
+      return true;
+    }
+
+    // Check ancestors for inline onclick or clickable role
+    let el = target;
+    for (let i = 0; i < 4 && el && el !== document.body; i++) {
+      if (el.hasAttribute && (el.hasAttribute('onclick') || el.getAttribute('role') === 'button')) {
+        return true;
+      }
+      el = el.parentElement;
+    }
+
+    return false;
+  }
+
+  extractWordAtPoint(x, y) {
+    if (typeof document === "undefined") return null;
+    let range = null;
+    let textNode = null;
+    let offset = 0;
+
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(x, y);
+      if (range) {
+        textNode = range.startContainer;
+        offset = range.startOffset;
+      }
+    } else if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(x, y);
+      if (pos) {
+        textNode = pos.offsetNode;
+        offset = pos.offset;
+      }
+    }
+
+    if (!textNode || textNode.nodeType !== 3 /* Node.TEXT_NODE */) {
+      return null;
+    }
+
+    const text = textNode.textContent || "";
+    if (!text || offset < 0 || offset > text.length) return null;
+
+    const isWordChar = (char) => /[a-zA-Z0-9]/.test(char);
+
+    // If offset points after a word character or whitespace, shift back 1 character if needed
+    let targetIdx = offset;
+    if (targetIdx >= text.length || !isWordChar(text[targetIdx])) {
+      if (targetIdx > 0 && isWordChar(text[targetIdx - 1])) {
+        targetIdx = targetIdx - 1;
+      }
+    }
+
+    if (!text[targetIdx] || !isWordChar(text[targetIdx])) {
+      return null;
+    }
+
+    // Find word boundaries (allowing internal apostrophes like don't, we're)
+    let start = targetIdx;
+    while (start > 0 && (isWordChar(text[start - 1]) || (text[start - 1] === "'" && start > 1 && isWordChar(text[start - 2])))) {
+      start--;
+    }
+
+    let end = targetIdx;
+    while (end < text.length && (isWordChar(text[end]) || (text[end] === "'" && end + 1 < text.length && isWordChar(text[end + 1])))) {
+      end++;
+    }
+
+    const rawWord = text.substring(start, end).replace(/^['"]+|['"]+$/g, '').trim();
+
+    // Must contain English alphabet
+    if (!rawWord || !/[a-zA-Z]/.test(rawWord)) return null;
+    // Discard single letters except 'a' or 'I'
+    if (rawWord.length === 1 && !['a', 'A', 'i', 'I'].includes(rawWord)) return null;
+
+    // Extract surrounding sentence context
+    let sentence = "";
+    try {
+      const fullText = (textNode.parentElement ? textNode.parentElement.innerText || text : text).trim();
+      const sentences = fullText.match(/[^.!?\n]+[.!?\n]+|[^.!?\n]+$/g) || [fullText];
+      for (const s of sentences) {
+        if (s.includes(rawWord)) {
+          sentence = s.trim();
+          break;
+        }
+      }
+    } catch (e) {}
+
+    return { word: rawWord, sentence: sentence };
+  }
+
+  handleGlobalWordClick(e) {
+    // 1. Check preference
+    if (window.storageManager && window.storageManager.state && window.storageManager.state.preferences) {
+      if (window.storageManager.state.preferences.instantVocab === false) return;
+    }
+
+    // 2. If user is selecting or dragging text, ignore click
+    const sel = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
+    if (sel.length > 0) return;
+
+    // 3. Ignore interactive or excluded elements
+    if (this.isInteractiveOrExcludedElement(e.target)) return;
+
+    // 4. Extract word at point
+    const x = e.clientX;
+    const y = e.clientY;
+    if (typeof x !== "number" || typeof y !== "number") return;
+
+    const extracted = this.extractWordAtPoint(x, y);
+    if (!extracted || !extracted.word) return;
+
+    // Trigger instant lookup!
+    this.handleReadingWordClick(e, extracted.word, extracted.sentence, "");
+  }
+
+  handleGlobalTextSelection(e) {
+    // 1. Check preference
+    if (window.storageManager && window.storageManager.state && window.storageManager.state.preferences) {
+      if (window.storageManager.state.preferences.selectionTranslate === false) {
+        this.hideSelectionTranslateTooltip();
+        return;
+      }
+    }
+
+    // 2. Get selection
+    if (typeof window === "undefined" || !window.getSelection) return;
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) {
+      if (e && e.target && !e.target.closest('#selection-translate-tooltip')) {
+        this.hideSelectionTranslateTooltip();
+      }
+      return;
+    }
+
+    const selectedText = selection.toString().trim();
+    if (!selectedText || selectedText.length < 2 || selectedText.length > 500 || !/[a-zA-Z]/.test(selectedText)) {
+      this.hideSelectionTranslateTooltip();
+      return;
+    }
+
+    // Check if selection is within excluded areas
+    const anchorNode = selection.anchorNode;
+    const parentEl = anchorNode ? (anchorNode.nodeType === 1 ? anchorNode : anchorNode.parentElement) : null;
+    if (parentEl && parentEl.closest('#reading-word-modal, #selection-translate-tooltip, input, textarea, select')) {
+      return;
+    }
+
+    try {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      if (rect && (rect.width > 0 || rect.height > 0)) {
+        this.showSelectionTranslateTooltip(rect, selectedText);
+      }
+    } catch (err) {
+      this.hideSelectionTranslateTooltip();
+    }
+  }
+
+  showSelectionTranslateTooltip(rect, selectedText) {
+    const tooltip = this.getOrCreateSelectionTooltip();
+    if (!tooltip) return;
+
+    const tooltipWidth = 150;
+    const tooltipHeight = 36;
+    const spacing = 8;
+
+    let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+    left = Math.max(10, Math.min(window.innerWidth - tooltipWidth - 10, left));
+
+    let top = rect.top - tooltipHeight - spacing;
+    if (top < 10) {
+      top = rect.bottom + spacing;
+    }
+
+    tooltip.style.left = `${Math.round(left)}px`;
+    tooltip.style.top = `${Math.round(top)}px`;
+    tooltip.style.display = "flex";
+
+    tooltip.dataset.text = selectedText;
+
+    const label = tooltip.querySelector(".tooltip-label");
+    if (label) {
+      const isSentence = selectedText.includes(" ") || selectedText.length > 15;
+      label.textContent = isSentence ? "แปลประโยคนี้" : `แปล "${selectedText}"`;
+    }
+  }
+
+  getOrCreateSelectionTooltip() {
+    if (typeof document === "undefined") return null;
+    let tooltip = document.getElementById("selection-translate-tooltip");
+    if (!tooltip) {
+      tooltip = document.createElement("div");
+      tooltip.id = "selection-translate-tooltip";
+      tooltip.className = "fixed z-50 hidden items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full shadow-2xl border border-slate-700/60 dark:border-slate-200 cursor-pointer select-none text-xs font-bold transition-all hover:scale-105 active:scale-95 animate-fadeIn";
+      tooltip.style.pointerEvents = "auto";
+      tooltip.innerHTML = `
+        <span class="text-indigo-400 dark:text-indigo-600 text-sm">📖</span>
+        <span class="tooltip-label">แปลประโยคนี้</span>
+        <svg class="w-3.5 h-3.5 opacity-60 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      `;
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const text = tooltip.dataset.text;
+        if (text) {
+          this.translateSelectedText(text);
+        }
+      });
+      document.body.appendChild(tooltip);
+    }
+    return tooltip;
+  }
+
+  hideSelectionTranslateTooltip() {
+    const tooltip = document.getElementById("selection-translate-tooltip");
+    if (tooltip && tooltip.style.display !== "none") {
+      tooltip.style.display = "none";
+      tooltip.dataset.text = "";
+    }
+  }
+
+  translateSelectedText(text) {
+    this.hideSelectionTranslateTooltip();
+    if (!text || !text.trim()) return;
+    this.handleReadingWordClick(null, text.trim(), text.trim(), "");
+  }
+
+  copyTextToClipboard(text, successMsg = "คัดลอกแล้ว") {
+    if (!text) return;
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        window.soundFx.playClick();
+        this.showToast(successMsg, "success");
+      }).catch(() => {
+        this.fallbackCopyText(text, successMsg);
+      });
+    } else {
+      this.fallbackCopyText(text, successMsg);
+    }
+  }
+
+  fallbackCopyText(text, successMsg = "คัดลอกแล้ว") {
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      window.soundFx.playClick();
+      this.showToast(successMsg, "success");
+    } catch (e) {
+      this.showToast("ไม่สามารถคัดลอกได้ในอุปกรณ์ของคุณ", "info");
     }
   }
 

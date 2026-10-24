@@ -45,7 +45,9 @@ class StorageManager {
         theme: "dark",
         accent: "en-US",
         sfx: true,
-        showDialogueThai: true
+        showDialogueThai: true,
+        instantVocab: true,
+        selectionTranslate: true
       }
     };
   }
@@ -201,6 +203,30 @@ class StorageManager {
     this.state.preferences.showDialogueThai = show !== undefined ? show : !this.state.preferences.showDialogueThai;
     this.save();
     return this.state.preferences.showDialogueThai;
+  }
+
+  toggleInstantVocab(show) {
+    if (!this.state.preferences) this.state.preferences = {};
+    this.state.preferences.instantVocab = show !== undefined ? show : (this.state.preferences.instantVocab !== false ? false : true);
+    this.save();
+    return this.state.preferences.instantVocab;
+  }
+
+  toggleSelectionTranslate(show) {
+    if (!this.state.preferences) this.state.preferences = {};
+    this.state.preferences.selectionTranslate = show !== undefined ? show : (this.state.preferences.selectionTranslate !== false ? false : true);
+    this.save();
+    return this.state.preferences.selectionTranslate;
+  }
+
+  toggleSoundEffects(show) {
+    if (!this.state.preferences) this.state.preferences = {};
+    this.state.preferences.sfx = show !== undefined ? show : (this.state.preferences.sfx !== false ? false : true);
+    if (typeof window !== "undefined" && window.soundFx) {
+      window.soundFx.enabled = this.state.preferences.sfx;
+    }
+    this.save();
+    return this.state.preferences.sfx;
   }
 
   // ==========================================
