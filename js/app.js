@@ -5515,11 +5515,6 @@ class EngMasteryApp {
                     : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
                 }">
                 ${cat.label}
-                  this.vocabFilter === cat.id
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
-                }">
-                ${cat.label}
               </button>
             `).join("")}
           </div>
@@ -5584,8 +5579,8 @@ class EngMasteryApp {
         </div>
 
         <!-- 3D Flashcard Container -->
-        <div class="perspective-1000 w-full min-h-[410px] sm:min-h-[430px] h-[420px] sm:h-[450px] cursor-pointer select-none" onclick="window.app.toggleFlashcardFlip()">
-          <div class="card-inner w-full h-full relative rounded-3xl transition-transform duration-500 transform-style-3d ${this.isCardFlipped ? 'is-flipped' : ''}">
+        <div class="perspective-1000 w-full min-h-[410px] sm:min-h-[430px] h-[420px] sm:h-[450px] cursor-pointer select-none no-instant-vocab" onclick="window.app.toggleFlashcardFlip()">
+          <div class="card-inner w-full h-full relative rounded-3xl transition-transform duration-500 transform-style-3d no-instant-vocab ${this.isCardFlipped ? 'is-flipped' : ''}">
             
             <!-- FRONT FACE -->
             <div class="card-front absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-700/50 shadow-2xl backface-hidden">
@@ -9220,6 +9215,17 @@ class EngMasteryApp {
       '.interactive-chip',
       '.clickable-chip',
       '.no-instant-vocab',
+      '.no-instant-vocab *',
+      '.perspective-1000',
+      '.perspective-1000 *',
+      '.card-inner',
+      '.card-inner *',
+      '.card-front',
+      '.card-front *',
+      '.card-back',
+      '.card-back *',
+      '.flashcard',
+      '.flashcard *',
       'audio',
       'video',
       'svg',
@@ -9328,14 +9334,22 @@ class EngMasteryApp {
       if (window.storageManager.state.preferences.instantVocab === false) return;
     }
 
-    // 2. If user is selecting or dragging text, ignore click
+    // 2. Never trigger word lookup on Flashcards (card flips instead of double popups)
+    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "srs")) {
+      return;
+    }
+    if (e.target && e.target.closest && e.target.closest('.card-inner, .perspective-1000, .card-front, .card-back, .no-instant-vocab, .flashcard')) {
+      return;
+    }
+
+    // 3. If user is selecting or dragging text, ignore click
     const sel = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
     if (sel.length > 0) return;
 
-    // 3. Ignore interactive or excluded elements
+    // 4. Ignore interactive or excluded elements
     if (this.isInteractiveOrExcludedElement(e.target)) return;
 
-    // 4. Extract word at point
+    // 5. Extract word at point
     const x = e.clientX;
     const y = e.clientY;
     if (typeof x !== "number" || typeof y !== "number") return;
@@ -9356,7 +9370,13 @@ class EngMasteryApp {
       }
     }
 
-    // 2. Get selection
+    // 2. Never show selection tooltip on Flashcards
+    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "srs")) {
+      this.hideSelectionTranslateTooltip();
+      return;
+    }
+
+    // 3. Get selection
     if (typeof window === "undefined" || !window.getSelection) return;
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed) {
