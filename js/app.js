@@ -8940,134 +8940,140 @@ class EngMasteryApp {
         </div>
 
         <!-- Reading Comprehension Quiz Section -->
-        <div class="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold">
-                <span>🎯 Reading Comprehension Quiz</span>
-                <span>•</span>
-                <span>3 ข้อ</span>
+        ${(() => {
+          const quizList = article.readingQuiz || article.quiz || [];
+          if (quizList.length === 0) return "";
+          return `
+            <div class="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold">
+                    <span>🎯 Reading Comprehension Quiz</span>
+                    <span>•</span>
+                    <span>${quizList.length} ข้อ</span>
+                  </div>
+                  <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1">
+                    แบบทดสอบวัดความเข้าใจท้ายบทความ
+                  </h3>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    ตอบถูก 2 ใน 3 ข้อขึ้นไป เพื่อปลดล็อกโบนัสความรู้ +30 XP
+                  </p>
+                </div>
+                <span class="text-sm font-black text-amber-500">+30 XP</span>
               </div>
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1">
-                แบบทดสอบวัดความเข้าใจท้ายบทความ
-              </h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400">
-                ตอบถูก 2 ใน 3 ข้อขึ้นไป เพื่อปลดล็อกโบนัสความรู้ +30 XP
-              </p>
-            </div>
-            <span class="text-sm font-black text-amber-500">+30 XP</span>
-          </div>
 
-          <!-- Quiz Questions -->
-          <div class="space-y-5">
-            ${article.readingQuiz.map((q, qIdx) => {
-              const selectedOpt = quizAnswers[qIdx];
-              const isSubmitted = !!quizResult;
-              const isCorrect = selectedOpt === q.answer;
+              <!-- Quiz Questions -->
+              <div class="space-y-5">
+                ${quizList.map((q, qIdx) => {
+                  const selectedOpt = quizAnswers[qIdx];
+                  const isSubmitted = !!quizResult;
+                  const isCorrect = selectedOpt === q.answer;
 
-              return `
-                <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border ${
-                  isSubmitted
-                    ? (isCorrect ? 'border-emerald-300 dark:border-emerald-800' : 'border-rose-300 dark:border-rose-800')
-                    : 'border-slate-200 dark:border-slate-800'
-                } shadow-sm space-y-3">
-                  <div class="flex items-start gap-2">
-                    <span class="px-2 py-0.5 rounded-lg bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 text-xs font-black">
-                      ข้อ ${qIdx + 1}
-                    </span>
-                    <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
-                      ${q.question}
-                    </h4>
-                  </div>
-
-                  <!-- Options -->
-                  <div class="space-y-2 pt-1">
-                    ${q.options.map((opt, optIdx) => {
-                      const isSelected = selectedOpt === optIdx;
-                      let btnClasses = "w-full text-left p-3 rounded-2xl text-xs font-medium transition-all flex items-center justify-between ";
-
-                      if (!isSubmitted) {
-                        btnClasses += isSelected
-                          ? "bg-indigo-600 text-white font-bold shadow-md"
-                          : "bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-100 dark:border-slate-800";
-                      } else {
-                        if (optIdx === q.answer) {
-                          btnClasses += "bg-emerald-600 text-white font-bold shadow-md";
-                        } else if (isSelected && !isCorrect) {
-                          btnClasses += "bg-rose-600 text-white font-bold shadow-md";
-                        } else {
-                          btnClasses += "bg-slate-50 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500 opacity-60";
-                        }
-                      }
-
-                      return `
-                        <button type="button"
-                          ${isSubmitted ? 'disabled' : ''}
-                          onclick="window.app.selectArticleQuizOption('${article.id}', ${qIdx}, ${optIdx})"
-                          class="${btnClasses}">
-                          <div class="flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border ${
-                              isSelected ? 'border-white text-white' : 'border-slate-300 dark:border-slate-600 text-slate-500'
-                            }">
-                              ${String.fromCharCode(65 + optIdx)}
-                            </span>
-                            <span>${opt}</span>
-                          </div>
-                          ${isSubmitted && optIdx === q.answer ? `
-                            <svg class="w-4 h-4 text-white shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                          ` : ''}
-                        </button>
-                      `;
-                    }).join("")}
-                  </div>
-
-                  <!-- Explanation upon submission -->
-                  ${isSubmitted ? `
-                    <div class="p-3 rounded-2xl ${
-                      isCorrect ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200' : 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200'
-                    } text-xs space-y-1">
-                      <div class="font-bold flex items-center gap-1">
-                        <span>${isCorrect ? '✅ ถูกต้อง!' : '❌ ยังไม่ถูกต้อง'}</span>
+                  return `
+                    <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border ${
+                      isSubmitted
+                        ? (isCorrect ? 'border-emerald-300 dark:border-emerald-800' : 'border-rose-300 dark:border-rose-800')
+                        : 'border-slate-200 dark:border-slate-800'
+                    } shadow-sm space-y-3">
+                      <div class="flex items-start gap-2">
+                        <span class="px-2 py-0.5 rounded-lg bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 text-xs font-black">
+                          ข้อ ${qIdx + 1}
+                        </span>
+                        <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+                          ${q.question}
+                        </h4>
                       </div>
-                      <p class="text-[11px] leading-relaxed">${q.explanation}</p>
-                    </div>
-                  ` : ''}
-                </div>
-              `;
-            }).join("")}
-          </div>
 
-          <!-- Quiz Submit / Result Actions -->
-          <div class="pt-4">
-            ${quizResult ? `
-              <div class="p-5 rounded-3xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 text-center">
-                <div class="text-3xl">${quizResult.passed ? '🎉' : '💪'}</div>
-                <h4 class="text-base font-bold text-slate-900 dark:text-white">
-                  ${quizResult.passed ? 'ยินดีด้วย! คุณผ่านแบบทดสอบความเข้าใจบทความ' : 'พยายามได้ดี! ลองศึกษาบทความอีกครั้ง'}
-                </h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400">
-                  ได้คะแนน ${quizResult.score} จาก ${quizResult.total} ข้อ (${quizResult.percent}%)
-                </p>
-                <div class="flex items-center justify-center gap-3 pt-2">
-                  <button onclick="window.app.retryArticleQuiz('${article.id}')"
-                    class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all">
-                    ลองทำใหม่อีกครั้ง
-                  </button>
-                  <button onclick="window.app.navigateTo('articles', { articleId: null })"
-                    class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-300 transition-all">
-                    เลือกบทความอื่น
-                  </button>
-                </div>
+                      <!-- Options -->
+                      <div class="space-y-2 pt-1">
+                        ${q.options.map((opt, optIdx) => {
+                          const isSelected = selectedOpt === optIdx;
+                          let btnClasses = "w-full text-left p-3 rounded-2xl text-xs font-medium transition-all flex items-center justify-between ";
+
+                          if (!isSubmitted) {
+                            btnClasses += isSelected
+                              ? "bg-indigo-600 text-white font-bold shadow-md"
+                              : "bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-100 dark:border-slate-800";
+                          } else {
+                            if (optIdx === q.answer) {
+                              btnClasses += "bg-emerald-600 text-white font-bold shadow-md";
+                            } else if (isSelected && !isCorrect) {
+                              btnClasses += "bg-rose-600 text-white font-bold shadow-md";
+                            } else {
+                              btnClasses += "bg-slate-50 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500 opacity-60";
+                            }
+                          }
+
+                          return `
+                            <button type="button"
+                              ${isSubmitted ? 'disabled' : ''}
+                              onclick="window.app.selectArticleQuizOption('${article.id}', ${qIdx}, ${optIdx})"
+                              class="${btnClasses}">
+                              <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border ${
+                                  isSelected ? 'border-white text-white' : 'border-slate-300 dark:border-slate-600 text-slate-500'
+                                }">
+                                  ${String.fromCharCode(65 + optIdx)}
+                                </span>
+                                <span>${opt}</span>
+                              </div>
+                              ${isSubmitted && optIdx === q.answer ? `
+                                <svg class="w-4 h-4 text-white shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                              ` : ''}
+                            </button>
+                          `;
+                        }).join("")}
+                      </div>
+
+                      <!-- Explanation upon submission -->
+                      ${isSubmitted ? `
+                        <div class="p-3 rounded-2xl ${
+                          isCorrect ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200' : 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200'
+                        } text-xs space-y-1">
+                          <div class="font-bold flex items-center gap-1">
+                            <span>${isCorrect ? '✅ ถูกต้อง!' : '❌ ยังไม่ถูกต้อง'}</span>
+                          </div>
+                          <p class="text-[11px] leading-relaxed">${q.explanation}</p>
+                        </div>
+                      ` : ''}
+                    </div>
+                  `;
+                }).join("")}
               </div>
-            ` : `
-              <button onclick="window.app.submitArticleQuiz('${article.id}')"
-                class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2">
-                <span>ส่งคำตอบแบบทดสอบ (Submit Quiz)</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-              </button>
-            `}
-          </div>
-        </div>
+
+              <!-- Quiz Submit / Result Actions -->
+              <div class="pt-4">
+                ${quizResult ? `
+                  <div class="p-5 rounded-3xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 text-center">
+                    <div class="text-3xl">${quizResult.passed ? '🎉' : '💪'}</div>
+                    <h4 class="text-base font-bold text-slate-900 dark:text-white">
+                      ${quizResult.passed ? 'ยินดีด้วย! คุณผ่านแบบทดสอบความเข้าใจบทความ' : 'พยายามได้ดี! ลองศึกษาบทความอีกครั้ง'}
+                    </h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      ได้คะแนน ${quizResult.score} จาก ${quizResult.total} ข้อ (${quizResult.percent}%)
+                    </p>
+                    <div class="flex items-center justify-center gap-3 pt-2">
+                      <button onclick="window.app.retryArticleQuiz('${article.id}')"
+                        class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all">
+                        ลองทำใหม่อีกครั้ง
+                      </button>
+                      <button onclick="window.app.navigateTo('articles', { articleId: null })"
+                        class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-300 transition-all">
+                        เลือกบทความอื่น
+                      </button>
+                    </div>
+                  </div>
+                ` : `
+                  <button onclick="window.app.submitArticleQuiz('${article.id}')"
+                    class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2">
+                    <span>ส่งคำตอบแบบทดสอบ (Submit Quiz)</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        })()}
 
         <!-- Unified Previous / Next Article Navigation Footer -->
         <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -9174,8 +9180,11 @@ class EngMasteryApp {
     const article = articles.find(a => a.id === artId);
     if (!article) return;
 
+    const quizList = article.readingQuiz || article.quiz || [];
+    const totalQuestions = quizList.length;
+    if (totalQuestions === 0) return;
+
     const answers = this.articleQuizAnswers[artId] || {};
-    const totalQuestions = article.readingQuiz.length;
 
     if (Object.keys(answers).length < totalQuestions) {
       alert("กรุณาตอบคำถามให้ครบทุกข้อก่อนส่งคำตอบครับ");
@@ -9183,7 +9192,7 @@ class EngMasteryApp {
     }
 
     let score = 0;
-    article.readingQuiz.forEach((q, idx) => {
+    quizList.forEach((q, idx) => {
       if (answers[idx] === q.answer) {
         score++;
       }
