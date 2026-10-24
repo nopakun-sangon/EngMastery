@@ -494,6 +494,48 @@ class EngMasteryApp {
           `;
         })()}
 
+        <!-- CEFR DIAGNOSTIC PLACEMENT TEST BANNER -->
+        ${(() => {
+          let testResult = null;
+          try {
+            const raw = localStorage.getItem("engmastery_placement_result");
+            if (raw) testResult = JSON.parse(raw);
+          } catch(e) {}
+
+          return `
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 border border-purple-500/30 p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
+                  🎯
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm sm:text-base font-black text-white">
+                      วัดระดับภาษาอังกฤษด่วน (CEFR Diagnostic Placement Test)
+                    </h3>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-500/30 text-purple-200 border border-purple-400/30">
+                      15 Calibrated Questions
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1">
+                    ${testResult 
+                      ? `🏆 ผลการทดสอบล่าสุด: ได้คะแนน <strong class="text-emerald-400 font-bold">${testResult.score}/${testResult.total} (${testResult.percentage}%)</strong> • แนะนำ <strong class="text-indigo-300 font-bold">${testResult.recommendedTitle}</strong>`
+                      : `ยังไม่แน่ใจว่าจะเริ่มเรียน Level ไหน? ทำแบบทดสอบ 15 ข้อเพื่อประเมินระดับ CEFR (A1-C1) และรับคำแนะนำคอร์สที่เหมาะกับคุณที่สุด`
+                    }
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 shrink-0">
+                <button onclick="window.placementTest ? window.placementTest.open() : alert('Placement test is loading...')"
+                  class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg hover:shadow-purple-500/25 transition-all active:scale-95 flex items-center gap-2">
+                  <span>${testResult ? '🔄 ทำแบบทดสอบอีกครั้ง' : '🎯 เริ่มทำแบบทดสอบวัดระดับ'}</span>
+                  <span>➔</span>
+                </button>
+              </div>
+            </div>
+          `;
+        })()}
+
         <!-- NEW FEATURE HUBS (Vocabulary Flashcards, Articles Library, Masterclass Hub) -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">

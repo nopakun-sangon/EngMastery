@@ -322,6 +322,126 @@ window.LESSON_3_CONNECTOR = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! ในประโยคเงื่อนไข Type 1 (เหตุการณ์ที่เป็นไปได้จริงในอนาคต) โครงสร้างคือ 'If + Present Simple (V.1), S + will + V.1' โดยในส่วนของประโยคย่อยหลัง If ห้ามใส่ will เด็ดขาด จึงต้องใช้ 'If the build fails...'"
+      },
+      {
+        id: "q-3-6",
+        question: "เลือกคำบอกเวลาใน Present Perfect ให้ถูกต้อง: 'Have you reviewed the pull request _____? — Yes, I have _____ approved and merged it.'",
+        options: [
+          "yet / already",
+          "already / yet",
+          "since / for",
+          "ever / yet"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! ในประโยคคำถามทั่วไปของ Present Perfect นิยมวาง 'yet' ไว้ท้ายประโยคเพื่อถามว่าทำหรือยัง ส่วนในประโยคบอกเล่าคำตอบที่ทำเสร็จเรียบร้อยแล้วจะวาง 'already' ไว้หน้ากริยาช่อง 3"
+      },
+      {
+        id: "q-3-7",
+        question: "เลือกโครงสร้างที่ถูกต้อง: 'The unexpected spike in latency _____ right after we updated the routing rules.'",
+        options: [
+          "was happened",
+          "happened",
+          "has been happened",
+          "was happening by"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'happen' เป็นอกรรมกริยา (Intransitive Verb) เช่นเดียวกับ occur, exist กฎเหล็กคือห้ามนำมาทำเป็น Passive Voice เด็ดขาด (was happened ผิดไวยากรณ์) ต้องใช้ Active Voice รูปอดีต 'happened'"
+      },
+      {
+        id: "q-3-8",
+        question: "โครงสร้างสมมุติในปัจจุบันที่เป็นไปได้ยาก (Second Conditional): 'If we _____ an in-memory Redis cluster, our API response time _____ significantly faster.'",
+        options: [
+          "implemented / would be",
+          "implement / would be",
+          "will implement / will be",
+          "had implemented / will be"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง Second Conditional (สมมุติเหตุการณ์ในปัจจุบัน/อนาคตที่ยังไม่เกิดขึ้นจริง) คือ If + Past Simple (V2), Subject + would + V1 (base form) จึงได้ 'If we implemented ..., response time would be...'"
+      },
+      {
+        id: "q-3-9",
+        question: "เติมกริยาที่เน้นย้ำความต่อเนื่องยาวนานตั้งแต่ในอดีตจนถึงวินาทีนี้: 'The SRE team _____ the root cause of this incident for over four hours.'",
+        options: [
+          "has been investigating",
+          "have investigated",
+          "is investigated",
+          "was investigating since"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'for over four hours' บ่งบอกระยะเวลาความต่อเนื่องที่ทำติดต่อกันมาจนถึงปัจจุบัน (Present Perfect Continuous) โดยประธาน 'The SRE team' ถือเป็นนามเอกพจน์ จึงใช้ 'has been investigating'"
+      },
+      {
+        id: "q-3-10",
+        question: "โครงสร้าง Passive Voice ร่วมกับ Modal Verb ข้อใดถูกต้องตามหลักความปลอดภัย?",
+        options: [
+          "All sensitive API keys must not be stored in plaintext inside version control.",
+          "All sensitive API keys must not stored in plaintext inside version control.",
+          "All sensitive API keys must not been stored in plaintext inside version control.",
+          "All sensitive API keys must not being store in plaintext inside version control."
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง Passive Voice เมื่อใช้ตามหลัง Modal Verb (must, should, can) คือ Modal + be + V3 (Past Participle) ดังนั้นรูปที่ถูกต้องคือ 'must not be stored'"
+      },
+      {
+        id: "q-3-11",
+        question: "เลือก Relative Pronoun เชื่อมประโยคขยายสิ่งของ/ระบบ: 'We deployed a microservice _____ automatically compresses image payloads before uploading them to S3.'",
+        options: [
+          "which",
+          "who",
+          "whom",
+          "where"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'microservice' เป็นสิ่งของ/ระบบทางเทคนิค ไม่ใช่บุคคล การเชื่อมประโยคขยายทำหน้าที่เป็นประธานของอนุประโยคจึงต้องใช้ 'which' (หรือ 'that')"
+      },
+      {
+        id: "q-3-12",
+        question: "เลือกคำเชื่อมบอกความขัดแย้งที่ขึ้นต้นประโยคที่มีประธานและกริยารองรับ: '_____ the load testing script executed smoothly, the database ran out of disk space.'",
+        options: [
+          "Although",
+          "However",
+          "Therefore",
+          "Despite"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'Although' เป็น Conjunction ตามด้วยอนุประโยค (Clause: Subject + Verb) ส่วน 'Despite' เป็น Preposition ต้องตามด้วยคำนาม (Noun / V-ing) และ 'However' เป็น Adverb มักคั่นด้วยเครื่องหมายจุลภาค ไม่ใช้เปิดหน้า Clause เดี่ยวๆ แบบนี้"
+      },
+      {
+        id: "q-3-13",
+        question: "เลือกคำบอกเวลาที่ถูกต้อง: 'The production Kubernetes cluster has been running stably _____ six consecutive months.'",
+        options: [
+          "since",
+          "for",
+          "during",
+          "from"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'six consecutive months' เป็นช่วงระยะเวลาความยาว (Duration) กฎไวยากรณ์สากลใน Present Perfect บังคับให้ใช้ 'for' (ส่วน 'since' จะใช้กับจุดเริ่มต้นของเวลา เช่น since January)"
+      },
+      {
+        id: "q-3-14",
+        question: "ประโยคบอกข้อเท็จจริงทางเทคนิคที่เป็นจริงเสมอ (Zero Conditional): 'When a worker node _____ unresponsive, the orchestrator automatically _____ its pods to another healthy host.'",
+        options: [
+          "becomes / reschedules",
+          "will become / reschedules",
+          "became / will reschedule",
+          "is becoming / rescheduled"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง Zero Conditional ใช้บอกความจริงทางธรรมชาติหรือระบบการทำงานอัตโนมัติ คือ When/If + Present Simple, Present Simple ดังนั้นประธานเอกพจน์ทั้งสองฝั่งจึงผันเป็น 'becomes' และ 'reschedules'"
+      },
+      {
+        id: "q-3-15",
+        question: "รูปประโยค Passive Voice ในกาล Present Perfect ที่ถูกต้องคือข้อใด?",
+        options: [
+          "The corrupted database table has restored successfully from the backup snapshot.",
+          "The corrupted database table has been restored successfully from the backup snapshot.",
+          "The corrupted database table is been restored successfully from the backup snapshot.",
+          "The corrupted database table was being restore successfully from the backup snapshot."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! โครงสร้าง Passive Voice ของ Present Perfect คือ Subject + has/have + been + V3 เนื่องจากตารางฐานข้อมูลเป็นฝ่ายถูกกู้คืนและทำเสร็จสิ้นแล้ว จึงต้องใช้ 'has been restored'"
       }
     ]
   }

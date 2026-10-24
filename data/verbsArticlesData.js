@@ -818,6 +818,151 @@ const verbsArticlesData = [
         "explanation": "ถูกต้อง! 'must not' แปลว่า 'ห้ามทำโดยเด็ดขาด' (Strict Prohibition) ซึ่งตรงกับนโยบายความปลอดภัยขององค์กรอย่างถูกต้อง ส่วน 'don't have to' จะแปลว่าไม่ต้องทำก็ได้"
       }
     ]
+  },
+  {
+    "id": "art-tech-prepositions-mastery",
+    "title": "คัมภีร์บุพบทสำหรับสาย Tech & DevOps (in, on, at, over, via, to, into) จุดตายที่โปรแกรมเมอร์มักใช้ผิด",
+    "titleEn": "Technical Prepositions Mastery for Software Engineers & SREs",
+    "category": "Technical English & DevOps",
+    "categoryTh": "ภาษาอังกฤษสำหรับงานเทคนิค & DevOps",
+    "readTime": "18 นาที",
+    "author": "Principal DevOps Engineer & Technical English Coach",
+    "publishedDate": "2026-10-24",
+    "coverEmoji": "🌐",
+    "summary": "ถอดรหัสบุพบทเฉพาะทางสายวิศวกรรมซอฟต์แวร์และคลาวด์: ทำไมต้อง 'listen on port', 'in memory', 'on disk', 'over HTTPS', 'via WebSocket', 'stream to S3', 'merge into main' พร้อมตารางเทียบจุดตาย 15 จุดที่พบบ่อยที่สุดใน Slack, PR และ Incident Reports",
+    "tags": [
+      "Prepositions",
+      "DevOps",
+      "Networking",
+      "Database",
+      "Operating Systems",
+      "Cloud Architecture"
+    ],
+    "sections": [
+      {
+        "heading": "1. เครือข่าย พอร์ต และโปรโตคอล (Networking, Ports & Protocols: ON, OVER, VIA, TO)",
+        "content": "ในการสื่อสารด้านเครือข่าย วิศวกรไทยมักสับสนว่าจะใช้ **in**, **on**, **at**, **over** หรือ **via** ซึ่งภาษาสากลมีกฎและหลักตรรกะที่แน่นอน:\n\n### 🌐 ตารางมาตรฐานบุพบทด้านเครือข่าย (Network Preposition Matrix):\n\n| บุพบทที่ใช้ | บริบททางเทคนิค | คำอธิบายหลักภาษา | ประโยคตัวอย่างที่ถูกต้อง ✅ | ตัวอย่างที่ผิดบ่อย ❌ |\n| :--- | :--- | :--- | :--- | :--- |\n| **listen ON [port]** | พอร์ตของเซิร์ฟเวอร์ | พอร์ตถือเป็นช่องสัญญาณบนเครื่อง จึงใช้ **on** เสมอ | *\"The API server listens **on port 8080**.\"* | *\"listens in port 8080\"* ❌<br>*\"listens at port 8080\"* (พบได้บ้างแต่ไม่นิยม) |\n| **transmit OVER [protocol]** | โปรโตคอล / ช่องทางส่ง | โปรโตคอลถือเป็นสื่อกลางการส่งผ่าน จึงใช้ **over** | *\"Data is encrypted and transmitted **over HTTPS**.\"* | *\"transmitted in HTTPS\"* ❌<br>*\"transmitted by HTTPS\"* ❌ |\n| **stream VIA [technology]** | เทคโนโลยีหรือตัวกลาง | สื่อถึงการเดินทาง \"ผ่านตัวกลาง\" | *\"We stream telemetry **via WebSocket** or gRPC.\"* | *\"stream through HTTP\"* (กำกวม) |\n| **connect TO [endpoint]** | ปลายทาง / โฮสต์ | การเชื่อมต่อมุ่งหน้าไปยังเป้าหมาย | *\"The worker connects **to the PostgreSQL cluster**.\"* | *\"connect with server\"* (สื่อถึงมีมิตรภาพ ไม่ใช่ socket) |\n| **bind TO [interface]** | การผูก Socket กับ IP | การยึดติดกับปลายทางแอดเดรส | *\"The daemon binds **to 0.0.0.0** by default.\"* | *\"binds on 0.0.0.0\"* (ผิดความหมาย socket) |\n\n### 💡 กฎทองจำง่าย:\n- พอร์ต = **ON** *(on port 443)*\n- สัญญาณ/โปรโตคอล = **OVER** *(over TCP, over HTTP/2, over TLS)*\n- ท่อ/ตัวกลาง = **VIA** *(via VPN, via gRPC, via SSH tunnel)*\n- ปลายทางเป้าหมาย = **TO** *(connect to, send request to)*",
+        "keyPhrases": [
+          {
+            "en": "The ingress controller listens on port 443 and terminates TLS traffic.",
+            "th": "Ingress Controller ดักฟังที่พอร์ต 443 และถอดรหัสทราฟฟิก TLS"
+          },
+          {
+            "en": "All inter-service RPC communication is routed over mutual TLS via Envoy proxy.",
+            "th": "การสื่อสาร RPC ระหว่างเซอร์วิสทั้งหมดถูกส่งผ่าน Mutual TLS โดยผ่าน Envoy Proxy"
+          }
+        ]
+      },
+      {
+        "heading": "2. หน่วยความจำ พื้นที่จัดเก็บ และฐานข้อมูล (Memory, Disk & Database: IN, ON, INTO)",
+        "content": "สถาปัตยกรรมคอมพิวเตอร์และฐานข้อมูลมีหลักการมองทางกายภาพ (Physical vs Logical) ที่ชัดเจนมาก:\n\n### 💾 ตารางบุพบทจัดเก็บข้อมูล (Data Storage Matrix):\n\n| บริบทเทคนิค | บุพบทที่ถูกต้อง | เหตุผลทางตรรกะ | ตัวอย่างประโยคจริง ✅ | ข้อผิดพลาดที่พบบ่อย ❌ |\n| :--- | :--- | :--- | :--- | :--- |\n| **RAM / Memory** | **IN memory** | แรมถือเป็นภาชนะ 3 มิติ มีพื้นที่บรรจุข้อมูลข้างใน | *\"Cached tokens are stored **in memory** for fast lookup.\"* | *\"stored on memory\"* ❌ |\n| **Hard Disk / SSD** | **ON disk** | ฮาร์ดดิสก์มองเป็นพื้นผิวแผ่นจานบันทึก (Platter/Drive) | *\"Uncompressed logs take up 500GB **on disk**.\"* | *\"take up 500GB in disk\"* ❌ |\n| **Database** | **IN the database** | ฐานข้อมูลถือเป็น Logical Store (คลังจัดเก็บ) | *\"The user profile is persisted **in the database**.\"* | *\"persisted on database\"* ❌ |\n| **Database Table** | **IN the table** | ตารางฐานข้อมูลเปรียบเหมือนแผ่นตารางที่มีเซลล์ข้างใน | *\"Each record **in the table** has a unique UUID.\"* | *\"records on the table\"* (ฟังเหมือนวางบนโต๊ะกินข้าว) |\n| **Disk Write Action** | **write TO disk / flush TO storage** | การส่งกระแสข้อมูลมุ่งหน้าไปเขียนลงแผ่นดิสก์ | *\"WAL buffers are flushed **to disk** every 500ms.\"* | *\"flushed inside disk\"* ❌ |\n| **Insert Action** | **insert INTO [table]** | การนำข้อมูลใหม่แทรก \"เข้าไปข้างใน\" ตาราง | *\"The consumer inserts batch events **into the events table**.\"* | *\"inserts in table\"* ❌ |",
+        "keyPhrases": [
+          {
+            "en": "Redis maintains an in-memory key-value store, while PostgreSQL writes persistent data to disk.",
+            "th": "Redis เก็บข้อมูล Key-Value ไว้ในหน่วยความจำ ในขณะที่ PostgreSQL บันทึกข้อมูลถาวรลงแผ่นดิสก์"
+          },
+          {
+            "en": "Always avoid bulk inserts into large tables without prior indexing considerations.",
+            "th": "จงหลีกเลี่ยงการ Bulk Insert เข้าไปในตารางขนาดใหญ่เสมอหากยังไม่ได้พิจารณาเรื่อง Index"
+          }
+        ]
+      },
+      {
+        "heading": "3. ระบบปฏิบัติการ สภาพแวดล้อม และเวลาการประมวลผล (OS, Containers & Runtime: ON, IN, AT)",
+        "content": "จุดนี้คือจุดที่คนเขียนภาษาอังกฤษสาย Tech มักผิดซ้ำซากที่สุด ระหว่าง **on**, **in**, และ **at**:\n\n### ⚙️ ตารางระบบปฏิบัติการและสภาพแวดล้อม (OS & Execution Matrix):\n\n| สิ่งที่กล่าวถึง | บุพบทที่ใช้ | กฎการเลือกใช้ | ตัวอย่างประโยคมาตรฐานสากล ✅ | ข้อผิดพลาดที่พบบ่อย ❌ |\n| :--- | :--- | :--- | :--- | :--- |\n| **OS / Platform** | **ON Linux / ON Windows / ON macOS** | ระบบปฏิบัติการถือเป็น Platform (ฐานรองรับ) จึงใช้ **on** | *\"This Docker engine runs natively **on Linux**.\"* | *\"runs in Linux\"* (พบบ่อยแต่เป็นทางการใช้ on) |\n| **Virtual Machine** | **ON a VM / ON an EC2 instance** | มองเป็นเครื่องแม่ข่ายรองรับ | *\"We host the backend **on AWS EC2 instances**.\"* | *\"host at AWS EC2\"* ❌ |\n| **Container** | **IN a container / INSIDE Docker** | มองเป็นตู้คอนเทนเนอร์ปิดล้อม (Enclosure) | *\"The application runs isolated **in a Docker container**.\"* | *\"runs on a container\"* ❌ |\n| **Execution Timing** | **AT runtime / AT compile-time** | จุดเวลาจำเพาะในวัฏจักรชีวิตของโปรแกรม | *\"Type checking is performed **at compile-time**, not **at runtime**.\"* | *\"in compile-time\"* ❌<br>*\"on runtime\"* ❌ |\n| **Application Startup** | **ON startup / AT boot** | ช่วงจังหวะที่ระบบเริ่มทำงาน | *\"The microservice loads environment variables **on startup**.\"* | *\"in startup\"* ❌ |\n| **Cloud Provider** | **ON AWS / ON GCP / ON Azure** | ถือเป็นแพลตฟอร์มคลาวด์ขนาดใหญ่ | *\"Our disaster recovery environment is hosted **on GCP**.\"* | *\"hosted in AWS\"* (พบบ้างแต่ on GCP/AWS สากลกว่า) |\n| **Region / Datacenter** | **IN the us-east-1 region** | ภูมิภาคและดาต้าเซ็นเตอร์มองเป็นพื้นที่ขอบเขตทางภูมิศาสตร์ | *\"The S3 bucket is located **in us-east-1**.\"* | *\"located on us-east-1\"* ❌ |",
+        "keyPhrases": [
+          {
+            "en": "TypeScript detects syntax errors at compile-time, whereas JavaScript throws errors at runtime.",
+            "th": "TypeScript ตรวจพบบั๊กไวยากรณ์ตั้งแต่ตอนคอมไพล์ ในขณะที่ JavaScript จะโยน Error ออกมาตอนรันไทม์"
+          },
+          {
+            "en": "The service crashed on startup because the database credentials were not found in the container.",
+            "th": "เซอร์วิสดับตั้งแต่ตอนเริ่มต้นทำงานเนื่องจากหาข้อมูลล็อกอินฐานข้อมูลไม่พบในคอนเทนเนอร์"
+          }
+        ]
+      },
+      {
+        "heading": "4. เวิร์กโฟลว์ Git และการควบคุมเวอร์ชัน (Git & Version Control: ON, TO, INTO, FROM)",
+        "content": "ในการทำ Code Review, Standup, และ Slack Updates การเลือกบุพบทของ Git จะช่วยสะท้อนความเป็นมืออาชีพได้อย่างชัดเจน:\n\n### 🐙 ตารางบุพบท Git และ Version Control (Git Operations Matrix):\n\n| คำกริยา / การกระทำ | บุพบทที่ใช้ | ความหมายเชิงเทคนิค | ตัวอย่างประโยคจริง ✅ |\n| :--- | :--- | :--- | :--- |\n| **work ON [branch/ticket]** | **on** | กำลังทำงานอยู่บนกิ่งหรือทาสก์นั้น | *\"I am currently working **on the payment-gateway branch**.\"* |\n| **commit TO [branch]** | **to** | นำการเปลี่ยนแปลงไปผูกไว้กับกิ่ง | *\"Do not commit directly **to the main branch**.\"* |\n| **merge INTO [branch]** | **into** | หลอมรวมโค้ดเข้าไปข้างในกิ่งเป้าหมาย | *\"We merged feature branch 104 **into develop** yesterday.\"* |\n| **rebase ONTO [base-branch]** | **onto** | ย้ายฐานประวัติคอมมิตไปวางทับบนกิ่งใหม่ | *\"Please rebase your branch **onto origin/main** before asking for review.\"* |\n| **push TO / pull FROM** | **to / from** | ทิศทางของการส่งและดึงโค้ด | *\"I just pushed the hotfix **to GitHub**; pull **from remote**.\"* |\n| **cherry-pick FROM [branch]** | **from** | ดึงเฉพาะคอมมิตเจาะจงมาจากกิ่งอื่น | *\"We cherry-picked the security patch **from staging**.\"* |",
+        "keyPhrases": [
+          {
+            "en": "Always create a pull request before merging changes into the production branch.",
+            "th": "จงเปิด Pull Request ทุกครั้งก่อนที่จะรวมการเปลี่ยนแปลงเข้าไปในกิ่ง Production"
+          },
+          {
+            "en": "I rebased my feature branch onto origin/main to eliminate merge conflicts.",
+            "th": "ผมทำการ Rebase กิ่งฟีเจอร์ของผมขึ้นบน origin/main เพื่อเคลียร์ความขัดแย้งของโค้ด"
+          }
+        ]
+      },
+      {
+        "heading": "5. ตารางสรุป 15 จุดตายการใช้บุพบทผิดยอดฮิตของสาย Tech (Cheat Sheet Master Matrix)",
+        "content": "ท่องจำตารางสรุป 15 คู่เปรียบเทียบนี้ แล้วคุณจะไม่พลาดอีกเลยทั้งในเอกสาร RFC, Slack, Jira และการสัมภาษณ์งาน:\n\n### 🏆 15 Technical Preposition Traps & Solutions:\n\n| # | จุดตายที่พบบ่อย (Common Pitfall) ❌ | โครงสร้างที่ถูกต้องสากล (Global Standard) ✅ | คำแปลภาษาไทย |\n| :-: | :--- | :--- | :--- |\n| **1** | listen in port 3000 | **listen on port 3000** | ดักฟังที่พอร์ต 3000 |\n| **2** | stored on memory | **stored in memory** | จัดเก็บอยู่ในหน่วยความจำ RAM |\n| **3** | saved in hard disk | **saved on disk** | บันทึกลงบนแผ่นดิสก์ |\n| **4** | send request by HTTPS | **send request over HTTPS** | ส่ง Request ผ่านโปรโตคอล HTTPS |\n| **5** | connect with the database | **connect to the database** | เชื่อมต่อไปยังฐานข้อมูล |\n| **6** | in runtime / on compile-time | **at runtime / at compile-time** | ตอนรันไทม์ / ตอนคอมไพล์ไทม์ |\n| **7** | runs in Linux | **runs on Linux** | ทำงานบนระบบปฏิบัติการ Linux |\n| **8** | inside on a container | **in a container** | ทำงานอยู่ภายในคอนเทนเนอร์ |\n| **9** | merge in master | **merge into main** | รวมโค้ดเข้าไปในกิ่ง main |\n| **10** | commit on branch | **commit to branch** | คอมมิตโค้ดไปยังกิ่ง |\n| **11** | host at AWS | **host on AWS** | โฮสต์อยู่บนคลาวด์ AWS |\n| **12** | located on us-west-2 | **located in us-west-2** | ตั้งอยู่ในเขตภูมิภาค us-west-2 |\n| **13** | in startup of the app | **on startup / at boot** | เมื่อตอนเริ่มเปิดใช้งานแอปพลิเคชัน |\n| **14** | subscribe of topic | **subscribe to topic** | กดติดตามหัวข้อ/คิวข้อความ (Kafka/PubSub) |\n| **15** | depend of the network | **depend on the network** | ขึ้นอยู่กับระบบเครือข่าย |",
+        "keyPhrases": [
+          {
+            "en": "Engineers listen on ports, store data in memory, write logs to disk, and transmit packets over TLS.",
+            "th": "วิศวกรดักฟังที่พอร์ต (on), เก็บข้อมูลในแรม (in), เขียนล็อกลงดิสก์ (to), และส่งแพ็กเก็ตผ่าน TLS (over)"
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "ประโยคใดต่อไปนี้ระบุการเชื่อมต่อพอร์ตและโปรโตคอลได้ถูกต้องตามมาตรฐานวิศวกรรมเครือข่าย?",
+        "options": [
+          "The microservice listens in port 8443 and communicates by HTTPS.",
+          "The microservice listens on port 8443 and communicates over HTTPS.",
+          "The microservice listens at port 8443 and communicates in HTTPS.",
+          "The microservice listens for port 8443 and communicates with HTTPS."
+        ],
+        "answer": 1,
+        "explanation": "ถูกต้อง! พอร์ตของเซิร์ฟเวอร์ใช้ 'listen ON port [number]' เสมอ และโปรโตคอลการสื่อสารข้อมูลใช้ 'OVER [protocol]' เช่น over HTTPS, over TCP"
+      },
+      {
+        "question": "เติมบุพบทระบุที่ตั้งทางกายภาพ (RAM vs Disk) ให้ถูกต้อง: 'Fast-access session states are held _____ memory, while audit logs are persisted _____ disk.'",
+        "options": [
+          "in / on",
+          "on / in",
+          "at / on",
+          "in / inside"
+        ],
+        "answer": 0,
+        "explanation": "ถูกต้อง! สถาปัตยกรรมคอมพิวเตอร์ถือว่า RAM เป็นภาชนะบรรจุจึงใช้ 'in memory' ส่วนฮาร์ดดิสก์ถือเป็นแผ่นจานบันทึกข้อมูลจึงใช้ 'on disk'"
+      },
+      {
+        "question": "เลือกคู่บุพบทกาลเวลาการประมวลผล (Execution Lifecycles): 'Syntax errors are caught _____ compile-time, whereas null pointer exceptions crash the service _____ runtime.'",
+        "options": [
+          "in / on",
+          "at / at",
+          "on / at",
+          "at / in"
+        ],
+        "answer": 1,
+        "explanation": "ถูกต้อง! ทั้ง 'at compile-time' และ 'at runtime' ถือเป็นจุดเวลาจำเพาะ (Specific phase in program lifecycle) ตามหลักภาษาอังกฤษจึงต้องใช้บุพบท 'at' ทั้งคู่"
+      },
+      {
+        "question": "การจัดการกิ่งโค้ดใน Git ข้อใดเลือกใช้บุพบทได้ถูกต้องตามธรรมเนียมสากล?",
+        "options": [
+          "I am working on the hotfix branch and will merge it into main after testing.",
+          "I am working in the hotfix branch and will merge it in main after testing.",
+          "I am working at the hotfix branch and will merge it to main after testing.",
+          "I am working to the hotfix branch and will merge it onto main after testing."
+        ],
+        "answer": 0,
+        "explanation": "ถูกต้อง! เมื่อทำงานอยู่บนกิ่งใช้ 'work ON a branch' และเมื่อรวมโค้ดเข้าไปในกิ่งเป้าหมายใช้ 'merge INTO [target-branch]'"
+      },
+      {
+        "question": "ในระบบ Event-driven Messaging เช่น Kafka หรือ RabbitMQ ประโยคใดถูกต้อง?",
+        "options": [
+          "The notification service subscribes of the payment-events topic.",
+          "The notification service subscribes to the payment-events topic.",
+          "The notification service subscribes on the payment-events topic.",
+          "The notification service subscribes with the payment-events topic."
+        ],
+        "answer": 1,
+        "explanation": "ถูกต้อง! กริยา 'subscribe' ต้องคู่กับบุพบท 'to' เสมอ (subscribe TO a topic/channel) เช่นเดียวกับในระบบ Pub/Sub ทั่วโลก"
+      }
+    ]
   }
 ];
 

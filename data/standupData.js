@@ -292,6 +292,66 @@ window.STANDUP_SCENARIOS = [
       { word: "dataset", ipa: "/ˈdeɪ.tə.set/", pos: "n.", th: "ชุดข้อมูล" }
     ],
     xpReward: 35
+  },
+  {
+    id: "standup-sc-07",
+    title: "Sprint Planning: Story Estimation & Scope Pushback",
+    titleTh: "การประชุมวางแผนสปรินต์: การประเมิน Story Points และการต่อรองขอบเขตงานอย่างมืออาชีพ",
+    role: "Senior Engineer / Tech Lead",
+    level: "Intermediate - Advanced",
+    badge: "Sprint Planning",
+    yesterday: {
+      en: "During backlog refinement, we reviewed the user story for OAuth2 social logins and identified three hidden backend dependencies.",
+      th: "ช่วงกลั่นกรอง Backlog เมื่อวาน เราได้ตรวจสอบ User Story สำหรับการล็อกอินโซเชียล OAuth2 และพบว่ามี 3 ส่วนที่ผูกกับระบบหลังบ้านเดิมครับ",
+      tip: "ใช้ 'identified hidden dependencies' เพื่อสื่อถึงการมองการณ์ไกลในเชิงสถาปัตยกรรม"
+    },
+    today: {
+      en: "For this sprint, I estimate this story at 8 story points due to third-party rate limits, and I recommend breaking it down into two smaller deliverables.",
+      th: "สำหรับสปรินต์นี้ ผมขอประเมินงานนี้ไว้ที่ 8 Story Points เนื่องจากมีเรื่อง Rate Limits ของภายนอก และขอเสนอให้ย่อยงานเป็น 2 เฟสย่อยครับ",
+      tip: "สูตรประเมินงาน: 'I estimate this story at [X] points because [reason]'"
+    },
+    blocker: {
+      en: "Given that two senior team members are on leave this sprint, committing to the full epic right now would risk our sprint goal, so let's defer the second half.",
+      th: "เนื่องจากในสปรินต์นี้มีวิศวกรซีเนียร์ลาพักร้อน 2 ท่าน หากรับงานมหากาพย์นี้ทั้งก้อนจะเสี่ยงต่อเป้าหมายสปรินต์ จึงขอเสนอเลื่อนครึ่งหลังไปสปรินต์หน้าครับ",
+      tip: "การปฏิเสธอย่างมืออาชีพ (Scope Pushback): ชี้แจงเรื่อง Capacity และขอ Defer งานบางส่วน"
+    },
+    fullSpeech: "Good morning team. During backlog refinement, we reviewed the user story for OAuth2 social logins and identified three hidden backend dependencies. For this sprint, I estimate this story at 8 story points due to third-party rate limits, and I recommend breaking it down into two smaller deliverables. Given that two senior team members are on leave this sprint, committing to the full epic right now would risk our sprint goal, so I suggest we defer the secondary provider to next sprint.",
+    keyVocab: [
+      { word: "dependency", ipa: "/dɪˈpen.dən.si/", pos: "n.", th: "สิ่งที่ต้องพึ่งพาหรือขึ้นต่อกัน" },
+      { word: "deliverable", ipa: "/dɪˈlɪv.ər.ə.bəl/", pos: "n.", th: "ชิ้นงานหรือผลลัพธ์ที่ต้องส่งมอบ" },
+      { word: "defer", ipa: "/dɪˈfɜːr/", pos: "v.", th: "เลื่อนเวลาออกไปก่อน" }
+    ],
+    xpReward: 40
+  },
+  {
+    id: "standup-sc-08",
+    title: "Sprint Retrospective: Celebrating Wins & Flaky Test Quarantine",
+    titleTh: "การประชุมสรุปบทเรียนสปรินต์: การชื่นชมความสำเร็จและการจัดการหนี้เทคนิค Flaky Tests",
+    role: "DevOps / Full-Stack Engineer",
+    level: "Intermediate - Advanced",
+    badge: "Sprint Retrospective",
+    yesterday: {
+      en: "What went really well this sprint was the automated preview environments on PRs, which accelerated QA sign-offs by over 30%.",
+      th: "สิ่งที่ทำได้ยอดเยี่ยมมากในสปรินต์นี้คือระบบ Automated Preview บน PR ซึ่งช่วยให้ทีม QA ตรวจรับงานได้เร็วขึ้นกว่า 30% ครับ",
+      tip: "เริ่ม Retro ด้วยสิ่งที่ดี (Positive Win) เพื่อสร้างบรรยากาศจิตวิทยาที่ปลอดภัย (Psychological Safety)"
+    },
+    today: {
+      en: "What could be improved is our end-to-end test suite; intermittent flaky tests caused false-positive pipeline failures four times this week.",
+      th: "สิ่งที่ควรปรับปรุงคือชุดทดสอบ E2E ครับ มี Flaky Tests ที่ติด ๆ ดับ ๆ ทำให้ไปป์ไลน์แจ้งเตือนล้มเหลวแบบไม่จริงถึง 4 ครั้งในสัปดาห์นี้",
+      tip: "ชี้ปัญหาที่ระบบ: 'intermittent flaky tests caused false-positive failures'"
+    },
+    blocker: {
+      en: "My proposed action item is to dedicate one technical debt ticket next sprint to quarantine and refactor those three unstable test cases.",
+      th: "ข้อเสนอแนะ Action Item ของผมคือขอกำหนดการ์ด Tech Debt 1 ใบในสปรินต์ถัดไป เพื่อแยกกักบริเวณ (Quarantine) และรีแฟกเตอร์ 3 เทสต์เคสนั้นใหม่ครับ",
+      tip: "จบด้วยรูปธรรม (Concrete Action Item): 'dedicate one tech-debt ticket to quarantine and refactor'"
+    },
+    fullSpeech: "Hi everyone. Reflecting on our sprint: What went really well was the automated preview environments on pull requests, which accelerated QA sign-offs by over 30%. What could be improved is our end-to-end test suite; intermittent flaky tests caused false-positive pipeline failures four times this week. My proposed action item is to dedicate one technical debt ticket next sprint to quarantine and refactor those three unstable test cases.",
+    keyVocab: [
+      { word: "retrospective", ipa: "/ˌret.rəˈspek.tɪv/", pos: "n.", th: "การประชุมทบทวนถอดบทเรียนการทำงาน" },
+      { word: "flaky", ipa: "/ˈfleɪ.ki/", pos: "adj.", th: "ไม่เสถียร (ผลทดสอบเปลี่ยนไปมาทั้งที่โค้ดเหมือนเดิม)" },
+      { word: "quarantine", ipa: "/ˈkwɒr.ən.tiːn/", pos: "v.", th: "แยกกักกันเพื่อไม่ให้รบกวนส่วนอื่น" }
+    ],
+    xpReward: 40
   }
 ];
 
@@ -455,6 +515,70 @@ window.PREP_QA_SCENARIOS = [
     },
     fullAnswer: "We've carefully architected this release with safety in mind. Here is our rollback plan. We can execute a complete rollback within two minutes using our automated Canary deployment pipeline. The database changes follow the expand-and-contract pattern, so the previous code container can safely read the new columns. We tested this exact revert sequence on staging yesterday, and traffic switched back instantaneously with zero downtime. If the production HTTP 500 error rate exceeds 1% during the first 10 minutes, ArgoCD will trigger the rollback automatically.",
     keyTip: "การมีเงื่อนไขชัดเจน (exceeds 1% error rate) แสดงถึงมาตรฐานทางวิศวกรรมระดับสูง"
+  },
+  {
+    id: "prep-06",
+    question: "Can we pull this urgent marketing request into the active sprint?",
+    questionTh: "เราสามารถดึงคำขอเร่งด่วนของฝ่ายการตลาดแทรกเข้ามาในสปรินต์ที่กำลังดำเนินอยู่ได้ไหม?",
+    category: "Sprint Planning & Scope Negotiation",
+    saviorOpener: "I completely understand the business urgency. Let me walk you through our sprint capacity real quick...",
+    saviorOpenerTh: "เข้าใจความเร่งด่วนทางธุรกิจเป็นอย่างดีครับ เดี๋ยวผมขออธิบายภาพรวม Capacity ของสปรินต์สักครู่ครับ...",
+    prep: {
+      point: {
+        label: "Point (ชี้แจงจุดยืนและข้อจำกัดตรงไปตรงมา)",
+        en: "We cannot take in this new feature without deferring an existing committed user story.",
+        th: "เราไม่สามารถรับฟีเจอร์ใหม่นี้เข้ามาได้ เว้นแต่ว่าจะต้องสลับเอางานเดิมที่คอมมิตไว้แล้วออกไปครับ"
+      },
+      reason: {
+        label: "Reason (บอกเหตุผลเรื่องขีดความสามารถ)",
+        en: "Our current sprint velocity is at 100% capacity, and our backend team has zero buffer hours left.",
+        th: "ขีดความสามารถ (Velocity) ของสปรินต์นี้เต็ม 100% แล้ว และทีมหลังบ้านไม่มีชั่วโมงสำรองเหลืออยู่เลยครับ"
+      },
+      example: {
+        label: "Example/Trade-off (ผลกระทบที่เป็นรูปธรรมหากฝืนรับ)",
+        en: "If we force this feature in, the payment security refactor will slip past our compliance deadline next Tuesday.",
+        th: "หากเราฝืนดึงงานนี้เข้ามา งานความปลอดภัยระบบชำระเงินจะหลุดเส้นตายการตรวจสอบความปลอดภัยวันอังคารหน้าทันทีครับ"
+      },
+      pointNext: {
+        label: "Point/Next (เสนอทางออกที่สร้างสรรค์ร่วมกัน)",
+        en: "If this request takes top priority, let's agree with the Product Owner right now to swap out Ticket 402.",
+        th: "ถ้าคำขอนี้มีความสำคัญสูงสุด ขอให้เราตกลงร่วมกับ PO ตอนนี้เพื่อสลับเอา Ticket 402 กลับไปไว้ใน Backlog ก่อนครับ"
+      }
+    },
+    fullAnswer: "I completely understand the business urgency. Let me walk you through our sprint capacity real quick. We cannot take in this new feature without deferring an existing committed user story. Our current sprint velocity is at 100% capacity, and our backend team has zero buffer hours left. If we force this feature in, the payment security refactor will slip past our compliance deadline next Tuesday. If this request takes top priority, let's agree with the Product Owner right now to swap out Ticket 402.",
+    keyTip: "การปฏิเสธแบบ Agile ไม่ใช่บอกว่า 'ไม่ทำ' แต่เป็นการบอกว่า 'ถ้าจะทำสิ่งนี้ จะต้องแลกด้วยสิ่งไหน' (Trade-off)"
+  },
+  {
+    id: "prep-07",
+    question: "How should our engineering team balance technical debt with new features in our sprint retrospectives?",
+    questionTh: "ทีมวิศวกรของเราควรสร้างสมดุลระหว่างการแก้หนี้ทางเทคนิค (Tech Debt) กับการส่งมอบฟีเจอร์ใหม่อย่างไรในการประชุม Retrospective?",
+    category: "Agile Retrospectives & Sustainability",
+    saviorOpener: "That's a crucial topic for our engineering health and team velocity...",
+    saviorOpenerTh: "เป็นประเด็นที่สำคัญยิ่งต่อสุขภาพของระบบและความเร็วระยะยาวของทีมเราเลยครับ...",
+    prep: {
+      point: {
+        label: "Point (กำหนดโควตาที่ชัดเจน)",
+        en: "We should formalize a 20% engineering capacity allocation in every sprint dedicated to technical debt.",
+        th: "เราควรกำหนดสัดส่วน 20% ของกำลังทีมในทุกสปรินต์สำหรับสะสางหนี้ทางเทคนิคโดยเฉพาะครับ"
+      },
+      reason: {
+        label: "Reason (อธิบายดอกเบี้ยของหนี้เทคนิค)",
+        en: "Unaddressed technical debt compounds over time, increasing bug frequency and slowing down new feature delivery.",
+        th: "หนี้ทางเทคนิคที่ปล่อยทิ้งไว้จะสะสมเป็นดอกเบี้ย ทำให้เกิดบั๊กบ่อยขึ้นและทำให้การพัฒนาฟีเจอร์ใหม่ช้าลงเรื่อย ๆ ครับ"
+      },
+      example: {
+        label: "Example/Evidence (ยกตัวอย่างผลลัพธ์ที่เคยทำสำเร็จ)",
+        en: "When we dedicated two days to refactor the auth pipeline last quarter, our login-related incident tickets dropped by 65%.",
+        th: "เมื่อไตรมาสก่อนที่เราจัดเวลา 2 วันรีแฟกเตอร์ระบบยืนยันตัวตน ตั๋วปัญหาเรื่องล็อกอินลดลงไปถึง 65% ครับ"
+      },
+      pointNext: {
+        label: "Point/Next (สรุปข้อตกลงและลงมือปฏิบัติ)",
+        en: "I propose we bake this 20% capacity rule into our team's working agreement starting in the next sprint planning.",
+        th: "ผมขอเสนอให้บรรจุกฎ 20% นี้เข้าไปใน Working Agreement ของทีมโดยเริ่มตั้งแต่รอบวางแผนสปรินต์ถัดไปทันทีครับ"
+      }
+    },
+    fullAnswer: "That's a crucial topic for our engineering health and team velocity. We should formalize a 20% engineering capacity allocation in every sprint dedicated to technical debt. Unaddressed technical debt compounds over time, increasing bug frequency and slowing down new feature delivery. When we dedicated two days to refactor the auth pipeline last quarter, our login-related incident tickets dropped by 65%. I propose we bake this 20% capacity rule into our team's working agreement starting in the next sprint planning.",
+    keyTip: "ใช้ตัวเลขจริง (20% capacity, dropped by 65%) เพื่อโน้มน้าวใจ Product Manager ให้เห็นความคุ้มค่าของการเคลียร์ Tech Debt"
   }
 ];
 

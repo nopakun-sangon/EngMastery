@@ -334,6 +334,126 @@ window.LESSON_2_STORYTELLER = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! 'cost' จัดอยู่ในกลุ่ม No-Change Irregular Verbs (กริยา 3 ช่องคงรูปเดิม) โดย V1 = cost, V2 = cost, V3 = cost เช่น 'The migration cost 5,000 dollars last month.' ห้ามเติม -ed เป็น costed เด็ดขาด"
+      },
+      {
+        id: "q-2-6",
+        question: "หากต้องการสร้างประโยคคำถามถามเหตุการณ์ในอดีต: '_____ you verify the checksum before you pushed the container image?' ควรเติมคำใด?",
+        options: [
+          "Did",
+          "Were",
+          "Have",
+          "Do"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! การสร้างประโยคคำถาม Past Simple กับกริยาแท้ 'verify' ต้องใช้กริยาช่วย 'Did' นำหน้าประธานเสมอ โครงสร้างคือ Did + Subject + V1 (base form)"
+      },
+      {
+        id: "q-2-7",
+        question: "เติมกริยาช่อง 2 ให้ถูกต้อง: 'Last night, the database primary node _____ unresponsive for approximately 10 minutes.'",
+        options: [
+          "becomed",
+          "became",
+          "become",
+          "was become"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! กริยา 'become' เป็นกริยาอปกติ (Irregular Verb) ผันรูปอดีต V2 เป็น 'became' (ห้ามเติม -ed เป็น becomed)"
+      },
+      {
+        id: "q-2-8",
+        question: "เลือกรูปขั้นสุด (Superlative) ของคำว่า 'good' ที่ถูกต้อง: 'PostgreSQL proved to be _____ database engine for our complex analytics workload.'",
+        options: [
+          "the most good",
+          "the better",
+          "the best",
+          "most best"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! 'good' เป็นคำคุณศัพท์ที่ผันรูปพิเศษ: good ➔ better (ขั้นกว่า) ➔ the best (ขั้นสุด) จึงต้องใช้ 'the best database engine'"
+      },
+      {
+        id: "q-2-9",
+        question: "ข้อใดเลือกใช้รูปอนาคตที่ถูกต้องตามบริบท: 'We have already budgeted the cloud credits and reserved the downtime; we _____ our staging cluster next Monday.'",
+        options: [
+          "migrate",
+          "will migrate",
+          "are going to migrate",
+          "are migrated"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! เมื่อมีการวางแผน จัดสรรงบประมาณ หรือกำหนดการเตรียมการไว้ล่วงหน้าอย่างชัดเจน (Pre-planned intention) กฎไวยากรณ์สากลจะนิยมใช้ 'be going to' มากกว่า 'will'"
+      },
+      {
+        id: "q-2-10",
+        question: "เติมคำบอกเวลาในอดีตให้ถูกต้อง: 'The vendor released the critical security advisory three days _____.'",
+        options: [
+          "before",
+          "ago",
+          "since",
+          "last"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'ago' ใช้วางหลังช่วงระยะเวลา (Duration + ago) เช่น 'three days ago' เพื่อบอกว่าเหตุการณ์เกิดขึ้นเมื่อ 3 วันที่แล้วนับย้อนจากปัจจุบันใน Past Simple"
+      },
+      {
+        id: "q-2-11",
+        question: "เลือกคู่กริยาอปกติ (V2) ที่ถูกต้อง: 'Yesterday afternoon, Sarah _____ the bash script and _____ the load test.'",
+        options: [
+          "writed / runned",
+          "wrote / ran",
+          "wrote / runned",
+          "written / run"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! ทั้ง 'write' และ 'run' เป็น Irregular Verbs โดย V2 ของ write คือ 'wrote' และ V2 ของ run คือ 'ran' (ห้ามเติม -ed เป็น writed หรือ runned)"
+      },
+      {
+        id: "q-2-12",
+        question: "เลือกรูปเปรียบเทียบขั้นกว่าของคำหลายพยางค์: 'The microservice architecture is significantly _____ to maintain than the legacy monolith.'",
+        options: [
+          "more easier",
+          "more difficult",
+          "difficultier",
+          "most difficult"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'difficult' มี 3 พยางค์ การทำเป็นขั้นกว่าต้องใส่ 'more' นำหน้าเป็น 'more difficult' (ส่วน more easier ผิดไวยากรณ์เพราะ easy พยางค์สั้นต้องเปลี่ยน y เป็น ier เป็น easier โดยไม่มี more)"
+      },
+      {
+        id: "q-2-13",
+        question: "เติมรูปปฏิเสธ Past Simple ให้ถูกต้อง: 'The DevOps lead _____ the pull request because two automated unit tests failed.'",
+        options: [
+          "didn't approved",
+          "didn't approve",
+          "wasn't approve",
+          "don't approved"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! ในประโยคปฏิเสธของ Past Simple เมื่อใช้ 'didn't' แล้ว กริยาตามหลังต้องคืนสู่รูปกริยาช่อง 1 ไม่ผัน (Base form) คือ 'didn't approve' (ห้ามมี -ed อีก)"
+      },
+      {
+        id: "q-2-14",
+        question: "คู่คำศัพท์กริยา Tech ในรูปอดีตคู่ใดที่ออกเสียงลงท้ายด้วยเสียงพยางค์พิเศษ /ɪd/ ทั้งสองคำ?",
+        options: [
+          "deployed and crashed",
+          "migrated and tested",
+          "fixed and launched",
+          "scaled and logged"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! กฎสากลคือ กริยาที่ลงท้ายด้วยเสียง /t/ หรือ /d/ เมื่อเติม -ed จะต้องออกเสียงเพิ่มอีก 1 พยางค์เป็น /ɪd/ ซึ่ง 'migrate' (ลงท้ายเสียง /t/) และ 'test' (ลงท้ายเสียง /t/) จึงออกเสียงเป็น 'migrated' (/ˈmaɪ.ɡreɪ.tɪd/) และ 'tested' (/ˈtes.tɪd/)"
+      },
+      {
+        id: "q-2-15",
+        question: "สังเกตสัญญาณตรงหน้า: 'Look at the server telemetry! The CPU graph is hitting 99% and the fan is screaming. The node _____!'",
+        options: [
+          "will crash perhaps",
+          "is going to crash",
+          "crashed",
+          "is crash"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! เมื่อเป็นการคาดการณ์อนาคตโดยมี 'หลักฐานเชิงประจักษ์คาตาในปัจจุบัน' (Evidence in the present) กฎไวยากรณ์ภาษาอังกฤษกำหนดให้ใช้ 'be going to' คือ 'is going to crash'"
       }
     ]
   }

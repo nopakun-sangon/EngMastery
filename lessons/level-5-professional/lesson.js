@@ -334,6 +334,126 @@ window.LESSON_5_PROFESSIONAL = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! 'I have a hard stop at [time]' เป็นสำนวนธุรกิจและอุตสาหกรรมเทคโนโลยีสากลที่สุภาพและเป็นมืออาชีพที่สุดในการแจ้งล่วงหน้าว่าคุณมีนัดหมายสำคัญอื่นต่อ และจำเป็นต้องออกจากประชุมตรงเวลาตามที่ระบุ"
+      },
+      {
+        id: "q-5-6",
+        question: "โครงสร้างสมมุติอดีตตรงข้ามความจริงและส่งผลในอดีต (Third Conditional): 'If the automated health check _____ triggered in time, our SRE team _____ the database degradation within 5 minutes.'",
+        options: [
+          "had / would have resolved",
+          "has / would resolve",
+          "had have / resolved",
+          "was / had resolved"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง Third Conditional คือ If + Past Perfect (had + V3), Subject + would have + V3 ใช้สำหรับการวิเคราะห์ทบทวนหลังเกิดเหตุ (Post-mortem Incident Analysis) สิ่งที่ถ้าเกิดขึ้นในอดีต ผลลัพธ์ในอดีตก็จะเปลี่ยนไป"
+      },
+      {
+        id: "q-5-7",
+        question: "โครงสร้างสมมุติผสมผสานกาลเวลา (Mixed Conditional: อดีตส่งผลถึงปัจจุบัน): 'If we had migrated our services to Kubernetes last quarter, we _____ these painful deployment bottlenecks today.'",
+        options: [
+          "wouldn't be facing",
+          "wouldn't have faced",
+          "won't face",
+          "didn't face"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! อนุประโยคหน้าเป็นเงื่อนไขในอดีต (If + Past Perfect: had migrated) แต่อนุประโยคหลังมีคำว่า 'today' ซึ่งเป็นผลลัพธ์ในปัจจุบัน จึงต้องใช้รูป would(n't) + be + V-ing หรือ would(n't) + V1 เพื่อบอกว่า 'ตอนนี้เราคงไม่ต้องมาเผชิญหน้ากับปัญหานี้'"
+      },
+      {
+        id: "q-5-8",
+        question: "โครงสร้าง Future Continuous บอกกิจกรรมที่จะกำลังกระทำอยู่ ณ จุดเวลาในอนาคต: 'This time tomorrow, our infrastructure team _____ the zero-downtime database failover drill.'",
+        options: [
+          "will be executing",
+          "will execute",
+          "will have been execute",
+          "is execute"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! สำนวน 'This time tomorrow' บ่งบอกจุดเวลาที่เจาะจงในอนาคตว่าเราจะ 'กำลังปฏิบัติงานนั้นอยู่' จึงต้องใช้ Future Continuous คือ will be + V-ing ('will be executing')"
+      },
+      {
+        id: "q-5-9",
+        question: "ในการประชุม Standup หากมีสองวิศวกรถกเถียงรายละเอียดลึกจนกินเวลาคนอื่น ประโยคใดที่นำเสนอการ 'คุยนอกรอบ' ได้อย่างเป็นมืออาชีพที่สุด?",
+        options: [
+          "Stop talking now because nobody cares.",
+          "This is a great discussion, but let's take this offline so we don't hold up the rest of the standup.",
+          "Go outside the room right now and argue there.",
+          "You two are wasting everybody's sprint time."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! สำนวน 'take this offline' เป็นมาตรฐานสากลในวงการ Tech หมายถึง 'ขอแยกประเด็นนี้ไปคุยนอกรอบ/หลังไมค์' เพื่อรักษาเวลาของคนทั้งทีมใน Standup"
+      },
+      {
+        id: "q-5-10",
+        question: "เลือกโครงสร้างการใช้คำว่า 'explain' ที่ถูกต้องตามกฎไวยากรณ์สากล: 'Could you please _____ the new rate-limiting algorithm?'",
+        options: [
+          "explain to me",
+          "explain me",
+          "explain for me",
+          "explain about to me"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'explain' เป็นกริยาที่ห้ามตามด้วยกรรมบุคคลตรง ๆ (ห้ามพูด 'explain me' เด็ดขาด) กฎสากลคือ 'explain something to someone' หรือ 'explain to someone something' จึงต้องเป็น 'explain to me'"
+      },
+      {
+        id: "q-5-11",
+        question: "เลือก Preposition ให้ถูกต้องตามกฎ Phrasal Verb ของ follow up: 'I will follow up _____ the QA engineer regarding the bug, and follow up _____ the ticket status tomorrow.'",
+        options: [
+          "with / on",
+          "on / with",
+          "to / about",
+          "with / with"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! กฎคือ: ติดตามสอบถามกับ 'บุคคล' ใช้ follow up WITH someone และติดตามความคืบหน้าของ 'เรื่องราว/งาน' ใช้ follow up ON something"
+      },
+      {
+        id: "q-5-12",
+        question: "โครงสร้าง Future Perfect Continuous เน้นความต่อเนื่องของระยะเวลาในอนาคต: 'By the end of this year, our lead architect _____ this multi-region platform for five full years.'",
+        options: [
+          "will have been managing",
+          "will be managing",
+          "will have managed",
+          "is managing"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! เมื่อมี 'By + เวลาในอนาคต' ผนวกกับ 'for + ระยะเวลา' (for five full years) ที่ต้องการเน้นย้ำความต่อเนื่องยาวนานไม่ขาดสาย ไวยากรณ์ชั้นสูงจะใช้ Future Perfect Continuous คือ 'will have been managing'"
+      },
+      {
+        id: "q-5-13",
+        question: "กฎ Time Clause กับกาลอนาคต: 'We will switch production DNS traffic to the new cluster as soon as the automated health check _____ HTTP 200.'",
+        options: [
+          "returns",
+          "will return",
+          "returned",
+          "shall return"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! หลังคำเชื่อมบอกเวลา 'as soon as, when, before, after' ห้ามใส่ will เด็ดขาด โดยต้องผันกริยาเป็น Present Simple เสมอ ประธานเอกพจน์ 'the health check' จึงใช้ 'returns'"
+      },
+      {
+        id: "q-5-14",
+        question: "ในบริบทของทีมวิศวกรซอฟต์แวร์ เมื่อเพื่อนร่วมงานบอกว่า 'I don't have the bandwidth to take on another task this sprint' หมายความว่าอย่างไร?",
+        options: [
+          "ความเร็วสัญญาณอินเทอร์เน็ตของเขาช้าเกินไป",
+          "เขาไม่มีเวลาหรือความพร้อมของตารางงานเพียงพอที่จะรับงานเพิ่มในสปรินต์นี้",
+          "ซีพียูเครื่องคอมพิวเตอร์ของเขาทำงานหนักเกินไป",
+          "เขาปฏิเสธที่จะทำงานร่วมกับทีมอย่างถาวร"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! คำว่า 'bandwidth' ในภาษาอังกฤษสายธุรกิจและ Tech ถูกใช้เป็น Metaphor (อุปมาอุปไมย) หมายถึง 'ขีดความสามารถ เวลา หรือกำลังคนที่มีอยู่' (human mental/time capacity)"
+      },
+      {
+        id: "q-5-15",
+        question: "เลือก Phrasal Verb ที่แปลว่า 'พึ่งพาแผนสำรองหรือระบบสำรองฉุกเฉิน': 'If the Redis distributed cache becomes unreachable, the service will _____ the local in-memory fallback.'",
+        options: [
+          "fall back on",
+          "fall down to",
+          "fall off from",
+          "fall out with"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'fall back on' เป็นกริยาวลีที่ใช้บ่อยมากในระบบวิศวกรรม แปลว่า 'ถอยกลับไปพึ่งพา/ใช้งานระบบสำรอง' (to rely on something as a secondary reserve when others fail)"
       }
     ]
   }

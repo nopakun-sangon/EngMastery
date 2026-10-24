@@ -334,6 +334,126 @@ window.LESSON_1_SURVIVOR = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! โครงสร้าง 'There is / There are' เมื่อทำเป็นประโยคคำถาม ให้ทำการสลับ Verb to be ขึ้นมาไว้หน้า There ทันที โดยสิ่งของที่กล่าวถึงคือ 'a severe security vulnerability' (เอกพจน์ 1 จุด) จึงสลับ 'Is' ขึ้นต้นเป็น 'Is there...?'"
+      },
+      {
+        id: "q-1-6",
+        question: "เติมคำในช่องว่างให้ถูกต้อง: 'The backend team _____ additional memory to handle peak load.'",
+        options: [
+          "is needing",
+          "needs",
+          "need",
+          "is need"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'need' เป็น Stative Verb (กริยาบอกความต้องการ/สภาวะ) ห้ามทำเป็น Continuous (-ing) โดยเด็ดขาด และประธาน 'The backend team' ในบริบทนี้ถือเป็นนามเอกพจน์ (องค์กรหรือทีมเดียว) กริยาจึงต้องผันเติม -s เป็น 'needs'"
+      },
+      {
+        id: "q-1-7",
+        question: "หากต้องการสร้างประโยคคำถาม WH-Question: 'Where _____ the microservice store user authentication tokens?' ควรเติมคำใด?",
+        options: [
+          "does",
+          "is",
+          "do",
+          "has"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! ในประโยคคำถาม Present Simple ที่มีกริยาแท้คือ 'store' (จัดเก็บ) และประธานเป็นเอกพจน์คือ 'the microservice' โครงสร้างคือ Wh-word + does + Subject + V1 (base form) จึงต้องใช้ 'Where does the microservice store...?'"
+      },
+      {
+        id: "q-1-8",
+        question: "ข้อใดเลือกใช้ Tense ถูกต้องตามบริบท: 'Normally I use VS Code, but this week I _____ IntelliJ IDEA for Java debugging.'",
+        options: [
+          "am using",
+          "use",
+          "uses",
+          "am use"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! คำบอกเวลา 'Normally' (ปกติเป็นกิจวัตร) ใช้ Present Simple (I use) แต่ท่อนหลังมีคำว่า 'this week' (เฉพาะสัปดาห์นี้ เป็นพฤติกรรมชั่วคราว) กฎไวยากรณ์สากลกำหนดให้ใช้ Present Continuous คือ 'am using'"
+      },
+      {
+        id: "q-1-9",
+        question: "ข้อใดเรียงลำดับคำกริยาวิเศษณ์บอกความถี่ (Adverbs of Frequency) ได้ถูกต้องตามหลักไวยากรณ์?",
+        options: [
+          "Our team deploys always on Wednesday.",
+          "Our team always deploys on Wednesday.",
+          "Always our team deploys on Wednesday.",
+          "Our team deploys on Wednesday always."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! กฎตำแหน่งของ Adverbs of Frequency (always, usually, often, never) คือ 'ต้องอยู่หน้ากริยาแท้' (Before Main Verbs) แต่ 'อยู่หลัง Verb to be' ดังนั้น 'always deploys' จึงเป็นตำแหน่งที่ถูกต้องตามมาตรฐานสากล"
+      },
+      {
+        id: "q-1-10",
+        question: "เติมคำในช่องว่างให้ถูกต้อง: 'These load balancers _____ support HTTP/3 yet.'",
+        options: [
+          "doesn't",
+          "aren't",
+          "don't",
+          "not"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! ประธาน 'These load balancers' เป็นพหูพจน์ (มีหลายตัว สังเกต These และ -s) เมื่อปฏิเสธใน Present Simple กับกริยาแท้ 'support' จึงต้องใช้ 'don't' (ห้ามใช้ aren't เพราะมีกริยาแท้ support อยู่แล้ว)"
+      },
+      {
+        id: "q-1-11",
+        question: "เติมคำในช่องว่าง: 'System throughput _____ heavily on the number of available database connections.'",
+        options: [
+          "is depending",
+          "depends",
+          "depend",
+          "are depending"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'depend on' เป็น Stative Verb (ขึ้นอยู่กับ / ผูกพันกับสภาวะ) ห้ามใช้ในรูป Continuous และประธาน 'System throughput' เป็นนามนับไม่ได้ (เอกพจน์) กริยาจึงต้องผันเติม -s เป็น 'depends'"
+      },
+      {
+        id: "q-1-12",
+        question: "เลือกคู่กริยาที่ถูกต้อง: 'The production database _____ stable, so we _____ any maintenance right now.'",
+        options: [
+          "is / don't need",
+          "does / aren't need",
+          "is / aren't needing",
+          "has / don't need"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! ส่วนแรก 'stable' เป็น Adjective (คำคุณศัพท์) ต้องใช้ Verb to be คือ 'is' ส่วนหลัง 'need' เป็น Stative Verb ในรูปปฏิเสธกับประธาน 'we' จึงต้องใช้ 'don't need' (ห้ามใช้ aren't needing)"
+      },
+      {
+        id: "q-1-13",
+        question: "หากต้องการถามว่า 'ใครดูแลคิว On-call สัปดาห์นี้?' โดย Who ทำหน้าที่เป็นประธานของประโยค ข้อใดถูกต้อง?",
+        options: [
+          "Who handle the primary on-call rotation this week?",
+          "Who handles the primary on-call rotation this week?",
+          "Who does handle the primary on-call rotation this week?",
+          "Who is handle the primary on-call rotation this week?"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! เมื่อ 'Who' ทำหน้าที่เป็นประธาน (Subject Question) กฎไวยากรณ์คือไม่ต้องใส่กริยาช่วย do/does เข้ามาคั่น แต่ให้ผันกริยาแท้เสมือนเป็นประธานเอกพจน์ทันที จึงได้ 'Who handles...?'"
+      },
+      {
+        id: "q-1-14",
+        question: "เลือกคำสะกดที่ถูกต้องตามหลักการเติม -ing (Spelling Rules): 'The CI pipeline is currently _____ the automated regression tests.'",
+        options: [
+          "runing",
+          "stoping",
+          "running",
+          "runned"
+        ],
+        answer: 2,
+        explanation: "ถูกต้อง! กริยา 'run' มี 1 พยางค์ สระเสียงสั้น 1 ตัว (u) และตัวสะกด 1 ตัว (n) ตามกฎ CVC (Consonant-Vowel-Consonant) จะต้อง 'เบิ้ลตัวสะกดท้าย' อีก 1 ตัวก่อนเติม -ing จึงสะกดเป็น 'running'"
+      },
+      {
+        id: "q-1-15",
+        question: "ประโยคใดที่วิศวกรซอฟต์แวร์นำไปใช้ในที่ประชุมได้อย่างถูกต้อง ปราศจากกับดักไวยากรณ์ยอดฮิต?",
+        options: [
+          "I am totally agree with the architecture proposal.",
+          "I totally agree with the architecture proposal.",
+          "I am agree totally with the architecture proposal.",
+          "I does agree with the architecture proposal completely."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! 'agree' เป็นคำกริยาแท้ (ไม่ใช่ Adjective) จึง 'ห้ามใส่ Verb to be (am)' นำหน้าเด็ดขาด โครงสร้างที่ถูกต้องสากลคือ 'I agree...' หรือขยายด้วย Adverb เป็น 'I totally agree with...'"
       }
     ]
   }

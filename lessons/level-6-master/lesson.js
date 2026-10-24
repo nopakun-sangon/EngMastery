@@ -321,6 +321,126 @@ window.LESSON_6_MASTER = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! 'To play devil's advocate' เป็นสำนวนชั้นสูง หมายถึงการที่ใครคนหนึ่งแกล้งแสดงความคิดเห็นหรือโต้แย้งในมุมมองตรงกันข้ามกับสิ่งที่คนส่วนใหญ่เห็นชอบ เพื่อทดสอบว่าไอเดียหรือสถาปัตยกรรมนั้นมีความรัดกุมและคิดมารอบด้านจริงหรือไม่"
+      },
+      {
+        id: "q-6-6",
+        question: "การกลับประโยคเงื่อนไขขั้นสูง (Third Conditional Inversion): ข้อใดแปลงประโยค 'If we had tested the failover mechanism earlier, the outage wouldn't have lasted two hours.' ได้อย่างสมบูรณ์แบบ?",
+        options: [
+          "Had we tested the failover mechanism earlier, the outage wouldn't have lasted two hours.",
+          "Had we not tested the failover mechanism earlier, the outage wouldn't have lasted two hours.",
+          "Did we test the failover mechanism earlier, the outage wouldn't have lasted two hours.",
+          "Were we tested the failover mechanism earlier, the outage wouldn't have lasted two hours."
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! ในภาษาอังกฤษระดับทางการ (Formal C1) สามารถตัด 'If' ทิ้งแล้วสลับ 'Had' ขึ้นมาไว้หน้าประธานได้ทันที (Inversion): 'Had we tested...' โดยคงความหมายเดิมอย่างทรงพลัง"
+      },
+      {
+        id: "q-6-7",
+        question: "โครงสร้าง Subjunctive Mood หลังคำสั่ง/ข้อกำหนดทางการ: 'The Chief Security Officer mandated that multi-factor authentication _____ enforced across all internal microservices.'",
+        options: [
+          "be",
+          "is",
+          "was",
+          "will be"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! หลังคำกริยาแสดงคำสั่งหรือความจำเป็นยิ่งยวด (demand, insist, mandate, recommend, require that...) กริยาในประโยคย่อยจะต้องเป็น Base Form (Infinitive without to) เสมอ โครงสร้าง Passive จึงต้องใช้ 'be enforced' (ห้ามใช้ is หรือ was)"
+      },
+      {
+        id: "q-6-8",
+        question: "โครงสร้าง Inversion หลัง Adverb เชิงปฏิเสธ (Rarely / Seldom): 'Rarely _____ such severe degradation in query throughput without an accompanying spike in locks.'",
+        options: [
+          "have we encountered",
+          "we have encountered",
+          "we encountered",
+          "did we encountered"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! เมื่อนำคำกริยาวิเศษณ์เชิงปฏิเสธที่มีความหมายว่าแทบจะไม่ (Rarely, Seldom, Little) ขึ้นต้นประโยค จะต้องสลับกริยาช่วยขึ้นมาหน้าประธานเสมือนรูปประโยคคำถาม จึงได้ 'Rarely have we encountered...'"
+      },
+      {
+        id: "q-6-9",
+        question: "ข้อใดคือโครงสร้าง What-Cleft Sentence ที่ถูกต้องเพื่อเน้นย้ำประเด็นว่า 'ความหน่วงเวลาต่ำ (Low latency) คือสิ่งที่สำคัญที่สุดต่อผู้ใช้งาน'?",
+        options: [
+          "What matters most to users is low latency.",
+          "What matter most to users are low latency.",
+          "What does matter most to users it is low latency.",
+          "That what matters to users is low latency."
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง What-Cleft Clause ทำหน้าที่เป็นเอกพจน์: 'What matters most to users is [focus point]' เป็นกลยุทธ์การสื่อสารชั้นสูงในการดึงโฟกัสของผู้ฟังไปยังประเด็นหลัก"
+      },
+      {
+        id: "q-6-10",
+        question: "การกลับประโยคเงื่อนไขอนาคตด้วย 'Should' (First Conditional Inversion): '_____ any performance regressions during canary verification, the CI pipeline will abort the rollout.'",
+        options: [
+          "Should you detect",
+          "If you detected",
+          "Had you detected",
+          "Were you detecting"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'Should + Subject + Base Verb' ใช้แทน 'If + Subject + Present Simple' ในระดับทางการและสัญญาข้อตกลง (SLA) มีความหมายว่า 'หากมีกรณีที่ตรวจพบข้อผิดพลาดแม้เพียงเล็กน้อย...'"
+      },
+      {
+        id: "q-6-11",
+        question: "ในการวิจารณ์สถาปัตยกรรมระบบเดิมต่อหน้าทีมบริหาร ประโยคใดนำเสนอการวิพากษ์เชิงสร้างสรรค์ระดับผู้นำ (Diplomatic Executive Critique) ได้ดีที่สุด?",
+        options: [
+          "This architecture is garbage and we must rewrite it.",
+          "While this legacy architecture has served us well, current metrics suggest it may struggle to sustain our projected tenfold traffic growth.",
+          "I hate this codebase and everyone knows it is broken.",
+          "Whoever designed this monolithic mess clearly lacked foresight."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! C1 Executive Communication ให้เกียรติบริบทอดีต ('has served us well') อ้างอิงตัวชี้วัดที่เป็นกลาง ('current metrics suggest') และใช้ Hedging ชี้แจงความเสี่ยงในอนาคต ('may struggle to sustain') ทำให้ทุกฝ่ายพร้อมร่วมมือ ไม่เกิดการตั้งกำแพงป้องกันตนเอง"
+      },
+      {
+        id: "q-6-12",
+        question: "การกลับประโยคสมมุติปัจจุบันด้วย 'Were' (Second Conditional Inversion): ข้อใดแปลงประโยค 'If we were to re-architect our data pipeline from scratch' ได้ถูกต้อง?",
+        options: [
+          "Were we to re-architect our data pipeline from scratch, we would select Apache Kafka.",
+          "Were we re-architect our data pipeline from scratch, we would select Apache Kafka.",
+          "Did we were to re-architect our data pipeline from scratch, we would select Apache Kafka.",
+          "Had we to re-architect our data pipeline from scratch, we would select Apache Kafka."
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง 'Were + Subject + to-Infinitive' เป็นรูป Inversion ของ Second Conditional เพื่อกล่าวถึงสมมุติฐานเชิงทฤษฎีในอนาคตได้อย่างสละสลวย"
+      },
+      {
+        id: "q-6-13",
+        question: "โครงสร้าง Subjunctive Mood หลังคำแนะนำของทีม: 'The site reliability team recommended that the gateway connection timeout _____ increased from 30s to 60s.'",
+        options: [
+          "be",
+          "is",
+          "would be",
+          "should been"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! หลัง 'recommend that...' กริยาต้องอยู่ในรูป Base Form เสมอ และในโครงสร้าง Passive Voice จึงต้องใช้ 'be + V3' (be increased)"
+      },
+      {
+        id: "q-6-14",
+        question: "ในการประชุมทบทวน Sprint (Retrospective) เพื่อนร่วมงานเอ่ยว่า: 'Before we discuss story points, let's address the elephant in the room.' สำนวนนี้หมายถึงสิ่งใด?",
+        options: [
+          "ปัญหาหรือประเด็นใหญ่ที่ชัดเจนมากจนทุกคนรับรู้อยู่เต็มอก แต่ต่างฝ่ายต่างพยายามหลีกเลี่ยงที่จะพูดถึง",
+          "ฟีเจอร์ขนาดใหญ่มากที่ฝ่ายการตลาดขอแทรกเข้ามา",
+          "เซิร์ฟเวอร์ขนาดใหญ่ที่มีราคาสูงเกินงบประมาณ",
+          "สมาชิกในทีมที่ส่งเสียงดังเกินไปในที่ประชุม"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'The elephant in the room' เป็นสำนวนระดับสูงที่พบบ่อยมากในอุตสาหกรรม หมายถึงปัญหาใหญ่เบิ้มที่มองเห็นชัดเจนราวกับมีช้างยืนอยู่กลางห้อง แต่ทุกคนกลับแกล้งทำเป็นมองไม่เห็นและไม่ยอมพูดถึง"
+      },
+      {
+        id: "q-6-15",
+        question: "เมื่อต้องนำเสนอการตัดสินใจทางสถาปัตยกรรม (Architectural Decision Record) ต่อ CTO ลำดับขั้นตอนตาม PREP Framework ที่ถูกต้องและทรงพลังที่สุดคือข้อใด?",
+        options: [
+          "Point (แถลงจุดยืนตรงประเด็น) ➔ Reason (ให้เหตุผลเชิงเทคนิคและธุรกิจ) ➔ Example (ยกหลักฐาน Benchmark หรือกรณีศึกษา) ➔ Point (ตอกย้ำข้อสรุปและขั้นตอนถัดไป)",
+          "Background (เล่าประวัติความเป็นมา) ➔ Complaint (บ่นปัญหา) ➔ Solution (เสนอทางแก้) ➔ Budget (ของบ)",
+          "Apology (ขอโทษที่ระบบช้า) ➔ Code review (เปิดโค้ดให้ดู) ➔ Opinion (บอกความรู้สึก) ➔ Exit (จบการพูด)",
+          "Point (เปิดด้วยข้อเรียกร้อง) ➔ Example (ยกตัวอย่าง) ➔ Criticize (วิจารณ์ทีมอื่น) ➔ Summary (สรุป)"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! โครงสร้าง PREP (Point ➔ Reason ➔ Example/Evidence ➔ Point/Next Steps) เป็นหัวใจสำคัญของการสื่อสารระดับ Executive ในบริษัทเทคโนโลยีชั้นนำ ช่วยให้ตอบคำถามได้คม ชัดเจน กระชับ และโน้มน้าวใจได้สูงสุด"
       }
     ]
   }

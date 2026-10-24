@@ -323,6 +323,126 @@ window.LESSON_4_COMMUNICATOR = {
         ],
         answer: 1,
         explanation: "ถูกต้อง! คำนามข้างหน้าคือ 'The senior software architect' (บุคคล/มนุษย์) และทำหน้าที่เป็นประธานของกริยา 'designed' ในประโยคย่อย ดังนั้น Relative Pronoun ที่ต้องใช้เชื่อมจึงเป็น 'who' เท่านั้น (which ใช้กับสิ่งของ, where ใช้กับสถานที่, whose ใช้แสดงความเป็นเจ้าของ)"
+      },
+      {
+        id: "q-4-6",
+        question: "โครงสร้างแสดงความเสียดายในอดีต (Past Regret: should have + V3): 'The deployment failed because we skipped integration tests. We _____ them before releasing to production.'",
+        options: [
+          "should have run",
+          "should run",
+          "must have run",
+          "could run"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'should have + V3' ใช้พูดถึงสิ่งที่ 'ควรจะทำในอดีต แต่ความจริงไม่ได้ทำ' เพื่อถอดบทเรียน (Post-mortem lesson) โดย V3 ของ run คือ run (run ➔ ran ➔ run) จึงได้ 'should have run'"
+      },
+      {
+        id: "q-4-7",
+        question: "เปลี่ยนประโยค Yes/No Question 'Does the new API endpoint support rate limiting?' ให้เป็น Indirect Question ที่นุ่มนวลและสุภาพ:",
+        options: [
+          "I was wondering does the new API endpoint support rate limiting.",
+          "I was wondering whether the new API endpoint supports rate limiting.",
+          "I was wondering if supports the new API endpoint rate limiting.",
+          "I was wondering that the new API endpoint supported rate limiting."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! เมื่อเปลี่ยน Yes/No Question เป็น Indirect Question ต้องเชื่อมด้วย 'whether' หรือ 'if' ตามด้วยโครงสร้างประโยคบอกเล่า (S + V) ตัด does ทิ้ง และผันกริยาตามประธานเอกพจน์เป็น 'supports'"
+      },
+      {
+        id: "q-4-8",
+        question: "เลือกโครงสร้างเหตุการณ์คู่ขนานที่ถูกแทรกแซงในอดีต: 'The server ran out of memory _____ the batch worker _____ the 10GB payload.'",
+        options: [
+          "while / was processing",
+          "when / processed",
+          "during / processes",
+          "since / has processed"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! เหตุการณ์ที่กำลังดำเนินอยู่อย่างต่อเนื่องในอดีต (Background action) ใช้ Past Continuous 'was processing' นำหน้าด้วย 'while' และเหตุการณ์ที่เข้ามาแทรกแซงสั้น ๆ ใช้ Past Simple 'ran out'"
+      },
+      {
+        id: "q-4-9",
+        question: "จัดลำดับกาลเวลาในอดีตด้วย Past Perfect: 'By the time the DevOps on-call engineer received the alert, the cluster _____ automatically.'",
+        options: [
+          "had recovered",
+          "recovered",
+          "has recovered",
+          "recovers"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! สำนวน 'By the time + Past Simple' (เมื่อถึงเวลาที่วิศวกรได้รับแจ้งเตือน) เหตุการณ์ที่คลัสเตอร์ฟื้นตัวกลับมาได้ก่อนหน้านั้นเสร็จสิ้นเรียบร้อยแล้ว ต้องใช้ Past Perfect คือ 'had recovered'"
+      },
+      {
+        id: "q-4-10",
+        question: "หากเพื่อนร่วมทีมหรือ Stakeholder เข้าใจประเด็นที่คุณอธิบายคลาดเคลื่อน ประโยคในข้อใดช่วย Paraphrase แก้ไขความเข้าใจได้อย่างมืออาชีพและสุภาพที่สุด?",
+        options: [
+          "You completely misunderstood what I said.",
+          "That's not quite what I meant. Let me rephrase that another way to make it clearer.",
+          "Listen to me carefully this time.",
+          "Why is this so difficult for everyone to understand?"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! วัฒนธรรมการสื่อสารระดับสากลจะไม่กล่าวโทษคู่สนทนาตรง ๆ แต่จะใช้สำนวนการจัดรูปประโยคใหม่ (Paraphrasing & Softening) เช่น 'That's not quite what I meant. Let me rephrase that...'"
+      },
+      {
+        id: "q-4-11",
+        question: "เลือก Relative Pronoun แสดงความเป็นเจ้าของ (Possessive): 'We are integrating with an external vendor _____ API rate limits are extremely strict.'",
+        options: [
+          "whose",
+          "which",
+          "whom",
+          "that its"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'whose' ใช้เชื่อมคำนามเพื่อแสดงความเป็นเจ้าของ (Possessive Relative Pronoun) ในที่นี้หมายถึง 'vendor ผู้ซึ่งมี API rate limits ที่เข้มงวดมาก' (whose + noun)"
+      },
+      {
+        id: "q-4-12",
+        question: "โครงสร้างการคาดคะเนข้อเท็จจริงในอดีตด้วยหลักฐานแน่นหนา (Past Deduction: must have + V3): 'All 502 errors ceased immediately after reverting the release container. The latest commit _____ the culprit.'",
+        options: [
+          "must have been",
+          "should be",
+          "can be",
+          "might be"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! เมื่อมีหลักฐานชัดเจนว่าพอ Rollback ปุ๊บแล้วระบบหายพังทันที การสรุปด้วยความมั่นใจ 95%+ ว่าต้นเหตุต้องเป็น commit ล่าสุดแน่นอน ต้องใช้ 'must have been' (ต้องเป็นอย่างนั้นแน่ ๆ ในอดีต)"
+      },
+      {
+        id: "q-4-13",
+        question: "ข้อใดเรียงลำดับคำในประโยคคำถามซ้อน (Embedded Question) ได้ถูกต้องตามมาตรฐานไวยากรณ์?",
+        options: [
+          "Do you happen to know what time is the architectural review meeting?",
+          "Do you happen to know what time the architectural review meeting is?",
+          "Do you happen to know what is the architectural review meeting time?",
+          "Do you happen to know when does the architectural review meeting start is?"
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! ใน Indirect/Embedded Question ลำดับคำในอนุประโยคคำถามย่อยจะต้องเรียงเป็น 'Wh-phrase + Subject + Verb' เสมือนประโยคบอกเล่า ดังนั้น Verb to be (is) จึงต้องอยู่ท้ายประธาน เป็น 'what time the meeting is'"
+      },
+      {
+        id: "q-4-14",
+        question: "เลือกคำเชื่อมแสดงความแตกต่างเชิงเปรียบเทียบระหว่าง 2 ระบบ: 'Relational databases enforce strict predefined schemas, _____ document stores provide flexible unstructured schemas.'",
+        options: [
+          "whereas",
+          "despite",
+          "in spite of",
+          "therefore"
+        ],
+        answer: 0,
+        explanation: "ถูกต้อง! 'whereas' (หรือ 'while') เป็นคำเชื่อมสองอนุประโยค (Conjunction) ที่ใช้เปรียบเทียบความแตกต่างตรงข้ามระหว่างสองสิ่งอย่างเป็นทางการ (ในขณะที่...)"
+      },
+      {
+        id: "q-4-15",
+        question: "ผู้บริหารหรือลูกค้าขอแทรกฟีเจอร์ใหญ่กลาง Sprint กะทันหัน ข้อใดคือประโยคปฏิเสธและต่อรองอย่างมืออาชีพตามหลัก Agile Communication?",
+        options: [
+          "No, we don't accept changes mid-sprint. It violates Scrum rules.",
+          "I completely understand the value of this feature. Given our committed sprint capacity, let's backlog it and size it together during next Monday's planning session.",
+          "Ask the Product Owner, it's not my responsibility.",
+          "We can try, but the whole production system will probably crash."
+        ],
+        answer: 1,
+        explanation: "ถูกต้อง! นี่คือศิลปะการสื่อสารระดับสากล (Assertive yet Collaborative): รับฟังคุณค่าของคำขอ (acknowledge value) ชี้แจงข้อจำกัดเชิงระบบ (capacity commitment) และเสนอแนวทางออกที่สร้างสรรค์ (size it in next sprint planning)"
       }
     ]
   }

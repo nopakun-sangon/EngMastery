@@ -1396,6 +1396,261 @@ const masterclassData = [
       explanation: "ถูกต้อง! ในการทำงานจริง การขอความชัดเจน (Clarification) ก่อนเริ่มลงมือทำถือเป็นคุณสมบัติของวิศวกรที่ดีเยี่ยม ผู้สัมภาษณ์ยินดีที่จะอธิบายบริบทเพิ่มเติมให้คุณเสมอ"
     }
   ]
+},
+{
+  id: "mc-pr-code-review",
+  title: "Code Reviews & Pull Request Mastery: สื่อสารบน GitHub อย่างมืออาชีพด้วย Conventional Comments",
+  titleEn: "Mastering Asynchronous Code Reviews: GitHub PRs & Conventional Comments",
+  category: "Written Communication & PR Reviews",
+  categoryTh: "การสื่อสารแบบเขียน & การตรวจโค้ด PR",
+  badge: "GitHub & Async Review",
+  badgeColor: "purple",
+  readTime: "15 นาที",
+  author: "Staff Software Engineer & Technical Lead",
+  publishedDate: "2026-10-24",
+  coverEmoji: "🔍",
+  summary: "คู่มือการเขียนคอมเมนต์ตรวจโค้ด (PR Review) ให้สุภาพ เคารพเพื่อนร่วมทีม และได้มาตรฐานสากล: รู้จัก Conventional Comments (suggestion:, nit:, question:, blocking:), เทคนิค Diplomatic Phrasing ลดความขัดแย้ง, และการตอบโต้เมื่อเห็นต่างเชิงเทคนิค",
+  tags: [
+    "Code Review",
+    "Pull Request",
+    "Conventional Comments",
+    "GitHub",
+    "Async Communication"
+  ],
+  sections: [
+    {
+      heading: "1. กฎเหล็กสากล Conventional Comments: สื่อเจตนาให้ชัดเจนก่อนเริ่มเขียนคอมเมนต์",
+      content: "ปัญหาใหญ่ที่สุดของการตรวจโค้ดแบบ Asynchronous บน GitHub/GitLab คือ **\"น้ำเสียง (Tone)\"** ของข้อความที่ผู้เขียนอาจพิมพ์สั้น ๆ แต่ผู้รับสารรู้สึกเหมือนถูกตำหนิอย่างรุนแรง องค์กรเทคโนโลยีชั้นนำจึงนำมาตรฐาน **Conventional Comments** เข้ามาใช้ โดยกำกับประเภทของคอมเมนต์ไว้ข้างหน้าเสมอ:\n\n### 🏷️ ตารางมาตรฐาน Conventional Comments Matrix:\n\n| คำนำหน้า (Label) | เจตนา (Intent) | ระดับความจำเป็น (Severity) | ตัวอย่างประโยคจริงบน GitHub |\n| :--- | :--- | :--- | :--- |\n| **suggestion:** | เสนอแนะวิธีที่ดีกว่า สะอาดกว่า หรือปลอดภัยกว่า | **Non-blocking** (ขึ้นกับดุลยพินิจของ Author) | *\"**suggestion:** What do you think about using `Array.prototype.find()` here to avoid the nested loop?\"* |\n| **nit (nitpick):** | ติเพื่อก่อเรื่องสไตล์เล็กน้อย เช่น การเว้นวรรค หรือชื่อตัวแปร | **Non-blocking** (ปล่อยผ่านได้ถ้าติดเวลา) | *\"**nit:** Could we rename `d` to `elapsedDurationMs` for better clarity? Non-blocking.\"* |\n| **question:** | ถามเพื่อทำความเข้าใจบริบท ไม่ได้ตัดสินว่าผิด | **Non-blocking** (อยากได้คำอธิบาย) | *\"**question:** Just curious, why did we choose HMAC-SHA256 over Ed25519 for this payload?\"* |\n| **issue (or blocking):** | ข้อผิดพลาดทางเทคนิค บั๊ก หรือช่องโหว่ความปลอดภัยที่ต้องแก้ก่อน Merge | **Blocking** (ต้องแก้ไขก่อนผ่าน) | *\"**issue:** This database query runs inside the loop, causing an N+1 performance issue. We need to batch it.\"* |\n| **chore:** | งานจิปาถะ เช่น อัปเดตเอกสาร หรือการทดสอบประกอบ | **Non-blocking** หรือแล้วแต่ตกลง | *\"**chore:** Don't forget to update the README with the new environment variable.\"* |\n| **praise:** | ชื่นชมการเขียนโค้ดที่ยอดเยี่ยม สร้างพลังบวก | **Positive Feedback** (ควรพิมพ์บ่อย ๆ) | *\"**praise:** Love how clean this state reducer is! Really elegant abstraction.\"* |",
+      keyPhrases: [
+        {
+          en: "Labeling review comments with Conventional Comments eliminates ambiguity and prevents defensive reactions.",
+          th: "การติดป้ายกำกับคอมเมนต์รีวิวตามหลัก Conventional Comments ช่วยขจัดความคลุมเครือและป้องกันไม่ให้ผู้เขียนโค้ดเกิดความรู้สึกตั้งกำแพง"
+        },
+        {
+          en: "Explicitly stating 'nit:' or 'non-blocking' grants the author autonomy while keeping the PR review velocity high.",
+          th: "การระบุอย่างชัดเจนว่า 'nit:' หรือ 'non-blocking' ช่วยให้อิสระแก่ผู้เขียนโค้ดในขณะที่ยังรักษาความเร็วในการส่งมอบ PR ไว้ได้"
+        }
+      ]
+    },
+    {
+      heading: "2. ศิลปะการใช้ Diplomatic Hedging & Positive Phrasing: เปลี่ยนคำตำหนิให้เป็นคำถามชวนคิด",
+      content: "แทนที่จะใช้คำสั่งโดยตรง (Imperative Commands) เช่น *\"Change this\"* หรือ *\"This is wrong\"* ซึ่งสร้างบรรยากาศตึงเครียด ให้เปลี่ยนเป็นการใช้คำถามปลายเปิดหรือการตั้งข้อสังเกตอย่างนุ่มนวล:\n\n### ⚖️ ตารางเทียบการสื่อสารแบบห้วน ๆ vs มืออาชีพระดับสากล:\n\n| ข้อความแบบห้วน / กล่าวโทษ ❌ | ข้อความแบบมืออาชีพ สุภาพ ชวนคิด ✅ | ผลลัพธ์ทางจิตวิทยา |\n| :--- | :--- | :--- |\n| *\"Why did you write it like this? It is so slow.\"* | *\"**question:** Could you help me understand the reasoning behind this logic? I'm wondering if we might hit latency issues with large payloads.\"* | ผู้เขียนเปิดใจเล่าเหตุผลและพร้อมช่วยหาทางปรับปรุง |\n| *\"This function is duplicated. Delete it.\"* | *\"**suggestion:** It looks like we already have an identical helper in `src/utils/formatters.ts`. What do you think about reusing it here?\"* | ชี้แนะแนวทางโดยไม่ทำให้รู้สึกเสียหน้า |\n| *\"You forgot to handle the error here.\"* | *\"**issue:** What happens if the network call times out? Should we add a `try/catch` block or fallback handler?\"* | มุ่งเน้นไปที่ผลลัพธ์ของระบบ ไม่ใช่ความผิดของบุคคล |\n| *\"Rename this variable, it's terrible.\"* | *\"**nit:** Would you mind renaming `val` to `validatedToken`? It would make the control flow easier to scan.\"* | สุภาพ และมีเหตุผลรองรับชัดเจน |",
+      keyPhrases: [
+        {
+          en: "What do you think about extracting this logic into a custom hook to improve testability?",
+          th: "คุณคิดเห็นอย่างไรกับการแยกตรรกะนี้ออกเป็น Custom Hook เพื่อให้เขียนยูนิตเทสต์ได้ง่ายขึ้นครับ?"
+        },
+        {
+          en: "I noticed a potential race condition when two requests land concurrently. How do you feel about adding a lock?",
+          th: "ผมสังเกตเห็นโอกาสเกิด Race Condition เมื่อมีสองรีเควสต์เข้ามาพร้อมกัน คุณมองว่าเราควรเพิ่มตัวล็อกตรงนี้ไหมครับ?"
+        }
+      ]
+    },
+    {
+      heading: "3. การเขียน PR Description ที่ดี & การตอบรับ Feedback เมื่อเห็นต่างเชิงเทคนิค",
+      content: "เมื่อเปิด PR ควรอำนวยความสะดวกให้ผู้ตรวจ โดยใช้ Template 4 ส่วน: **Why** (ทำไมถึงทำ), **What** (ทำอะไรไปบ้าง), **How to Test** (วิธีทดสอบพร้อมคำสั่ง), และ **Screenshots / Benchmarks** (หลักฐานผลลัพธ์)\n\n### 💬 วิธีตอบกลับเมื่อมีความเห็นต่างเชิงสถาปัตยกรรม (Respectful Disagreement):\n\n| กลยุทธ์การตอบ | สำนวนสากลที่แนะนำ | บริบทการใช้งาน |\n| :--- | :--- | :--- |\n| **รับฟังและให้ข้อมูลบริบทเพิ่ม** | *\"Good point! The reason I opted for this approach is that...\"* | เมื่อเรามีข้อจำกัดทางเทคนิคที่ Reviewer อาจยังไม่ทราบ |\n| **เสนอทางเลือกประนีประนอม** | *\"I see your concern regarding memory. How about we keep this implementation for now, and I'll create a follow-up ticket to profile it under load?\"* | เมื่อไม่อยากให้ PR บวม หรือกลายเป็น Scope Creep |\n| **ยอมรับและขอบคุณ** | *\"Great catch! I completely overlooked that edge case. Pushed a fix in commit `a1b2c3d`.\"* | เมื่ออีกฝ่ายพบจุดผิดพลาดจริง แสดงความใจกว้าง |",
+      keyPhrases: [
+        {
+          en: "Great catch! I completely overlooked that edge case. I have pushed a fix in commit 7a3f4e.",
+          th: "ตรวจพบได้ยอดเยี่ยมมากครับ! ผมมองข้ามกรณีนั้นไปสนิทเลย ตอนนี้ผมได้แก้และดันคอมมิต 7a3f4e ขึ้นไปเรียบร้อยแล้วครับ"
+        },
+        {
+          en: "Given the upcoming release deadline, could we tackle that refactor in a dedicated follow-up ticket?",
+          th: "เนื่องจากใกล้กำหนดการปล่อยของรอบนี้แล้ว เราพอจะแยกงานรีแฟกเตอร์ตรงนั้นไปทำเป็นการ์ดเฉพาะในรอบถัดไปได้ไหมครับ?"
+        }
+      ]
+    }
+  ],
+  quiz: [
+    {
+      id: "mc-pr-q1",
+      question: "ตามมาตรฐาน Conventional Comments ป้ายกำกับ 'nit:' (nitpick) มีความหมายและระดับความเร่งด่วนอย่างไร?",
+      options: [
+        "เป็นบั๊กความปลอดภัยร้ายแรงที่ต้องแก้ทันที",
+        "เป็นข้อเสนอแนะเรื่องเล็กน้อย (เช่น สไตล์การเว้นวรรค หรือชื่อตัวแปร) ซึ่งเป็นแบบ Non-blocking ไม่จำเป็นต้องบล็อกการ Merge หากติดเวลา",
+        "เป็นคำชมเชยโค้ดที่เขียนได้ดี",
+        "เป็นคำถามขอให้ Reviewer โค้ดใหม่ทั้งหมด"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! 'nit:' (ย่อมาจาก nitpick) หมายถึงข้อคิดเห็นเล็ก ๆ น้อย ๆ ที่ไม่ส่งผลต่อฟังก์ชันการทำงานของระบบ ผู้เขียนโค้ดมีสิทธิ์เลือกว่าจะแก้หรือไม่แก้ก็ได้โดยไม่กระทบต่อการอนุมัติ PR"
+    },
+    {
+      id: "mc-pr-q2",
+      question: "เมื่อตรวจพบช่องโหว่ความปลอดภัยหรือบั๊กร้ายแรงใน PR ของเพื่อนร่วมทีม คอมเมนต์ในข้อใดสุภาพ เป็นมืออาชีพ และเน้นที่ระบบมากที่สุด?",
+      options: [
+        "You wrote insecure code again. You don't know how to sanitize SQL inputs.",
+        "issue: User input from the query parameter is passed directly into the query, which creates a SQL injection vulnerability. We should use parameterized queries here.",
+        "Change this immediately or I will reject your PR.",
+        "Why is your code always so bad?"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! การใช้ป้าย 'issue:' ระบุจุดบกพร่องทางเทคนิคที่ชัดเจน อธิบายผลกระทบ (SQL injection) และเสนอทางแก้ที่ถูกต้อง (parameterized queries) โดยไม่กล่าวโทษตัวบุคคล"
+    },
+    {
+      id: "mc-pr-q3",
+      question: "หาก Reviewer เสนอให้คุณรีแฟกเตอร์สถาปัตยกรรมครั้งใหญ่ซึ่งอยู่นอกเหนือขอบเขตงานของการ์ดนี้ และใกล้กำหนดเวลาส่งมอบ การตอบกลับข้อใดมีความเป็นมืออาชีพสูงสุด?",
+      options: [
+        "That's stupid, I'm not doing that.",
+        "I understand and agree that this refactor would be beneficial long-term. Given our current release timeline, would it make sense to create a follow-up technical debt ticket so we don't hold up this bug fix?",
+        "Ignore the comment completely and merge anyway.",
+        "Tell the manager that the reviewer is bullying you."
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! นี่คือศิลปะการทำงานร่วมกัน: ยอมรับคุณค่าของข้อเสนอ (acknowledge value), ชี้แจงข้อจำกัดเรื่องเวลา (release timeline), และเสนอทางออกที่เป็นรูปธรรม (create a follow-up tech debt ticket)"
+    },
+    {
+      id: "mc-pr-q4",
+      question: "การใช้เทคนิค 'Diplomatic Hedging' ในการตรวจโค้ดให้ประโยชน์หลักในเรื่องใด?",
+      options: [
+        "ทำให้ผู้เขียนโค้ดรู้สึกกลัวและไม่กล้าทำผิดอีก",
+        "ลดการเกิดความรู้สึกตั้งกำแพง (Defensive reaction) ส่งเสริมวัฒนธรรมการแลกเปลี่ยนเรียนรู้ และมุ่งเน้นการแก้ปัญหาที่โค้ด",
+        "ช่วยให้เราไม่ต้องตรวจโค้ดให้ละเอียด",
+        "ทำให้ PR ผ่านโดยไม่ต้องเขียนยูนิตเทสต์"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! ภาษาที่นุ่มนวลและเปิดกว้างจะช่วยป้องกันความขัดแย้งส่วนบุคคลในทีม ทำให้ทุกคนโฟกัสที่การปรับปรุงคุณภาพซอฟต์แวร์ได้อย่างมีความสุข"
+    },
+    {
+      id: "mc-pr-q5",
+      question: "ข้อใดคือองค์ประกอบสำคัญของ Pull Request Description ที่ยอดเยี่ยมบน GitHub?",
+      options: [
+        "เขียนแค่ 'fixes bug' หรือปล่อยว่างไว้",
+        "อธิบายบริบทว่าทำไมถึงทำ (Why), สรุปสิ่งที่มีการเปลี่ยนแปลง (What), วิธีการทดสอบพร้อมผลลัพธ์ (How to test & Benchmarks)",
+        "ใส่เฉพาะรูปภาพ Meme ตลก ๆ",
+        "คัดลอกประวัติการแชตทั้งหมดใน Slack มาแปะ"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! PR Description ที่ดีจะช่วยลดภาระทางความคิด (Cognitive load) ของ Reviewer ทำให้การตรวจโค้ดเป็นไปอย่างรวดเร็วและตรงจุด"
+    }
+  ]
+},
+{
+  id: "mc-incident-slack-rca",
+  title: "Production Incident Communication & Blameless RCA: รายงานเหตุด่วนบน Slack และเขียน Post-Mortem ระดับสากล",
+  titleEn: "Production Incident Response & Blameless RCA Writing",
+  category: "Incident Management & SRE",
+  categoryTh: "การจัดการเหตุการณ์วิกฤต & SRE",
+  badge: "SRE & On-Call",
+  badgeColor: "rose",
+  readTime: "16 นาที",
+  author: "Site Reliability Director & Incident Commander",
+  publishedDate: "2026-10-24",
+  coverEmoji: "🚨",
+  summary: "คัมภีร์สื่อสารยามระบบโปรดักชันล่ม (P0/P1 Outages): วิธีอัปเดตสเตตัสบน Slack Incident Channel ให้ชัดเจน (Investigating, Identified, Monitoring, Resolved), เทคนิคเขียน Blameless Post-Mortem / RCA, และการสื่อสารกับผู้บริหารและลูกค้าภายนอก",
+  tags: [
+    "Incident Management",
+    "SRE",
+    "Post-Mortem",
+    "RCA",
+    "Slack",
+    "Blameless Culture"
+  ],
+  sections: [
+    {
+      heading: "1. โครงสร้างการสื่อสารบน Slack ยามวิกฤต: 4 สถานะมาตรฐานสากล (Incident Lifecycle)",
+      content: "เมื่อระบบเกิดเหตุขัดข้องรุนแรง (P0/P1 Outage) สิ่งที่แย่ที่สุดไม่ใช่ตัวบั๊ก แต่คือ **\"ความเงียบและความตื่นตระหนก\"** ในช่อง Slack ทีม SRE และ On-call จะต้องใช้รูปแบบสถานะ 4 ขั้นตอนที่เป็นมาตรฐานสากล:\n\n### ⏱️ ตาราง 4 สถานะอัปเดตเหตุด่วน (Incident Status Cadence):\n\n| สถานะ (Status) | จังหวะเวลา (Frequency) | เนื้อหาสำคัญที่ต้องระบุ | แม่แบบข้อความภาษาอังกฤษสำหรับก๊อปปี้ไปใช้ |\n| :--- | :--- | :--- | :--- |\n| **INVESTIGATING** | อัปเดตทุก 10-15 นาที | ระบุขอบเขตความเสียหาย (Impact), ทีมที่กำลังตรวจสอบ, และช่องทางติดตาม | *\"🚨 **[INCIDENT P0] Investigating**<br>• **Impact:** Checkout API returning HTTP 500 (~35% of users)<br>• **Current Action:** SRE team inspecting database read replicas and connection pool metrics.<br>• **Incident Commander:** @sarah<br>• **Next Update:** In 15 minutes (14:30 UTC)\"* |\n| **IDENTIFIED** | อัปเดตทันทีที่รู้สาเหตุ | ระบุ Root Cause ชัดเจน และแผนการแก้ไข (Mitigation Plan) | *\"🔍 **[INCIDENT P0] Cause Identified**<br>• **Root Cause:** Memory leak in pod version `v2.4.1` causing OOM kills.<br>• **Mitigation:** Initiating immediate rollback to stable release `v2.4.0`.<br>• **ETA to Recover:** Approximately 10 minutes.\"* |\n| **MONITORING** | อัปเดตระหว่างดูอาการ | ระบุว่า Rollback/Patch สำเร็จแล้ว และกำลังเฝ้าดูสถิติตัวชี้วัด | *\"🟡 **[INCIDENT P0] Monitoring**<br>• **Status:** Rollback to `v2.4.0` completed successfully across all nodes.<br>• **Metrics:** Error rates have dropped from 35% back to baseline 0.02%.<br>• **Next Step:** Observing traffic for 30 minutes before declaring resolution.\"* |\n| **RESOLVED** | อัปเดตเมื่อระบบปกติ 100% | ประกาศจบเหตุการณ์อย่างเป็นทางการ และนัดหมายวันเวลาส่งเอกสาร RCA | *\"🟢 **[INCIDENT P0] Resolved**<br>• **Resolution:** All services fully healthy and responding within SLA.<br>• **Total Downtime:** 28 minutes.<br>• **Follow-up:** Blameless Post-Mortem will be published in `#eng-postmortems` by tomorrow 12:00 UTC.\"* |",
+      keyPhrases: [
+        {
+          en: "Clear, time-stamped incident updates prevent stakeholder panic and allow the response team to focus on debugging.",
+          th: "การอัปเดตสถานะเหตุการณ์อย่างชัดเจนพร้อมเวลาที่แน่นอนช่วยคลายความตื่นตระหนกของผู้มีส่วนได้ส่วนเสีย และเปิดทางให้ทีมแก้ไขมุ่งมั่นกับการดีบักได้อย่างเต็มที่"
+        },
+        {
+          en: "Always commit to a 'Next Update' time, even if you do not have new technical findings yet.",
+          th: "จงระบุเวลา 'Next Update' ครั้งถัดไปเสมอ แม้ว่าคุณจะยังไม่มีความคืบหน้าทางเทคนิคใหม่ ๆ ก็ตาม"
+        }
+      ]
+    },
+    {
+      heading: "2. ศิลปะการเขียน Blameless Post-Mortem / RCA: มุ่งเน้นความผิดพลาดของระบบ ไม่ใช่ตัวบุคคล",
+      content: "วัฒนธรรมวิศวกรรมระดับโลก (Google, Netflix, AWS) ยึดถือหลักการ **Blameless Culture**: ข้อผิดพลาดของมนุษย์ (Human error) เป็นเพียง **อาการ (Symptom)** แต่ไม่ใช่ **สาเหตุที่แท้จริง (Root cause)** ระบบที่ยอดเยี่ยมจะต้องมี Safety Net ที่ป้องกันไม่ให้ความผิดพลาดของคนหนึ่งคนล้มทั้งระบบได้:\n\n### 🛡️ ตารางเปรียบเทียบสำนวนใน Post-Mortem: กล่าวโทษบุคคล vs วิเคราะห์ระบบ:\n\n| สำนวนแบบกล่าวโทษบุคคล (Blame-centric) ❌ | สำนวนเชิงวิศวกรรมระบบ (Blameless Systemic) ✅ |\n| :--- | :--- |\n| *\"John deployed the wrong configuration file by mistake.\"* | *\"The deployment automation lacked schema validation, allowing an invalid configuration key to propagate to production.\"* |\n| *\"The developer didn't test their code properly before pushing.\"* | *\"Our CI pipeline lacked automated integration tests for this payment gateway boundary case.\"* |\n| *\"The on-call engineer was sleeping and responded late.\"* | *\"PagerDuty escalation policies failed to trigger secondary SMS fallback alerts when primary push notifications went unacknowledged.\"* |\n\n### 📋 โครงสร้าง 5 องค์ประกอบของเอกสาร RCA (Post-Mortem Template):\n1. **Executive Summary:** สรุป 3 บรรทัด (อะไรพัง, กระทบใคร, แก้ไขอย่างไร)\n2. **Impact & Metrics:** ตัวเลขจริง (Downtime 42 mins, 12,000 requests dropped, SLA dropped to 99.1%)\n3. **Timeline (UTC):** ลำดับเหตุการณ์นาทีต่อนาทีตั้งแต่ Alert แรกจนถึง Resolve\n4. **Root Cause Analysis (5 Whys):** ขุดลึกลงไปถึงจุดบกพร่องของกลไกและกระบวนการ\n5. **Action Items (SMART):** ตารางมาตรการป้องกันไม่ให้เกิดซ้ำ ระบุผู้รับผิดชอบและวันส่งมอบชัดเจน",
+      keyPhrases: [
+        {
+          en: "A blameless post-mortem assumes that everyone acted with good intentions based on the information they had.",
+          th: "การทบทวนหลังเกิดเหตุแบบไม่กล่าวโทษบุคคลตั้งอยู่บนสมมติฐานว่าทุกคนทำหน้าที่ด้วยเจตนาที่ดีที่สุดตามข้อมูลที่มีในขณะนั้น"
+        },
+        {
+          en: "Human error is the starting point of the investigation, never the conclusion.",
+          th: "ความผิดพลาดของมนุษย์เป็นเพียงจุดเริ่มต้นของการสืบค้น แต่ไม่ใช่บทสรุปของสาเหตุที่แท้จริง"
+        }
+      ]
+    },
+    {
+      heading: "3. แม่แบบการสื่อสารกับผู้บริหาร (C-Level) และแถลงการณ์ขออภัยลูกค้าภายนอก",
+      content: "เมื่อต้องรายงานผู้บริหารระดับสูงหรือส่งอีเมลแจ้งลูกค้า B2B ห้ามใช้ศัพท์เทคนิคเชิงลึกที่เข้าใจยาก ให้มุ่งเน้นที่ **Impact, Immediate Fix, และ Preventative Measures**:\n\n### 🏢 แม่แบบรายงานผู้บริหาร (Executive Briefing Template):\n```markdown\n**Subject: Executive Summary: Incident INC-8042 (Payment Gateway Outage)**\n\n• **Summary:** On Oct 24 between 14:02 and 14:30 UTC, our payment checkout service experienced an outage affecting 35% of transactions.\n• **Business Impact:** An estimated $4,200 in delayed checkouts; zero customer data was compromised.\n• **Current State:** 100% restored. All pending payment webhooks have been safely reconciled.\n• **Prevention:** We are adding automated canary smoke-testing and rate-limit guardrails to prevent recurrence by end of week.\n```\n\n### 🌍 แถลงการณ์ขออภัยลูกค้าภายนอก (Customer-Facing Public Notice):\n*\"We sincerely apologize for the service disruption experienced earlier today. Our engineering team identified and mitigated the issue within 28 minutes. We hold ourselves to the highest standards of availability and are already implementing additional safeguards to ensure this does not happen again.\"*",
+      keyPhrases: [
+        {
+          en: "Zero customer data was compromised, and all pending transactions have been reconciled.",
+          th: "ไม่มีข้อมูลของลูกค้าได้รับผลกระทบหรือรั่วไหล และรายการธุรกรรมที่ค้างอยู่ทั้งหมดได้รับการกระทบยอดอย่างปลอดภัยแล้ว"
+        },
+        {
+          en: "We sincerely apologize for the disruption and are implementing safeguards to prevent recurrence.",
+          th: "เราขออภัยอย่างจริงใจสำหรับความไม่สะดวกที่เกิดขึ้น และกำลังนำมาตรการป้องกันมาใช้เพื่อไม่ให้เกิดเหตุซ้ำรอย"
+        }
+      ]
+    }
+  ],
+  quiz: [
+    {
+      id: "mc-inc-q1",
+      question: "ในระหว่างที่ระบบเกิดเหตุการณ์ P0 Outage ขั้นตอนใดของการสื่อสารบน Slack สำคัญที่สุดต่อการสร้างความมั่นใจให้ทีมบริหาร?",
+      options: [
+        "ปิดช่องทางแชตเพื่อไม่ให้ใครรบกวน",
+        "ส่งอัปเดตสม่ำเสมอตามจังหวะเวลา (Cadence) พร้อมระบุเวลาอัปเดตครั้งถัดไป (Next Update) เสมอ แม้ยังหาสาเหตุไม่พบ",
+        "รีบพิมพ์ขอโทษและกล่าวโทษผู้ที่เพิ่งคอมมิตโค้ดขึ้นไป",
+        "รอจนกว่าจะแก้ปัญหาเสร็จ 100% แล้วค่อยรายงานทีเดียว"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! ความสม่ำเสมอในการสื่อสาร (Predictable Cadence) และการบอกเวลา Next Update เป็นหัวใจสำคัญของ Incident Commander ในการรักษาความสงบและลดความตื่นตระหนก"
+    },
+    {
+      id: "mc-inc-q2",
+      question: "หลักการสำคัญที่สุดของ 'Blameless Post-Mortem' (การวิเคราะห์เหตุการณ์หลังระบบล่มแบบไม่กล่าวโทษ) คือข้อใด?",
+      options: [
+        "การลงโทษวิศวกรที่ทำให้เกิดความผิดพลาดอย่างเปิดเผย",
+        "การมองว่าความผิดพลาดของมนุษย์เกิดจากช่องโหว่ของกระบวนการหรือเครื่องมือในระบบ และมุ่งเน้นการสร้างแนวทางป้องกันเชิงระบบไม่ให้เกิดขึ้นซ้ำ",
+        "การปกปิดความจริงเพื่อไม่ให้บริษัทเสียชื่อเสียง",
+        "การห้ามเขียนเอกสารสรุปเหตุการณ์ใด ๆ ทั้งสิ้น"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! Blameless Post-Mortem มองว่าระบบที่ดีต้องมีเครื่องมือ ป้องกัน (Safety Net) หากคนทำงานผิดพลาด แปลว่าระบบยังไม่มีการตรวจสอบที่ดีพอ การแก้ที่ระบบจึงเป็นการแก้ปัญหาที่ยั่งยืนที่สุด"
+    },
+    {
+      id: "mc-inc-q3",
+      question: "ประโยคสรุปเหตุการณ์ในข้อใดเขียนได้ถูกต้องตามวัฒนธรรม Blameless Culture มากที่สุด?",
+      options: [
+        "Bob forgot to run migrations, causing production to crash.",
+        "The automated CI/CD pipeline lacked a schema-migration pre-flight check, which allowed the application to start against an unmigrated schema.",
+        "The QA engineer was careless and missed the bug.",
+        "The outage was entirely caused by the junior developer's lack of experience."
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! ประโยคนี้มุ่งวิเคราะห์ที่ตัวระบบไปป์ไลน์ (The pipeline lacked a pre-flight check) ซึ่งสะท้อนมาตรฐานการเขียนเชิงวิศวกรรมระดับสูง ไม่พาดพิงบุคคล"
+    },
+    {
+      id: "mc-inc-q4",
+      question: "เมื่อเขียนมาตรการป้องกันในส่วน Action Items ของเอกสาร RCA คุณสมบัติใดที่จำเป็นต้องมีเสมอ?",
+      options: [
+        "ระบุคำสัญญาปากเปล่าว่าทุกคนจะระวังตัวมากขึ้น",
+        "ระบุผู้รับผิดชอบที่แน่นอน (Owner), สิ่งที่ต้องทำชัดเจน (Deliverable), และกำหนดส่งที่วัดผลได้ (Due Date)",
+        "เขียนให้คลุมเครือเพื่อไม่ให้ใครต้องรับภาระ",
+        "มอบหมายให้ทีมอื่นทำทั้งหมด"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! Action Items ที่มีประสิทธิภาพต้องเป็น SMART (Specific, Measurable, Achievable, Relevant, Time-bound) และมีเจ้าภาพรับผิดชอบชัดเจน"
+    },
+    {
+      id: "mc-inc-q5",
+      question: "ในการสรุปผลกระทบต่อผู้บริหารระดับสูง (C-Level Executive Briefing) สิ่งใดที่ควรหลีกเลี่ยง?",
+      options: [
+        "การบอกตัวเลขเวลา Downtime และผลกระทบต่อธุรกิจ",
+        "การบรรยายรายละเอียดทางเทคนิคเชิงลึกที่เยิ่นเย้อและศัพท์เฉพาะทางโดยไม่มีบทสรุปทางธุรกิจ",
+        "การชี้แจงมาตรการป้องกันในอนาคต",
+        "การยืนยันความปลอดภัยของข้อมูลลูกค้า"
+      ],
+      answer: 1,
+      explanation: "ถูกต้อง! ผู้บริหารต้องการทราบภาพรวมผลกระทบเชิงธุรกิจ (Business Impact) ความปลอดภัยของข้อมูล และแผนป้องกันระยะยาว ไม่ต้องการอ่าน Log หรือ Stack trace ที่ยาวเหยียด"
+    }
+  ]
 }
 ];
 
