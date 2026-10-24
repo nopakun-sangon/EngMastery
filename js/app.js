@@ -6627,7 +6627,7 @@ class EngMasteryApp {
                 </button>
               </div>
             ` : `
-              <span class="text-xs text-slate-400">เลือกคำตอบให้ครบทั้ง 3 ข้อเพื่อส่งคำตอบ</span>
+              <span class="text-xs text-slate-400">เลือกคำตอบให้ครบทั้ง ${(article.quiz || []).length} ข้อเพื่อส่งคำตอบ</span>
               <button onclick="window.app.submitNewsQuiz('${article.id}')"
                 class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5">
                 <span>ส่งคำตอบ & รับ XP</span>
