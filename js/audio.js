@@ -69,12 +69,20 @@ class SoundEffects {
     this.playTone(783.99, "sine", 0.28, 0.16, 0.22);    // G5
   }
 
+  playSuccess() {
+    this.playCorrect();
+  }
+
   // Gentle low tone for incorrect answers
   playIncorrect() {
     if (!this.enabled) return;
     this.initContext();
     this.playTone(260, "sawtooth", 0.18, 0, 0.12);
     this.playTone(220, "sawtooth", 0.28, 0.1, 0.14);
+  }
+
+  playError() {
+    this.playIncorrect();
   }
 
   // Subtle tap sound for buttons / card flips

@@ -221,6 +221,12 @@
       this.isOpen = false;
       const modal = document.getElementById("placement-test-modal");
       if (modal) modal.remove();
+      try {
+        if (window.app && window.app.currentView === "dashboard") {
+          const container = document.getElementById("main-content-view");
+          if (container) window.app.renderDashboardView(container);
+        }
+      } catch (e) {}
     }
 
     handleSelectAnswer(optionIndex) {
@@ -231,9 +237,21 @@
       const isCorrect = optionIndex === q.answer;
       if (isCorrect) {
         this.score++;
-        if (window.soundFx) window.soundFx.playSuccess();
+        try {
+          if (window.soundFx && typeof window.soundFx.playCorrect === "function") {
+            window.soundFx.playCorrect();
+          } else if (window.soundFx && typeof window.soundFx.playSuccess === "function") {
+            window.soundFx.playSuccess();
+          }
+        } catch (e) {}
       } else {
-        if (window.soundFx) window.soundFx.playError();
+        try {
+          if (window.soundFx && typeof window.soundFx.playIncorrect === "function") {
+            window.soundFx.playIncorrect();
+          } else if (window.soundFx && typeof window.soundFx.playError === "function") {
+            window.soundFx.playError();
+          }
+        } catch (e) {}
       }
 
       this.userAnswers.push({
@@ -282,11 +300,21 @@
 
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
-        nextBtn.focus();
+        setTimeout(() => {
+          try {
+            nextBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            nextBtn.focus();
+          } catch (e) {}
+        }, 50);
       }
     }
 
     nextQuestion() {
+      try {
+        if (window.soundFx && typeof window.soundFx.playClick === "function") {
+          window.soundFx.playClick();
+        }
+      } catch (e) {}
       this.hasAnswered = false;
       this.currentIndex++;
       if (this.currentIndex >= PLACEMENT_QUESTIONS.length) {
@@ -392,7 +420,7 @@
       const progressPercent = Math.round(((this.currentIndex) / PLACEMENT_QUESTIONS.length) * 100);
 
       modal.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col max-h-[90vh] overflow-y-auto">
+        <div id="placement-modal-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col max-h-[90vh] overflow-y-auto">
           <!-- Top Bar -->
           <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-3">
@@ -433,7 +461,7 @@
           <div id="placement-options-grid" class="space-y-3">
             ${q.options.map((opt, idx) => `
               <button onclick="window.placementTest.handleSelectAnswer(${idx})"
-                class="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-400 bg-white dark:bg-slate-800/80 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 text-slate-800 dark:text-slate-200 font-medium transition-all flex items-center justify-between group active:scale-[0.99]">
+                class="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-400 bg-white dark:bg-slate-800/80 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 text-slate-800 dark:text-slate-200 font-medium transition-all flex items-center justify-between group active:scale-[0.99] cursor-pointer">
                 <div class="flex items-center gap-3">
                   <span class="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 group-hover:bg-indigo-600 group-hover:text-white text-xs font-black flex items-center justify-center transition-colors">
                     ${['A', 'B', 'C', 'D'][idx]}
@@ -450,13 +478,16 @@
           <!-- Bottom Action -->
           <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
             <button id="placement-next-btn" onclick="window.placementTest.nextQuestion()"
-              class="hidden px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 transition-all flex items-center gap-2 active:scale-95">
+              class="hidden px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 transition-all flex items-center gap-2 active:scale-95 cursor-pointer">
               <span>${this.currentIndex === PLACEMENT_QUESTIONS.length - 1 ? 'ดูผลการประเมิน' : 'ข้อถัดไป'}</span>
               <span>➔</span>
             </button>
           </div>
         </div>
       `;
+
+      const card = document.getElementById("placement-modal-card");
+      if (card) card.scrollTop = 0;
     }
 
     renderResult() {
