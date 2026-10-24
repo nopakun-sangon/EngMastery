@@ -4,7 +4,7 @@
  * Enables 100% offline access, instant load, and native-like installation.
  */
 
-const CACHE_NAME = 'engmastery-pwa-v6';
+const CACHE_NAME = 'engmastery-pwa-v7';
 
 const STATIC_ASSETS = [
   './',

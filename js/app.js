@@ -10832,7 +10832,9 @@ class EngMasteryApp {
         isCompleted: !!this.sentenceCompletedDrills[drill.id],
         isCorrect: !!this.sentenceCompletedDrills[drill.id],
         showSolution: false,
-        errorMessage: null
+        errorMessage: null,
+        inputMode: "interactive",
+        typedText: this.sentenceCompletedDrills[drill.id] ? (drill.targetWords || []).join(" ") : ""
       };
 
       // If already completed in past, preload the placed words in correct order
@@ -10842,6 +10844,7 @@ class EngMasteryApp {
           text: w
         }));
         this.sentenceBuilderState[drill.id].poolWords = [];
+        this.sentenceBuilderState[drill.id].typedText = (drill.targetWords || []).join(" ");
       }
     }
   }
@@ -10854,11 +10857,14 @@ class EngMasteryApp {
       isCompleted: false,
       isCorrect: false,
       showSolution: false,
-      errorMessage: null
+      errorMessage: null,
+      inputMode: "interactive",
+      typedText: ""
     };
 
     const isDone = !!this.sentenceCompletedDrills[drill.id];
     const isTopicFinished = drills.every(d => this.sentenceCompletedDrills[d.id]);
+    const isTyping = state.inputMode === "typing";
 
     return `
       <div class="space-y-6">
@@ -10871,7 +10877,7 @@ class EngMasteryApp {
                 ภารกิจลองแต่งประโยคกัน! (Interactive Sentence Drills)
               </h3>
               <p class="text-xs text-slate-500 dark:text-slate-400">
-                ลากคำศัพท์มาวางในช่อง หรือแตะคำศัพท์เพื่อเรียงประโยคให้ตรงกับความหมาย
+                ลากคำศัพท์ แตะคำ หรือสลับไปโหมดพิมพ์แป้นพิมพ์เพื่อฝึกแต่งประโยคตามต้องการ
               </p>
             </div>
           </div>
@@ -10914,89 +10920,183 @@ class EngMasteryApp {
             </div>
           </div>
 
-          <!-- Sentence Drop Zone (ช่องวางคำศัพท์) -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <span>📥 ช่องเรียงประโยค (Drop Zone):</span>
-                <span class="text-[10px] text-slate-400 font-normal">(ลากวาง หรือ แตะคำเพื่อนำออก)</span>
+          <!-- Mode Switcher Pill Toggle: ลาก/แตะ vs พิมพ์เอง -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-slate-100 dark:border-slate-800/80">
+            <div class="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/60 shadow-inner">
+              <button type="button"
+                      onclick="window.app.setSentenceInputMode('${drill.id}', 'interactive')"
+                      class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        !isTyping
+                          ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      }">
+                <span>👆 แตะ / ลากวางคำ</span>
+              </button>
+              <button type="button"
+                      onclick="window.app.setSentenceInputMode('${drill.id}', 'typing')"
+                      class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        isTyping
+                          ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      }">
+                <span>⌨️ พิมพ์เอง (Keyboard)</span>
+              </button>
+            </div>
+            ${isTyping ? `
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <span>💡 เคล็ดลับ: พิมพ์เสร็จแล้วกด</span>
+                <kbd class="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold border border-slate-300 dark:border-slate-700">Enter ↵</kbd>
+                <span>เพื่อตรวจคำตอบได้ทันที</span>
+              </div>
+            ` : `
+              <span class="text-[11px] text-slate-400 dark:text-slate-500">
+                แตะหรือลากคำศัพท์เพื่อจัดเรียงประโยค
               </span>
-              ${state.placedWords.length > 0 && !state.isCorrect ? `
-                <button onclick="window.app.clearSentenceWords('${drill.id}')"
-                        class="text-xs font-semibold text-rose-500 hover:text-rose-600 flex items-center gap-1">
-                  <span>↺ ล้างคำตอบ</span>
-                </button>
-              ` : ''}
-            </div>
-
-            <div id="sentence-dropzone-${drill.id}"
-                 class="slot-dropzone p-4 rounded-2xl ${
-                   state.isCorrect
-                     ? 'bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-500 correct-pulse'
-                     : state.errorMessage
-                       ? 'bg-red-50/50 dark:bg-red-950/20 border-2 border-red-400 shake-error'
-                       : 'bg-slate-50 dark:bg-slate-800/50 border-2 border-dashed border-indigo-300 dark:border-indigo-800'
-                 } flex flex-wrap items-center gap-2.5 min-h-[76px] transition-all relative"
-                 ondragover="window.app.handleSentenceDragOver(event)"
-                 ondragleave="window.app.handleSentenceDragLeave(event)"
-                 ondrop="window.app.handleSentenceDrop(event, '${drill.id}')">
-              
-              ${state.placedWords.length === 0 ? `
-                <div class="w-full text-center py-2 text-xs text-slate-400 dark:text-slate-500 flex items-center justify-center gap-2 pointer-events-none select-none">
-                  <span class="text-lg">👆</span>
-                  <span>ลากคำศัพท์มาวางในช่องนี้ หรือแตะคำศัพท์จากคลังด้านล่างเพื่อเรียงประโยค</span>
-                </div>
-              ` : state.placedWords.map((w, wIdx) => `
-                <div id="placed-${w.id}"
-                     draggable="${!state.isCorrect}"
-                     ondragstart="window.app.handleSentenceDragStart(event, '${drill.id}', '${w.id}', 'placed')"
-                     ondragend="window.app.handleSentenceDragEnd(event)"
-                     ondragover="event.preventDefault()"
-                     ondrop="event.stopPropagation(); window.app.handleSentenceDropOnWord(event, '${drill.id}', '${w.id}')"
-                     onclick="${state.isCorrect ? '' : `window.app.returnSentenceWord('${drill.id}', '${w.id}')`}"
-                     class="word-chip px-4 py-2.5 rounded-xl font-bold text-sm shadow-md flex items-center gap-2 cursor-pointer select-none transition-all active:scale-95 ${
-                       state.isCorrect
-                         ? 'bg-emerald-600 text-white cursor-default'
-                         : 'bg-indigo-600 text-white hover:bg-indigo-700'
-                     }">
-                  <span>${w.text}</span>
-                  ${!state.isCorrect ? `
-                    <span class="text-[10px] opacity-70 hover:opacity-100 hover:text-red-200">✕</span>
-                  ` : ''}
-                </div>
-              `).join("")}
-            </div>
+            `}
           </div>
 
-          <!-- Word Bank Pool (คลังคำศัพท์ให้เลือก) -->
-          ${!state.isCorrect ? `
+          ${!isTyping ? `
+            <!-- Sentence Drop Zone (ช่องวางคำศัพท์) -->
             <div class="space-y-2">
               <div class="flex items-center justify-between text-xs">
                 <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <span>🎲 คลังคำศัพท์ (Word Bank):</span>
-                  <span class="text-[10px] text-slate-400 font-normal">(แตะหรือลากเพื่อนำไปใส่ในประโยค)</span>
+                  <span>📥 ช่องเรียงประโยค (Drop Zone):</span>
+                  <span class="text-[10px] text-slate-400 font-normal">(ลากวาง หรือ แตะคำเพื่อนำออก)</span>
                 </span>
-                <span class="text-[11px] text-slate-400 font-mono">คงเหลือ ${state.poolWords.length} คำ</span>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 min-h-[64px]">
-                ${state.poolWords.map(w => `
-                  <button id="pool-${w.id}"
-                          type="button"
-                          draggable="true"
-                          ondragstart="window.app.handleSentenceDragStart(event, '${drill.id}', '${w.id}', 'pool')"
-                          ondragend="window.app.handleSentenceDragEnd(event)"
-                          onclick="window.app.placeSentenceWord('${drill.id}', '${w.id}')"
-                          class="word-chip px-4 py-2 rounded-xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-300 dark:border-slate-700 font-bold text-sm shadow-sm active:scale-95 transition-all flex items-center gap-1">
-                    <span>${w.text}</span>
+                ${state.placedWords.length > 0 && !state.isCorrect ? `
+                  <button onclick="window.app.clearSentenceWords('${drill.id}')"
+                          class="text-xs font-semibold text-rose-500 hover:text-rose-600 flex items-center gap-1">
+                    <span>↺ ล้างคำตอบ</span>
                   </button>
-                `).join("")}
-                ${state.poolWords.length === 0 ? `
-                  <span class="text-xs text-slate-400 italic">นำคำศัพท์ทั้งหมดไปวางในประโยคแล้ว กด "ตรวจสอบคำตอบ" ได้เลย!</span>
                 ` : ''}
               </div>
+
+              <div id="sentence-dropzone-${drill.id}"
+                   class="slot-dropzone p-4 rounded-2xl ${
+                     state.isCorrect
+                       ? 'bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-500 correct-pulse'
+                       : state.errorMessage
+                         ? 'bg-red-50/50 dark:bg-red-950/20 border-2 border-red-400 shake-error'
+                         : 'bg-slate-50 dark:bg-slate-800/50 border-2 border-dashed border-indigo-300 dark:border-indigo-800'
+                   } flex flex-wrap items-center gap-2.5 min-h-[76px] transition-all relative"
+                   ondragover="window.app.handleSentenceDragOver(event)"
+                   ondragleave="window.app.handleSentenceDragLeave(event)"
+                   ondrop="window.app.handleSentenceDrop(event, '${drill.id}')">
+                
+                ${state.placedWords.length === 0 ? `
+                  <div class="w-full text-center py-2 text-xs text-slate-400 dark:text-slate-500 flex items-center justify-center gap-2 pointer-events-none select-none">
+                    <span class="text-lg">👆</span>
+                    <span>ลากคำศัพท์มาวางในช่องนี้ หรือแตะคำศัพท์จากคลังด้านล่างเพื่อเรียงประโยค</span>
+                  </div>
+                ` : state.placedWords.map((w, wIdx) => `
+                  <div id="placed-${w.id}"
+                       draggable="${!state.isCorrect}"
+                       ondragstart="window.app.handleSentenceDragStart(event, '${drill.id}', '${w.id}', 'placed')"
+                       ondragend="window.app.handleSentenceDragEnd(event)"
+                       ondragover="event.preventDefault()"
+                       ondrop="event.stopPropagation(); window.app.handleSentenceDropOnWord(event, '${drill.id}', '${w.id}')"
+                       onclick="${state.isCorrect ? '' : `window.app.returnSentenceWord('${drill.id}', '${w.id}')`}"
+                       class="word-chip px-4 py-2.5 rounded-xl font-bold text-sm shadow-md flex items-center gap-2 cursor-pointer select-none transition-all active:scale-95 ${
+                         state.isCorrect
+                           ? 'bg-emerald-600 text-white cursor-default'
+                           : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                       }">
+                    <span>${w.text}</span>
+                    ${!state.isCorrect ? `
+                      <span class="text-[10px] opacity-70 hover:opacity-100 hover:text-red-200">✕</span>
+                    ` : ''}
+                  </div>
+                `).join("")}
+              </div>
             </div>
-          ` : ''}
+
+            <!-- Word Bank Pool (คลังคำศัพท์ให้เลือก) -->
+            ${!state.isCorrect ? `
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <span>🎲 คลังคำศัพท์ (Word Bank):</span>
+                    <span class="text-[10px] text-slate-400 font-normal">(แตะหรือลากเพื่อนำไปใส่ในประโยค)</span>
+                  </span>
+                  <span class="text-[11px] text-slate-400 font-mono">คงเหลือ ${state.poolWords.length} คำ</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 min-h-[64px]">
+                  ${state.poolWords.map(w => `
+                    <button id="pool-${w.id}"
+                            type="button"
+                            draggable="true"
+                            ondragstart="window.app.handleSentenceDragStart(event, '${drill.id}', '${w.id}', 'pool')"
+                            ondragend="window.app.handleSentenceDragEnd(event)"
+                            onclick="window.app.placeSentenceWord('${drill.id}', '${w.id}')"
+                            class="word-chip px-4 py-2 rounded-xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-300 dark:border-slate-700 font-bold text-sm shadow-sm active:scale-95 transition-all flex items-center gap-1">
+                      <span>${w.text}</span>
+                    </button>
+                  `).join("")}
+                  ${state.poolWords.length === 0 ? `
+                    <span class="text-xs text-slate-400 italic">นำคำศัพท์ทั้งหมดไปวางในประโยคแล้ว กด "ตรวจสอบคำตอบ" ได้เลย!</span>
+                  ` : ''}
+                </div>
+              </div>
+            ` : ''}
+          ` : `
+            <!-- Typing Input Section (โหมดพิมพ์คำตอบเอง) -->
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <span>⌨️ กล่องพิมพ์คำตอบ (Type your sentence):</span>
+                  </span>
+                  ${(state.typedText || "") && !state.isCorrect ? `
+                    <button type="button"
+                            onclick="window.app.clearSentenceTyping('${drill.id}')"
+                            class="text-xs font-semibold text-rose-500 hover:text-rose-600 flex items-center gap-1">
+                      <span>↺ ล้างข้อความ</span>
+                    </button>
+                  ` : ''}
+                </div>
+
+                <div class="relative">
+                  <textarea id="sentence-typing-input-${drill.id}"
+                            rows="3"
+                            ${state.isCorrect ? 'disabled' : ''}
+                            oninput="window.app.handleSentenceTypingInput('${drill.id}', this.value)"
+                            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); window.app.checkSentenceAnswer('${topic.id}', '${drill.id}'); }"
+                            placeholder="พิมพ์ประโยคภาษาอังกฤษที่นี่... (เช่น ${(drill.targetWords || []).slice(0, 2).join(' ')} ...)"
+                            class="w-full px-4 py-3.5 rounded-2xl border-2 text-base font-medium transition-all outline-none resize-none leading-relaxed ${
+                              state.isCorrect
+                                ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-500 text-emerald-900 dark:text-emerald-100 font-bold'
+                                : state.errorMessage
+                                  ? 'bg-red-50/40 dark:bg-red-950/20 border-red-400 text-slate-900 dark:text-white focus:ring-2 focus:ring-red-400'
+                                  : 'bg-slate-50 dark:bg-slate-800/60 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/40'
+                            }">${(state.typedText || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</textarea>
+                </div>
+              </div>
+
+              <!-- Hint Word Chips (แตะเพื่อเติมคำ ช่วยพิมพ์ได้เร็วขึ้น) -->
+              ${!state.isCorrect ? `
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <span>💡 คำช่วยจำ / แตะเพื่อเติมคำ (Word Bank Hints):</span>
+                      <span class="text-[10px] text-slate-400 font-normal">(แตะคำเพื่อแทรกต่อท้ายได้ทันที)</span>
+                    </span>
+                    <span class="text-[11px] text-slate-400 font-mono">${(drill.poolWords || []).length} คำ</span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800">
+                    ${(drill.poolWords || []).map(w => `
+                      <button type="button"
+                              onclick="window.app.appendWordToTypingInput('${drill.id}', '${w.replace(/'/g, "\\'")}')"
+                              class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-300 dark:border-slate-700 text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center gap-1">
+                        <span class="text-indigo-500 font-normal">+</span>
+                        <span>${w}</span>
+                      </button>
+                    `).join("")}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `}
 
           <!-- Feedback Notification Area -->
           ${state.isCorrect ? `
@@ -11251,6 +11351,92 @@ class EngMasteryApp {
     this.refreshSentenceWorkshop();
   }
 
+  // --- Sentence Direct Keyboard Typing Methods ---
+  setSentenceInputMode(drillId, mode) {
+    const state = this.sentenceBuilderState[drillId];
+    if (!state) return;
+    state.inputMode = mode;
+    state.errorMessage = null;
+
+    // If switching to typing and typedText is empty, sync from placedWords
+    if (mode === "typing" && !state.typedText && state.placedWords.length > 0) {
+      state.typedText = state.placedWords.map(w => w.text).join(" ");
+    }
+
+    window.soundFx.playClick();
+    this.refreshSentenceWorkshop();
+
+    if (mode === "typing") {
+      setTimeout(() => {
+        const el = document.getElementById(`sentence-typing-input-${drillId}`);
+        if (el && typeof el.focus === "function") {
+          el.focus();
+          if (typeof el.setSelectionRange === "function") {
+            const len = (el.value || "").length;
+            el.setSelectionRange(len, len);
+          }
+        }
+      }, 50);
+    }
+  }
+
+  handleSentenceTypingInput(drillId, value) {
+    const state = this.sentenceBuilderState[drillId];
+    if (!state || state.isCorrect) return;
+    state.typedText = value;
+    if (state.errorMessage) {
+      state.errorMessage = null;
+    }
+  }
+
+  appendWordToTypingInput(drillId, word) {
+    const state = this.sentenceBuilderState[drillId];
+    if (!state || state.isCorrect) return;
+
+    let current = (state.typedText || "").trim();
+    if (current.length > 0) {
+      if (/^[.,!?;:]/.test(word)) {
+        current = current + word;
+      } else {
+        current = current + " " + word;
+      }
+    } else {
+      current = word;
+    }
+    state.typedText = current;
+    state.errorMessage = null;
+
+    window.soundFx.playClick();
+    this.refreshSentenceWorkshop();
+
+    setTimeout(() => {
+      const el = document.getElementById(`sentence-typing-input-${drillId}`);
+      if (el && typeof el.focus === "function") {
+        el.focus();
+        if (typeof el.setSelectionRange === "function") {
+          const len = (el.value || "").length;
+          el.setSelectionRange(len, len);
+        }
+      }
+    }, 50);
+  }
+
+  clearSentenceTyping(drillId) {
+    const state = this.sentenceBuilderState[drillId];
+    if (!state || state.isCorrect) return;
+
+    state.typedText = "";
+    state.errorMessage = null;
+
+    window.soundFx.playClick();
+    this.refreshSentenceWorkshop();
+
+    setTimeout(() => {
+      const el = document.getElementById(`sentence-typing-input-${drillId}`);
+      if (el && typeof el.focus === "function") el.focus();
+    }, 50);
+  }
+
   checkSentenceAnswer(topicId, drillId) {
     const topic = (window.sentenceBuilderData || []).find(t => t.id === topicId);
     if (!topic) return;
@@ -11259,26 +11445,79 @@ class EngMasteryApp {
     const state = this.sentenceBuilderState[drillId];
     if (!state) return;
 
-    if (state.placedWords.length === 0) {
-      state.errorMessage = "กรุณาลากหรือแตะคำศัพท์เพื่อเรียงประโยคก่อนตรวจคำตอบ";
-      window.soundFx.playIncorrect();
-      this.refreshSentenceWorkshop();
-      return;
+    const isTyping = state.inputMode === "typing";
+    let isMatch = false;
+
+    if (isTyping) {
+      const rawTyped = (state.typedText || "").trim();
+      if (!rawTyped) {
+        state.errorMessage = "กรุณาพิมพ์ประโยคภาษาอังกฤษก่อนตรวจสอบคำตอบ";
+        window.soundFx.playIncorrect();
+        this.refreshSentenceWorkshop();
+        return;
+      }
+
+      const normalizeSentence = (str) => {
+        return (str || "")
+          .toLowerCase()
+          .replace(/[\u2018\u2019]/g, "'")
+          .replace(/\bcan't\b/g, "cannot")
+          .replace(/\bwon't\b/g, "will not")
+          .replace(/\bdon't\b/g, "do not")
+          .replace(/\bdoesn't\b/g, "does not")
+          .replace(/\bdidn't\b/g, "did not")
+          .replace(/\bi'm\b/g, "i am")
+          .replace(/\bwe're\b/g, "we are")
+          .replace(/\bthey're\b/g, "they are")
+          .replace(/\bit's\b/g, "it is")
+          .replace(/\bthat's\b/g, "that is")
+          .replace(/\bthere's\b/g, "there is")
+          .replace(/\blet's\b/g, "let us")
+          .replace(/\bhaven't\b/g, "have not")
+          .replace(/\bhasn't\b/g, "has not")
+          .replace(/[.,!?;:]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      };
+
+      const targetFull = (drill.targetWords || []).join(" ");
+      const userNorm = normalizeSentence(rawTyped);
+      const targetNorm = normalizeSentence(targetFull);
+
+      const userSimple = rawTyped.toLowerCase().replace(/[.,!?;:]/g, "").replace(/\s+/g, " ").trim();
+      const targetSimple = targetFull.toLowerCase().replace(/[.,!?;:]/g, "").replace(/\s+/g, " ").trim();
+
+      isMatch = (rawTyped === targetFull) || (userSimple === targetSimple) || (userNorm === targetNorm);
+    } else {
+      if (state.placedWords.length === 0) {
+        state.errorMessage = "กรุณาลากหรือแตะคำศัพท์เพื่อเรียงประโยคก่อนตรวจคำตอบ";
+        window.soundFx.playIncorrect();
+        this.refreshSentenceWorkshop();
+        return;
+      }
+
+      // Normalization check: compare normalized strings ignoring case and trailing punctuation differences
+      const userTokens = state.placedWords.map(w => w.text.trim());
+      const targetTokens = drill.targetWords.map(w => w.trim());
+
+      const userNormalized = userTokens.join(" ").toLowerCase().replace(/[.,!?;:]/g, "").replace(/\s+/g, " ");
+      const targetNormalized = targetTokens.join(" ").toLowerCase().replace(/[.,!?;:]/g, "").replace(/\s+/g, " ");
+
+      isMatch = (userTokens.join(" ") === targetTokens.join(" ")) || (userNormalized === targetNormalized);
     }
-
-    // Normalization check: compare normalized strings ignoring case and trailing punctuation differences
-    const userTokens = state.placedWords.map(w => w.text.trim());
-    const targetTokens = drill.targetWords.map(w => w.trim());
-
-    const userNormalized = userTokens.join(" ").toLowerCase().replace(/[.,!?;]/g, "").replace(/\s+/g, " ");
-    const targetNormalized = targetTokens.join(" ").toLowerCase().replace(/[.,!?;]/g, "").replace(/\s+/g, " ");
-
-    const isMatch = (userTokens.join(" ") === targetTokens.join(" ")) || (userNormalized === targetNormalized);
 
     if (isMatch) {
       state.isCorrect = true;
       state.isCompleted = true;
       state.errorMessage = null;
+
+      // Sync both modes representation
+      state.placedWords = (drill.targetWords || []).map((w, idx) => ({
+        id: `${drill.id}-placed-${idx}`,
+        text: w
+      }));
+      state.poolWords = [];
+      state.typedText = drill.targetWords.join(" ");
 
       // Mark in persistent storage
       const wasAlreadyDone = !!this.sentenceCompletedDrills[drill.id];
@@ -11309,16 +11548,26 @@ class EngMasteryApp {
 
       this.refreshSentenceWorkshop();
     } else {
-      state.errorMessage = "คำตอบยังไม่ถูกต้อง ลองตรวจสอบการเรียงลำดับคำ หรือกด 'ดูเฉลย' เพื่อศึกษาแนวทาง";
+      state.errorMessage = isTyping
+        ? "ประโยคที่คุณพิมพ์ยังไม่ถูกต้อง ลองตรวจสอบตัวสะกด ลำดับคำ หรือกด 'ดูเฉลย' เพื่อศึกษาแนวทาง"
+        : "คำตอบยังไม่ถูกต้อง ลองตรวจสอบการเรียงลำดับคำ หรือกด 'ดูเฉลย' เพื่อศึกษาแนวทาง";
       window.soundFx.playIncorrect();
       this.refreshSentenceWorkshop();
     }
   }
 
   revealSentenceSolution(topicId, drillId) {
+    const topic = (window.sentenceBuilderData || []).find(t => t.id === topicId);
+    if (!topic) return;
+    const drill = (topic.drills || []).find(d => d.id === drillId);
+    if (!drill) return;
     const state = this.sentenceBuilderState[drillId];
     if (!state) return;
+
     state.showSolution = true;
+    if (state.inputMode === "typing" && !state.typedText) {
+      state.typedText = drill.targetWords.join(" ");
+    }
     window.soundFx.playClick();
     this.refreshSentenceWorkshop();
   }
