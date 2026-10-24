@@ -5449,6 +5449,11 @@ class EngMasteryApp {
                 }">
                 <span>📋 รายการทั้งหมด</span>
               </button>
+              <button onclick="window.app.openAddCustomVocabModal()"
+                class="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 font-bold text-xs border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs"
+                title="เพิ่มคำศัพท์ใหม่ลงในคลังส่วนตัว">
+                <span>➕ เพิ่มคำศัพท์</span>
+              </button>
             </div>
           </div>
         </div>
@@ -5492,9 +5497,11 @@ class EngMasteryApp {
           <div class="flex flex-wrap items-center gap-2">
             ${(() => {
               const savedCount = (window.storageManager.getSavedVocab() || []).length;
+              const customCount = (window.storageManager.getCustomVocabs ? window.storageManager.getCustomVocabs().length : 0);
+              const totalPersonal = Math.max(savedCount, customCount);
               return [
                 { id: "all", label: "🌟 ทั้งหมด" },
-                { id: "saved", label: `⭐ คำที่บันทึกไว้ (${savedCount})` },
+                { id: "saved", label: `⭐ คำศัพท์ของฉัน (${totalPersonal})` },
                 { id: "tech-devops", label: "💻 Tech & DevOps" },
                 { id: "workplace-business", label: "💼 Workplace" },
                 { id: "phrasal-idioms", label: "⚡ Phrasal Verbs" },
@@ -5503,6 +5510,11 @@ class EngMasteryApp {
             })().map(cat => `
               <button onclick="window.app.setVocabCategory('${cat.id}')"
                 class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  this.vocabFilter === cat.id
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+                }">
+                ${cat.label}
                   this.vocabFilter === cat.id
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
@@ -5970,39 +5982,85 @@ class EngMasteryApp {
   }
 
   getFilteredVocabList(vocabs) {
-    let baseList = vocabs;
+    const customList = (window.storageManager && typeof window.storageManager.getCustomVocabs === "function")
+      ? window.storageManager.getCustomVocabs()
+      : [];
+
+    const customMap = new Map();
+    customList.forEach(c => {
+      if (c.word) customMap.set(c.word.toLowerCase().trim(), c);
+    });
+
+    let baseList = [];
+
     if (this.vocabFilter === 'saved') {
-      const savedWords = window.storageManager.getSavedVocab() || [];
+      const savedWords = (window.storageManager && typeof window.storageManager.getSavedVocab === "function")
+        ? window.storageManager.getSavedVocab()
+        : [];
       const vocabMap = new Map();
       vocabs.forEach(v => {
-        if (v.word) vocabMap.set(v.word.toLowerCase(), v);
+        if (v.word) vocabMap.set(v.word.toLowerCase().trim(), v);
       });
 
-      baseList = [];
+      const seen = new Set();
+      // 1. Add all custom words (auto-learned and user-added)
+      customList.forEach(c => {
+        const clean = (c.word || "").toLowerCase().trim();
+        if (clean && !seen.has(clean)) {
+          baseList.push(c);
+          seen.add(clean);
+        }
+      });
+
+      // 2. Add any words from savedWords that are not yet added
       savedWords.forEach(sw => {
-        const found = vocabMap.get(sw.toLowerCase());
-        if (found) {
-          baseList.push(found);
-        } else {
-          baseList.push({
-            id: `saved-${sw.toLowerCase()}`,
-            word: sw,
-            ipa: "",
-            pos: "Vocab",
-            level: "Personal",
-            category: "saved",
-            categoryLabel: "⭐ My Saved",
-            th: "คำศัพท์ที่บันทึกไว้ในสมุดส่วนตัว",
-            definition: "Saved from Reading Lab or Dictionary lookup",
-            exampleEn: `I saved "${sw}" to review later in my vocabulary notebook.`,
-            exampleTh: `ฉันบันทึกคำว่า "${sw}" ไว้ทบทวนในสมุดคำศัพท์ส่วนตัว`
-          });
+        const clean = sw.toLowerCase().trim();
+        if (clean && !seen.has(clean)) {
+          const found = vocabMap.get(clean) || customMap.get(clean);
+          if (found) {
+            baseList.push(found);
+          } else {
+            baseList.push({
+              id: `saved-${clean}`,
+              word: sw,
+              ipa: "",
+              pos: "Vocab",
+              level: "Personal",
+              category: "saved",
+              categoryLabel: "⭐ คำศัพท์ของฉัน",
+              th: "คำศัพท์ที่บันทึกไว้ในสมุดส่วนตัว",
+              definition: "Saved from Reading Lab or Dictionary lookup",
+              exampleEn: `I saved "${sw}" to review later in my vocabulary notebook.`,
+              exampleTh: `ฉันบันทึกคำว่า "${sw}" ไว้ทบทวนในสมุดคำศัพท์ส่วนตัว`
+            });
+          }
+          seen.add(clean);
+        }
+      });
+    } else {
+      // For all or other categories: merge custom list with vocabs
+      const seen = new Set();
+      customList.forEach(c => {
+        const clean = (c.word || "").toLowerCase().trim();
+        if (clean && !seen.has(clean)) {
+          baseList.push(c);
+          seen.add(clean);
+        }
+      });
+      vocabs.forEach(v => {
+        const clean = (v.word || "").toLowerCase().trim();
+        if (clean && !seen.has(clean)) {
+          baseList.push(v);
+          seen.add(clean);
         }
       });
     }
 
     return baseList.filter(v => {
-      const matchCat = this.vocabFilter === 'all' || this.vocabFilter === 'saved' || v.category === this.vocabFilter;
+      const matchCat = this.vocabFilter === 'all' ||
+                       this.vocabFilter === 'saved' ||
+                       v.category === this.vocabFilter ||
+                       (v.categoryLabel && v.categoryLabel.includes(this.vocabFilter));
       if (!matchCat) return false;
       if (!this.vocabSearch) return true;
       const q = this.vocabSearch.toLowerCase().trim();
@@ -6620,6 +6678,192 @@ class EngMasteryApp {
       }
     }
     return merged;
+  }
+
+  // ==========================================
+  // CUSTOM VOCABULARY MODAL & AUTO-FETCH
+  // ==========================================
+  openAddCustomVocabModal() {
+    let modal = document.getElementById("add-custom-vocab-modal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "add-custom-vocab-modal";
+      modal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.onclick = (e) => {
+        if (e.target === modal) this.closeAddCustomVocabModal();
+      };
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl relative space-y-5 popup-scale-in">
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">➕</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              เพิ่มคำศัพท์ใหม่ลงในคลัง (Add Custom Word)
+            </h3>
+          </div>
+          <button onclick="window.app.closeAddCustomVocabModal()" class="w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-sm font-bold">
+            ✕
+          </button>
+        </div>
+
+        <!-- Form -->
+        <div class="space-y-4 text-xs">
+          <!-- Word input with auto-fetch button -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300">คำศัพท์ภาษาอังกฤษ (English Word) *</label>
+            <div class="flex gap-2">
+              <input type="text" id="custom-vocab-input-word" placeholder="เช่น observability, idempotent, monorepo"
+                class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-indigo-500">
+              <button type="button" onclick="window.app.autoFetchCustomVocabDefinition()"
+                class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shrink-0 flex items-center gap-1 active:scale-95 transition-all shadow-sm"
+                title="ค้นหาคำแปลและตัวอย่างประโยคอัตโนมัติ">
+                <span>⚡ ค้นคำแปล</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Thai Translation -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300">ความหมายภาษาไทย (Thai Translation) *</label>
+            <input type="text" id="custom-vocab-input-th" placeholder="คำแปลภาษาไทย"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-indigo-500">
+          </div>
+
+          <!-- Part of Speech & IPA -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="font-bold text-slate-700 dark:text-slate-300">ชนิดของคำ (POS)</label>
+              <select id="custom-vocab-input-pos" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none">
+                <option value="noun">noun (คำนาม)</option>
+                <option value="verb">verb (คำกริยา)</option>
+                <option value="adjective">adjective (คำคุณศัพท์)</option>
+                <option value="adverb">adverb (คำกริยาวิเศษณ์)</option>
+                <option value="phrasal verb">phrasal verb (กริยาวลี)</option>
+                <option value="idiom">idiom (สำนวน)</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="font-bold text-slate-700 dark:text-slate-300">คำอ่านสัทอักษร (IPA / Pronunciation)</label>
+              <input type="text" id="custom-vocab-input-ipa" placeholder="/.../"
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-indigo-500">
+            </div>
+          </div>
+
+          <!-- Example English -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300">ตัวอย่างประโยคภาษาอังกฤษ (Example Sentence)</label>
+            <textarea id="custom-vocab-input-example-en" rows="2" placeholder="เช่น We need to improve our observability pipeline."
+              class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-indigo-500"></textarea>
+          </div>
+
+          <!-- Example Thai -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300">คำแปลตัวอย่างประโยค (Example Translation)</label>
+            <input type="text" id="custom-vocab-input-example-th" placeholder="คำแปลประโยคภาษาไทย"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <button type="button" onclick="window.app.closeAddCustomVocabModal()"
+            class="px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs">
+            ยกเลิก
+          </button>
+          <button type="button" onclick="window.app.saveCustomVocabFromModal()"
+            class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+            <span>💾 บันทึกลงคลังศัพท์</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+
+  closeAddCustomVocabModal() {
+    const modal = document.getElementById("add-custom-vocab-modal");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  }
+
+  async autoFetchCustomVocabDefinition() {
+    const wordInput = document.getElementById("custom-vocab-input-word");
+    const thInput = document.getElementById("custom-vocab-input-th");
+    const exampleEnInput = document.getElementById("custom-vocab-input-example-en");
+    const exampleThInput = document.getElementById("custom-vocab-input-example-th");
+    if (!wordInput || !wordInput.value.trim()) {
+      this.showToast("กรุณากรอกคำศัพท์ภาษาอังกฤษก่อนกดค้นหา", "info");
+      return;
+    }
+    const word = wordInput.value.trim();
+    this.showToast(`กำลังค้นหาคำแปล "${word}"...`, "info");
+    const entry = await this.lookupReadingWord(word);
+    if (entry) {
+      if (thInput) thInput.value = entry.th || "";
+      if (exampleEnInput && entry.exampleEn && entry.exampleEn.toLowerCase() !== word.toLowerCase()) {
+        exampleEnInput.value = entry.exampleEn;
+      }
+      if (exampleThInput && entry.exampleTh) {
+        exampleThInput.value = entry.exampleTh;
+      }
+      this.showToast(`ค้นพบคำแปล "${word}" เรียบร้อยแล้ว!`, "success");
+    }
+  }
+
+  saveCustomVocabFromModal() {
+    const wordInput = document.getElementById("custom-vocab-input-word");
+    const thInput = document.getElementById("custom-vocab-input-th");
+    const posInput = document.getElementById("custom-vocab-input-pos");
+    const ipaInput = document.getElementById("custom-vocab-input-ipa");
+    const exampleEnInput = document.getElementById("custom-vocab-input-example-en");
+    const exampleThInput = document.getElementById("custom-vocab-input-example-th");
+
+    const word = (wordInput?.value || "").trim();
+    const th = (thInput?.value || "").trim();
+    if (!word || !th) {
+      this.showToast("กรุณากรอกทั้งคำศัพท์ภาษาอังกฤษและความหมายภาษาไทย", "error");
+      return;
+    }
+
+    const pos = (posInput?.value || "vocabulary").trim();
+    const ipa = (ipaInput?.value || "").trim();
+    const exampleEn = (exampleEnInput?.value || "").trim();
+    const exampleTh = (exampleThInput?.value || "").trim();
+
+    if (window.storageManager && typeof window.storageManager.addCustomVocab === "function") {
+      const added = window.storageManager.addCustomVocab({
+        word,
+        th,
+        pos,
+        ipa,
+        exampleEn,
+        exampleTh,
+        source: "user"
+      });
+
+      if (this.vocabIndex && added) {
+        this.vocabIndex.set(word.toLowerCase().trim(), added);
+      }
+    }
+
+    window.soundFx.playCorrect();
+    this.showToast(`⭐ บันทึกคำศัพท์ "${word}" ลงในคลังศัพท์สำเร็จแล้ว!`, "success");
+    this.closeAddCustomVocabModal();
+
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "vocabulary") {
+      this.renderVocabularyView(container);
+    }
   }
 
   // =========================================================================
@@ -8389,12 +8633,30 @@ class EngMasteryApp {
   // INTERACTIVE WORD TAP & POPUP DICTIONARY (HYBRID LOCAL + GOOGLE TRANSLATE)
   // =========================================================================
   getVocabIndex() {
-    if (this.vocabIndex) return this.vocabIndex;
+    if (this.vocabIndex) {
+      if (window.storageManager && typeof window.storageManager.getCustomVocabs === "function") {
+        const custom = window.storageManager.getCustomVocabs() || [];
+        for (const v of custom) {
+          if (v.word && !this.vocabIndex.has(v.word.toLowerCase())) {
+            this.vocabIndex.set(v.word.toLowerCase(), v);
+          }
+        }
+      }
+      return this.vocabIndex;
+    }
     const map = new Map();
     const list = window.vocabData || [];
     for (const v of list) {
       if (v.word) {
         map.set(v.word.toLowerCase(), v);
+      }
+    }
+    if (window.storageManager && typeof window.storageManager.getCustomVocabs === "function") {
+      const custom = window.storageManager.getCustomVocabs() || [];
+      for (const v of custom) {
+        if (v.word && !map.has(v.word.toLowerCase())) {
+          map.set(v.word.toLowerCase(), v);
+        }
       }
     }
     this.vocabIndex = map;
@@ -8549,6 +8811,23 @@ class EngMasteryApp {
         try {
           localStorage.setItem("engmastery_online_vocab_cache", JSON.stringify(this.onlineVocabCache));
         } catch (e) {}
+
+        // Auto-learn: If this is a single English word outside core dictionary, auto-add to customVocabs!
+        if (!isPhraseOrSentence && cleanWord.length > 1 && !cleanWord.includes(" ") && window.storageManager && typeof window.storageManager.addCustomVocab === "function") {
+          const autoEntry = window.storageManager.addCustomVocab({
+            word: cleanWord,
+            ipa: "",
+            pos: "vocabulary",
+            th: translated,
+            definition: "คำแปลจากระบบแปลภาษาอัตโนมัติ (Auto-Learned)",
+            exampleEn: sentenceEn || "",
+            exampleTh: sentenceTh || "",
+            source: "auto"
+          });
+          if (this.vocabIndex && autoEntry) {
+            this.vocabIndex.set(cleanWord, autoEntry);
+          }
+        }
 
         return {
           word: isPhraseOrSentence ? trimmedRaw : cleanWord,

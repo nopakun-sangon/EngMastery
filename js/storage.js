@@ -30,6 +30,7 @@ class StorageManager {
       completedLevels: [], // e.g. ["level-a1"]
       quizHistory: {},    // e.g. { "level-a1": { bestScore: 5, totalQuestions: 5, percent: 100, timestamp: "..." } }
       savedVocab: [],     // e.g. ["deploy", "redundancy", "latency"]
+      customVocabs: [],   // e.g. [ { id, word, ipa, pos, th, definition, exampleEn, exampleTh, source, createdAt } ]
       dailyQuests: {
         date: new Date().toISOString().split("T")[0],
         readArticle: 0,       // target: 1 (20 XP)
@@ -79,6 +80,7 @@ class StorageManager {
           profile: { ...this.getDefaultState().profile, ...(parsed.profile || {}) },
           stats: { ...this.getDefaultState().stats, ...(parsed.stats || {}) },
           savedVocab: Array.isArray(parsed.savedVocab) ? parsed.savedVocab : [],
+          customVocabs: Array.isArray(parsed.customVocabs) ? parsed.customVocabs : [],
           dailyQuests: quests,
           preferences: { ...this.getDefaultState().preferences, ...(parsed.preferences || {}) }
         };
@@ -287,7 +289,7 @@ class StorageManager {
   }
 
   // ==========================================
-  // MY SAVED VOCAB (BOOKMARKS)
+  // MY SAVED VOCAB & CUSTOM VOCABULARY ENGINE
   // ==========================================
   getSavedVocab() {
     if (!Array.isArray(this.state.savedVocab)) {
@@ -302,8 +304,11 @@ class StorageManager {
     return this.getSavedVocab().includes(clean);
   }
 
-  toggleSaveWord(word) {
-    if (!word) return false;
+  toggleSaveWord(wordOrObj) {
+    if (!wordOrObj) return { saved: false, isSaved: false };
+    const word = typeof wordOrObj === "string" ? wordOrObj : wordOrObj.word;
+    if (!word) return { saved: false, isSaved: false };
+
     const clean = word.toLowerCase().trim();
     const list = this.getSavedVocab();
     const idx = list.indexOf(clean);
@@ -315,11 +320,82 @@ class StorageManager {
     } else {
       list.push(clean);
       isSaved = true;
+      // If rich object provided, auto-save to customVocabs as well
+      if (typeof wordOrObj === "object" && wordOrObj.th) {
+        this.addCustomVocab(wordOrObj);
+      }
     }
 
     this.state.savedVocab = list;
     this.save();
-    return isSaved;
+    return { saved: isSaved, isSaved: isSaved };
+  }
+
+  getCustomVocabs() {
+    if (!Array.isArray(this.state.customVocabs)) {
+      this.state.customVocabs = [];
+    }
+    return this.state.customVocabs;
+  }
+
+  addCustomVocab(entry) {
+    if (!entry || !entry.word) return null;
+    const cleanWord = entry.word.toLowerCase().trim();
+    if (!cleanWord || cleanWord.length < 2) return null;
+
+    const list = this.getCustomVocabs();
+    const existingIdx = list.findIndex(v => (v.word || "").toLowerCase().trim() === cleanWord);
+
+    const newVocab = {
+      id: existingIdx >= 0 ? list[existingIdx].id : `custom-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      word: entry.word.trim(),
+      ipa: entry.ipa || (existingIdx >= 0 ? list[existingIdx].ipa : "") || "",
+      pos: entry.pos || "vocabulary",
+      level: entry.level || "Custom",
+      category: "saved",
+      categoryLabel: "⭐ คำศัพท์ของฉัน",
+      th: entry.th || (existingIdx >= 0 ? list[existingIdx].th : "") || "",
+      definition: entry.definition || "คำแปลที่ระบบบันทึกจากการใช้งานจริง",
+      exampleEn: entry.exampleEn || "",
+      exampleTh: entry.exampleTh || "",
+      source: entry.source || "auto",
+      createdAt: existingIdx >= 0 ? list[existingIdx].createdAt : new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    if (existingIdx >= 0) {
+      list[existingIdx] = { ...list[existingIdx], ...newVocab };
+    } else {
+      list.unshift(newVocab);
+    }
+
+    // Also auto-add to savedVocab list so it is bookmarked
+    const savedList = this.getSavedVocab();
+    if (!savedList.includes(cleanWord)) {
+      savedList.push(cleanWord);
+      this.state.savedVocab = savedList;
+    }
+
+    this.save();
+    return newVocab;
+  }
+
+  deleteCustomVocab(idOrWord) {
+    if (!idOrWord) return false;
+    const clean = idOrWord.toLowerCase().trim();
+    const list = this.getCustomVocabs();
+    const idx = list.findIndex(v => v.id === idOrWord || (v.word && v.word.toLowerCase().trim() === clean));
+    if (idx >= 0) {
+      const removed = list.splice(idx, 1)[0];
+      if (removed && removed.word) {
+        const savedList = this.getSavedVocab();
+        const sIdx = savedList.indexOf(removed.word.toLowerCase().trim());
+        if (sIdx >= 0) savedList.splice(sIdx, 1);
+      }
+      this.save();
+      return true;
+    }
+    return false;
   }
 
   // ==========================================
