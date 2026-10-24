@@ -325,11 +325,17 @@
             </div>
 
             <!-- Mic Scoring Button -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
               <button id="generator-mic-btn" onclick="window.standupLab.recordAndScoreScript('${safeText}')"
-                class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95">
+                class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
-                <span>ซ้อมอ่านวัดคะแนน AI (+30 XP)</span>
+                <span>ซ้อมอ่านวัดคะแนน (+30 XP)</span>
+              </button>
+              <button onclick="window.pronunciationLab.open('${safeText}', '', '')"
+                class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5 active:scale-95"
+                title="วิเคราะห์สำเนียงเจาะลึกด้วย Pronunciation Lab">
+                <span>🎙️</span>
+                <span>วิเคราะห์สำเนียง</span>
               </button>
             </div>
           </div>

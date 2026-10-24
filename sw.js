@@ -19,6 +19,9 @@ const STATIC_ASSETS = [
   './js/app.js',
   './js/standupLab.js',
   './js/pwa.js',
+  './js/globalSearch.js',
+  './js/srsEngine.js',
+  './js/pronunciationLab.js',
   './data/vocabData.js',
   './data/articlesData.js',
   './data/verbsArticlesData.js',
@@ -130,3 +133,4 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+

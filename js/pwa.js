@@ -400,3 +400,4 @@
   // Expose global instance
   window.pwaManager = new PWAManager();
 })();
+

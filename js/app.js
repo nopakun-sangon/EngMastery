@@ -330,6 +330,14 @@ class EngMasteryApp {
     }
   }
 
+  startSRSReviewFromDashboard() {
+    window.soundFx.playClick();
+    this.vocabMode = 'srs';
+    this.srsCardIndex = 0;
+    this.srsIsFlipped = false;
+    this.navigateTo('vocabulary');
+  }
+
   // =========================================================================
   // VIEW 1: DASHBOARD (OVERVIEW, CEFR LEVELS & PROGRESS BAR)
   // =========================================================================
@@ -443,6 +451,48 @@ class EngMasteryApp {
             <p class="text-[11px] text-slate-400 mt-1">วัดคะแนนด้วย Web Speech AI</p>
           </div>
         </div>
+
+        <!-- SRS DAILY REVIEW BANNER (IF CARDS ARE DUE OR TO START SM-2 REVIEW) -->
+        ${(() => {
+          const srs = window.srsEngine ? window.srsEngine.getStatsSummary(window.vocabData || []) : null;
+          if (!srs) return '';
+          return `
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-cyan-950 border border-cyan-500/30 p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
+                  🧠
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm sm:text-base font-black text-white">
+                      ระบบทบทวนคำศัพท์อัจฉริยะ (Spaced Repetition • SM-2)
+                    </h3>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/30 text-cyan-200 border border-cyan-400/30">
+                      Scientific Memory
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1">
+                    ${srs.dueToday > 0 
+                      ? `🔥 วันนี้มีคำศัพท์ที่ถึงรอบเวลาทบทวน <strong class="text-amber-400 font-bold">${srs.dueToday} คำ</strong> เพื่อป้องกันการลืมถาวร`
+                      : `🎉 คุณทบทวนคำศัพท์ประจำวันครบแล้ว! กำลังจำแม่นยำ ${srs.learning} คำ • จดจำถาวร ${srs.mastered} คำ`
+                    }
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 shrink-0">
+                <button onclick="window.app.startSRSReviewFromDashboard()"
+                  class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg hover:shadow-cyan-500/25 transition-all active:scale-95 flex items-center gap-2">
+                  <span>${srs.dueToday > 0 ? 'ทบทวนคำศัพท์วันนี้' : 'ฝึกศัพท์เพิ่ม'}</span>
+                  <span>➔</span>
+                </button>
+                <button onclick="window.globalSearch.open()"
+                  class="px-3.5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition-all flex items-center gap-1.5" title="ค้นหาด่วน Ctrl+K">
+                  <span>🔍 ค้นหาด่วน</span>
+                </button>
+              </div>
+            </div>
+          `;
+        })()}
 
         <!-- NEW FEATURE HUBS (Vocabulary Flashcards, Articles Library, Masterclass Hub) -->
         <div class="space-y-3">
@@ -4156,7 +4206,20 @@ class EngMasteryApp {
           </div>
           <div class="flex items-center gap-2">
             <!-- Mode Switcher -->
-            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold">
+            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold overflow-x-auto">
+              <button onclick="window.app.setVocabMode('srs')"
+                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                  this.vocabMode === 'srs'
+                    ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }">
+                <span>🧠 ทบทวน SRS (SM-2)</span>
+                ${(() => {
+                  if (!window.srsEngine) return '';
+                  const s = window.srsEngine.getStatsSummary(vocabs);
+                  return s.dueToday > 0 ? `<span class="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-amber-500 text-white animate-pulse">${s.dueToday}</span>` : '';
+                })()}
+              </button>
               <button onclick="window.app.setVocabMode('flashcard')"
                 class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
                   this.vocabMode === 'flashcard'
@@ -4569,9 +4632,9 @@ class EngMasteryApp {
                         title="ฟังเสียงอ่าน">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
                       </button>
-                      <button onclick="window.app.startBrowseVocabSpeaking('${v.id}', '${v.word.replace(/'/g, "\\'")}')"
-                        class="p-1.5 rounded-xl ${scoreData?.isListening ? 'bg-red-600 text-white recording-pulse' : 'bg-slate-100 dark:bg-slate-800 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50'} hover:scale-110 transition-all"
-                        title="ทดสอบการออกเสียงคำนี้">
+                      <button onclick="window.pronunciationLab.open('${v.word.replace(/'/g, "\\'")}', '${(v.ipa || '').replace(/'/g, "\\'")}', '${(v.exampleEn || '').replace(/'/g, "\\'")}')"
+                        class="p-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:hover:bg-purple-900/60 text-purple-600 dark:text-purple-400 hover:scale-110 transition-all shadow-xs"
+                        title="ทดสอบการออกเสียงคำนี้ (Pronunciation Lab)">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                       </button>
                     </div>
@@ -4770,9 +4833,234 @@ class EngMasteryApp {
     if (!contentArea) return;
     const vocabs = window.vocabData || [];
     const filtered = this.getFilteredVocabList(vocabs);
-    contentArea.innerHTML = this.vocabMode === 'flashcard' 
-      ? this.renderFlashcardMode(filtered) 
-      : this.renderBrowseVocabMode(filtered);
+    if (this.vocabMode === 'srs') {
+      contentArea.innerHTML = this.renderSRSReviewMode(vocabs);
+    } else if (this.vocabMode === 'flashcard') {
+      contentArea.innerHTML = this.renderFlashcardMode(filtered);
+    } else {
+      contentArea.innerHTML = this.renderBrowseVocabMode(filtered);
+    }
+  }
+
+  renderSRSReviewMode(vocabs) {
+    if (!window.srsEngine) return `<div class="p-8 text-center text-slate-400">SRS Engine is loading...</div>`;
+    const dueQueue = window.srsEngine.getDueCards(vocabs, 10);
+    const stats = window.srsEngine.getStatsSummary(vocabs);
+
+    if (this.srsCardIndex === undefined) this.srsCardIndex = 0;
+    if (this.srsIsFlipped === undefined) this.srsIsFlipped = false;
+
+    if (dueQueue.length === 0 || this.srsCardIndex >= dueQueue.length) {
+      return `
+        <div class="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-800/60 rounded-3xl p-8 sm:p-12 text-center space-y-6 max-w-xl mx-auto shadow-2xl animate-fadeIn">
+          <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-4xl shadow-xl">
+            🎉
+          </div>
+          <div class="space-y-2">
+            <h2 class="text-xl sm:text-2xl font-black text-white">
+              ยอดเยี่ยมมาก! ทบทวนครบสำหรับวันนี้แล้ว
+            </h2>
+            <p class="text-xs sm:text-sm text-cyan-200 leading-relaxed">
+              สมองของคุณได้รับการกระตุ้นความจำตามหลักวิทยาศาสตร์ <strong>Spaced Repetition (SM-2)</strong> เรียบร้อยแล้ว ระบบจะจัดคิวคำศัพท์กลับมาให้อัตโนมัติเมื่อถึงรอบเวลาที่เหมาะสม
+            </p>
+          </div>
+
+          <!-- Quick Stats Pill Grid -->
+          <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400">กำลังจำ (Learning)</span>
+              <p class="text-lg font-black text-indigo-400 mt-0.5">${stats.learning} คำ</p>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400">จำแม่น (Mastered)</span>
+              <p class="text-lg font-black text-emerald-400 mt-0.5">${stats.mastered} คำ</p>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400">ทำต่อเนื่อง</span>
+              <p class="text-lg font-black text-amber-400 mt-0.5">${stats.streakDays} วัน 🔥</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-3 pt-2">
+            <button onclick="window.app.loadMoreSRSCards()" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95">
+              + ฝึกคำศัพท์ใหม่เพิ่ม 10 คำ
+            </button>
+            <button onclick="window.app.setVocabMode('flashcard')" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition-all">
+              กลับไปโหมดสุ่มทั่วไป
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    const currentItem = dueQueue[this.srsCardIndex];
+    const v = currentItem.vocab;
+    const cardState = currentItem.state;
+    const isNew = currentItem.isNew;
+    const isFlipped = this.srsIsFlipped;
+
+    return `
+      <div class="max-w-2xl mx-auto space-y-4 animate-fadeIn">
+        
+        <!-- Queue Counter & Interval Badge -->
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase ${isNew ? 'bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300' : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'}">
+              ${isNew ? '🌟 ศัพท์ใหม่ (New)' : `🔄 ทบทวนรอบที่ ${cardState?.repetitions || 1}`}
+            </span>
+            <span class="font-bold">คำที่ ${this.srsCardIndex + 1} จาก ${dueQueue.length}</span>
+          </div>
+          <div class="text-[11px] font-medium text-slate-400">
+            ${cardState?.interval ? `ระยะห่างล่าสุด: ${cardState.interval} วัน` : 'เริ่มนับรอบแรก'}
+          </div>
+        </div>
+
+        <!-- Anki-style Flashcard Main Box -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 text-center relative overflow-hidden transition-all">
+          
+          <!-- Category & Level Header -->
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              ${v.categoryLabel || v.category || 'Vocabulary'}
+            </span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="window.speechEngine.speak('${v.word.replace(/'/g, "\\'")}')" class="p-2 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 transition-all text-xs" title="ฟังเสียงอ่าน 🔊">
+                🔊 ฟังเสียง
+              </button>
+              <button onclick="window.pronunciationLab.open('${v.word.replace(/'/g, "\\'")}', '${(v.ipa || '').replace(/'/g, "\\'")}', '${(v.exampleEn || '').replace(/'/g, "\\'")}')" class="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 hover:bg-purple-100 transition-all text-xs font-bold flex items-center gap-1" title="ซ้อมออกเสียง 🎙️">
+                <span>🎙️</span>
+                <span>ซ้อมพูด</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Target Word Front -->
+          <div class="py-4 space-y-2">
+            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+              ${v.word}
+            </h2>
+            ${v.ipa ? `
+              <p class="text-sm sm:text-base font-mono text-cyan-600 dark:text-cyan-400 font-medium">
+                ${v.ipa}
+              </p>
+            ` : ''}
+            ${v.pos ? `
+              <span class="inline-block px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                ${v.pos}
+              </span>
+            ` : ''}
+          </div>
+
+          <!-- Flip Divider / Answer Reveal -->
+          ${!isFlipped ? `
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+              <button onclick="window.app.toggleSRSFlip()"
+                class="w-full py-4 px-6 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 text-white font-black text-sm rounded-2xl shadow-lg hover:shadow-cyan-500/25 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span>🔍 แตะเพื่อดูคำแปล & เฉลย</span>
+              </button>
+              <p class="text-[11px] text-slate-400 mt-2">หรือกด Spacebar บนแป้นพิมพ์เพื่อเปิดคำแปล</p>
+            </div>
+          ` : `
+            <!-- Back of Card: Meaning, Definition, Example -->
+            <div class="space-y-5 pt-4 border-t border-slate-100 dark:border-slate-800 animate-fadeIn text-left">
+              <div class="text-center space-y-1">
+                <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">ความหมายภาษาไทย:</span>
+                <h3 class="text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400">
+                  ${v.th || v.meaning || ''}
+                </h3>
+                ${v.definition ? `
+                  <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium pt-1 max-w-lg mx-auto">
+                    ${v.definition}
+                  </p>
+                ` : ''}
+              </div>
+
+              ${v.exampleEn ? `
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-1 text-xs">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">ตัวอย่างการใช้งานจริง:</span>
+                    <button onclick="window.speechEngine.speak('${v.exampleEn.replace(/'/g, "\\'")}')" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">🔊 ฟังตัวอย่าง</button>
+                  </div>
+                  <p class="font-semibold text-slate-800 dark:text-slate-200 italic">"${v.exampleEn}"</p>
+                  ${v.exampleTh ? `<p class="text-slate-500 dark:text-slate-400">${v.exampleTh}</p>` : ''}
+                </div>
+              ` : ''}
+
+              <!-- 4 SM-2 Action Rating Buttons -->
+              <div class="pt-3 space-y-2">
+                <span class="text-xs font-bold text-slate-400 block text-center">ระดับความจำของคุณสำหรับคำนี้ (SM-2 Interval):</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  
+                  <!-- Again (1) -->
+                  <button onclick="window.app.submitSRSRating(1)"
+                    class="p-3 rounded-2xl border border-red-200 dark:border-red-900/60 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 text-center transition-all active:scale-95 group">
+                    <div class="text-base font-black">🔴 ลืม</div>
+                    <div class="text-[10px] text-red-500 dark:text-red-400 mt-0.5">ทบทวนพรุ่งนี้</div>
+                  </button>
+
+                  <!-- Hard (2) -->
+                  <button onclick="window.app.submitSRSRating(2)"
+                    class="p-3 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-center transition-all active:scale-95 group">
+                    <div class="text-base font-black">🟠 ยาก</div>
+                    <div class="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">อีก 2 วัน</div>
+                  </button>
+
+                  <!-- Good (3) -->
+                  <button onclick="window.app.submitSRSRating(3)"
+                    class="p-3 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-center transition-all active:scale-95 group">
+                    <div class="text-base font-black">🟢 จำได้</div>
+                    <div class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">อีก 4-6 วัน</div>
+                  </button>
+
+                  <!-- Easy (4) -->
+                  <button onclick="window.app.submitSRSRating(4)"
+                    class="p-3 rounded-2xl border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/60 text-cyan-700 dark:text-cyan-300 text-center transition-all active:scale-95 group">
+                    <div class="text-base font-black">🔵 ง่ายมาก</div>
+                    <div class="text-[10px] text-cyan-600 dark:text-cyan-400 mt-0.5">อีก 10-14 วัน</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  toggleSRSFlip() {
+    if (window.soundFx && window.soundFx.playFlip) window.soundFx.playFlip();
+    this.srsIsFlipped = !this.srsIsFlipped;
+    this.renderVocabContentArea();
+  }
+
+  submitSRSRating(rating) {
+    if (!window.srsEngine) return;
+    const vocabs = window.vocabData || [];
+    const dueQueue = window.srsEngine.getDueCards(vocabs, 10);
+    if (!dueQueue[this.srsCardIndex]) return;
+
+    const current = dueQueue[this.srsCardIndex];
+    const wordId = current.vocab.id || current.vocab.word;
+
+    const res = window.srsEngine.recordReview(wordId, rating);
+
+    if (rating >= 3) {
+      if (window.soundFx && window.soundFx.playCorrect) window.soundFx.playCorrect();
+      this.showToast(`บันทึกแล้ว! (${current.vocab.word}) นัดทบทวนอีกครั้งในอีก ${res.nextInterval} วัน (+${res.xp} XP)`, "success");
+    } else {
+      if (window.soundFx && window.soundFx.playClick) window.soundFx.playClick();
+      this.showToast(`จะนำคำว่า "${current.vocab.word}" กลับมาทบทวนใหม่ในวันพรุ่งนี้ครับ`, "info");
+    }
+
+    this.srsCardIndex++;
+    this.srsIsFlipped = false;
+    this.renderVocabContentArea();
+  }
+
+  loadMoreSRSCards() {
+    this.srsCardIndex = 0;
+    this.srsIsFlipped = false;
+    this.renderVocabContentArea();
   }
 
   searchVocab(query) {
@@ -7134,9 +7422,9 @@ class EngMasteryApp {
               title="ฟังเสียงอ่านคำศัพท์ (Pronounce)">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-4.72 4.72H2.5A1.5 1.5 0 001 9.19v1.62c0 .83.67 1.5 1.5 1.5h1.5l4.72 4.72A.75.75 0 0010 16.5V3.5zm3.78 3.22a.75.75 0 011.06 0 6.5 6.5 0 010 9.19.75.75 0 01-1.06-1.06 5 5 0 000-7.07.75.75 0 010-1.06z"/></svg>
             </button>
-            <button id="reading-word-mic-btn" onclick="window.app.startReadingWordPopupSpeaking('${entry.word.replace(/'/g, "\\'")}')"
-              class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/80 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
-              title="ทดสอบออกเสียงคำนี้ (Voice Test)">
+            <button id="reading-word-mic-btn" onclick="window.pronunciationLab.open('${entry.word.replace(/'/g, "\\'")}', '${(entry.ipa || '').replace(/'/g, "\\'")}', '${(entry.exampleEn || '').replace(/'/g, "\\'")}')"
+              class="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/80 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 active:scale-95 transition-all shadow-sm"
+              title="ทดสอบออกเสียงคำนี้ (Pronunciation Lab)">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
             </button>
             <button onclick="window.app.closeReadingWordPopup()"
