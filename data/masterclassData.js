@@ -1652,6 +1652,291 @@ const masterclassData = [
     }
   ]
 }
+,
+  // =========================================================================
+  // MASTERCLASS 11: TECH PRONUNCIATION PITFALLS
+  // =========================================================================
+  {
+  "id": "mc-tech-pronunciation-pitfalls",
+  "title": "Tech Pronunciation Pitfalls: 25+ คำศัพท์เทคที่คนไทยมักออกเสียงผิด พร้อม IPA และวิธีออกเสียงให้ฝรั่งเข้าใจทันที",
+  "titleEn": "Tech Pronunciation Pitfalls: 25+ Most Mispronounced Tech Terms with IPA and Audio Guidelines",
+  "category": "Pronunciation Mastery",
+  "categoryTh": "การออกเสียงศัพท์เทคโนโลยี",
+  "badge": "🗣️ Tech Pronunciation Lab",
+  "badgeColor": "rose",
+  "readTime": "16 นาที",
+  "author": "Senior Software Engineer & English Phonetics Specialist",
+  "publishedDate": "2026-10-25",
+  "coverEmoji": "🎙️",
+  "summary": "รวม 26 คำศัพท์ไอทีและวิศวกรรมซอฟต์แวร์ที่โปรแกรมเมอร์ไทยมักอ่านออกเสียงผิดเพี้ยนตามตัวสะกด เช่น cache, parameter, archive, schema, queue, null, variable, suite, tuple, sudo, regex ฯลฯ มาเรียนรู้วิธีอ่านตามสัทศาสตร์สากล (IPA) จุดเน้นพยางค์ (Stress) และประโยคใช้งานจริงในที่ทำงาน เพื่อให้ฝรั่งเข้าใจทันทีตั้งแต่คำแรกโดยไม่ต้องถามซ้ำ",
+  "tags": [
+    "Pronunciation",
+    "Tech Vocabulary",
+    "IPA",
+    "Speaking Confidence",
+    "Daily Standup"
+  ],
+  "sections": [
+    {
+      "heading": "1. กลุ่มคำศัพท์โค้ดดิ้งและสถาปัตยกรรม (Code, Data Structures & Architecture)",
+      "content": "คำศัพท์ทางเทคนิคด้านโค้ดดิ้งและโครงสร้างข้อมูลหลายคำ มีรากศัพท์มาจากภาษาละตินหรือประดิษฐ์ขึ้นใหม่ หากเราออกเสียงแบบถอดรูปตัวสะกดตรงๆ แบบภาษาไทย ฝรั่งหรือเพื่อนร่วมทีมต่างชาติอาจฟังไม่เข้าใจจนเกิดความเข้าใจผิดได้\n\n### 📊 ตารางสัทศาสตร์กลุ่ม Code & Architecture\n\n| คำศัพท์ (Term) | สัทศาสตร์สากล (IPA) | คำอ่านไทย & จุดเน้นเสียง | ข้อผิดพลาดยอดฮิต (❌) | ตัวอย่างประโยคจริงในงาน (Real-world Example) |\n|---|---|---|---|---|\n| **parameter** | /pəˈræm.ɪ.tər/ | เพอะ-**แรม**-มิ-เถ่อะ *(เน้นพยางค์ 2)* | ❌ พารา-มิเตอร์ | *\"We need to pass an optional config **parameter** into the function.\"* |\n| **variable** | /ˈveə.ri.ə.bəl/ | **แว๊**-เรีย-เบิล *(เน้นพยางค์แรก)* | ❌ วา-เรีย-เบิล | *\"The environment **variable** is not defined in the container.\"* |\n| **schema** | /ˈskiː.mə/ | **สกี**-ม่า *(ch ออกเสียง /k/)* | ❌ เช-ม่า, สเก-ม่า | *\"Let's review the new database **schema** before running migrations.\"* |\n| **null** | /nʌl/ | **นัล** *(สระอะ กึ่งไม้หันอากาศ)* | ❌ นูล, นิว | *\"The API returned a **null** value for the user profile.\"* |\n| **queue** | /kjuː/ | **คิว** *(พยางค์เดียว เหมือน queue แถว)* | ❌ คิว-อี้, เคว | *\"The background worker consumes messages from the SQS **queue**.\"* |\n| **boolean** | /ˈbuː.li.ən/ | **บู**-ลี-เอิน *(เน้น บู)* | ❌ โบ-ลีน, บัว-ลีน | *\"Set the flag to a **boolean** true to enable debug mode.\"* |\n| **tuple** | /ˈtʌp.əl/ หรือ /ˈtuː.pəl/ | **ทัป**-เพิล หรือ **ทู**-เพิล | ❌ ทู-เปิ้ล, ตุ๊บ-เปิ้ล | *\"In Python, a **tuple** is an immutable sequence of elements.\"* |\n| **char** | /tʃɑːr/ หรือ /kær/ | **ชาร์** หรือ **แคร์** | ❌ ชา, ชาร์-แรก-เตอร์ | *\"Store the single currency symbol as a 3-character **char** field.\"* |\n| **NaN** | /næn/ | **แนน** *(อ่านเป็นคำ ไม่สะกดทีละตัว)* | ❌ เอ็น-เอ-เอ็น | *\"The division by zero resulted in a **NaN** floating-point value.\"* |\n\n> 💡 **กฎสำคัญเรื่อง Word Stress:** ในภาษาอังกฤษ หากเราเน้นพยางค์ผิดที่ เช่น คำว่า `parameter` ถ้าไปเน้นพยางค์แรกเป็น *\"พารา-มิเตอร์\"* ฝรั่งอาจประมวลผลไม่ออกทันที แต่ถ้าเน้นพยางค์สองเป็น *\"pə-RAM-i-ter\"* เขาจะเก็ทในเสี้ยววินาที!",
+      "keyPhrases": [
+        {
+          "en": "We need to pass an optional config parameter into the function.",
+          "th": "เราจำเป็นต้องส่งค่าพารามิเตอร์คอนฟิกที่เป็นทางเลือกเข้าไปในฟังก์ชัน"
+        },
+        {
+          "en": "The API returned a null value because the record was not found.",
+          "th": "API ส่งค่ากลับมาเป็น null เพราะหาเรคคอร์ดดังกล่าวไม่พบ"
+        },
+        {
+          "en": "Messages are piling up in the dead-letter queue.",
+          "th": "ข้อความกำลังกองสะสมอยู่ในคิว Dead-letter"
+        }
+      ]
+    },
+    {
+      "heading": "2. กลุ่มคำศัพท์ระบบไฟล์ ฮาร์ดแวร์ และโครงสร้างพื้นฐาน (OS, Network & Storage)",
+      "content": "กลุ่มคำศัพท์ System, Linux และ Infrastructure มักมีคำที่คนไทยอ่านติดปากจากการสะกดผิด หรืออ่านแบบสำเนียงฝรั่งเศส/โบราณ มาดูคำที่ถูกต้องกัน:\n\n### 📊 ตารางสัทศาสตร์กลุ่ม OS & Infrastructure\n\n| คำศัพท์ (Term) | สัทศาสตร์สากล (IPA) | คำอ่านไทย & จุดเน้นเสียง | ข้อผิดพลาดยอดฮิต (❌) | ตัวอย่างประโยคจริงในงาน (Real-world Example) |\n|---|---|---|---|---|\n| **cache** | /kæʃ/ | **แคช** *(ออกเสียงเหมือน cash เงินสด)* | ❌ แค-เช่, คา-เช่ | *\"Clear your browser **cache** and restart the dev server.\"* |\n| **archive** | /ˈɑːr.kaɪv/ | **อาร์**-ไคฟ์ *(ch ออกเสียง /k/)* | ❌ อา-ชีพ, อา-ชีฟ | *\"We should compress and **archive** old audit logs to S3 Glacier.\"* |\n| **hierarchy** | /ˈhaɪə.rɑːr.ki/ | **ไฮ**-เออ-ราร์-คี *(เน้น ไฮ)* | ❌ เฮีย-รา-ชี่, ไฮ-ราก-ชี่ | *\"The organizational chart defines the permission **hierarchy**.\"* |\n| **sudo** | /ˈsuː.duː/ | **ซู**-ดู *(Superuser Do)* | ❌ ซู-โด, ซู-โด้ | *\"Run the installation script with **sudo** privileges.\"* |\n| **chown** | /tʃeɪndʒ ˈoʊn.ər/ หรือ /tʃaʊn/ | **เชาวน์** *(ย่อจาก change owner)* | ❌ โชว์น, ชอน | *\"Run **chown** to change directory ownership to www-data.\"* |\n| **daemon** | /ˈdiː.mən/ | **ดี**-เมิน *(เหมือน demon)* | ❌ แด-มอน, ดา-เอ-มอน | *\"The Docker **daemon** is currently not running on this host.\"* |\n| **nginx** | /ˌen.dʒɪnˈeks/ | เอนจิน-**เอกซ์** | ❌ เอ็น-กิงซ์, เอ็น-จิน-กริกส์ | *\"We configured **NGINX** as a reverse proxy for load balancing.\"* |\n| **epoch** | /ˈiː.pɒk/ หรือ /ˈep.ək/ | **อี**-พ็อค หรือ **เอพ**-เพิค | ❌ อี-โพช, เอ-พ็อช | *\"The timestamp is stored in Unix **epoch** milliseconds.\"* |\n| **repository** | /rɪˈpɒz.ɪ.tər.i/ | ริ-**พอซ**-ซิ-ทรี *(เน้น พอซ)* | ❌ รี-โพ-ซิ-ตอรี่ | *\"Clone the main backend **repository** using SSH.\"* |\n\n> 📌 **Pro Tip:** คำว่า `cache` ออกเสียงเหมือนคำว่า `cash` 100%! ไม่ต้องเติม \"เช่\" ข้างหลังเด็ดขาด!",
+      "keyPhrases": [
+        {
+          "en": "Clear your Redis cache before re-running the integration tests.",
+          "th": "เคลียร์แคช Redis ของคุณก่อนรันการทดสอบ Integration ใหม่อีกครั้ง"
+        },
+        {
+          "en": "The Docker daemon stopped responding after the memory spike.",
+          "th": "เดมอนของ Docker หยุดตอบสนองหลังจากหน่วยความจำพุ่งสูงผิดปกติ"
+        },
+        {
+          "en": "Clone the frontend repository and run npm install.",
+          "th": "โคลน Git repository ของส่วนหน้าบ้าน แล้วรันคำสั่ง npm install"
+        }
+      ]
+    },
+    {
+      "heading": "3. กลุ่มคำศัพท์การทดสอบ การประมวลผล และคำสั่ง DevOps (Testing, Async & Tools)",
+      "content": "คำศัพท์ในชีวิตประจำวันของ Developer เกี่ยวกับการเขียน Test, การรัน Async และเครื่องมือต่างๆ:\n\n### 📊 ตารางสัทศาสตร์กลุ่ม Testing & DevOps\n\n| คำศัพท์ (Term) | สัทศาสตร์สากล (IPA) | คำอ่านไทย & จุดเน้นเสียง | ข้อผิดพลาดยอดฮิต (❌) | ตัวอย่างประโยคจริงในงาน (Real-world Example) |\n|---|---|---|---|---|\n| **suite** (test suite) | /swiːt/ | **สวีท** *(เหมือน sweet ขนมหวาน)* | ❌ ซูท, สวี-เต้ | *\"All 50 unit tests in the authentication **suite** passed.\"* |\n| **regex** / **regexp** | /ˈredʒ.eks/ | **เรจ**-เอกซ์ *(g ออกเสียง /dʒ/)* | ❌ รี-เก็กซ์, เรก-เอ็กซ์ | *\"Write a clean **regex** to validate the email format.\"* |\n| **asynchronous** | /eɪˈsɪŋ.krə.nəs/ | เอ-**ซิง**-โคร-เนิส *(เน้น ซิง)* | ❌ อา-ซิง-โคร-นัส | *\"Node.js handles I/O operations in an **asynchronous** manner.\"* |\n| **synchronous** | /ˈsɪŋ.krə.nəs/ | **ซิง**-โคร-เนิส *(เน้น ซิง)* | ❌ ซิน-โคร-นัส | *\"Avoid blocking the event loop with heavy **synchronous** calls.\"* |\n| **deprecate** | /ˈdep.rə.keɪt/ | **เดป**-เพรอะ-เคท *(เน้น เดป)* | ❌ ดี-ปรี-เคต | *\"This v1 endpoint is **deprecated** and will be removed next month.\"* |\n| **gauge** | /ɡeɪdʒ/ | **เกจ** *(ออกเสียงเหมือน gage)* | ❌ เก๊าก์, เกา-เก้ | *\"Prometheus uses a **gauge** metric to track active connections.\"* |\n| **subtle** | /ˈsʌt.əl/ | **ซัต**-เทิล *(ตัว b ไม่ออกเสียง!)* | ❌ ซับ-เทิล | *\"There is a **subtle** concurrency bug in this goroutine.\"* |\n| **alias** | /ˈeɪ.li.əs/ | **เอ**-เลียส *(เน้น เอ)* | ❌ อา-เลียส, อะ-ไล-แอส | *\"Add a shell **alias** for the kubectl command.\"* |\n\n> 💡 **Silent Letters (ตัวอักษรเงียบ):** ในคำว่า `subtle` ตัว `b` เป็น Silent letter จึงออกเสียงว่า **\"ซัต-เทิล\"** (คล้าย subtle hint) ห้ามออกเสียงตัวบีเด็ดขาด",
+      "keyPhrases": [
+        {
+          "en": "All end-to-end tests in the regression suite passed without flakiness.",
+          "th": "การทดสอบ End-to-End ทั้งหมดใน Regression Suite ผ่านฉลุยโดยไม่มีข้อผิดพลาดสุ่มสี่สุ่มห้า"
+        },
+        {
+          "en": "The legacy billing API has been deprecated in favor of Stripe webhooks.",
+          "th": "API ชำระเงินรุ่นเก่ายกเลิกการสนับสนุน (deprecated) แล้วเพื่อเปลี่ยนไปใช้ Stripe webhook แทน"
+        },
+        {
+          "en": "Use an asynchronous message broker to decouple the microservices.",
+          "th": "ใช้ระบบส่งข้อความแบบ Asynchronous เพื่อลดการยึดติดกันระหว่างไมโครเซอร์วิส"
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "id": "mc-pron-q1",
+      "question": "คำว่า 'cache' ในระบบคอมพิวเตอร์ ออกเสียงที่ถูกต้องตามหลักสากลอย่างไร?",
+      "options": [
+        "ออกเสียงว่า 'คา-เช่' (ka-shey)",
+        "ออกเสียงว่า 'แคช' (/kæʃ/) เหมือนคำว่า cash (เงินสด)",
+        "ออกเสียงว่า 'เคค' (cake)",
+        "ออกเสียงว่า 'แคต-เช่' (cat-chey)"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! คำว่า cache ในภาษาอังกฤษออกเสียงพยางค์เดียวว่า 'แคช' (/kæʃ/) เหมือนคำว่า cash ทุกประการ ห้ามเติม 'เช่' ข้างหลัง"
+    },
+    {
+      "id": "mc-pron-q2",
+      "question": "คำว่า 'parameter' ควรลงเสียงหนัก (Stress) ที่พยางค์ใด?",
+      "options": [
+        "พยางค์แรก (PA-ra-me-ter)",
+        "พยางค์ที่สอง (pə-RAM-i-ter)",
+        "พยางค์ที่สาม (pa-ra-ME-ter)",
+        "ทุกพยางค์ออกเสียงเท่ากันหมด"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! parameter ลงเสียงเน้นที่พยางค์ที่สอง /pəˈræm.ɪ.tər/ (เพอะ-แรม-มิ-เถ่อะ) ซึ่งการเน้นพยางค์สองนี้จะทำให้ฝรั่งเข้าใจได้ทันที"
+    },
+    {
+      "id": "mc-pron-q3",
+      "question": "คำว่า 'test suite' (ชุดการทดสอบโค้ด) คำว่า 'suite' ออกเสียงเหมือนคำใดในภาษาอังกฤษ?",
+      "options": [
+        "เหมือนคำว่า suit (ชุดสูท /suːt/)",
+        "เหมือนคำว่า sweet (ขนมหวาน /swiːt/)",
+        "เหมือนคำว่า soot (เขม่าดำ /sʊt/)",
+        "เหมือนคำว่า sweat (เหงื่อ /swet/)"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! suite ออกเสียงว่า /swiːt/ (สวีท) เหมือนคำว่า sweet เช่น hotel suite หรือ test suite ไม่ได้ออกเสียงว่า ซูท"
+    },
+    {
+      "id": "mc-pron-q4",
+      "question": "คำว่า 'schema' (โครงสร้างฐานข้อมูล) พยัญชนะ 'ch' ในคำนี้ออกเสียงอย่างไร?",
+      "options": [
+        "ออกเสียง /tʃ/ เหมือนคำว่า 'chair'",
+        "ออกเสียง /ʃ/ เหมือนคำว่า 'shoe'",
+        "ออกเสียง /k/ เหมือนคำว่า 'sky' (/ˈskiː.mə/ สกี-ม่า)",
+        "ไม่ออกเสียง 'ch'"
+      ],
+      "answer": 2,
+      "explanation": "ถูกต้อง! schema มีรากศัพท์จากภาษากรีก ตัว ch ในคำนี้จึงออกเสียงเป็นเสียงเคอะ /k/ รวมกันเป็น /ˈskiː.mə/ (สกี-ม่า) ไม่ใช่ เช-ม่า"
+    },
+    {
+      "id": "mc-pron-q5",
+      "question": "คำว่า 'subtle' (เช่น a subtle bug) ตัวอักษรใดคือ Silent Letter (ตัวอักษรเงียบที่ไม่ออกเสียง)?",
+      "options": [
+        "ตัว s",
+        "ตัว b (ออกเสียงว่า /ˈsʌt.əl/ ซัต-เทิล)",
+        "ตัว t",
+        "ตัว l"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! ตัวอักษร 'b' ในคำว่า subtle เป็น Silent Letter ไม่ออกเสียง คำนี้จึงอ่านว่า /ˈsʌt.əl/ (ซัต-เทิล) แปลว่า เล็กน้อย หรือแนบเนียน"
+    }
+  ]
+},
+  // =========================================================================
+  // MASTERCLASS 12: JUNIOR DEV SURVIVAL GUIDE
+  // =========================================================================
+  {
+  "id": "mc-junior-dev-survival",
+  "title": "Junior Dev Survival Guide: คู่มือเอาตัวรอดสัปดาห์แรกในทีมเทคระดับสากล (Slack, Access, Standup & Acronyms)",
+  "titleEn": "Junior Dev Survival Guide: Essential English for Onboarding, Asking for Help, and Remote Collaboration",
+  "category": "Career & Workplace",
+  "categoryTh": "การทำงานและเอาตัวรอดในทีมเทค",
+  "badge": "🚀 Junior Dev Blueprint",
+  "badgeColor": "amber",
+  "readTime": "18 นาที",
+  "author": "Engineering Manager & Senior Agile Coach",
+  "publishedDate": "2026-10-25",
+  "coverEmoji": "🐣",
+  "summary": "เจาะลึกทักษะภาษาอังกฤษและเทคนิคการสื่อสารที่ Junior Engineer, Intern และมือใหม่ทุกคนต้องใช้ตั้งแต่วันแรก: ตั้งแต่การเขียนแนะนำตัวบน Slack ช่อง #general/#engineering, การขอสิทธิ์ Access (GitHub repo, AWS console, VPN), ศิลปะการขอความช่วยเหลือจาก Senior แบบมีมารยาทด้วยกฎ '3-Step Asking for Help', ประโยคเอาตัวรอดใน Zoom เมื่อฟังฝรั่งพูดเร็วไม่ทัน, และรวมคำย่อไอทียอดฮิต (LGTM, WIP, ETA, PTO, AFK, TBD)",
+  "tags": [
+    "Junior Developer",
+    "Onboarding",
+    "Asking for Help",
+    "Slack Communication",
+    "Tech Acronyms"
+  ],
+  "sections": [
+    {
+      "heading": "1. Day 1 Onboarding & Requesting Access (การแนะนำตัวและขอสิทธิ์เข้าระบบอย่างมืออาชีพ)",
+      "content": "สัปดาห์แรกของการเข้าทำงาน (Onboarding) คือช่วงเวลาสร้าง First Impression ที่สำคัญที่สุด การแนะนำตัวบน Slack และการขอสิทธิ์การเข้าถึง (Access Rights) ควรมีความชัดเจน เป็นกันเอง และให้ข้อมูลครบถ้วนโดยไม่ต้องให้ทีมถามซ้ำ\n\n### 💬 เทมเพลตแนะนำตัวใน Slack (#general หรือ #engineering)\n\n```markdown\nHi everyone! 👋\nI'm [Name], and I'm super excited to join the team today as a [Junior Software Engineer / Frontend Developer] on the [Core / Platform] team.\n\nI'm really looking forward to working with you all, learning from the codebase, and contributing to the upcoming sprint goals!\n\nOutside of coding, I enjoy [drinking coffee / playing guitar / gaming].\nFeel free to say hi or ping me anytime! 🚀\n```\n\n---\n\n### 🔑 เทมเพลตขอสิทธิ์เข้าระบบ (GitHub, AWS, VPN, Jira)\nการขอ Access ที่ดีต้องระบุ: **คุณเป็นใคร + ต้องการสิทธิ์อะไร + เพื่อทำอะไร + มีตั๋ว Jira หรือคำอนุมัติจากใคร**\n\n```markdown\nHi @DevOps-Team,\nCould you please grant me read/write access to the [repo-name] GitHub repository?\nI am currently setting up my local development environment for ticket [PROJ-102].\n\n- GitHub username: [your-github-handle]\n- Role: Junior Backend Engineer\n- Manager / Mentor: @Senior-Name\n\nThanks in advance for your help! 🙏\n```\n\n> 💡 **มารยาทสากล:** เมื่อมีคนให้สิทธิ์หรือช่วยเหลือเสร็จแล้ว จงกด React อิโมจิ เช่น ✅ หรือ 🙏 พร้อมพิมพ์สั้นๆ ว่า *\"Access verified, thank you so much!\"* เพื่อยืนยันว่าใช้ได้แล้ว",
+      "keyPhrases": [
+        {
+          "en": "I'm really excited to join the team and contribute to the upcoming sprint.",
+          "th": "ผมรู้สึกตื่นเต้นมากที่ได้ร่วมงานกับทีมและได้มีส่วนร่วมในสปรินต์ที่กำลังจะมาถึงนี้"
+        },
+        {
+          "en": "Could you please grant me read and write access to the main repository?",
+          "th": "รบกวนช่วยเปิดสิทธิ์การอ่านและเขียน (Read/Write) ใน Git repository หลักให้หน่อยได้ไหมครับ"
+        },
+        {
+          "en": "Access verified and working properly on my machine, thanks a lot!",
+          "th": "ตรวจสอบสิทธิ์แล้ว ใช้งานได้เรียบร้อยดีบนเครื่องของผม ขอบคุณมากๆ ครับ!"
+        }
+      ]
+    },
+    {
+      "heading": "2. The 3-Step Asking for Help Formula (สูตรขอความช่วยเหลือจาก Senior แบบได้ใจและได้คำตอบทันที)",
+      "content": "ปัญหาใหญ่ที่สุดของ Junior และน้องใหม่ คือ **\"Suffering in Silence\"** (ติดปัญหาแต่เงียบไม่กล้าถามจนหมดวัน) หรือในทางกลับกันคือ **\"ถามแบบไม่มีบริบท\"** เช่น ทักมาแค่ *\"พี่ครับ ทำไมมันรันไม่ขึ้น\"*\n\nSenior วิศวกรทุกคนยินดีช่วยน้องใหม่เสมอ หากน้องใช้ **สูตร 3 จังหวะ (The 3-Step Asking Formula)**:\n\n### 🧩 สูตร 3 จังหวะในการถาม\n\n1. **Step 1: สิ่งที่ต้องการทำ + สิ่งที่ได้พยายามลองไปแล้ว (Context & What I Tried)**\n   - บอกเป้าหมาย และพิสูจน์ว่าเราไม่ได้รอป้อนข้าว แต่ได้หาข้อมูลหรือลองแก้เบื้องต้นมาแล้ว\n2. **Step 2: จุดที่ติด Error ชัดเจนพร้อม Log หรือภาพ (The Exact Roadblock & Evidence)**\n   - แนบ Error message, Stack trace หรือ Command ที่สั่งรัน\n3. **Step 3: คำถามเจาะจง หรือสมมติฐานของเรา (Specific Question or Hypothesis)**\n   - ถามเจาะจง ไม่ถามกว้างๆ เพื่อให้ Senior ชี้เป้าได้ใน 1 บรรทัด\n\n---\n\n### ⚖️ เปรียบเทียบ Before vs After\n\n| ❌ แบบที่ทำให้ Senior ปวดหัว (Don't) | ✅ แบบมืออาชีพที่ Senior พร้อมช่วยทันที (Do) |\n|---|---|\n| *\"พี่ครับ ช่วยดู Docker ให้หน่อย รันไม่ผ่านครับ\"* | *\"Hi @Alex, I'm trying to spin up the local PostgreSQL container for ticket #102. **I've verified** that Docker Desktop is running and I pulled the latest image, but `docker compose up` exits with code 1: `port 5432 already in use`. Could it be that a local Postgres service is already bound to that port? Should I kill the local process or change the mapped port in `.env`?\"* |\n\n> ⏳ **กฎ 30 นาที (The 30-Minute Rule):** หากคุณติดบล็อคเกอร์อะไรก็ตาม ลองค้นคว้าและดีบักด้วยตัวเองไม่เกิน 30 นาที หากยังไม่คืบหน้า ให้เริ่มร่างคำถาม 3 จังหวะนี้ทักหา Senior หรือ Buddy ทันที อย่าปล่อยให้เวลาผ่านไปทั้งวัน!",
+      "keyPhrases": [
+        {
+          "en": "I've tried clearing the cache and rebuilding the image, but the same error persists.",
+          "th": "ผมได้ลองเคลียร์แคชและบิลด์ Image ใหม่แล้ว แต่ยังคงพบ Error เดิมอยู่ครับ"
+        },
+        {
+          "en": "Could you point me in the right direction when you have a free minute?",
+          "th": "หากพี่พอมีเวลาว่างสักครู่ รบกวนช่วยชี้แนะแนวทางเบื้องต้นให้หน่อยได้ไหมครับ"
+        },
+        {
+          "en": "Here is the exact stack trace and the command I executed.",
+          "th": "นี่คือ Stack trace และคำสั่งที่ผมใช้รันตอนที่เกิดปัญหาครับ"
+        }
+      ]
+    },
+    {
+      "heading": "3. Zoom Meeting Survival & Everyday Tech Acronyms (การเอาตัวรอดในประชุมและรวมคำย่อไอที)",
+      "content": "เมื่อต้องเข้าประชุมออนไลน์กับเพื่อนร่วมทีมต่างชาติที่พูดเร็วมากจนฟังไม่ทัน หรือมีคำย่อบน Slack โผล่มาเต็มไปหมด ต่อไปนี้คือประโยคและคำย่อที่จะช่วยให้คุณรอดปลอดภัยและดูเป็นมืออาชีพ:\n\n### 🎙️ 5 ประโยคเอาตัวรอดใน Zoom เมื่อฟังไม่ทัน\n\n1. **เมื่อเสียงขาดหายหรือฟังไม่ทัน:**\n   - *\"Sorry, your audio broke up for a second. Could you please repeat that last sentence?\"* (ขออภัยครับ พอดีสัญญาณเสียงกระตุกไปชั่วขณะ รบกวนพูดประโยคเมื่อสักครู่อีกครั้งได้ไหมครับ)\n2. **เมื่อต้องการเช็กความเข้าใจว่าเราเข้าใจตรงกันไหม:**\n   - *\"Just to make sure I'm on the same page, do you mean we should prioritize the login fix before the refactoring?\"* (เพื่อความแน่ใจว่าเราเข้าใจตรงกัน หมายความว่าเราควรแก้เรื่องล็อกอินก่อนการรีแฟกเตอร์โค้ดใช่ไหมครับ)\n3. **เมื่อต้องการให้เขาส่งลิงก์หรือข้อความในแชต:**\n   - *\"Could you drop that PR link into the meeting chat so I can follow along?\"* (รบกวนแปะลิงก์ PR นั้นลงในแชตของห้องประชุมให้หน่อยได้ไหมครับ เพื่อจะได้เปิดดูตามไปด้วย)\n4. **เมื่อมีคำถามแต่ยังคิดประโยคภาษาอังกฤษไม่ทัน:**\n   - *\"I have a quick question regarding the API contract, if you don't mind.\"* (ผมมีคำถามสั้นๆ เกี่ยวกับข้อตกลง API สักเล็กน้อยครับ)\n5. **เมื่อไมโครโฟนลืมเปิด (Mute):**\n   - *\"Sorry, I was on mute! Let me share my screen real quick.\"* (ขออภัยครับ ลืมเปิดไมค์! เดี๋ยวผมขอแชร์หน้าจอเลยนะครับ)\n\n---\n\n### 📖 รวมคำย่อทางเทคนิคและการทำงานยอดนิยม (Everyday Tech Acronyms)\n\n| คำย่อ (Acronym) | คำเต็ม (Full Term) | ความหมายและการใช้งานจริง |\n|---|---|---|\n| **LGTM** | Looks Good To Me | ใช้บ่อยที่สุดเวลา Approve โค้ดใน Pull Request ว่า *\"โค้ดดูดี อนุมัติผ่าน\"* |\n| **WIP** | Work In Progress | งานที่กำลังทำอยู่ ยังไม่เสร็จสมบูรณ์ (เช่น `[WIP] Refactor auth flow`) |\n| **ETA** | Estimated Time of Arrival | เวลาโดยประมาณที่คาดว่างานหรือฟีเจอร์จะเสร็จสมบูรณ์ |\n| **PTO** | Paid Time Off | การลาพักร้อน / วันหยุดประจำปี |\n| **AFK** | Away From Keyboard | ไม่อยู่หน้าจอชั่วคราว (เช่น ไปหยิบน้ำ เข้าห้องน้ำ) |\n| **TBD / TBA** | To Be Decided / Announced | ยังไม่ได้ข้อสรุป / รอการประกาศภายหลัง |\n| **FYI / FYA** | For Your Information / Action | แจ้งเพื่อทราบ / ส่งต่อเพื่อให้ดำเนินการต่อ |\n| **TL;DR** | Too Long; Didn't Read | สรุปใจความสั้นๆ สำหรับเนื้อหายาว |\n| **PR / MR** | Pull Request / Merge Request | คำขอนำโค้ดเข้าไปรวมกับกิ่งหลักใน GitHub/GitLab |\n| **OOO** | Out of Office | ลางานหรือไม่อยู่ในออฟฟิศ |",
+      "keyPhrases": [
+        {
+          "en": "Just to make sure we are on the same page, should I submit the PR today?",
+          "th": "เพื่อความแน่ใจว่าเราเข้าใจตรงกัน ผมควรเปิด Pull Request ภายในวันนี้เลยใช่ไหมครับ"
+        },
+        {
+          "en": "The PR looks good to me (LGTM), feel free to merge whenever you are ready.",
+          "th": "โค้ดใน PR ดูเรียบร้อยดีมากครับ (LGTM) พร้อมเมื่อไหร่กด Merge ได้เลยครับ"
+        },
+        {
+          "en": "I'll be away from keyboard (AFK) for lunch, back in 30 minutes.",
+          "th": "ผมจะไม่อยู่หน้าจอ (AFK) ไปทานข้าวเที่ยงสักครู่ อีก 30 นาทีกลับมาครับ"
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "id": "mc-jun-q1",
+      "question": "ตามหลัก 'The 3-Step Asking for Help Formula' สิ่งใดที่ Junior ควรเตรียมพร้อมไว้ก่อนทักถาม Senior เสมอ?",
+      "options": [
+        "รอให้หมดเวลางานก่อนแล้วค่อยทักถาม",
+        "บริบทเป้าหมาย สิ่งที่ได้พยายามลองทำไปแล้ว (What I tried) และหลักฐาน Error Log ที่ชัดเจน",
+        "พิมพ์แค่ 'พี่ครับ ช่วยด้วย' แล้วรอให้พี่โทรกลับมา",
+        "เดาสุ่มลบโค้ดทิ้งทั้งหมดแล้วเริ่มเขียนใหม่"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! การบอกสิ่งที่พยายามลองไปแล้ว พร้อมบริบทและ Log ชัดเจน แสดงถึงความใส่ใจ ไม่รอป้อนข้าว และช่วยให้ Senior ชี้จุดแก้ปัญหาได้ทันที"
+    },
+    {
+      "id": "mc-jun-q2",
+      "question": "เมื่อตรวจโค้ดของเพื่อนร่วมทีมบน GitHub และเห็นว่าโค้ดทำงานถูกต้องเรียบร้อยดี ควรพิมพ์คำย่อใด?",
+      "options": [
+        "AFK (Away From Keyboard)",
+        "LGTM (Looks Good To Me)",
+        "TBD (To Be Decided)",
+        "PTO (Paid Time Off)"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! LGTM ย่อมาจาก Looks Good To Me นิยมใช้กันทั่วโลกในการรีวิว Pull Request เพื่อสื่อว่าโค้ดดูดีพร้อม Merge"
+    },
+    {
+      "id": "mc-jun-q3",
+      "question": "หากในระหว่างประชุม Zoom สัญญาณเสียงของเพื่อนร่วมงานกระตุกจนฟังไม่รู้เรื่อง ควรพูดอย่างไรอย่างสุภาพ?",
+      "options": [
+        "'You speak too fast, stop.'",
+        "'Sorry, your audio broke up for a second. Could you please repeat that last sentence?'",
+        "'I don't care, next topic.'",
+        "'Turn off your camera immediately.'"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! 'Sorry, your audio broke up for a second. Could you please repeat that last sentence?' เป็นประโยคสุภาพ เป็นมืออาชีพ และอธิบายสาเหตุว่าเสียงหลุดจึงขอให้พูดซ้ำ"
+    },
+    {
+      "id": "mc-jun-q4",
+      "question": "เมื่อส่งคำขอเปิดสิทธิ์ (Access Request) บน Slack ไปยังทีม DevOps ข้อมูลใดที่จำเป็นต้องระบุ?",
+      "options": [
+        "Username, ชื่อ Repo หรือเซอร์วิสที่ต้องการสิทธิ์, บทบาทงาน และเลขตั๋วงานหรือผู้รับรอง",
+        "รหัสผ่านส่วนตัวของผู้ใช้",
+        "ประวัติการศึกษาตั้งแต่ชั้นมัธยม",
+        "พิมพ์คำว่า 'ขอสิทธิ์ด่วนที่สุด' โดยไม่ต้องระบุชื่อระบบ"
+      ],
+      "answer": 0,
+      "explanation": "ถูกต้อง! การขอสิทธิ์ต้องระบุ Username, ชื่อ Repository, Role และตั๋วอ้างอิง เพื่อให้ผู้ดูแลระบบตรวจสอบความปลอดภัยและอนุมัติได้อย่างถูกต้อง"
+    },
+    {
+      "id": "mc-jun-q5",
+      "question": "คำว่า 'ETA' ที่มักถูกถามใน Standup Meeting ย่อมาจากอะไรและหมายถึงสิ่งใด?",
+      "options": [
+        "Error Time Allocation - เวลาที่ระบบพัง",
+        "Estimated Time of Arrival - เวลาโดยประมาณที่คาดว่างานจะเสร็จสมบูรณ์",
+        "Engineering Team Agreement - ข้อตกลงทีม",
+        "Emergency Task Action - งานด่วนพิเศษ"
+      ],
+      "answer": 1,
+      "explanation": "ถูกต้อง! ETA ย่อมาจาก Estimated Time of Arrival ซึ่งในบริบทการทำงานหมายถึง 'เวลาโดยประมาณที่คาดว่างานหรือฟีเจอร์จะเสร็จ'"
+    }
+  ]
+}
 ];
 
 if (typeof window !== "undefined") {

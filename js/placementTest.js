@@ -326,45 +326,54 @@
 
     calculateRecommendation() {
       const score = this.score;
-      if (score <= 3) {
+      if (score <= 2) {
         return {
-          levelId: "level-a1",
+          levelId: "level-0-starter",
+          levelCode: "Pre-A1",
+          title: "Level 0: The Starter Kit (Pre-A1 - ปูรากฐานจากศูนย์)",
+          color: "sky",
+          description: "คุณกำลังเริ่มต้นก้าวแรกอย่างมั่นใจ! แนะนำให้เริ่มจาก Level 0 เพื่อแม่นยำ 4 ชนิดคำหลัก (Parts of Speech), โครงสร้าง S+V+O, สัญลักษณ์คีย์บอร์ดโค้ดดิ้ง 20 ตัว และตัวเลข Tech ในชีวิตจริง",
+          xpBonus: 80
+        };
+      } else if (score <= 5) {
+        return {
+          levelId: "level-1-survivor",
           levelCode: "A1",
           title: "Level 1: The Survivor (A1 - ผู้รอดชีวิต)",
           color: "blue",
-          description: "คุณกำลังเริ่มต้นปูรากฐานภาษาอังกฤษ แนะนำให้เริ่มจาก Level 1 เพื่อแม่นยำ Present Simple, Stative Verbs, และการสร้างประโยคถาม-ตอบพื้นฐาน",
+          description: "คุณมีพื้นฐานเบื้องต้นแล้ว แนะนำให้ลุย Level 1 เพื่อแม่นยำ Present Simple, Verb to Be vs Action Verbs, และการสร้างประโยคถาม-ตอบในการทำงาน",
           xpBonus: 100
         };
-      } else if (score <= 6) {
+      } else if (score <= 8) {
         return {
-          levelId: "level-a2",
+          levelId: "level-2-storyteller",
           levelCode: "A2",
           title: "Level 2: The Storyteller (A2 - นักเล่าเรื่อง)",
           color: "teal",
           description: "คุณมีพื้นฐานไวยากรณ์ปัจจุบันดีแล้ว แนะนำให้เริ่มจาก Level 2 เพื่อต่อยอด Past Simple กริยา 3 ช่อง การเล่าเรื่องลำดับกาลเวลา และการเปรียบเทียบ",
           xpBonus: 150
         };
-      } else if (score <= 9) {
+      } else if (score <= 10) {
         return {
-          levelId: "level-b1",
+          levelId: "level-3-connector",
           levelCode: "B1",
           title: "Level 3: The Connector (B1 - นักเชื่อมโยง)",
           color: "emerald",
           description: "คุณสื่อสารอดีตและปัจจุบันได้คล่องแคล่ว แนะนำให้เริ่มจาก Level 3 เพื่อฝึกฝน Present Perfect, Passive Voice ในงาน Tech และ If-Clause",
           xpBonus: 200
         };
-      } else if (score <= 11) {
+      } else if (score <= 12) {
         return {
-          levelId: "level-b1-plus",
+          levelId: "level-4-communicator",
           levelCode: "B1+",
           title: "Level 4: The Communicator (B1+ - นักสื่อสารมือโปร)",
           color: "amber",
           description: "ทักษะไวยากรณ์ของคุณอยู่ในระดับดี แนะนำให้ฝึก Level 4 เพื่อเน้นความสุภาพ Indirect Questions, Past Continuous & Past Perfect และการถอดบทเรียน",
           xpBonus: 250
         };
-      } else if (score <= 13) {
+      } else if (score <= 14) {
         return {
-          levelId: "level-b2",
+          levelId: "level-5-professional",
           levelCode: "B2",
           title: "Level 5: The Professional (B2 - มืออาชีพสากล)",
           color: "indigo",
@@ -373,7 +382,7 @@
         };
       } else {
         return {
-          levelId: "level-c1",
+          levelId: "level-6-master",
           levelCode: "C1",
           title: "Level 6: The Master (C1 - ปรมาจารย์ผู้นำ)",
           color: "purple",

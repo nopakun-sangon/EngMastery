@@ -4,7 +4,7 @@
  * Enables 100% offline access, instant load, and native-like installation.
  */
 
-const CACHE_NAME = 'engmastery-pwa-v4';
+const CACHE_NAME = 'engmastery-pwa-v5';
 
 const STATIC_ASSETS = [
   './',
@@ -34,6 +34,7 @@ const STATIC_ASSETS = [
   './data/grammarSyllabusData.js',
   './data/standupData.js',
   './lessons/courseData.js',
+  './lessons/level-0-starter/lesson.js',
   './lessons/level-1-survivor/lesson.js',
   './lessons/level-2-storyteller/lesson.js',
   './lessons/level-3-connector/lesson.js',

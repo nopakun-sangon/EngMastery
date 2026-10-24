@@ -10,6 +10,7 @@ class EngMasteryApp {
     this.currentView = "dashboard";
     this.activeLevelId = null;
     this.activeTabByLevel = {
+      "level-0-starter": "grammar",
       "level-1-survivor": "grammar",
       "level-2-storyteller": "grammar",
       "level-3-connector": "grammar",

@@ -352,6 +352,36 @@ window.STANDUP_SCENARIOS = [
       { word: "quarantine", ipa: "/ˈkwɒr.ən.tiːn/", pos: "v.", th: "แยกกักกันเพื่อไม่ให้รบกวนส่วนอื่น" }
     ],
     xpReward: 40
+  },
+  {
+    id: "standup-sc-09",
+    title: "First Sprint Onboarding: Local Dev Environment & Docker Setup",
+    titleTh: "การรายงาน Standup สัปดาห์แรก: เซ็ตอัปเครื่อง Dev และรันคอนเทนเนอร์ในเครื่อง",
+    role: "Junior Software Engineer / Intern",
+    level: "Beginner",
+    badge: "Onboarding & Fundamentals",
+    yesterday: {
+      en: "Yesterday, I completed the company security training, cloned the backend repository, and configured my local environment variables.",
+      th: "เมื่อวานผมผ่านการอบรมระบบความปลอดภัยของบริษัท โคลนโค้ดจาก Git repo และตั้งค่าตัวแปร .env ในเครื่องเรียบร้อยแล้วครับ",
+      tip: "มือใหม่ควรสรุปงาน Onboarding สั้นๆ ชัดเจน แสดงความคืบหน้าเป็นขั้นตอน"
+    },
+    today: {
+      en: "Today, I will spin up the local Docker containers, run the database seed script, and verify that the API test suite passes on my machine.",
+      th: "วันนี้ผมจะรันคอนเทนเนอร์ Docker ในเครื่อง สั่ง seed ข้อมูลตัวอย่างลงฐานข้อมูล และทดสอบรัน test suite ให้ผ่านทุกตัวครับ",
+      tip: "ใช้คำกริยา 'spin up', 'seed', 'verify' แสดงความเป็นมือโปรทางเทคนิค"
+    },
+    blocker: {
+      en: "No major blockers right now, but I might reach out to @Senior-Dev if I run into any permission issues with the internal package registry.",
+      th: "ตอนนี้ยังไม่มีบล็อคเกอร์อะไรครับ แต่ถ้าติดเรื่องสิทธิ์ดาวน์โหลดแพ็กเกจภายในองค์กร อาจจะขอทักหาพี่ซีเนียร์สั้นๆ ครับ",
+      tip: "บอกล่วงหน้าแบบสุภาพ: 'I might reach out to [Name] if I run into...'"
+    },
+    fullSpeech: "Good morning team! Yesterday, I completed the company security training, cloned the backend repository, and configured my local environment variables. Today, I will spin up the local Docker containers, run the database seed script, and verify that the API test suite passes on my machine. No major blockers right now, but I might reach out to @Senior-Dev if I run into any permission issues with the internal package registry right after standup.",
+    keyVocab: [
+      { word: "onboarding", ipa: "/ˈɒnˌbɔː.dɪŋ/", pos: "n.", th: "กระบวนการเริ่มต้นทำงานและปรับตัวเข้าสู่ทีม" },
+      { word: "spin up", ipa: "/spɪn ʌp/", pos: "phr. v.", th: "เปิดเครื่องเซิร์ฟเวอร์หรือรันคอนเทนเนอร์ขึ้นมาทำงาน" },
+      { word: "seed", ipa: "/siːd/", pos: "v.", th: "นำเข้าข้อมูลชุดเริ่มต้นลงในฐานข้อมูลเพื่อใช้ทดสอบ" }
+    ],
+    xpReward: 35
   }
 ];
 
@@ -579,6 +609,38 @@ window.PREP_QA_SCENARIOS = [
     },
     fullAnswer: "That's a crucial topic for our engineering health and team velocity. We should formalize a 20% engineering capacity allocation in every sprint dedicated to technical debt. Unaddressed technical debt compounds over time, increasing bug frequency and slowing down new feature delivery. When we dedicated two days to refactor the auth pipeline last quarter, our login-related incident tickets dropped by 65%. I propose we bake this 20% capacity rule into our team's working agreement starting in the next sprint planning.",
     keyTip: "ใช้ตัวเลขจริง (20% capacity, dropped by 65%) เพื่อโน้มน้าวใจ Product Manager ให้เห็นความคุ้มค่าของการเคลียร์ Tech Debt"
+  },
+  {
+    id: "prep-08",
+    question: "Are you blocked on setting up your local environment? Do you need any assistance?",
+    questionTh: "ติดปัญหาตรงไหนกับการเซ็ตอัปเครื่องหรือเปล่า มีอะไรให้พี่ช่วยไหม?",
+    category: "Junior Asking for Help",
+    saviorOpener: "Thanks for checking in! Yes, I could use a quick pointer on Docker credentials...",
+    saviorOpenerTh: "ขอบคุณที่แวะมาถามครับ พอดีอยากขอคำแนะนำสั้นๆ เรื่องสิทธิ์ Docker Credential สักหน่อยครับ...",
+    prep: {
+      point: {
+        label: "Point (บอกปัญหาที่ติดอยู่ใน 1 ประโยค)",
+        en: "I'm currently blocked on pulling the internal base Docker image due to a 403 Forbidden error.",
+        th: "ตอนนี้ผมติดปัญหาดึง Docker image ตัวหลักของบริษัทไม่ได้ครับ เพราะเจอ 403 Forbidden"
+      },
+      reason: {
+        label: "Reason (บอกสิ่งที่ได้ลองทำไปแล้ว)",
+        en: "I've already authenticated with my company SSO and verified that Docker Desktop is running, but the credential helper seems to be pointing to the wrong registry URL.",
+        th: "ผมล็อกอินผ่าน SSO ของบริษัทและเช็กแล้วว่า Docker Desktop รันอยู่ แต่ดูเหมือน credential helper จะชี้ไปที่ URL ของ Registry ไม่ถูกต้องครับ"
+      },
+      example: {
+        label: "Example/Evidence (แสดงหลักฐานหรือสิ่งที่ติด)",
+        en: "Here is the exact terminal output and the .docker/config.json snippet I'm seeing on my MacBook.",
+        th: "นี่คือข้อความ Error ใน Terminal และเนื้อหาไฟล์ .docker/config.json ที่ผมเห็นบนเครื่องครับ"
+      },
+      pointNext: {
+        label: "Point/Next (คำถามเจาะจงให้ Senior ชี้ทาง)",
+        en: "Could you confirm if I need an extra token from 1Password or should I run the auth helper script again?",
+        th: "รบกวนพี่ช่วยดูหน่อยได้ไหมครับว่าผมต้องดึง Token เพิ่มจาก 1Password หรือต้องรันสคริปต์ Auth ซ้ำอีกรอบครับ"
+      }
+    },
+    fullAnswer: "Thanks for checking in! Yes, I could use a quick pointer on Docker credentials. I'm currently blocked on pulling the internal base Docker image due to a 403 Forbidden error. I've already authenticated with my company SSO and verified that Docker Desktop is running, but the credential helper seems to be pointing to the wrong registry URL. Here is the exact terminal output and the .docker/config.json snippet I'm seeing on my MacBook. Could you confirm if I need an extra token from 1Password or should I run the auth helper script again?",
+    keyTip: "ใช้เทคนิค 3 จังหวะ: บอกสิ่งที่ลองทำแล้ว (What I tried) + แนบ Log ชัดเจน + ถามเจาะจง (Token หรือ Script) แทนที่จะพูดลอยๆ ว่า 'ช่วยด้วยทำไม่เป็น'"
   }
 ];
 

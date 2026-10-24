@@ -1,10 +1,11 @@
 /**
- * EngMastery: Zero to Pro - Complete 6-Level Course Data Aggregator
+ * EngMastery: Zero to Pro - Complete 7-Level Course Data Aggregator
  * Gathers modular lessons from each level folder into a single standard courseData array.
  * Future-proof schema: Easily extendable or replaced with an API endpoint.
  */
 
 const courseData = [
+  window.LESSON_0_STARTER,
   window.LESSON_1_SURVIVOR,
   window.LESSON_2_STORYTELLER,
   window.LESSON_3_CONNECTOR,
