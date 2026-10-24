@@ -18,7 +18,8 @@ const window = {
     playVictory: () => {}
   },
   speechEngine: {
-    speak: () => {}
+    speak: () => {},
+    stop: () => {}
   },
   storageManager: {
     state: {
@@ -32,7 +33,9 @@ const window = {
       this.state.stats.dailyXP += amt;
       return { totalXP: this.state.stats.totalXP };
     }
-  }
+  },
+  addEventListener: () => {},
+  location: { hash: '' }
 };
 
 const localStorageData = {};
@@ -84,6 +87,9 @@ const context = vm.createContext({
 });
 
 // Load data and app.js into context
+const storageCode = fs.readFileSync('js/storage.js', 'utf8');
+vm.runInContext(storageCode, context);
+
 const sentenceDataCode = fs.readFileSync('data/sentenceBuilderData.js', 'utf8');
 vm.runInContext(sentenceDataCode, context);
 

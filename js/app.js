@@ -8864,11 +8864,45 @@ class EngMasteryApp {
         if (/[a-zA-Z0-9]/.test(token)) {
           const clean = token.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
           const escapedClean = clean.replace(/'/g, "\\'");
-          return `<span class="reading-word-token" onclick="window.app.handleReadingWordClick(event, '${escapedClean}', '${safeSent.replace(/'/g, "\\'")}', '${safeTh.replace(/'/g, "\\'")}')" title="กดเพื่อดูคำแปล">${token}</span>`;
+          return `<span class="reading-word-token" onclick="window.app.handleReadingWordTokenClick(event, '${escapedClean}', '${safeSent.replace(/'/g, "\\'")}', '${safeTh.replace(/'/g, "\\'")}')" title="กดเพื่อดูคำแปล">${token}</span>`;
         }
         return token;
       }).join("");
     }).join("");
+  }
+
+  handleReadingWordTokenClick(event, word, sentenceEn = "", sentenceTh = "") {
+    if (event) {
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    }
+    // Check preference
+    if (window.storageManager && window.storageManager.state && window.storageManager.state.preferences) {
+      if (window.storageManager.state.preferences.instantVocab === false) return;
+    }
+    const cleanWord = (word || "").trim();
+    if (!cleanWord) return;
+
+    let rect = null;
+    if (event && event.currentTarget && event.currentTarget.getBoundingClientRect) {
+      rect = event.currentTarget.getBoundingClientRect();
+    }
+    if (!rect && event && typeof event.clientX === "number") {
+      rect = {
+        left: Math.max(0, event.clientX - 25),
+        right: event.clientX + 25,
+        top: Math.max(0, event.clientY - 10),
+        bottom: event.clientY + 10,
+        width: 50,
+        height: 20
+      };
+    }
+    if (!rect) {
+      this.handleReadingWordClick(event, cleanWord, sentenceEn, sentenceTh);
+      return;
+    }
+
+    this.showWordTranslateTooltip(rect, cleanWord, sentenceEn, sentenceTh);
   }
 
   async handleReadingWordClick(event, rawWord, sentenceEn, sentenceTh) {
@@ -9325,10 +9359,40 @@ class EngMasteryApp {
       }
     } catch (e) {}
 
-    return { word: rawWord, sentence: sentence };
+    // Calculate bounding rectangle of the clicked word
+    let wordRect = null;
+    try {
+      if (typeof document !== "undefined" && document.createRange && textNode) {
+        const wordRange = document.createRange();
+        wordRange.setStart(textNode, start);
+        wordRange.setEnd(textNode, end);
+        wordRect = wordRange.getBoundingClientRect();
+      }
+    } catch (e) {}
+
+    if (!wordRect || (wordRect.width === 0 && wordRect.height === 0)) {
+      wordRect = {
+        left: Math.max(0, x - 25),
+        right: x + 25,
+        top: Math.max(0, y - 10),
+        bottom: y + 10,
+        width: 50,
+        height: 20
+      };
+    }
+
+    return { word: rawWord, sentence: sentence, rect: wordRect };
   }
 
   handleGlobalWordClick(e) {
+    // 0. If clicked inside the floating tooltip, let tooltip handle it
+    if (e.target && e.target.closest && e.target.closest('#selection-translate-tooltip')) {
+      return;
+    }
+
+    // Dismiss existing tooltip on outside click
+    this.hideSelectionTranslateTooltip();
+
     // 1. Check preference
     if (window.storageManager && window.storageManager.state && window.storageManager.state.preferences) {
       if (window.storageManager.state.preferences.instantVocab === false) return;
@@ -9357,8 +9421,8 @@ class EngMasteryApp {
     const extracted = this.extractWordAtPoint(x, y);
     if (!extracted || !extracted.word) return;
 
-    // Trigger instant lookup!
-    this.handleReadingWordClick(e, extracted.word, extracted.sentence, "");
+    // Show floating [ 📖 แปลคำนี้ ] tooltip before popup!
+    this.showWordTranslateTooltip(extracted.rect, extracted.word, extracted.sentence);
   }
 
   handleGlobalTextSelection(e) {
@@ -9380,6 +9444,10 @@ class EngMasteryApp {
     if (typeof window === "undefined" || !window.getSelection) return;
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed) {
+      // If a word tooltip was just shown within last 350ms, do not hide it due to collapsed selection from click
+      if (Date.now() - (this._lastWordTooltipTime || 0) < 350) {
+        return;
+      }
       if (e && e.target && !e.target.closest('#selection-translate-tooltip')) {
         this.hideSelectionTranslateTooltip();
       }
@@ -9410,9 +9478,45 @@ class EngMasteryApp {
     }
   }
 
+  showWordTranslateTooltip(rect, word, sentence = "", sentenceTh = "") {
+    const tooltip = this.getOrCreateSelectionTooltip();
+    if (!tooltip || !rect) return;
+
+    this._lastWordTooltipTime = Date.now();
+
+    const tooltipWidth = 140;
+    const tooltipHeight = 36;
+    const spacing = 8;
+
+    let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+    left = Math.max(10, Math.min(window.innerWidth - tooltipWidth - 10, left));
+
+    let top = rect.top - tooltipHeight - spacing;
+    if (top < 10) {
+      top = rect.bottom + spacing;
+    }
+    if (top + tooltipHeight > window.innerHeight - 10) {
+      top = Math.max(10, window.innerHeight - tooltipHeight - 10);
+    }
+
+    tooltip.style.left = `${Math.round(left)}px`;
+    tooltip.style.top = `${Math.round(top)}px`;
+    tooltip.style.display = "flex";
+
+    tooltip.dataset.text = word;
+    tooltip.dataset.sentence = sentence || word;
+    tooltip.dataset.sentenceTh = sentenceTh || "";
+    tooltip.dataset.mode = "word";
+
+    const label = tooltip.querySelector(".tooltip-label");
+    if (label) {
+      label.textContent = "แปลคำนี้";
+    }
+  }
+
   showSelectionTranslateTooltip(rect, selectedText) {
     const tooltip = this.getOrCreateSelectionTooltip();
-    if (!tooltip) return;
+    if (!tooltip || !rect) return;
 
     const tooltipWidth = 150;
     const tooltipHeight = 36;
@@ -9425,17 +9529,23 @@ class EngMasteryApp {
     if (top < 10) {
       top = rect.bottom + spacing;
     }
+    if (top + tooltipHeight > window.innerHeight - 10) {
+      top = Math.max(10, window.innerHeight - tooltipHeight - 10);
+    }
 
     tooltip.style.left = `${Math.round(left)}px`;
     tooltip.style.top = `${Math.round(top)}px`;
     tooltip.style.display = "flex";
 
     tooltip.dataset.text = selectedText;
+    tooltip.dataset.sentence = selectedText;
+    tooltip.dataset.sentenceTh = "";
+    tooltip.dataset.mode = "selection";
 
     const label = tooltip.querySelector(".tooltip-label");
     if (label) {
       const isSentence = selectedText.includes(" ") || selectedText.length > 15;
-      label.textContent = isSentence ? "แปลประโยคนี้" : `แปล "${selectedText}"`;
+      label.textContent = isSentence ? "แปลประโยคนี้" : "แปลคำนี้";
     }
   }
 
@@ -9445,8 +9555,10 @@ class EngMasteryApp {
     if (!tooltip) {
       tooltip = document.createElement("div");
       tooltip.id = "selection-translate-tooltip";
-      tooltip.className = "fixed z-50 hidden items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full shadow-2xl border border-slate-700/60 dark:border-slate-200 cursor-pointer select-none text-xs font-bold transition-all hover:scale-105 active:scale-95 animate-fadeIn";
+      tooltip.className = "fixed items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full shadow-2xl border border-slate-700/60 dark:border-slate-200 cursor-pointer select-none text-xs font-bold transition-all hover:scale-105 active:scale-95 animate-fadeIn";
+      tooltip.style.display = "none";
       tooltip.style.pointerEvents = "auto";
+      tooltip.style.zIndex = "9999";
       tooltip.innerHTML = `
         <span class="text-indigo-400 dark:text-indigo-600 text-sm">📖</span>
         <span class="tooltip-label">แปลประโยคนี้</span>
@@ -9456,8 +9568,10 @@ class EngMasteryApp {
         e.stopPropagation();
         e.preventDefault();
         const text = tooltip.dataset.text;
+        const sentence = tooltip.dataset.sentence || text;
+        const sentenceTh = tooltip.dataset.sentenceTh || "";
         if (text) {
-          this.translateSelectedText(text);
+          this.translateSelectedText(text, sentence, sentenceTh);
         }
       });
       document.body.appendChild(tooltip);
@@ -9470,13 +9584,15 @@ class EngMasteryApp {
     if (tooltip && tooltip.style.display !== "none") {
       tooltip.style.display = "none";
       tooltip.dataset.text = "";
+      tooltip.dataset.sentence = "";
+      tooltip.dataset.sentenceTh = "";
     }
   }
 
-  translateSelectedText(text) {
+  translateSelectedText(text, sentence = "", sentenceTh = "") {
     this.hideSelectionTranslateTooltip();
     if (!text || !text.trim()) return;
-    this.handleReadingWordClick(null, text.trim(), text.trim(), "");
+    this.handleReadingWordClick(null, text.trim(), (sentence || text).trim(), sentenceTh || "");
   }
 
   copyTextToClipboard(text, successMsg = "คัดลอกแล้ว") {
