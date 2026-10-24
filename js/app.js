@@ -52,6 +52,15 @@ class EngMasteryApp {
     this.grammarAccordionOpen = { "parts-of-speech": true };
     this.mobileGrammarDrawerOpen = false;
 
+    // --- State for Specialized Tracks (Role-based, Workplace, System Design) ---
+    this.specializedTrackFilter = "all";
+    this.specializedTrackSearch = "";
+    this.specializedViewMode = "catalog"; // 'catalog' or 'reader'
+    this.activeSpecializedTopicId = null;
+    this.activeSpecializedUnitId = null;
+    this.specializedQuizAnswers = JSON.parse(localStorage.getItem("engmastery_specialized_quiz_answers") || "{}");
+    this.completedSpecializedUnits = new Set(JSON.parse(localStorage.getItem("engmastery_completed_specialized_units") || "[]"));
+
     // Load persisted progress from localStorage
     try {
       const savedVocabs = JSON.parse(localStorage.getItem("engmastery_reviewed_vocabs") || "[]");
@@ -1105,6 +1114,12 @@ class EngMasteryApp {
       }
     } else if (this.lessonsHubTrack === "core") {
       this.renderCoreLevelsView(container, courses);
+    } else if (this.lessonsHubTrack === "role-tracks" || this.lessonsHubTrack === "workplace" || this.lessonsHubTrack === "system-design") {
+      if (this.specializedViewMode === "reader" && this.activeSpecializedUnitId) {
+        this.renderSpecializedUnitReader(container, this.lessonsHubTrack);
+      } else {
+        this.renderSpecializedCatalogView(container, this.lessonsHubTrack);
+      }
     } else {
       this.renderLessonsHubPortal(container, courses);
     }
@@ -1113,21 +1128,77 @@ class EngMasteryApp {
   // =========================================================================
   // LESSONS HUB PORTAL: 2 PROMINENT COURSE BLOCKS (GRAMMAR & CEFR ROADMAP)
   // =========================================================================
+  renderLessonsTrackSwitcherPills(activeTrack) {
+    const courses = window.courseData || [];
+    const syllabus = window.grammarSyllabusData || [];
+    const roleTracks = window.roleTracksData || [];
+    const workplaceTracks = window.workplaceTracksData || [];
+    const sysDesignTracks = window.systemDesignTracksData || [];
+
+    const tracks = [
+      { id: "core", icon: "🗺️", label: `CEFR ${courses.length} ระดับ` },
+      { id: "grammar", icon: "📘", label: `ไวยากรณ์ ${syllabus.length} หมวด` },
+      { id: "role-tracks", icon: "💻", label: `4 สายงานเทค` },
+      { id: "workplace", icon: "🌍", label: `รีโมท & ข้ามชาติ` },
+      { id: "system-design", icon: "🏗️", label: `ออกแบบระบบ` }
+    ];
+
+    return `
+      <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1 overflow-x-auto max-w-full pb-1 sm:pb-1">
+        ${tracks.map(t => {
+          const isActive = activeTrack === t.id;
+          return `
+            <button onclick="window.app.switchLessonsTrack('${t.id}')"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-white text-indigo-950 shadow-md font-black'
+                  : 'text-indigo-200 hover:text-white hover:bg-white/10'
+              }">
+              <span>${t.icon}</span>
+              <span>${t.label}</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
   renderLessonsHubPortal(container, courses) {
     this.activeLevelId = null;
     courses = courses || window.courseData || [];
     const state = window.storageManager.state;
     const syllabus = window.grammarSyllabusData || [];
+    const roleTracks = window.roleTracksData || [];
+    const workplaceTracks = window.workplaceTracksData || [];
+    const sysDesignTracks = window.systemDesignTracksData || [];
 
-    // CEFR Course Stats
+    // 1. CEFR Stats
     const completedLevelsCount = courses.filter(c => (state.completedLevels || []).includes(c.id)).length;
     const cefrPercent = courses.length ? Math.round((completedLevelsCount / courses.length) * 100) : 0;
 
-    // Grammar Course Stats
+    // 2. Grammar Stats
     let totalGrammarUnits = 0;
     syllabus.forEach(t => { totalGrammarUnits += (t.units || []).length; });
     const completedGrammarUnits = this.completedGrammarUnits.size;
     const grammarPercent = totalGrammarUnits ? Math.round((completedGrammarUnits / totalGrammarUnits) * 100) : 0;
+
+    // 3. Role Tracks Stats
+    let totalRoleUnits = 0;
+    roleTracks.forEach(t => { totalRoleUnits += (t.units || []).length; });
+    const completedRoleUnits = roleTracks.reduce((acc, t) => acc + (t.units || []).filter(u => this.completedSpecializedUnits.has(u.id)).length, 0);
+    const rolePercent = totalRoleUnits ? Math.round((completedRoleUnits / totalRoleUnits) * 100) : 0;
+
+    // 4. Workplace Stats
+    let totalWorkplaceUnits = 0;
+    workplaceTracks.forEach(t => { totalWorkplaceUnits += (t.units || []).length; });
+    const completedWorkplaceUnits = workplaceTracks.reduce((acc, t) => acc + (t.units || []).filter(u => this.completedSpecializedUnits.has(u.id)).length, 0);
+    const workplacePercent = totalWorkplaceUnits ? Math.round((completedWorkplaceUnits / totalWorkplaceUnits) * 100) : 0;
+
+    // 5. System Design Stats
+    let totalSysDesignUnits = 0;
+    sysDesignTracks.forEach(t => { totalSysDesignUnits += (t.units || []).length; });
+    const completedSysDesignUnits = sysDesignTracks.reduce((acc, t) => acc + (t.units || []).filter(u => this.completedSpecializedUnits.has(u.id)).length, 0);
+    const sysDesignPercent = totalSysDesignUnits ? Math.round((completedSysDesignUnits / totalSysDesignUnits) * 100) : 0;
 
     const totalXP = (state.stats && state.stats.totalXP) || 0;
 
@@ -1137,9 +1208,9 @@ class EngMasteryApp {
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-10 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
-              <span>🎓 Lessons Hub • ศูนย์รวมห้องเรียน</span>
+              <span>🎓 Lessons Hub • ศูนย์รวม 5 เส้นทางหลักสูตร</span>
               <span class="text-indigo-400">•</span>
-              <span>เลือกบล็อกคอร์สเรียนที่ต้องการ</span>
+              <span>เลือกบล็อกคอร์สเรียนตามเป้าหมาย</span>
             </div>
 
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
@@ -1147,151 +1218,290 @@ class EngMasteryApp {
             </h1>
 
             <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
-              พัฒนาทักษะภาษาอังกฤษอย่างเป็นระบบและตรงจุด เลือกเจาะลึกไวยากรณ์ ${syllabus.length} หมวดหมู่ หรือเริ่มปูพื้นฐาน 6 ระดับตามมาตรฐานสากล CEFR จากระดับเริ่มต้นสู่ระดับสูง
+              พัฒนาทักษะภาษาอังกฤษเพื่อการทำงานจริงอย่างเป็นระบบและตรงจุด ครอบคลุมทั้งระดับสากล CEFR, คลังไวยากรณ์เชิงลึก, หลักสูตรเฉพาะทาง 4 สายงานเทค, การทำงานรีโมทกับทีมข้ามชาติ, และการพรีเซนต์ออกแบบระบบ
             </p>
 
             <!-- Learning Quick Summary Stats -->
-            <div class="pt-3 flex flex-wrap items-center gap-3 text-xs">
-              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+            <div class="pt-3 flex flex-wrap items-center gap-2.5 text-xs">
+              <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>🗺️</span>
+                <span class="text-indigo-200">CEFR:</span>
+                <span class="font-black text-emerald-300">${completedLevelsCount} / ${courses.length} ระดับ</span>
+              </div>
+              <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
                 <span>📘</span>
                 <span class="text-indigo-200">ไวยากรณ์:</span>
-                <span class="font-black text-amber-300">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย (${grammarPercent}%)</span>
+                <span class="font-black text-amber-300">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย</span>
               </div>
-              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
-                <span>🗺️</span>
-                <span class="text-indigo-200">ปูพื้นฐาน 6 ระดับ:</span>
-                <span class="font-black text-emerald-300">${completedLevelsCount} / ${courses.length} ระดับ (${cefrPercent}%)</span>
+              <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>💻</span>
+                <span class="text-indigo-200">สายงานเทค:</span>
+                <span class="font-black text-cyan-300">${completedRoleUnits} / ${totalRoleUnits} ยูนิต</span>
               </div>
-              <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
-                <span>✨</span>
-                <span class="text-indigo-200">XP รวม:</span>
-                <span class="font-black text-amber-400">${totalXP} XP</span>
+              <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>🌍</span>
+                <span class="text-indigo-200">รีโมทสากล:</span>
+                <span class="font-black text-purple-300">${completedWorkplaceUnits} / ${totalWorkplaceUnits} ยูนิต</span>
+              </div>
+              <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 flex items-center gap-2 backdrop-blur-xs">
+                <span>🏗️</span>
+                <span class="text-indigo-200">System Design:</span>
+                <span class="font-black text-rose-300">${completedSysDesignUnits} / ${totalSysDesignUnits} ยูนิต</span>
               </div>
             </div>
           </div>
 
-          <!-- Decorative glow -->
           <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         </div>
 
-        <!-- 2 Main Course Blocks -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <!-- 5 Main Course Blocks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           
-          <!-- BLOCK 1: 📘 คอร์สไวยากรณ์ (Grammar Mastery - ${syllabus.length} หัวข้อ) -->
-          <div onclick="window.app.enterLessonsTrack('grammar')"
-            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
-            
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-
-            <div class="space-y-5">
-              <!-- Block Header -->
-              <div class="flex items-center justify-between">
-                <span class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
-                  📘
-                </span>
-                <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                  ${syllabus.length} หมวดหมู่หลัก
-                </span>
-              </div>
-
-              <div>
-                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-2">
-                  <span>คอร์สไวยากรณ์ (Grammar Mastery)</span>
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2.5 leading-relaxed">
-                  เจาะลึก ${syllabus.length} หมวดหมู่วิเคราะห์ตามสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมกล่องสูตรไวยากรณ์ ตัวอย่างประโยคจริงในชีวิตประจำวัน & สายงานไอที/DevOps ระบบทดสอบออกเสียง AI และแบบฝึกหัดทบทวนทันที
-                </p>
-              </div>
-
-              <!-- Topic Tags Preview -->
-              <div class="flex flex-wrap gap-1.5 text-[11px] pt-1">
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1. Parts of Speech</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3. Tenses</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">16. Modal Verbs</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">17. แบบทดสอบท้ายบท</span>
-                <span class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">+${Math.max(0, syllabus.length - 4)} หมวด</span>
-              </div>
-
-              <!-- Progress bar for Grammar -->
-              <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                <div class="flex items-center justify-between text-xs font-bold">
-                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้าการเรียน</span>
-                  <span class="text-indigo-600 dark:text-indigo-400">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย (${grammarPercent}%)</span>
-                </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: ${grammarPercent}%"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Block Action Footer -->
-            <div class="pt-6 mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-              <span class="text-xs font-bold text-slate-400">
-                ${syllabus.length} หัวข้อ • ${totalGrammarUnits} บทย่อย
-              </span>
-              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('grammar')"
-                class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 group-hover:translate-x-1 transition-all flex items-center gap-2">
-                <span>เข้าสู่คอร์สไวยากรณ์</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- BLOCK 2: 🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap) -->
+          <!-- BLOCK 1: 🗺️ ปูพื้นฐาน CEFR Roadmap -->
           <div onclick="window.app.enterLessonsTrack('core')"
-            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
-            
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500"></div>
-
-            <div class="space-y-5">
-              <!-- Block Header -->
+            <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <span class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                <span class="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
                   🗺️
                 </span>
-                <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                   มาตรฐาน CEFR สากล
                 </span>
               </div>
 
               <div>
-                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center gap-2">
-                  <span>ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center gap-2">
+                  <span>ปูพื้นฐาน ${courses.length} ระดับ (CEFR Roadmap)</span>
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2.5 leading-relaxed">
-                  หลักสูตรปูพื้นฐานตามระดับสากล CEFR แบ่งเป็น 6 ระดับ (A1 ถึง C2) เรียนรู้ผ่าน 4 เสาหลัก: Core Grammar, Chunks คำศัพท์ติดปาก, บทสนทนาการทำงานจริง และ Action Drill & Quiz 5 ข้อ
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  หลักสูตรปูพื้นฐานมาตรฐานสากล CEFR แบ่งเป็น ${courses.length} ระดับ (Pre-A1 ถึง C1) เรียนรู้ผ่าน 4 เสาหลัก: Core Grammar, Chunks คำศัพท์ติดปาก, บทสนทนาการทำงานจริง และ Action Drill & Quiz
                 </p>
               </div>
 
-              <!-- Level Tags Preview -->
-              <div class="flex flex-wrap gap-1.5 text-[11px] pt-1">
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">A1 Survivor</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">A2 Explorer</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">B1/B2</span>
-                <span class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">C1/C2 Pro</span>
+              <div class="flex flex-wrap gap-1 text-[10px] pt-1">
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">Pre-A1 Starter</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">A1/A2 Basic</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">B1/B2 Pro</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">C1 Master</span>
               </div>
 
-              <!-- Progress bar for CEFR -->
-              <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                <div class="flex items-center justify-between text-xs font-bold">
-                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้าการเรียน</span>
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
                   <span class="text-emerald-600 dark:text-emerald-400">${completedLevelsCount} / ${courses.length} ระดับ (${cefrPercent}%)</span>
                 </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2.5 rounded-full transition-all duration-500" style="width: ${cefrPercent}%"></div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500" style="width: ${cefrPercent}%"></div>
                 </div>
               </div>
             </div>
 
-            <!-- Block Action Footer -->
-            <div class="pt-6 mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-              <span class="text-xs font-bold text-slate-400">
-                6 ระดับ • 4 เสาหลัก
-              </span>
+            <div class="pt-4 mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400">${courses.length} ระดับ • 4 เสาหลัก</span>
               <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('core')"
-                class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 group-hover:translate-x-1 transition-all flex items-center gap-2">
-                <span>เข้าสู่คอร์ส 6 ระดับ</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 group-hover:translate-x-1 transition-all flex items-center gap-1.5">
+                <span>เข้าสู่คอร์ส ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BLOCK 2: 📘 คอร์สไวยากรณ์ (Grammar Mastery) -->
+          <div onclick="window.app.enterLessonsTrack('grammar')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-13 h-13 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  📘
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  ${syllabus.length} หมวดหมู่หลัก
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-2">
+                  <span>คอร์สไวยากรณ์ (Grammar Mastery)</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  เจาะลึก ${syllabus.length} หมวดหมู่วิเคราะห์ตามสารบัญมาตรฐาน อธิบายด้วยภาษาง่ายๆ พร้อมกล่องสูตรไวยากรณ์ ตัวอย่างประโยคจริงในชีวิตประจำวัน & สายงานไอที/DevOps
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-1 text-[10px] pt-1">
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Parts of Speech</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Tenses</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Conditionals</span>
+                <span class="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold">+${Math.max(0, syllabus.length - 3)} หมวด</span>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
+                  <span class="text-indigo-600 dark:text-indigo-400">${completedGrammarUnits} / ${totalGrammarUnits} บทย่อย (${grammarPercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-500" style="width: ${grammarPercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400">${syllabus.length} หมวด • ${totalGrammarUnits} บทย่อย</span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('grammar')"
+                class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 group-hover:translate-x-1 transition-all flex items-center gap-1.5">
+                <span>เข้าสู่คอร์ส ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BLOCK 3: 💻 ภาษาอังกฤษตาม 4 สายงานเทค (Tech Role-Based Tracks) -->
+          <div onclick="window.app.enterLessonsTrack('role-tracks')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-500 dark:hover:border-cyan-500 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600"></div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-13 h-13 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  💻
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                  4 สายงานวิศวกรรม
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors flex items-center gap-2">
+                  <span>ภาษาอังกฤษตามสายงานเทค (Role Tracks)</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  เจาะลึกคำศัพท์และรูปประโยคสากลสำหรับ 4 สายงานเฉพาะทาง: Backend & Cloud/DevOps, Frontend & UI/UX, Data & AI/ML, และ Product & Agile
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-1 text-[10px] pt-1">
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">⚡ Backend & Cloud</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">🎨 Frontend</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">🤖 Data & AI</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">🎯 Product</span>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
+                  <span class="text-cyan-600 dark:text-cyan-400">${completedRoleUnits} / ${totalRoleUnits} ยูนิต (${rolePercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500" style="width: ${rolePercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400">4 สายงาน • ${totalRoleUnits} ยูนิต</span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('role-tracks')"
+                class="px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-md shadow-cyan-600/20 group-hover:translate-x-1 transition-all flex items-center gap-1.5">
+                <span>เข้าสู่คอร์ส ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BLOCK 4: 🌍 การทำงานรีโมทและทีมข้ามชาติ (Workplace Track) -->
+          <div onclick="window.app.enterLessonsTrack('workplace')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-500 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-indigo-500 to-pink-500"></div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-13 h-13 rounded-2xl bg-purple-50 dark:bg-purple-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  🌍
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                  ทีมสากล & ข้ามชาติ
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors flex items-center gap-2">
+                  <span>การทำงานรีโมท & ทีมข้ามชาติ (Workplace)</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  ทักษะการทำงานในองค์กรสากล: การสื่อสารแบบ Asynchronous บน Slack, การคัดค้านอย่างสร้างสรรค์ (Diplomatic Pushback), การคุยเล่น Small Talk ใน Zoom, และการเขียนประเมินตนเอง
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-1 text-[10px] pt-1">
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">💬 Async Slack</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">🤝 Pushback</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">☕ Small Talk</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">💼 Promotion</span>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
+                  <span class="text-purple-600 dark:text-purple-400">${completedWorkplaceUnits} / ${totalWorkplaceUnits} ยูนิต (${workplacePercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500" style="width: ${workplacePercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400">4 โดเมน • ${totalWorkplaceUnits} ยูนิต</span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('workplace')"
+                class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 group-hover:translate-x-1 transition-all flex items-center gap-1.5">
+                <span>เข้าสู่คอร์ส ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BLOCK 5: 🏗️ ออกแบบระบบและพรีเซนต์งานเทคนิค (System Design Track) -->
+          <div onclick="window.app.enterLessonsTrack('system-design')"
+            class="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500 dark:hover:border-amber-500 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500"></div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-13 h-13 rounded-2xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-xs">
+                  🏗️
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                  ระดับ Senior & Tech Lead
+                </span>
+              </div>
+
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center gap-2">
+                  <span>ออกแบบระบบ & พรีเซนต์งาน (System Design)</span>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  หลักสูตรระดับสูงสำหรับวิศวกรระดับกลางถึงอาวุโส: การอธิบาย Trade-offs สถาปัตยกรรม (Monolith vs Microservices / SQL vs NoSQL), การเขียนและปกป้อง RFC, และ Live Tech Demo ใน 5 นาที
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-1 text-[10px] pt-1">
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">⚖️ Trade-offs</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">📄 RFC Defense</span>
+                <span class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">🎤 5-Min Demo</span>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
+                  <span class="text-amber-600 dark:text-amber-400">${completedSysDesignUnits} / ${totalSysDesignUnits} ยูนิต (${sysDesignPercent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-2 rounded-full transition-all duration-500" style="width: ${sysDesignPercent}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400">3 โดเมน • ${totalSysDesignUnits} ยูนิต</span>
+              <button onclick="event.stopPropagation(); window.app.enterLessonsTrack('system-design')"
+                class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md shadow-amber-600/20 group-hover:translate-x-1 transition-all flex items-center gap-1.5">
+                <span>เข้าสู่คอร์ส ➔</span>
               </button>
             </div>
           </div>
@@ -1299,6 +1509,573 @@ class EngMasteryApp {
         </div>
       </div>
     `;
+  }
+
+  // =========================================================================
+  // SPECIALIZED TRACKS: CATALOG VIEW & UNIT READER CONTROLLER
+  // =========================================================================
+  getSpecializedTrackConfig(trackType) {
+    if (trackType === "role-tracks") {
+      return {
+        id: "role-tracks",
+        title: "ภาษาอังกฤษตาม 4 สายงานเทค (Tech Role-Based Tracks)",
+        titleEn: "Specialized English Curriculum for 4 Engineering Roles",
+        icon: "💻",
+        badge: "4 สายงานวิศวกรรม",
+        gradient: "from-cyan-950 via-slate-900 to-blue-950",
+        badgeColor: "cyan",
+        accentBg: "bg-cyan-600",
+        accentText: "text-cyan-600 dark:text-cyan-400",
+        data: window.roleTracksData || [],
+        description: "เจาะลึกคำศัพท์ โครงสร้างประโยค และการสื่อสารเฉพาะทางสำหรับ 4 สายงานเทค: Backend & DevOps, Frontend & UI/UX, Data & AI/ML, และ Product & Agile เพื่อการคุยงานที่คมชัดตรงประเด็น"
+      };
+    } else if (trackType === "workplace") {
+      return {
+        id: "workplace",
+        title: "การทำงานรีโมทและทีมข้ามชาติ (Remote & Cross-Cultural Workplace)",
+        titleEn: "Professional Cross-Cultural Collaboration & Career Growth",
+        icon: "🌍",
+        badge: "4 โดเมนการทำงานสากล",
+        gradient: "from-purple-950 via-slate-900 to-indigo-950",
+        badgeColor: "purple",
+        accentBg: "bg-purple-600",
+        accentText: "text-purple-600 dark:text-purple-400",
+        data: window.workplaceTracksData || [],
+        description: "ทักษะการทำงานในองค์กรสากล: การสื่อสารแบบ Asynchronous บน Slack, การคัดค้านและเห็นต่างอย่างสร้างสรรค์ (Diplomatic Pushback), การคุยเล่น Small Talk ใน Zoom, และการประเมินตนเองเพื่อขึ้นเงินเดือน"
+      };
+    } else {
+      return {
+        id: "system-design",
+        title: "ออกแบบระบบและพรีเซนต์งานเทคนิค (System Design & Tech Demos)",
+        titleEn: "Architectural Trade-offs, RFC Defense & 5-Min Demos",
+        icon: "🏗️",
+        badge: "3 โดเมนระดับ Senior/Lead",
+        gradient: "from-amber-950 via-slate-900 to-orange-950",
+        badgeColor: "amber",
+        accentBg: "bg-amber-600",
+        accentText: "text-amber-600 dark:text-amber-400",
+        data: window.systemDesignTracksData || [],
+        description: "หลักสูตรระดับสูงสำหรับวิศวกรระดับกลางถึงอาวุโส: การอธิบายข้อดี-ข้อเสีย (Trade-offs) สถาปัตยกรรมระบบ, การเขียนและปกป้องเอกสาร RFC, และการทำ Live Tech Demo 5 นาทีให้ทรงพลัง"
+      };
+    }
+  }
+
+  renderSpecializedCatalogView(container, trackType) {
+    const config = this.getSpecializedTrackConfig(trackType);
+    const topics = config.data;
+    const state = window.storageManager.state;
+    const totalXP = (state.stats && state.stats.totalXP) || 0;
+
+    let totalUnits = 0;
+    topics.forEach(t => { totalUnits += (t.units || []).length; });
+    const completedCount = topics.reduce((acc, t) => acc + (t.units || []).filter(u => this.completedSpecializedUnits.has(u.id)).length, 0);
+    const progressPercent = totalUnits > 0 ? Math.round((completedCount / totalUnits) * 100) : 0;
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
+        <!-- Return Navigation Bar -->
+        <div class="flex items-center justify-between pb-1">
+          <button onclick="window.app.enterLessonsTrack('hub')"
+            class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>← กลับสู่หน้าเลือกคอร์ส Lessons Hub</span>
+          </button>
+          <button onclick="window.app.enterLessonsTrack('core')"
+            class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+            <span>🗺️ สลับไปคอร์สปูพื้นฐาน CEFR ➔</span>
+          </button>
+        </div>
+
+        <!-- Hero Blog Header -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br ${config.gradient} p-6 sm:p-8 text-white shadow-xl border border-white/10">
+          <div class="relative z-10 space-y-4 max-w-4xl">
+            <!-- Track Switcher Pills -->
+            ${this.renderLessonsTrackSwitcherPills(trackType)}
+
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider">
+              <span>${config.icon} ${config.badge}</span>
+              <span>•</span>
+              <span>${topics.length} หมวด ${totalUnits} ยูนิตเจาะลึก</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+              ${config.title}
+            </h1>
+
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-3xl">
+              ${config.description}
+            </p>
+
+            <!-- Learning Progress Tracker -->
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
+              <div class="flex-1 bg-white/10 p-3 rounded-2xl border border-white/10 backdrop-blur-xs">
+                <div class="flex items-center justify-between mb-1.5 font-bold">
+                  <span class="text-slate-200">ความคืบหน้าการเรียนหลักสูตรนี้</span>
+                  <span class="text-amber-300">${completedCount} / ${totalUnits} ยูนิต (${progressPercent}%)</span>
+                </div>
+                <div class="w-full bg-black/30 rounded-full h-2.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-slate-200">หมวดหมู่</div>
+                  <div class="text-base font-black text-white">${topics.length} หมวด</div>
+                </div>
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-center">
+                  <div class="text-[10px] text-slate-200">XP สะสม</div>
+                  <div class="text-base font-black text-amber-300">${totalXP} XP</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- Topics & Units Catalog Grid -->
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>📚 สารบัญบทเรียนทั้งหมดในหลักสูตรนี้</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold">${topics.length} หมวด</span>
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${topics.map((topic, topicIdx) => {
+              const units = topic.units || [];
+              const topicCompleted = units.filter(u => this.completedSpecializedUnits.has(u.id)).length;
+              return `
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-2xl shadow-xs">
+                        ${topic.icon || '📌'}
+                      </span>
+                      <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        ${topicCompleted} / ${units.length} สำเร็จ
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug">
+                        ${topic.title}
+                      </h3>
+                      <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mt-0.5">
+                        ${topic.titleTh || ''}
+                      </p>
+                      <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                        ${topic.description || ''}
+                      </p>
+                    </div>
+
+                    <!-- Units List -->
+                    <div class="pt-2 space-y-2 border-t border-slate-100 dark:border-slate-800">
+                      <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">บทเรียนในหมวดนี้:</div>
+                      <div class="space-y-1.5">
+                        ${units.map((u, uIdx) => {
+                          const isDone = this.completedSpecializedUnits.has(u.id);
+                          return `
+                            <div onclick="window.app.openSpecializedUnit('${topic.id}', '${u.id}', '${trackType}')"
+                              class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/40 border border-slate-200/70 dark:border-slate-700/60 transition-all cursor-pointer flex items-center justify-between gap-3 group">
+                              <div class="flex items-center gap-2.5 truncate">
+                                <span class="w-6 h-6 rounded-lg ${isDone ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'} flex items-center justify-center text-[10px] font-black shrink-0">
+                                  ${isDone ? '✓' : (uIdx + 1)}
+                                </span>
+                                <div class="truncate">
+                                  <div class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                                    ${u.title}
+                                  </div>
+                                </div>
+                              </div>
+                              <span class="text-xs text-indigo-600 dark:text-indigo-400 font-bold shrink-0 group-hover:translate-x-1 transition-transform">➔</span>
+                            </div>
+                          `;
+                        }).join('')}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-slate-400">${units.length} ยูนิตย่อย</span>
+                    <button onclick="window.app.openSpecializedUnit('${topic.id}', '${units[0] ? units[0].id : ''}', '${trackType}')"
+                      class="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-indigo-600 dark:hover:bg-indigo-400 hover:text-white font-bold text-xs transition-all shadow-xs">
+                      เริ่มเรียนหมวดนี้ ➔
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderSpecializedUnitReader(container, trackType) {
+    const config = this.getSpecializedTrackConfig(trackType);
+    const topics = config.data;
+    
+    // Find active topic & unit
+    let activeTopic = topics.find(t => t.id === this.activeSpecializedTopicId) || topics[0];
+    let activeUnit = null;
+
+    if (activeTopic && activeTopic.units) {
+      activeUnit = activeTopic.units.find(u => u.id === this.activeSpecializedUnitId) || activeTopic.units[0];
+    }
+
+    if (!activeUnit) {
+      this.renderSpecializedCatalogView(container, trackType);
+      return;
+    }
+
+    // Flatten all units for navigation
+    const allUnits = [];
+    topics.forEach(t => {
+      (t.units || []).forEach(u => {
+        allUnits.push({ topicId: t.id, topicTitle: t.title, unitId: u.id, unitTitle: u.title, unit: u });
+      });
+    });
+
+    const currentIndex = allUnits.findIndex(item => item.unitId === activeUnit.id);
+    const prevUnitItem = currentIndex > 0 ? allUnits[currentIndex - 1] : null;
+    const nextUnitItem = currentIndex < allUnits.length - 1 ? allUnits[currentIndex + 1] : null;
+
+    const isDone = this.completedSpecializedUnits.has(activeUnit.id);
+    const answers = this.specializedQuizAnswers[activeUnit.id] || {};
+
+    container.innerHTML = `
+      <div class="space-y-8 animate-fadeIn max-w-4xl mx-auto pb-20 w-full">
+        <!-- Back Navigation & Top Progress Bar -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 flex-wrap gap-2">
+          <button onclick="window.app.returnToSpecializedCatalog('${trackType}')"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>← กลับสู่หน้ารวม ${config.title}</span>
+          </button>
+
+          <div class="flex items-center gap-2">
+            ${prevUnitItem ? `
+              <button onclick="window.app.selectSpecializedUnit('${prevUnitItem.topicId}', '${prevUnitItem.unitId}', '${trackType}')"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="บทก่อนหน้า: ${prevUnitItem.unitTitle}">
+                <span>←</span>
+                <span class="hidden sm:inline">ก่อนหน้า</span>
+              </button>
+            ` : ''}
+
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              ${currentIndex + 1} / ${allUnits.length}
+            </span>
+
+            ${nextUnitItem ? `
+              <button onclick="window.app.selectSpecializedUnit('${nextUnitItem.topicId}', '${nextUnitItem.unitId}', '${trackType}')"
+                class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="บทถัดไป: ${nextUnitItem.unitTitle}">
+                <span class="hidden sm:inline">ถัดไป</span>
+                <span>→</span>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+
+        <!-- Article Hero Header -->
+        <div class="space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-3xl">${activeTopic.icon || '📌'}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                ${activeTopic.badge || 'Track'} • ${activeTopic.title}
+              </span>
+              <span class="text-xs text-slate-400 font-medium">ยูนิตที่ ${currentIndex + 1}</span>
+            </div>
+
+            <button onclick="window.app.markSpecializedUnitComplete('${activeUnit.id}', '${trackType}')"
+              class="whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
+                isDone
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100'
+                  : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100'
+              }">
+              <span>${isDone ? '✅ เรียนจบแล้ว' : '🎯 ทำเครื่องหมายจบ'}</span>
+              <span class="text-[10px] text-amber-500 font-black">+15 XP</span>
+            </button>
+          </div>
+
+          <div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+              ${activeUnit.title}
+            </h1>
+            <p class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 mt-1">
+              ${activeTopic.titleTh || ''}
+            </p>
+          </div>
+
+          ${activeUnit.summary ? `
+            <div class="p-5 rounded-3xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+              <strong class="text-indigo-600 dark:text-indigo-400 block mb-1">💡 สรุปใจความสำคัญ (Executive Summary):</strong>
+              ${activeUnit.summary}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Formula Blueprint Box -->
+        ${activeUnit.formula ? `
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-5 sm:p-7 text-white border border-indigo-500/30 shadow-lg">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-2">
+                <span>📐</span>
+                <span>โครงสร้าง / สูตรหลัก (Conversational & Linguistic Framework)</span>
+              </span>
+              <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-white/10 text-indigo-200">Formula</span>
+            </div>
+            <div class="text-sm sm:text-base font-mono font-bold text-amber-200 leading-relaxed break-words bg-black/30 p-4 rounded-2xl border border-white/5">
+              ${activeUnit.formula}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Deep Markdown Explanation -->
+        <div class="space-y-4 text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
+          ${this.formatMarkdownContent(activeUnit.explanation || '')}
+        </div>
+
+        <!-- Real-world Examples with Audio -->
+        ${activeUnit.examples && activeUnit.examples.length > 0 ? `
+          <div class="p-6 rounded-3xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/80 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                <span>🎙️</span>
+                <span>ตัวอย่างประโยคจริงในงาน (Real-world Audio Examples)</span>
+              </span>
+              <span class="text-[11px] text-indigo-500 dark:text-indigo-400 font-semibold">${activeUnit.examples.length} ประโยค</span>
+            </div>
+            <div class="space-y-2.5">
+              ${activeUnit.examples.map(ex => `
+                <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-900/60 flex items-start justify-between gap-3 text-xs sm:text-sm">
+                  <div class="space-y-1">
+                    <strong class="text-slate-900 dark:text-white font-bold block leading-relaxed">${ex.en}</strong>
+                    <span class="text-slate-500 dark:text-slate-400 block text-xs">${ex.th}</span>
+                  </div>
+                  <button onclick="window.speechEngine.speak('${(ex.en || '').replace(/'/g, "\\'")}')"
+                    class="shrink-0 p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:scale-110 active:scale-95 transition-all" title="ฟังเสียงอ่านออกเสียง">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Interactive QuickCheck Quiz -->
+        ${activeUnit.quickCheck && activeUnit.quickCheck.length > 0 ? `
+          <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">✍️</span>
+                <div>
+                  <h3 class="text-base font-black text-slate-900 dark:text-white">แบบฝึกหัดทบทวนความเข้าใจ (QuickCheck)</h3>
+                  <p class="text-xs text-slate-500">ตอบถูกข้อละ +2 XP</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                ${activeUnit.quickCheck.length} ข้อ
+              </span>
+            </div>
+
+            <div class="space-y-6">
+              ${activeUnit.quickCheck.map((q, qIdx) => {
+                const selectedOpt = answers[qIdx];
+                const isAnswered = selectedOpt !== undefined;
+                const isCorrect = isAnswered && selectedOpt === q.correctIndex;
+                return `
+                  <div class="space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800">
+                    <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      ข้อ ${qIdx + 1}: ${q.question}
+                    </p>
+                    <div class="space-y-2">
+                      ${q.options.map((opt, optIdx) => {
+                        let btnStyle = "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-indigo-400";
+                        if (isAnswered) {
+                          if (optIdx === q.correctIndex) {
+                            btnStyle = "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-800 dark:text-emerald-200 font-bold";
+                          } else if (selectedOpt === optIdx) {
+                            btnStyle = "bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-800 dark:text-rose-200 line-through";
+                          }
+                        }
+                        return `
+                          <button onclick="window.app.answerSpecializedQuiz('${activeUnit.id}', ${qIdx}, ${optIdx}, '${trackType}')"
+                            class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm transition-all flex items-center justify-between ${btnStyle}">
+                            <span>${opt}</span>
+                            ${isAnswered && optIdx === q.correctIndex ? '<span class="text-emerald-600 font-bold">✓ ถูกต้อง</span>' : ''}
+                            ${isAnswered && selectedOpt === optIdx && optIdx !== q.correctIndex ? '<span class="text-rose-600 font-bold">✕ ไม่ถูกต้อง</span>' : ''}
+                          </button>
+                        `;
+                      }).join('')}
+                    </div>
+
+                    ${isAnswered ? `
+                      <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'} text-xs leading-relaxed">
+                        <strong class="block mb-0.5">${isCorrect ? '🎉 คำอธิบาย:' : '💡 เฉลย & คำอธิบาย:'}</strong>
+                        ${q.explanation}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Bottom Navigation Footer -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          ${prevUnitItem ? `
+            <button onclick="window.app.selectSpecializedUnit('${prevUnitItem.topicId}', '${prevUnitItem.unitId}', '${trackType}')"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95 group">
+              <span>⬅</span>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-400 font-medium">ยูนิตก่อนหน้า</div>
+                <div class="truncate max-w-[200px]">${prevUnitItem.unitTitle}</div>
+              </div>
+            </button>
+          ` : `
+            <button onclick="window.app.returnToSpecializedCatalog('${trackType}')"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
+              <span>⬅</span>
+              <span>หน้ารวม ${config.title}</span>
+            </button>
+          `}
+
+          <button onclick="window.app.returnToSpecializedCatalog('${trackType}')"
+            class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span>📚 สารบัญ (${currentIndex + 1}/${allUnits.length})</span>
+          </button>
+
+          ${nextUnitItem ? `
+            <button onclick="window.app.selectSpecializedUnit('${nextUnitItem.topicId}', '${nextUnitItem.unitId}', '${trackType}')"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center sm:justify-end gap-2 shadow-md transition-all active:scale-95 group">
+              <div class="text-right">
+                <div class="text-[10px] text-indigo-200 font-medium">ยูนิตถัดไป</div>
+                <div class="truncate max-w-[200px]">${nextUnitItem.unitTitle}</div>
+              </div>
+              <span>➔</span>
+            </button>
+          ` : `
+            <button onclick="window.app.returnToSpecializedCatalog('${trackType}')"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+              <span>🎉 จบครบทุกยูนิตในหลักสูตรนี้แล้ว!</span>
+              <span>➔</span>
+            </button>
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  openSpecializedUnit(topicId, unitId, trackType) {
+    window.soundFx.playClick();
+    if (window.speechEngine) {
+      window.speechEngine.stop();
+    }
+    this.activeSpecializedTopicId = topicId;
+    this.activeSpecializedUnitId = unitId;
+    this.specializedViewMode = "reader";
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderSpecializedUnitReader(container, trackType);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  selectSpecializedUnit(topicId, unitId, trackType) {
+    this.openSpecializedUnit(topicId, unitId, trackType);
+  }
+
+  returnToSpecializedCatalog(trackType) {
+    window.soundFx.playClick();
+    if (window.speechEngine) {
+      window.speechEngine.stop();
+    }
+    this.specializedViewMode = "catalog";
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      this.renderSpecializedCatalogView(container, trackType);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  markSpecializedUnitComplete(unitId, trackType) {
+    if (this.completedSpecializedUnits.has(unitId)) {
+      this.completedSpecializedUnits.delete(unitId);
+      window.soundFx.playClick();
+      this.showToast("ยกเลิกการทำเครื่องหมายสำเร็จแล้ว", "info");
+    } else {
+      this.completedSpecializedUnits.add(unitId);
+      window.soundFx.playCorrect();
+      window.storageManager.addXP(15);
+      window.storageManager.recordQuestProgress("readArticles", 1);
+      this.renderHeaderStats();
+      this.showToast("🎉 ยินดีด้วย! คุณเรียนจบยูนิตนี้แล้ว (+15 XP)", "success");
+    }
+    localStorage.setItem("engmastery_completed_specialized_units", JSON.stringify([...this.completedSpecializedUnits]));
+    const container = document.getElementById("main-content-view");
+    if (container) {
+      if (this.specializedViewMode === "reader") {
+        this.renderSpecializedUnitReader(container, trackType);
+      } else {
+        this.renderSpecializedCatalogView(container, trackType);
+      }
+    }
+  }
+
+  answerSpecializedQuiz(unitId, qIdx, selectedOptIdx, trackType) {
+    if (!this.specializedQuizAnswers) this.specializedQuizAnswers = {};
+    if (!this.specializedQuizAnswers[unitId]) this.specializedQuizAnswers[unitId] = {};
+
+    const alreadyAnswered = this.specializedQuizAnswers[unitId][qIdx] !== undefined;
+    this.specializedQuizAnswers[unitId][qIdx] = selectedOptIdx;
+    localStorage.setItem("engmastery_specialized_quiz_answers", JSON.stringify(this.specializedQuizAnswers));
+
+    // Find quiz in track data
+    const config = this.getSpecializedTrackConfig(trackType);
+    let targetUnit = null;
+    for (const t of config.data) {
+      const u = (t.units || []).find(x => x.id === unitId);
+      if (u) { targetUnit = u; break; }
+    }
+
+    if (targetUnit && targetUnit.quickCheck) {
+      const quizList = targetUnit.quickCheck;
+      const q = quizList[qIdx];
+      const isCorrect = q && selectedOptIdx === q.correctIndex;
+
+      if (!alreadyAnswered) {
+        if (isCorrect) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(2);
+          window.storageManager.recordQuestProgress("completeQuiz", 1);
+        } else {
+          window.soundFx.playIncorrect();
+        }
+        this.renderHeaderStats();
+      } else {
+        window.soundFx.playClick();
+      }
+
+      // Check if all answered
+      const answeredCount = Object.keys(this.specializedQuizAnswers[unitId]).length;
+      if (answeredCount >= quizList.length) {
+        if (!this.completedSpecializedUnits.has(unitId)) {
+          this.completedSpecializedUnits.add(unitId);
+          localStorage.setItem("engmastery_completed_specialized_units", JSON.stringify([...this.completedSpecializedUnits]));
+          window.storageManager.recordQuestProgress("readArticles", 1);
+          this.showToast(`🎉 ยอดเยี่ยม! ทำแบบฝึกหัดครบ ${quizList.length} ข้อแล้ว`, "success");
+        }
+      }
+    }
+
+    const container = document.getElementById("main-content-view");
+    if (container && this.specializedViewMode === "reader") {
+      this.renderSpecializedUnitReader(container, trackType);
+    }
   }
 
   renderCoreLevelsView(container, courses) {
@@ -1328,25 +2105,16 @@ class EngMasteryApp {
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-3xl">
             <!-- Track Switcher Pills -->
-            <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
-              <button onclick="window.app.switchLessonsTrack('grammar')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
-                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - ${(window.grammarSyllabusData || []).length} หัวข้อ)</span>
-              </button>
-              <button onclick="window.app.switchLessonsTrack('core')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
-                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
-              </button>
-            </div>
+            ${this.renderLessonsTrackSwitcherPills('core')}
 
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
               <span>🌟 CEFR Standardized Roadmap</span>
               <span class="text-indigo-400">•</span>
-              <span>A1 ➔ C2 Zero to Pro</span>
+              <span>Pre-A1 ➔ C1 Zero to Pro</span>
             </div>
             
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-              ห้องเรียน 6 ระดับมาตรฐานสากล (CEFR Level Mastery)
+              ห้องเรียน ${courses.length} ระดับมาตรฐานสากล (CEFR Level Mastery)
             </h1>
             
             <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
@@ -1502,7 +2270,7 @@ class EngMasteryApp {
         <div class="p-12 text-center text-slate-500">
           <p class="text-base font-bold">ไม่พบข้อมูลหลักสูตรไวยากรณ์</p>
           <button onclick="window.app.switchLessonsTrack('core')" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
-            สลับไปดูคอร์สปูพื้นฐาน 6 ระดับ
+            สลับไปดูคอร์สปูพื้นฐาน CEFR
           </button>
         </div>
       `;
@@ -1534,7 +2302,7 @@ class EngMasteryApp {
           </button>
           <button onclick="window.app.enterLessonsTrack('core')"
             class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
-            <span>🗺️ สลับไปคอร์สปูพื้นฐาน 6 ระดับ (CEFR) ➔</span>
+            <span>🗺️ สลับไปคอร์สปูพื้นฐาน CEFR Roadmap ➔</span>
           </button>
         </div>
 
@@ -1542,16 +2310,7 @@ class EngMasteryApp {
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 sm:p-8 text-white shadow-xl border border-indigo-800/40">
           <div class="relative z-10 space-y-4 max-w-4xl">
             <!-- Track Switcher Pills -->
-            <div class="inline-flex p-1 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md gap-1">
-              <button onclick="window.app.switchLessonsTrack('grammar')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-950 shadow-md flex items-center gap-2">
-                <span>📘 คอร์สไวยากรณ์ (Grammar Mastery - ${(window.grammarSyllabusData || []).length} หัวข้อ)</span>
-              </button>
-              <button onclick="window.app.switchLessonsTrack('core')"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-200 hover:text-white hover:bg-white/10 flex items-center gap-2">
-                <span>🗺️ ปูพื้นฐาน 6 ระดับ (CEFR Roadmap)</span>
-              </button>
-            </div>
+            ${this.renderLessonsTrackSwitcherPills('grammar')}
 
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold uppercase tracking-wider">
               <span>📚 ${syllabus.length} Core Grammar Topics</span>
@@ -1803,7 +2562,7 @@ class EngMasteryApp {
         <div class="p-12 text-center text-slate-500">
           <p class="text-base font-bold">ไม่พบข้อมูลหลักสูตรไวยากรณ์</p>
           <button onclick="window.app.switchLessonsTrack('core')" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
-            สลับไปดูคอร์สปูพื้นฐาน 6 ระดับ
+            สลับไปดูคอร์สปูพื้นฐาน CEFR
           </button>
         </div>
       `;
@@ -2246,6 +3005,10 @@ class EngMasteryApp {
     this.lessonsHubTrack = (track === "hub" || !track) ? null : track;
     if (this.lessonsHubTrack === "grammar") {
       this.grammarViewMode = "blog";
+    } else if (this.lessonsHubTrack === "role-tracks" || this.lessonsHubTrack === "workplace" || this.lessonsHubTrack === "system-design") {
+      this.specializedViewMode = "catalog";
+      this.specializedTrackFilter = "all";
+      this.specializedTrackSearch = "";
     }
     const container = document.getElementById("main-content-view");
     if (container) {
@@ -2679,7 +3442,7 @@ class EngMasteryApp {
             <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
               class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center sm:justify-start gap-2 shadow-xs transition-all active:scale-95">
               <span>⬅</span>
-              <span>หน้ารวมห้องเรียน 6 ระดับ (Blog)</span>
+              <span>หน้ารวมห้องเรียน CEFR (Blog)</span>
             </button>
           `}
 
@@ -2700,7 +3463,7 @@ class EngMasteryApp {
           ` : `
             <button onclick="window.app.navigateTo('level-detail', { levelId: null })"
               class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
-              <span>🎉 จบครบ 6 ระดับแล้ว! (กลับสู่หน้ารวม)</span>
+              <span>🎉 จบครบทุกระดับแล้ว! (กลับสู่หน้ารวม)</span>
               <span>➔</span>
             </button>
           `}
@@ -9737,7 +10500,7 @@ class EngMasteryApp {
               </h1>
             </div>
             <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
-              ถอดบทเรียนจากคู่มือ <strong>"ฝึกแต่งภาษาอังกฤษ 1,000 ประโยค"</strong> (Kru Dew / OpenDurian) สรุปสูตรประโยคสำเร็จรูป คลังคำศัพท์ และแบบฝึกหัดลากวางคำศัพท์ (Drag & Drop) ลงช่อง เพื่อฝึกสร้างประโยคอย่างถูกต้องแม่นยำ
+              ถอดบทเรียนจากคู่มือ <strong>"ฝึกแต่งภาษาอังกฤษ 1,000 ประโยค"</strong> ( / OpenDurian) สรุปสูตรประโยคสำเร็จรูป คลังคำศัพท์ และแบบฝึกหัดลากวางคำศัพท์ (Drag & Drop) ลงช่อง เพื่อฝึกสร้างประโยคอย่างถูกต้องแม่นยำ
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
@@ -9918,7 +10681,7 @@ class EngMasteryApp {
             <div class="flex items-center gap-2">
               <span class="text-2xl">📐</span>
               <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                โครงสร้างประโยคหลัก (Sentence Blueprints & Kru Dew Tips)
+                โครงสร้างประโยคหลัก (Sentence Blueprints &  Tips)
               </h2>
             </div>
           </div>
@@ -9954,11 +10717,11 @@ class EngMasteryApp {
                   </button>
                 </div>
 
-                <!-- Kru Dew Tip -->
+                <!--  Tip -->
                 <div class="p-3 rounded-xl bg-gradient-to-r from-amber-500/10 to-indigo-500/10 border border-amber-300/80 dark:border-amber-800 text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2">
                   <span class="text-base shrink-0">💡</span>
                   <div>
-                    <strong class="text-amber-800 dark:text-amber-300">Kru Dew Pro-Tip:</strong> ${f.kruDewTip}
+                    <strong class="text-amber-800 dark:text-amber-300"> Pro-Tip:</strong> ${f.kruDewTip}
                   </div>
                 </div>
               </div>
@@ -10253,7 +11016,7 @@ class EngMasteryApp {
                 "${drill.targetWords.join(" ")}"
               </div>
               <div class="text-xs text-slate-700 dark:text-slate-300 pt-2 border-t border-emerald-200 dark:border-emerald-900/60 leading-relaxed">
-                <strong>💡 Kru Dew Grammar Note:</strong> ${drill.explanation}
+                <strong>💡  Grammar Note:</strong> ${drill.explanation}
               </div>
             </div>
           ` : state.errorMessage ? `
