@@ -524,3 +524,4 @@
 
   window.placementTest = new PlacementTestManager();
 })();
+

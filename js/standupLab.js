@@ -44,6 +44,13 @@
       this.currentTab = tabName;
       if (this.app) {
         this.app.speakingLabTab = tabName;
+        if (typeof window !== "undefined" && window.location) {
+          const targetHash = `#/speaking-lab?tab=${encodeURIComponent(tabName)}`;
+          if (window.location.hash !== targetHash) {
+            if (this.app._isSyncingHash !== undefined) this.app._isSyncingHash = true;
+            window.location.hash = targetHash;
+          }
+        }
         const container = document.getElementById("main-content-view");
         if (container) this.render(this.app, container);
       }
@@ -1227,12 +1234,12 @@
 
     // Support navigateTo with params.tab
     const origNavigateTo = EngMasteryApp.prototype.navigateTo;
-    EngMasteryApp.prototype.navigateTo = function (viewName, params = {}) {
+    EngMasteryApp.prototype.navigateTo = function (viewName, params = {}, updateHash = true) {
       if (viewName === "speaking-lab" && params && params.tab) {
         StandupLab.currentTab = params.tab;
         this.speakingLabTab = params.tab;
       }
-      return origNavigateTo.call(this, viewName, params);
+      return origNavigateTo.call(this, viewName, params, updateHash);
     };
   }
 })();

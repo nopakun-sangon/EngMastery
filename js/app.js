@@ -141,6 +141,9 @@ class EngMasteryApp {
       this.vocabIndex = null;
     }
 
+    if (typeof window !== "undefined") {
+      window.app = this;
+    }
     this.init();
   }
 
@@ -148,13 +151,203 @@ class EngMasteryApp {
     this.initTheme();
     this.setupNavigation();
     this.renderHeaderStats();
-    this.renderView(this.currentView);
+    this.initRouter();
     if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           this.closeReadingWordPopup();
         }
       });
+    }
+  }
+
+  // =========================================================================
+  // ROUTER & DEEP LINKING SUITE (URL HASH ROUTING & BROWSER NAVIGATION)
+  // =========================================================================
+  initRouter() {
+    this._isSyncingHash = false;
+
+    if (typeof window === "undefined") {
+      this.renderView(this.currentView);
+      return;
+    }
+
+    // Listen for browser Back/Forward or manual URL hash changes
+    window.addEventListener("hashchange", () => {
+      if (this._isSyncingHash) {
+        this._isSyncingHash = false;
+        return;
+      }
+      this.handleHashChange();
+    });
+
+    // Check if initial hash is present on page load / refresh
+    const initialHash = window.location.hash;
+    if (initialHash && initialHash.length > 1 && initialHash !== "#/" && initialHash !== "#") {
+      const route = this.parseHash(initialHash);
+      this.navigateTo(route.viewName, route.params, false);
+    } else {
+      this.navigateTo("dashboard", {}, true);
+    }
+  }
+
+  handleHashChange() {
+    if (typeof window === "undefined") return;
+    const route = this.parseHash(window.location.hash);
+    this.navigateTo(route.viewName, route.params, false);
+  }
+
+  buildHash(viewName, params = {}) {
+    switch (viewName) {
+      case "dashboard":
+        return "#/dashboard";
+      case "level-detail":
+        if (params.levelId) {
+          const tabPart = params.tab ? `?tab=${encodeURIComponent(params.tab)}` : "";
+          return `#/levels/${encodeURIComponent(params.levelId)}${tabPart}`;
+        }
+        return "#/levels";
+      case "news":
+        if (params.articleId) {
+          return `#/news/${encodeURIComponent(params.articleId)}`;
+        }
+        return "#/news";
+      case "articles":
+        if (params.articleId) {
+          return `#/articles/${encodeURIComponent(params.articleId)}`;
+        }
+        return "#/articles";
+      case "masterclass":
+        if (params.masterclassId) {
+          return `#/masterclass/${encodeURIComponent(params.masterclassId)}`;
+        }
+        return "#/masterclass";
+      case "reading-lab":
+        if (params.articleId) {
+          return `#/reading-lab/${encodeURIComponent(params.articleId)}`;
+        }
+        return "#/reading-lab";
+      case "sentence-builder":
+        if (params.topicId) {
+          return `#/sentence-builder/${encodeURIComponent(params.topicId)}`;
+        }
+        return "#/sentence-builder";
+      case "speaking-lab":
+        if (params.tab) {
+          return `#/speaking-lab?tab=${encodeURIComponent(params.tab)}`;
+        }
+        return "#/speaking-lab";
+      case "vocabulary":
+        if (params.mode === "srs") {
+          return "#/vocabulary?mode=srs";
+        }
+        return "#/vocabulary";
+      case "cheat-sheet":
+        return "#/cheat-sheet";
+      case "profile":
+        return "#/profile";
+      default:
+        return `#/${encodeURIComponent(viewName)}`;
+    }
+  }
+
+  parseHash(hashString) {
+    if (!hashString || hashString === "#" || hashString === "#/") {
+      return { viewName: "dashboard", params: {} };
+    }
+
+    let clean = hashString.startsWith("#") ? hashString.slice(1) : hashString;
+    if (clean.startsWith("/")) clean = clean.slice(1);
+
+    const [pathPart, queryPart] = clean.split("?");
+    const queryParams = {};
+    if (queryPart) {
+      try {
+        const sp = new URLSearchParams(queryPart);
+        for (const [k, v] of sp.entries()) {
+          queryParams[k] = v;
+        }
+      } catch (e) {}
+    }
+
+    const segments = (pathPart || "").split("/").filter(Boolean).map(decodeURIComponent);
+    const primary = segments[0] || "dashboard";
+    const secondary = segments[1] || null;
+
+    switch (primary) {
+      case "dashboard":
+        return { viewName: "dashboard", params: queryParams };
+      case "levels":
+        return { viewName: "level-detail", params: { levelId: secondary, ...queryParams } };
+      case "news":
+        return { viewName: "news", params: { articleId: secondary, ...queryParams } };
+      case "articles":
+        return { viewName: "articles", params: { articleId: secondary, ...queryParams } };
+      case "masterclass":
+        return { viewName: "masterclass", params: { masterclassId: secondary, ...queryParams } };
+      case "reading-lab":
+        return { viewName: "reading-lab", params: { articleId: secondary, ...queryParams } };
+      case "sentence-builder":
+        return { viewName: "sentence-builder", params: { topicId: secondary, ...queryParams } };
+      case "speaking-lab":
+        return { viewName: "speaking-lab", params: queryParams };
+      case "vocabulary":
+        return { viewName: "vocabulary", params: queryParams };
+      case "cheat-sheet":
+        return { viewName: "cheat-sheet", params: queryParams };
+      case "profile":
+        return { viewName: "profile", params: queryParams };
+      default:
+        return { viewName: primary, params: queryParams };
+    }
+  }
+
+  // =========================================================================
+  // WEB SHARE & CLIPBOARD SUITE (MOBILE SHARE SHEET + DESKTOP CLIPBOARD)
+  // =========================================================================
+  async shareCurrentPage(options = {}) {
+    const defaultUrl = (typeof window !== "undefined" && window.location) ? window.location.href : "";
+    const shareData = {
+      title: options.title || document.title || "EngMastery: Zero to Pro",
+      text: options.text || "คอร์สภาษาอังกฤษสำหรับสายวิศวกรรมซอฟต์แวร์และคลาวด์",
+      url: options.url || defaultUrl
+    };
+
+    if (window.soundFx) window.soundFx.playClick();
+
+    // 1. Try Mobile Web Share API (Native OS sheet on iOS Safari / Android Chrome)
+    if (typeof navigator !== "undefined" && navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        if (window.soundFx) window.soundFx.playSuccess();
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") {
+          return; // User cancelled share sheet
+        }
+        console.warn("navigator.share failed, fallback to clipboard", err);
+      }
+    }
+
+    // 2. Fallback: Copy full URL to clipboard
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareData.url);
+      } else {
+        const tempInput = document.createElement("input");
+        tempInput.value = shareData.url;
+        tempInput.style.position = "fixed";
+        tempInput.style.opacity = "0";
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+      }
+      if (window.soundFx) window.soundFx.playSuccess();
+      this.showToast("📋 คัดลอกลิงก์เรียบร้อยแล้ว! สามารถนำไปส่งต่อได้ทันที", "success");
+    } catch (clipErr) {
+      console.error("Clipboard copy failed", clipErr);
+      this.showToast("ไม่สามารถคัดลอกลิงก์อัตโนมัติได้ กรุณาคัดลอกจากแถบ URL ด้านบน", "error");
     }
   }
 
@@ -223,9 +416,18 @@ class EngMasteryApp {
     }
   }
 
-  navigateTo(viewName, params = {}) {
-    window.soundFx.playClick();
+  navigateTo(viewName, params = {}, updateHash = true) {
+    if (window.soundFx) window.soundFx.playClick();
     this.currentView = viewName;
+
+    // Update URL hash if requested (and sync flag prevents loop)
+    if (updateHash && typeof window !== "undefined") {
+      const targetHash = this.buildHash(viewName, params);
+      if (window.location.hash !== targetHash) {
+        this._isSyncingHash = true;
+        window.location.hash = targetHash;
+      }
+    }
 
     // Close mobile drawer if open
     const mobileDrawer = document.getElementById("mobile-drawer");
@@ -262,6 +464,9 @@ class EngMasteryApp {
       } else if (!params.levelId) {
         this.lessonsHubTrack = null;
       }
+      if (params.tab && this.activeLevelId) {
+        this.activeTabByLevel[this.activeLevelId] = params.tab;
+      }
     }
     if (viewName === "reading-lab") {
       this.activeReadingArticleId = params.articleId !== undefined ? params.articleId : null;
@@ -278,13 +483,30 @@ class EngMasteryApp {
     if (viewName === "sentence-builder") {
       this.activeSentenceTopicId = params.topicId !== undefined ? params.topicId : null;
     }
+    if (viewName === "speaking-lab") {
+      if (params.tab) {
+        this.speakingLabTab = params.tab;
+        if (window.standupLab) {
+          window.standupLab.currentTab = params.tab;
+        }
+      }
+    }
+    if (viewName === "vocabulary") {
+      if (params.mode === "srs") {
+        this.vocabMode = "srs";
+        this.srsCardIndex = 0;
+        this.srsIsFlipped = false;
+      }
+    }
 
     // Stop active audio if switching away or to another article
     this.stopReadingTts();
     this.stopNewsTts();
 
     this.renderView(viewName);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
+      window.scrollTo({ top: 0, behavior: updateHash ? "smooth" : "auto" });
+    }
   }
 
   renderView(viewName) {
@@ -2365,6 +2587,11 @@ class EngMasteryApp {
             <span>กลับสู่ Lessons Hub (ห้องเรียน)</span>
           </button>
           <div class="flex items-center gap-2">
+            <button onclick="window.app.shareCurrentPage({ title: '${course.levelTitle.replace(/'/g, "\\'")}', text: '${course.levelSub ? course.levelSub.replace(/'/g, "\\'") : ''}' })"
+              class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์คอร์สระดับนี้">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>แชร์</span>
+            </button>
             ${prevCourse ? `
               <button onclick="window.app.navigateTo('level-detail', { levelId: '${prevCourse.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ระดับก่อนหน้า: ${prevCourse.levelTitle}">
@@ -2484,6 +2711,13 @@ class EngMasteryApp {
   switchLevelTab(levelId, tabName) {
     window.soundFx.playClick();
     this.activeTabByLevel[levelId] = tabName;
+    if (typeof window !== "undefined" && window.location) {
+      const targetHash = `#/levels/${encodeURIComponent(levelId)}?tab=${encodeURIComponent(tabName)}`;
+      if (window.location.hash !== targetHash) {
+        this._isSyncingHash = true;
+        window.location.hash = targetHash;
+      }
+    }
     const container = document.getElementById("main-content-view");
     if (container && this.currentView === "level-detail") {
       this.renderLevelDetailView(container, levelId);
@@ -5819,6 +6053,11 @@ class EngMasteryApp {
           </button>
           
           <div class="flex items-center gap-2">
+            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+              class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>แชร์</span>
+            </button>
             ${prevArt ? `
               <button onclick="window.app.navigateTo('reading-lab', { articleId: '${prevArt.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="เรื่องก่อนหน้า: ${prevArt.title}">
@@ -6705,6 +6944,11 @@ class EngMasteryApp {
           </button>
           
           <div class="flex items-center gap-2">
+            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+              class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>แชร์</span>
+            </button>
             ${prevArt ? `
               <button onclick="window.app.navigateTo('news', { articleId: '${prevArt.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ข่าวก่อนหน้า">
@@ -7820,6 +8064,11 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมบทความ</span>
           </button>
           <div class="flex items-center gap-2">
+            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+              class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>แชร์</span>
+            </button>
             ${prevArt ? `
               <button onclick="window.app.navigateTo('articles', { articleId: '${prevArt.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="บทความก่อนหน้า: ${prevArt.title}">
@@ -8353,6 +8602,11 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมห้องติวเข้ม (Masterclass Hub)</span>
           </button>
           <div class="flex items-center gap-2">
+            <button onclick="window.app.shareCurrentPage({ title: '${topic.title.replace(/'/g, "\\'")}', text: '${(topic.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+              class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์คลาสนี้">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>แชร์</span>
+            </button>
             ${prevMc ? `
               <button onclick="window.app.navigateTo('masterclass', { masterclassId: '${prevMc.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="ตอนก่อนหน้า: ${prevMc.title}">
