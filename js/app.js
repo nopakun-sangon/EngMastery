@@ -7324,12 +7324,19 @@ class EngMasteryApp {
   getReadingList() {
     const base = window.readingData || [];
     const stories = window.shortStoriesData || [];
+    const zeroDowntime = window.zeroDowntimeData || [];
     const idSet = new Set(base.map(a => a.id));
     const merged = [...base];
     for (const s of stories) {
       if (!idSet.has(s.id)) {
         merged.push(s);
         idSet.add(s.id);
+      }
+    }
+    for (const z of zeroDowntime) {
+      if (!idSet.has(z.id)) {
+        merged.push(z);
+        idSet.add(z.id);
       }
     }
     return merged;
@@ -7578,10 +7585,12 @@ class EngMasteryApp {
 
     // 1. Filter by collection
     let list = readingList;
-    if (collectionFilter === "100-short-stories") {
+    if (collectionFilter === "zero-downtime") {
+      list = list.filter(a => a.collection === "zero-downtime");
+    } else if (collectionFilter === "100-short-stories") {
       list = list.filter(a => a.collection === "100-short-stories");
     } else if (collectionFilter === "tech-cefr") {
-      list = list.filter(a => a.collection !== "100-short-stories");
+      list = list.filter(a => a.collection !== "100-short-stories" && a.collection !== "zero-downtime");
     }
 
     // 2. Filter by level
@@ -7603,7 +7612,8 @@ class EngMasteryApp {
     // Counts for UI badges
     const totalAll = readingList.length;
     const storiesCount = readingList.filter(a => a.collection === "100-short-stories").length;
-    const techCount = readingList.filter(a => a.collection !== "100-short-stories").length;
+    const zeroDowntimeCount = readingList.filter(a => a.collection === "zero-downtime").length;
+    const techCount = readingList.filter(a => a.collection !== "100-short-stories" && a.collection !== "zero-downtime").length;
     const completedCount = Object.values(this.readingQuizSubmitted).filter(r => r && r.passed).length;
     const totalXPFromReading = Object.values(this.readingQuizSubmitted).reduce((sum, r) => sum + (r.passed ? r.xpEarned || 0 : 0), 0);
 
@@ -7630,7 +7640,7 @@ class EngMasteryApp {
                 ห้องฝึกการอ่าน (Reading Lab)
               </h1>
               <p class="mt-2 text-emerald-100 text-xs sm:text-sm leading-relaxed">
-                ฝึกอ่านเรื่องสั้นภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! ครอบคลุมทั้งชุด <strong>100 English Short Stories</strong> สอดแทรกคำศัพท์ใช้งานจริง และบทความ CEFR A1–C2 พร้อมระบบเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซสะสม XP
+                ฝึกอ่านเรื่องสั้นภาษาอังกฤษจุใจกว่า ${totalAll} เรื่อง! ครอบคลุมทั้งซีรีส์ <strong>Zero Downtime</strong>, นิทาน <strong>100 English Short Stories</strong> และบทความ CEFR A1–C2 พร้อมระบบเสียงอ่าน Audio TTS, สลับดูคำแปล และควิซสะสม XP
               </p>
             </div>
 
@@ -7664,6 +7674,14 @@ class EngMasteryApp {
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }">
               🌟 ทั้งหมด (${totalAll})
+            </button>
+            <button onclick="window.app.setReadingCollection('zero-downtime')"
+              class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+                collectionFilter === 'zero-downtime'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }">
+              🚀 Zero Downtime (${zeroDowntimeCount})
             </button>
             <button onclick="window.app.setReadingCollection('100-short-stories')"
               class="px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
@@ -7726,6 +7744,29 @@ class EngMasteryApp {
           <span>พบ <strong>${list.length}</strong> เรื่อง ${list.length > 0 ? `(${startIndex + 1} - ${Math.min(startIndex + itemsPerPage, list.length)} จากทั้งหมด ${list.length})` : ''}</span>
           ${totalPages > 1 ? `<span>หน้า ${currentPage} / ${totalPages}</span>` : ''}
         </div>
+
+        ${collectionFilter === 'zero-downtime' ? `
+          <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white rounded-3xl p-6 sm:p-8 border border-indigo-500/30 shadow-xl space-y-4">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-inner">
+                🚀
+              </div>
+              <div class="space-y-2 text-center md:text-left flex-1">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-400/30">
+                  <span>📖 ซีรีส์นิยายสายเทค 7 ตอนจบ</span>
+                  <span>•</span>
+                  <span>CEFR B1 Accessible English</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-black text-white">
+                  Zero Downtime: คุณพ่อวัย 30 กับภารกิจกู้ชีพ (การงาน)
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                  ติดตามเส้นทางของ ‘อาร์เทอร์’ อดีตโปรแกรมเมอร์ยุคเก่าที่ต้องก้าวเข้าสู่แผนก DevOps ของบริษัทข้ามชาติ เผชิญหน้ากับความกลัวภาษาอังกฤษ สำเนียงออสซี่ และเทคโนโลยีคลาวด์ระดับโลก เพื่ออนาคตของครอบครัวและลูกชายวัย 6 ขวบ
+                </p>
+              </div>
+            </div>
+          </div>
+        ` : ''}
 
         <!-- Articles Grid -->
         ${list.length === 0 ? `
@@ -7860,9 +7901,11 @@ class EngMasteryApp {
 
   renderReadingArticleDetail(container, article) {
     const articles = this.getReadingList();
-    const artIndex = articles.findIndex(a => a.id === article.id);
-    const prevArt = artIndex > 0 ? articles[artIndex - 1] : null;
-    const nextArt = artIndex < articles.length - 1 ? articles[artIndex + 1] : null;
+    const isZeroDowntime = article.collection === "zero-downtime";
+    const navArticles = isZeroDowntime ? articles.filter(a => a.collection === "zero-downtime") : articles;
+    const artIndex = navArticles.findIndex(a => a.id === article.id);
+    const prevArt = artIndex > 0 ? navArticles[artIndex - 1] : null;
+    const nextArt = artIndex < navArticles.length - 1 ? navArticles[artIndex + 1] : null;
 
     const quizRecord = this.readingQuizSubmitted[article.id];
     const isPassed = quizRecord && quizRecord.passed;
@@ -7898,13 +7941,13 @@ class EngMasteryApp {
               <button onclick="window.app.navigateTo('reading-lab', { articleId: '${prevArt.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="เรื่องก่อนหน้า: ${prevArt.title}">
                 <span>←</span>
-                <span class="hidden sm:inline">ก่อนหน้า</span>
+                <span class="hidden sm:inline">${isZeroDowntime ? 'ตอนก่อนหน้า' : 'ก่อนหน้า'}</span>
               </button>
             ` : ''}
             ${nextArt ? `
               <button onclick="window.app.navigateTo('reading-lab', { articleId: '${nextArt.id}' })"
                 class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all flex items-center gap-1" title="เรื่องถัดไป: ${nextArt.title}">
-                <span class="hidden sm:inline">ถัดไป</span>
+                <span class="hidden sm:inline">${isZeroDowntime ? 'ตอนถัดไป' : 'ถัดไป'}</span>
                 <span>→</span>
               </button>
             ` : ''}
@@ -7927,6 +7970,31 @@ class EngMasteryApp {
             `}
           </div>
         </div>
+
+        ${isZeroDowntime ? `
+          <!-- Zero Downtime Chapter Navigation Bar -->
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-md">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🚀</span>
+              <div>
+                <div class="font-bold text-indigo-300 text-sm">ซีรีส์นิยาย Zero Downtime: ตอนที่ ${article.chapterNumber || 1} จาก 7</div>
+                <div class="text-[11px] text-slate-400">คุณพ่อวัย 30 กับภารกิจกู้ชีพ (การงาน) • Graded Workplace Reader</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto pb-1 sm:pb-0">
+              ${[1, 2, 3, 4, 5, 6, 7].map(chNum => `
+                <button onclick="window.app.navigateTo('reading-lab', { articleId: 'zd-ch-0${chNum}' })"
+                  class="w-7 h-7 rounded-xl font-bold text-xs flex items-center justify-center transition-all ${
+                    (article.chapterNumber || 1) === chNum
+                      ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-400 scale-105'
+                      : 'bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white'
+                  }" title="บทที่ ${chNum}">
+                  ${chNum}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
 
         <!-- Article Title & Meta -->
         <div class="space-y-2">
