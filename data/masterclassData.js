@@ -1082,6 +1082,15 @@ const masterclassData = [
     },
     {
       "id": "mc-wh3-q5",
+      "question": "ต้องการถาม Senior Developer อย่างสุภาพในที่ประชุมว่าใครรับผิดชอบงานนี้: \"Would you mind telling me who _____ in charge of the database migration?\"",
+      "options": [
+        "is",
+        "does",
+        "did",
+        "has"
+      ],
+      "answer": 0,
+      "explanation": "ถูกต้อง! โครงสร้าง 'who is in charge of...' หมายถึง 'ใครเป็นผู้รับผิดชอบ...' ในรูป Indirect Question ใช้รูปประโยคบอกเล่าตามปกติ"
     }
   ]
 },

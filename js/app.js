@@ -212,16 +212,16 @@ class EngMasteryApp {
     const initialHash = window.location.hash;
     if (initialHash && initialHash.length > 1 && initialHash !== "#/" && initialHash !== "#") {
       const route = this.parseHash(initialHash);
-      this.navigateTo(route.viewName, route.params, false);
+      this.navigateTo(route.viewName, route.params, false, false);
     } else {
-      this.navigateTo("dashboard", {}, true);
+      this.navigateTo("dashboard", {}, true, false);
     }
   }
 
   handleHashChange() {
     if (typeof window === "undefined") return;
     const route = this.parseHash(window.location.hash);
-    this.navigateTo(route.viewName, route.params, false);
+    this.navigateTo(route.viewName, route.params, false, false);
   }
 
   buildHash(viewName, params = {}) {
@@ -378,6 +378,59 @@ class EngMasteryApp {
     }
   }
 
+  shareReadingArticle(articleId) {
+    const articles = this.getReadingList ? this.getReadingList() : [];
+    const article = articles.find(a => a.id === articleId);
+    if (article) {
+      this.shareCurrentPage({
+        title: article.title,
+        text: (article.summary || article.title || "").slice(0, 120)
+      });
+    } else {
+      this.shareCurrentPage();
+    }
+  }
+
+  shareArticle(articleId) {
+    const article = (window.articlesData || []).find(a => a.id === articleId) ||
+                    (window.verbsArticlesData || []).find(a => a.id === articleId) ||
+                    (window.dailyNewsData || []).find(a => a.id === articleId);
+    if (article) {
+      this.shareCurrentPage({
+        title: article.title,
+        text: (article.summary || article.title || "").slice(0, 120)
+      });
+    } else {
+      this.shareCurrentPage();
+    }
+  }
+
+  shareMasterclass(topicId) {
+    const mcs = window.masterclassData || [];
+    const mc = mcs.find(m => m.id === topicId);
+    if (mc) {
+      this.shareCurrentPage({
+        title: mc.title,
+        text: (mc.summary || mc.title || "").slice(0, 120)
+      });
+    } else {
+      this.shareCurrentPage();
+    }
+  }
+
+  shareCourse(courseId) {
+    const courses = window.coursesData || window.courseData || [];
+    const course = courses.find(c => c.id === courseId);
+    if (course) {
+      this.shareCurrentPage({
+        title: course.levelTitle,
+        text: (course.levelSub || course.levelTitle || "").slice(0, 120)
+      });
+    } else {
+      this.shareCurrentPage();
+    }
+  }
+
   // --- Dark / Light Theme Toggle ---
   initTheme() {
     const saved = localStorage.getItem("engmastery_theme") || "dark";
@@ -443,8 +496,8 @@ class EngMasteryApp {
     }
   }
 
-  navigateTo(viewName, params = {}, updateHash = true) {
-    if (window.soundFx) window.soundFx.playClick();
+  navigateTo(viewName, params = {}, updateHash = true, playSound = false) {
+    if (playSound && window.soundFx) window.soundFx.playClick();
     this.currentView = viewName;
 
     // Update URL hash if requested (and sync flag prevents loop)
@@ -3368,7 +3421,7 @@ class EngMasteryApp {
             <span>กลับสู่ Lessons Hub (ห้องเรียน)</span>
           </button>
           <div class="flex items-center gap-2">
-            <button onclick="window.app.shareCurrentPage({ title: '${course.levelTitle.replace(/'/g, "\\'")}', text: '${course.levelSub ? course.levelSub.replace(/'/g, "\\'") : ''}' })"
+            <button onclick="window.app.shareCourse('${course.id}')"
               class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์คอร์สระดับนี้">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               <span>แชร์</span>
@@ -7932,7 +7985,7 @@ class EngMasteryApp {
           </button>
           
           <div class="flex items-center gap-2">
-            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+            <button onclick="window.app.shareReadingArticle('${article.id}')"
               class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               <span>แชร์</span>
@@ -8865,7 +8918,7 @@ class EngMasteryApp {
           </button>
           
           <div class="flex items-center gap-2">
-            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+            <button onclick="window.app.shareReadingArticle('${article.id}')"
               class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               <span>แชร์</span>
@@ -10568,7 +10621,7 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมบทความ</span>
           </button>
           <div class="flex items-center gap-2">
-            <button onclick="window.app.shareCurrentPage({ title: '${article.title.replace(/'/g, "\\'")}', text: '${(article.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+            <button onclick="window.app.shareReadingArticle('${article.id}')"
               class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์บทความนี้">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               <span>แชร์</span>
@@ -11115,7 +11168,7 @@ class EngMasteryApp {
             <span>กลับสู่หน้ารวมห้องติวเข้ม (Masterclass Hub)</span>
           </button>
           <div class="flex items-center gap-2">
-            <button onclick="window.app.shareCurrentPage({ title: '${topic.title.replace(/'/g, "\\'")}', text: '${(topic.summary || '').slice(0, 100).replace(/'/g, "\\'")}' })"
+            <button onclick="window.app.shareMasterclass('${topic.id}')"
               class="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs" title="แชร์คลาสนี้">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               <span>แชร์</span>
@@ -11989,7 +12042,7 @@ class EngMasteryApp {
   }
 
   renderMasterclassQuiz(topic, answers, quizResult) {
-    const questions = topic.quizQuestions || topic.quiz || [];
+    const questions = (topic.quizQuestions || topic.quiz || []).filter(q => q && q.question && (Array.isArray(q.options) || Array.isArray(q.choices)));
     const passThreshold = Math.max(1, Math.ceil(questions.length * 0.8));
 
     return `
@@ -12033,7 +12086,7 @@ class EngMasteryApp {
                 </div>
 
                 <div class="space-y-2 pt-1">
-                  ${q.options.map((opt, optIdx) => {
+                  ${(q.options || q.choices || []).map((opt, optIdx) => {
                     const isSelected = selectedOpt === optIdx;
                     let btnClasses = "w-full text-left p-3 rounded-2xl text-xs font-medium transition-all flex items-center justify-between ";
 

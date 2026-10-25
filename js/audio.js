@@ -7,7 +7,27 @@ class SoundEffects {
   constructor() {
     this.ctx = null;
     this.enabled = true;
+    this.userInteracted = false;
     this.loadSetting();
+    this.setupGestureUnlock();
+  }
+
+  setupGestureUnlock() {
+    if (typeof window === "undefined") return;
+    const unlock = () => {
+      this.userInteracted = true;
+      if (!this.ctx) {
+        this.initContext();
+      } else if (this.ctx.state === "suspended") {
+        this.ctx.resume().catch(() => {});
+      }
+      window.removeEventListener("click", unlock);
+      window.removeEventListener("keydown", unlock);
+      window.removeEventListener("touchstart", unlock);
+    };
+    window.addEventListener("click", unlock, { once: true, passive: true });
+    window.addEventListener("keydown", unlock, { once: true, passive: true });
+    window.addEventListener("touchstart", unlock, { once: true, passive: true });
   }
 
   loadSetting() {
@@ -30,15 +50,15 @@ class SoundEffects {
         this.ctx = new AudioCtx();
       }
     }
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
+    if (this.ctx && this.ctx.state === "suspended" && this.userInteracted) {
+      this.ctx.resume().catch(() => {});
     }
   }
 
   playTone(freq, type, duration, startTime = 0, gainLevel = 0.15) {
     if (!this.enabled) return;
     this.initContext();
-    if (!this.ctx) return;
+    if (!this.ctx || this.ctx.state === "suspended") return;
 
     try {
       const osc = this.ctx.createOscillator();
