@@ -28,7 +28,7 @@ class EngMasteryApp {
     this.activeMasterclassId = null;
     this.vocabFilter = "all";
     this.vocabSearch = "";
-    this.vocabMode = "flashcard"; // 'flashcard' or 'browse'
+    this.vocabMode = "flashcard"; // 'flashcard', 'sentence-flashcard', 'browse', 'srs'
     this.browseVisibleCount = 24;
     this.currentFlashcardIndex = 0;
     this.isCardFlipped = false;
@@ -36,6 +36,21 @@ class EngMasteryApp {
     this.flashcardVoiceScore = null;
     this.flashcardIsListening = false;
     this.browseVocabScores = {};
+
+    // --- State for Sentence Flashcards (CEFR A1-C2 & Switchable Direction) ---
+    this.sentenceDirection = (typeof localStorage !== "undefined" ? localStorage.getItem("engmastery_sentence_direction") : null) || "en-th"; // 'en-th' or 'th-en'
+    this.sentenceLevelFilter = "all"; // 'all', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'
+    this.sentenceCategoryFilter = "all"; // 'all', 'workplace', 'tech', 'daily', 'idiom'
+    this.sentenceSearch = "";
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    try {
+      this.masteredSentenceIds = new Set(JSON.parse((typeof localStorage !== "undefined" ? localStorage.getItem("engmastery_mastered_sentences") : null) || "[]"));
+    } catch (e) {
+      this.masteredSentenceIds = new Set();
+    }
 
     // --- State for Cheat Sheet Hub & Speaking Lab ---
     this.cheatSheetTab = "tenses";
@@ -5396,11 +5411,17 @@ class EngMasteryApp {
   // VIEW: VOCABULARY & RANDOM MODE (FLASHCARDS & BROWSER)
   // =========================================================================
   renderVocabularyView(container) {
+    const isSentenceMode = this.vocabMode === 'sentence-flashcard';
     const vocabs = window.vocabData || [];
     const filtered = this.getFilteredVocabList(vocabs);
     const totalVocabs = vocabs.length;
     const learnedCount = [...this.reviewedVocabIds].filter(id => vocabs.some(v => v.id === id)).length;
     const progressPercent = totalVocabs > 0 ? Math.round((learnedCount / totalVocabs) * 100) : 0;
+
+    const allSentences = window.sentenceFlashcardsData || [];
+    const totalSentences = allSentences.length;
+    const masteredSentenceCount = [...(this.masteredSentenceIds || [])].filter(id => allSentences.some(s => s.id === id)).length;
+    const sentenceProgressPercent = totalSentences > 0 ? Math.round((masteredSentenceCount / totalSentences) * 100) : 0;
 
     container.innerHTML = `
       <div class="space-y-8 animate-fadeIn max-w-6xl mx-auto pb-14 w-full">
@@ -5408,25 +5429,36 @@ class EngMasteryApp {
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-2xl">🎲</span>
+              <span class="text-2xl">${isSentenceMode ? '💬' : '🎲'}</span>
               <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                คลังคำศัพท์ & โหมดสุ่มการ์ด
+                ${isSentenceMode ? 'แฟลชการ์ดประโยค (Sentence Flashcards)' : 'คลังคำศัพท์ & โหมดสุ่มการ์ด'}
               </h1>
             </div>
             <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              คำศัพท์ Oxford 3000™, ศัพท์เทคนิค DevOps & Cloud, และ Phrasal Verbs & Idioms พร้อมเสียงอ่าน TTS
+              ${isSentenceMode 
+                ? 'ฝึกจำ แปล และออกเสียง 530+ ประโยคจริง ครบทุกระดับ CEFR A1 - C2 พร้อมระบบสลับทิศทาง EN ➔ TH และ TH ➔ EN' 
+                : 'คำศัพท์ Oxford 3000™, ศัพท์เทคนิค DevOps & Cloud, และ Phrasal Verbs & Idioms พร้อมเสียงอ่าน TTS'}
             </p>
           </div>
           <div class="flex items-center gap-2">
             <!-- Mode Switcher -->
-            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold overflow-x-auto">
+            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold overflow-x-auto max-w-full">
+              <button onclick="window.app.setVocabMode('sentence-flashcard')"
+                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+                  this.vocabMode === 'sentence-flashcard'
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }">
+                <span>💬 Flashcard ประโยค</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[10px] font-black ${this.vocabMode === 'sentence-flashcard' ? 'bg-white text-purple-700' : 'bg-purple-500 text-white'}">530</span>
+              </button>
               <button onclick="window.app.setVocabMode('srs')"
-                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
                   this.vocabMode === 'srs'
                     ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }">
-                <span>🧠 ทบทวน SRS (SM-2)</span>
+                <span>🧠 ทบทวน SRS</span>
                 ${(() => {
                   if (!window.srsEngine) return '';
                   const s = window.srsEngine.getStatsSummary(vocabs);
@@ -5434,95 +5466,203 @@ class EngMasteryApp {
                 })()}
               </button>
               <button onclick="window.app.setVocabMode('flashcard')"
-                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
                   this.vocabMode === 'flashcard'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }">
-                <span>🎴 Flashcards</span>
+                <span>🎴 Flashcard ศัพท์</span>
               </button>
               <button onclick="window.app.setVocabMode('browse')"
-                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                class="px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
                   this.vocabMode === 'browse'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }">
-                <span>📋 รายการทั้งหมด</span>
+                <span>📋 รายการศัพท์</span>
               </button>
               <button onclick="window.app.openAddCustomVocabModal()"
-                class="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 font-bold text-xs border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs"
+                class="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-400 font-bold text-xs border border-indigo-200 dark:border-indigo-800 transition-all flex items-center gap-1.5 active:scale-95 shadow-xs shrink-0"
                 title="เพิ่มคำศัพท์ใหม่ลงในคลังส่วนตัว">
-                <span>➕ เพิ่มคำศัพท์</span>
+                <span>➕ เพิ่มศัพท์</span>
               </button>
             </div>
           </div>
         </div>
 
         <!-- Learning Progress Metric -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg">
-              ✨
-            </div>
-            <div>
-              <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">ความคืบหน้าการจดจำคำศัพท์</div>
-              <div class="text-sm font-bold text-slate-900 dark:text-white">
-                จำได้แล้ว <span id="vocab-learned-count" class="text-indigo-600 dark:text-indigo-400 font-black">${learnedCount}</span> / ${totalVocabs} คำ (${progressPercent}%)
+        ${isSentenceMode ? `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg">
+                💬
+              </div>
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">ความคืบหน้าการจดจำประโยค (CEFR A1-C2)</div>
+                <div class="text-sm font-bold text-slate-900 dark:text-white">
+                  จำได้แล้ว <span class="text-purple-600 dark:text-purple-400 font-black">${masteredSentenceCount}</span> / ${totalSentences} ประโยค (${sentenceProgressPercent}%)
+                </div>
               </div>
             </div>
+            <div class="w-full sm:w-48 bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-purple-500 to-pink-600 h-2.5 rounded-full transition-all duration-500" style="width: ${sentenceProgressPercent}%"></div>
+            </div>
           </div>
-          <div class="w-full sm:w-48 bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
-            <div id="vocab-progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+        ` : `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg">
+                ✨
+              </div>
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">ความคืบหน้าการจดจำคำศัพท์</div>
+                <div class="text-sm font-bold text-slate-900 dark:text-white">
+                  จำได้แล้ว <span id="vocab-learned-count" class="text-indigo-600 dark:text-indigo-400 font-black">${learnedCount}</span> / ${totalVocabs} คำ (${progressPercent}%)
+                </div>
+              </div>
+            </div>
+            <div class="w-full sm:w-48 bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="vocab-progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+            </div>
           </div>
-        </div>
+        `}
 
         <!-- Filters & Search Toolbar -->
-        <div class="space-y-3">
-          <!-- Search Input -->
-          <div class="relative">
-            <input type="text"
-              id="vocab-search-input"
-              placeholder="ค้นหาคำศัพท์ ความหมายภาษาไทย หรือตัวอย่างประโยค..."
-              value="${(this.vocabSearch || '').replace(/"/g, '&quot;')}"
-              oninput="window.app.searchVocab(this.value)"
-              class="w-full pl-10 pr-24 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
-            />
-            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <button id="vocab-clear-search-btn"
-              onclick="window.app.clearVocabSearch()"
-              class="absolute right-3 top-2.5 px-2 py-0.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg ${this.vocabSearch ? '' : 'hidden'}">✕ ล้างคำค้น</button>
-          </div>
-
-          <!-- Category Filter Pills -->
-          <div class="flex flex-wrap items-center gap-2">
-            ${(() => {
-              const savedCount = (window.storageManager.getSavedVocab() || []).length;
-              const customCount = (window.storageManager.getCustomVocabs ? window.storageManager.getCustomVocabs().length : 0);
-              const totalPersonal = Math.max(savedCount, customCount);
-              return [
-                { id: "all", label: "🌟 ทั้งหมด" },
-                { id: "saved", label: `⭐ คำศัพท์ของฉัน (${totalPersonal})` },
-                { id: "tech-devops", label: "💻 Tech & DevOps" },
-                { id: "workplace-business", label: "💼 Workplace" },
-                { id: "phrasal-idioms", label: "⚡ Phrasal Verbs" },
-                { id: "daily-oxford", label: "📚 Oxford 3000™" }
-              ];
-            })().map(cat => `
-              <button onclick="window.app.setVocabCategory('${cat.id}')"
-                class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  this.vocabFilter === cat.id
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+        ${isSentenceMode ? `
+          <div class="space-y-4">
+            <!-- Direction Switcher Pill -->
+            <div class="flex items-center justify-between gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-md mx-auto shadow-xs">
+              <button onclick="window.app.setSentenceDirection('en-th')"
+                class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  this.sentenceDirection === 'en-th'
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }">
-                ${cat.label}
+                <span>🇺🇸 EN ➔ 🇹🇭 TH</span>
+                <span class="text-[10px] opacity-80 hidden sm:inline">(ฝึกฟัง & แปล)</span>
               </button>
-            `).join("")}
-          </div>
-        </div>
+              <button onclick="window.app.setSentenceDirection('th-en')"
+                class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  this.sentenceDirection === 'th-en'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }">
+                <span>🇹🇭 TH ➔ 🇺🇸 EN</span>
+                <span class="text-[10px] opacity-80 hidden sm:inline">(ฝึกคิด & พูด)</span>
+              </button>
+            </div>
 
-        <!-- Content Area: Flashcard or Browse List -->
+            <!-- Search Input -->
+            <div class="relative">
+              <input type="text"
+                id="sentence-search-input"
+                placeholder="ค้นหาประโยคภาษาอังกฤษ คำแปลภาษาไทย หรือคำสำคัญในประโยค..."
+                value="${(this.sentenceSearch || '').replace(/"/g, '&quot;')}"
+                oninput="window.app.searchSentence(this.value)"
+                class="w-full pl-10 pr-24 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+              />
+              <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <button id="sentence-clear-search-btn"
+                onclick="window.app.clearSentenceSearch()"
+                class="absolute right-3 top-2.5 px-2 py-0.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg ${this.sentenceSearch ? '' : 'hidden'}">✕ ล้างคำค้น</button>
+            </div>
+
+            <!-- CEFR Level Filter Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-1.5">
+              ${[
+                { id: 'all', label: '🌟 ทุกระดับ (530)' },
+                { id: 'A1', label: '🟢 A1 Beginner (100)' },
+                { id: 'A2', label: '🔵 A2 Elementary (100)' },
+                { id: 'B1', label: '🔷 B1 Intermediate (100)' },
+                { id: 'B2', label: '🟣 B2 Upper-Int (100)' },
+                { id: 'C1', label: '🔶 C1 Advanced (80)' },
+                { id: 'C2', label: '🔴 C2 Proficient (50)' }
+              ].map(lvl => `
+                <button onclick="window.app.setSentenceLevelFilter('${lvl.id}')"
+                  class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    this.sentenceLevelFilter === lvl.id
+                      ? 'bg-purple-600 text-white shadow-sm'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+                  }">
+                  ${lvl.label}
+                </button>
+              `).join("")}
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-1.5">
+              ${[
+                { id: 'all', label: 'ทุกหมวดหมู่' },
+                { id: 'workplace', label: '💼 การทำงาน & ธุรกิจ' },
+                { id: 'tech', label: '💻 สายเทค & ไอที' },
+                { id: 'daily', label: '☕ ชีวิตประจำวัน' },
+                { id: 'idiom', label: '⚡ สำนวน & กริยาวลี' }
+              ].map(cat => `
+                <button onclick="window.app.setSentenceCategoryFilter('${cat.id}')"
+                  class="px-2.5 py-1 rounded-xl text-xs font-semibold transition-all ${
+                    this.sentenceCategoryFilter === cat.id
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+                  }">
+                  ${cat.label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        ` : `
+          <div class="space-y-3">
+            <!-- Search Input -->
+            <div class="relative">
+              <input type="text"
+                id="vocab-search-input"
+                placeholder="ค้นหาคำศัพท์ ความหมายภาษาไทย หรือตัวอย่างประโยค..."
+                value="${(this.vocabSearch || '').replace(/"/g, '&quot;')}"
+                oninput="window.app.searchVocab(this.value)"
+                class="w-full pl-10 pr-24 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+              />
+              <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <button id="vocab-clear-search-btn"
+                onclick="window.app.clearVocabSearch()"
+                class="absolute right-3 top-2.5 px-2 py-0.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg ${this.vocabSearch ? '' : 'hidden'}">✕ ล้างคำค้น</button>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="flex flex-wrap items-center gap-2">
+              ${(() => {
+                const savedCount = (window.storageManager.getSavedVocab() || []).length;
+                const customCount = (window.storageManager.getCustomVocabs ? window.storageManager.getCustomVocabs().length : 0);
+                const totalPersonal = Math.max(savedCount, customCount);
+                return [
+                  { id: "all", label: "🌟 ทั้งหมด" },
+                  { id: "saved", label: `⭐ คำศัพท์ของฉัน (${totalPersonal})` },
+                  { id: "tech-devops", label: "💻 Tech & DevOps" },
+                  { id: "workplace-business", label: "💼 Workplace" },
+                  { id: "phrasal-idioms", label: "⚡ Phrasal Verbs" },
+                  { id: "daily-oxford", label: "📚 Oxford 3000™" }
+                ];
+              })().map(cat => `
+                <button onclick="window.app.setVocabCategory('${cat.id}')"
+                  class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                    this.vocabFilter === cat.id
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+                  }">
+                  ${cat.label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `}
+
+        <!-- Content Area: Flashcard, Sentence Flashcard, SRS, or Browse List -->
         <div id="vocab-content-area">
-          ${this.vocabMode === 'flashcard' ? this.renderFlashcardMode(filtered) : this.renderBrowseVocabMode(filtered)}
+          ${this.vocabMode === 'flashcard' 
+            ? this.renderFlashcardMode(filtered) 
+            : this.vocabMode === 'sentence-flashcard'
+            ? this.renderSentenceFlashcardMode()
+            : this.vocabMode === 'srs'
+            ? this.renderSRSReviewMode(vocabs)
+            : this.renderBrowseVocabMode(filtered)}
         </div>
       </div>
     `;
@@ -6086,8 +6226,11 @@ class EngMasteryApp {
     window.soundFx.playClick();
     this.vocabMode = mode;
     this.isCardFlipped = false;
+    this.isSentenceCardFlipped = false;
     this.flashcardVoiceScore = null;
+    this.sentenceVoiceScore = null;
     this.flashcardIsListening = false;
+    this.sentenceIsListening = false;
     const container = document.getElementById("main-content-view");
     if (container && this.currentView === "vocabulary") {
       this.renderVocabularyView(container);
@@ -6103,6 +6246,8 @@ class EngMasteryApp {
       contentArea.innerHTML = this.renderSRSReviewMode(vocabs);
     } else if (this.vocabMode === 'flashcard') {
       contentArea.innerHTML = this.renderFlashcardMode(filtered);
+    } else if (this.vocabMode === 'sentence-flashcard') {
+      contentArea.innerHTML = this.renderSentenceFlashcardMode();
     } else {
       contentArea.innerHTML = this.renderBrowseVocabMode(filtered);
     }
@@ -6659,6 +6804,521 @@ class EngMasteryApp {
         }
       }
     });
+  }
+
+  // =========================================================================
+  // SENTENCE FLASHCARDS ENGINE (CEFR A1 - C2, REVERSIBLE EN <-> TH)
+  // =========================================================================
+  getFilteredSentenceList() {
+    const list = window.sentenceFlashcardsData || [];
+    const lvl = this.sentenceLevelFilter || "all";
+    const cat = this.sentenceCategoryFilter || "all";
+    const q = (this.sentenceSearch || "").trim().toLowerCase();
+
+    return list.filter(item => {
+      if (lvl !== "all" && item.level !== lvl) return false;
+      if (cat !== "all" && item.category !== cat) return false;
+      if (q) {
+        const enMatch = item.en && item.en.toLowerCase().includes(q);
+        const thMatch = item.th && item.th.toLowerCase().includes(q);
+        const patternMatch = item.pattern && item.pattern.toLowerCase().includes(q);
+        const vocabMatch = item.keyVocab && item.keyVocab.some(v => 
+          (v.word && v.word.toLowerCase().includes(q)) || 
+          (v.th && v.th.toLowerCase().includes(q))
+        );
+        if (!enMatch && !thMatch && !patternMatch && !vocabMatch) return false;
+      }
+      return true;
+    });
+  }
+
+  setSentenceDirection(dir) {
+    if (this.sentenceDirection === dir) return;
+    window.soundFx.playClick();
+    this.sentenceDirection = dir;
+    try {
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("engmastery_sentence_direction", this.sentenceDirection);
+      }
+    } catch (e) {}
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "vocabulary") {
+      this.renderVocabularyView(container);
+    } else {
+      this.renderVocabContentArea();
+    }
+  }
+
+  toggleSentenceDirection() {
+    const nextDir = this.sentenceDirection === "en-th" ? "th-en" : "en-th";
+    this.setSentenceDirection(nextDir);
+  }
+
+  setSentenceLevelFilter(lvl) {
+    window.soundFx.playClick();
+    this.sentenceLevelFilter = lvl;
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "vocabulary") {
+      this.renderVocabularyView(container);
+    } else {
+      this.renderVocabContentArea();
+    }
+  }
+
+  setSentenceCategoryFilter(cat) {
+    window.soundFx.playClick();
+    this.sentenceCategoryFilter = cat;
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "vocabulary") {
+      this.renderVocabularyView(container);
+    } else {
+      this.renderVocabContentArea();
+    }
+  }
+
+  searchSentence(q) {
+    this.sentenceSearch = q;
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    const clearBtn = document.getElementById("sentence-clear-search-btn");
+    if (clearBtn) {
+      if (q) clearBtn.classList.remove("hidden");
+      else clearBtn.classList.add("hidden");
+    }
+    this.renderVocabContentArea();
+  }
+
+  clearSentenceSearch() {
+    this.sentenceSearch = "";
+    const input = document.getElementById("sentence-search-input");
+    if (input) input.value = "";
+    const clearBtn = document.getElementById("sentence-clear-search-btn");
+    if (clearBtn) clearBtn.classList.add("hidden");
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    this.renderVocabContentArea();
+  }
+
+  resetSentenceFilters() {
+    window.soundFx.playClick();
+    this.sentenceLevelFilter = "all";
+    this.sentenceCategoryFilter = "all";
+    this.sentenceSearch = "";
+    this.currentSentenceIndex = 0;
+    this.isSentenceCardFlipped = false;
+    const container = document.getElementById("main-content-view");
+    if (container && this.currentView === "vocabulary") {
+      this.renderVocabularyView(container);
+    } else {
+      this.renderVocabContentArea();
+    }
+  }
+
+  toggleSentenceFlip() {
+    window.soundFx.playClick();
+    this.isSentenceCardFlipped = !this.isSentenceCardFlipped;
+    this.renderVocabContentArea();
+  }
+
+  nextSentence() {
+    const list = this.getFilteredSentenceList();
+    if (list.length === 0) return;
+    window.soundFx.playClick();
+    if (this.currentSentenceIndex < list.length - 1) {
+      this.currentSentenceIndex++;
+    } else {
+      this.currentSentenceIndex = 0;
+    }
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    this.renderVocabContentArea();
+  }
+
+  prevSentence() {
+    const list = this.getFilteredSentenceList();
+    if (list.length === 0) return;
+    window.soundFx.playClick();
+    if (this.currentSentenceIndex > 0) {
+      this.currentSentenceIndex--;
+    } else {
+      this.currentSentenceIndex = list.length - 1;
+    }
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    this.renderVocabContentArea();
+  }
+
+  randomSentence() {
+    const list = this.getFilteredSentenceList();
+    if (list.length <= 1) return;
+    window.soundFx.playClick();
+    let nextIdx;
+    do {
+      nextIdx = Math.floor(Math.random() * list.length);
+    } while (nextIdx === this.currentSentenceIndex);
+    this.currentSentenceIndex = nextIdx;
+    this.isSentenceCardFlipped = false;
+    this.sentenceVoiceScore = null;
+    this.sentenceIsListening = false;
+    this.renderVocabContentArea();
+  }
+
+  toggleMasterSentence(sentenceId) {
+    if (!this.masteredSentenceIds) this.masteredSentenceIds = new Set();
+    const isMastered = this.masteredSentenceIds.has(sentenceId);
+    if (isMastered) {
+      this.masteredSentenceIds.delete(sentenceId);
+      window.soundFx.playClick();
+      this.showToast("ยกเลิกการบันทึกประโยคนี้แล้ว", "info");
+    } else {
+      this.masteredSentenceIds.add(sentenceId);
+      window.soundFx.playVictory();
+      window.storageManager.addXP(10);
+      window.storageManager.recordQuestProgress("speakSentences", 1);
+      this.renderHeaderStats();
+      this.showToast("✨ เก่งมาก! จำประโยคนี้ได้แล้ว (+10 XP)", "success");
+    }
+    try {
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("engmastery_mastered_sentences", JSON.stringify([...this.masteredSentenceIds]));
+      }
+    } catch (e) {}
+    this.renderVocabContentArea();
+  }
+
+  startSentenceSpeaking(targetSentence) {
+    if (!window.speechEngine) return;
+    if (!window.speechEngine.hasRecognition) {
+      this.showToast("เบราว์เซอร์ของคุณยังไม่รองรับระบบตรวจจับเสียงพูด (แนะนำให้ใช้ Google Chrome หรือ Microsoft Edge)", "error");
+      return;
+    }
+
+    this.sentenceIsListening = true;
+    this.renderVocabContentArea();
+
+    window.speechEngine.listenAndScore(targetSentence, {
+      onStart: () => {
+        window.soundFx.playClick();
+      },
+      onResult: (res) => {
+        this.sentenceIsListening = false;
+        const feedback = this.getVoiceScoreFeedback(res.score);
+        this.sentenceVoiceScore = {
+          score: res.score,
+          spokenText: res.spokenText,
+          feedback: feedback,
+          passed: feedback.passed
+        };
+
+        if (feedback.passed) {
+          window.soundFx.playCorrect();
+          window.storageManager.addXP(15);
+          window.storageManager.recordSpeakingDrill();
+          window.storageManager.recordQuestProgress("speakSentences", 1);
+          this.renderHeaderStats();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%) รับ +15 XP!`, "success");
+        } else {
+          window.soundFx.playIncorrect();
+          this.showToast(`${feedback.emoji} ${feedback.label} (ความเหมือน ${res.score}%) ลองซ้อมพูดใหม่อีกครั้งครับ`, "info");
+        }
+
+        this.renderVocabContentArea();
+      },
+      onError: (err) => {
+        this.sentenceIsListening = false;
+        this.renderVocabContentArea();
+        this.showToast(err.message || "เกิดข้อผิดพลาดในการฟังเสียง", "error");
+      },
+      onEnd: () => {
+        if (this.sentenceIsListening) {
+          this.sentenceIsListening = false;
+          this.renderVocabContentArea();
+        }
+      }
+    });
+  }
+
+  renderSentenceFlashcardMode() {
+    const sentences = this.getFilteredSentenceList();
+    if (sentences.length === 0) {
+      return `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center space-y-4 max-w-lg mx-auto">
+          <div class="text-4xl">🔍</div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">ไม่พบประโยคตามเงื่อนไขที่เลือก</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">ลองเลือกระดับ CEFR อื่น หรือล้างคำค้นหาดูใหม่อีกครั้ง</p>
+          <button onclick="window.app.resetSentenceFilters()" class="px-4 py-2 bg-purple-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-purple-700 transition-all">
+            แสดงประโยคทั้งหมด
+          </button>
+        </div>
+      `;
+    }
+
+    if (this.currentSentenceIndex >= sentences.length) {
+      this.currentSentenceIndex = 0;
+    }
+
+    const currentCard = sentences[this.currentSentenceIndex];
+    if (!currentCard) return '';
+
+    const isMastered = this.masteredSentenceIds && this.masteredSentenceIds.has(currentCard.id);
+    const voiceScore = this.sentenceVoiceScore;
+    const feedback = voiceScore ? this.getVoiceScoreFeedback(voiceScore.score) : null;
+    const isEnTh = (this.sentenceDirection !== 'th-en');
+
+    // CEFR badge styling
+    const badgeColors = {
+      'A1': 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+      'A2': 'bg-teal-500/20 text-teal-300 border-teal-400/30',
+      'B1': 'bg-sky-500/20 text-sky-300 border-sky-400/30',
+      'B2': 'bg-indigo-500/20 text-indigo-300 border-indigo-400/30',
+      'C1': 'bg-purple-500/20 text-purple-300 border-purple-400/30',
+      'C2': 'bg-rose-500/20 text-rose-300 border-rose-400/30'
+    };
+    const badgeCls = badgeColors[currentCard.level] || 'bg-indigo-500/20 text-indigo-200 border-indigo-400/30';
+
+    return `
+      <div class="space-y-4 max-w-xl mx-auto">
+        <!-- Progress Counter & Info -->
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+          <span>ประโยคที่ <strong class="text-slate-900 dark:text-white font-bold">${this.currentSentenceIndex + 1}</strong> จาก ${sentences.length} ประโยค</span>
+          <div class="flex items-center gap-1.5">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${badgeCls}">
+              CEFR ${currentCard.level} (${currentCard.levelName})
+            </span>
+            <span class="text-purple-600 dark:text-purple-400 font-semibold text-[11px]">${currentCard.categoryLabel}</span>
+          </div>
+        </div>
+
+        <!-- 3D Flashcard Container -->
+        <div class="perspective-1000 w-full min-h-[440px] sm:min-h-[460px] h-[450px] sm:h-[480px] cursor-pointer select-none no-instant-vocab" onclick="window.app.toggleSentenceFlip()">
+          <div class="card-inner w-full h-full relative rounded-3xl transition-transform duration-500 transform-style-3d no-instant-vocab ${this.isSentenceCardFlipped ? 'is-flipped' : ''}">
+            
+            <!-- FRONT FACE -->
+            <div class="card-front absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-700/40 shadow-2xl backface-hidden">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase ${badgeCls}">
+                    CEFR ${currentCard.level}
+                  </span>
+                  <span class="text-xs text-indigo-300 font-medium">
+                    ${isEnTh ? '🇺🇸 ฝั่งภาษาอังกฤษ' : '🇹🇭 ฝั่งภาษาไทย'}
+                  </span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.en.replace(/'/g, "\\'")}')"
+                    class="p-2 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all shadow-md"
+                    title="ฟังเสียงอ่านภาษาอังกฤษ">
+                    <svg class="w-5 h-5 text-indigo-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Sentence Area -->
+              <div class="text-center my-auto space-y-3 py-2">
+                ${isEnTh ? `
+                  <!-- EN -> TH FRONT: English Big Sentence -->
+                  <div class="space-y-2">
+                    <h2 class="${currentCard.en.length > 80 ? 'text-xl sm:text-2xl' : currentCard.en.length > 45 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-black text-white drop-shadow-sm leading-relaxed tracking-tight px-2">
+                      "${currentCard.en}"
+                    </h2>
+                  </div>
+                ` : `
+                  <!-- TH -> EN FRONT: Thai Sentence + Hint -->
+                  <div class="space-y-3">
+                    <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-500/30">
+                      🎯 โจทย์: แปลหรือพูดเป็นประโยคภาษาอังกฤษ
+                    </div>
+                    <h2 class="${currentCard.th.length > 70 ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl'} font-black text-white drop-shadow-sm leading-relaxed px-2">
+                      "${currentCard.th}"
+                    </h2>
+                    ${currentCard.pattern ? `
+                      <div class="inline-block px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-indigo-200">
+                        💡 โครงสร้างใบ้: <span class="font-mono text-amber-300">${currentCard.pattern}</span>
+                      </div>
+                    ` : ''}
+                  </div>
+                `}
+
+                <!-- Voice Scoring / Recording Status Block -->
+                <div class="pt-2 w-full max-w-md mx-auto">
+                  ${this.sentenceIsListening ? `
+                    <div class="p-3 rounded-2xl bg-red-950/80 border border-red-500/60 shadow-lg text-center space-y-1 animate-pulse backdrop-blur-sm">
+                      <div class="flex items-center justify-center gap-2 text-red-200 font-bold text-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                        <span>กำลังฟังเสียง... พูดประโยคเข้าไมค์ได้เลยครับ</span>
+                      </div>
+                      <p class="text-[10px] text-red-300/80">ระบบกำลังประเมินความชัดเจนของประโยค</p>
+                    </div>
+                  ` : voiceScore && feedback ? `
+                    <div class="p-3 rounded-2xl bg-slate-900/95 border ${feedback.passed ? 'border-emerald-500/60 shadow-emerald-500/20' : 'border-amber-500/60 shadow-amber-500/20'} shadow-xl space-y-1.5 backdrop-blur-md text-left">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 font-black text-xs ${feedback.textColor}">
+                          <span class="text-sm">${feedback.emoji}</span>
+                          <span>${feedback.label}</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-black shadow-sm ${feedback.badgeClass}">
+                          ความเหมือน ${voiceScore.score}%
+                        </span>
+                      </div>
+                      <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden border border-white/10">
+                        <div class="h-full rounded-full transition-all duration-700 ease-out ${feedback.barColor}" style="width: ${voiceScore.score}%"></div>
+                      </div>
+                      <div class="text-[10px] text-slate-300 font-mono truncate">
+                        ได้ยินว่า: <span class="text-white font-sans font-semibold">"${voiceScore.spokenText || '(ไม่ได้ยินคำ)'}"</span>
+                      </div>
+                      <div class="pt-1 border-t border-white/10 flex items-center justify-center gap-2">
+                        <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.en.replace(/'/g, "\\'")}')"
+                          class="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-indigo-200 text-[10px] font-bold flex items-center gap-1 transition-all">
+                          🔊 ฟังต้นฉบับ
+                        </button>
+                        <button onclick="event.stopPropagation(); window.app.startSentenceSpeaking('${currentCard.en.replace(/'/g, "\\'")}')"
+                          class="px-3 py-1 rounded-xl bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold flex items-center gap-1 shadow-md transition-all active:scale-95">
+                          <span>🎙️ ซ้อมพูดใหม่</span>
+                        </button>
+                      </div>
+                    </div>
+                  ` : `
+                    <button onclick="event.stopPropagation(); window.app.startSentenceSpeaking('${currentCard.en.replace(/'/g, "\\'")}')"
+                      class="px-4 py-2 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-red-900/40 flex items-center justify-center gap-2 transition-all mx-auto">
+                      <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                      <span>${isEnTh ? '🎙️ ซ้อมพูดออกเสียงประโยคนี้' : '🎙️ ลองพูดประโยคภาษาอังกฤษ'}</span>
+                    </button>
+                  `}
+                </div>
+              </div>
+
+              <!-- Bottom prompt -->
+              <div class="text-center pt-2.5 border-t border-white/10">
+                <span class="text-xs text-indigo-300/80 flex items-center justify-center gap-1.5 animate-pulse">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  <span>${isEnTh ? 'แตะที่การ์ดเพื่อพลิกดูคำแปลภาษาไทยและโครงสร้าง' : 'แตะที่การ์ดเพื่อดูเฉลยประโยคภาษาอังกฤษ'}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- BACK FACE -->
+            <div class="card-back absolute inset-0 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between border border-indigo-200 dark:border-indigo-900/60 shadow-2xl backface-hidden transform-rotate-y-180 overflow-y-auto">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${badgeCls}">
+                      CEFR ${currentCard.level}
+                    </span>
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">${currentCard.categoryLabel}</span>
+                  </div>
+                  <button onclick="event.stopPropagation(); window.speechEngine.speak('${currentCard.en.replace(/'/g, "\\'")}')"
+                    class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-colors shadow-xs"
+                    title="ฟังเสียงอ่านประโยค">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
+                  </button>
+                </div>
+
+                <!-- Thai Translation & English Original -->
+                <div class="space-y-1.5">
+                  <h3 class="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400 leading-snug">
+                    ${currentCard.th}
+                  </h3>
+                  <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+                    "${currentCard.en}"
+                  </div>
+                </div>
+
+                <!-- Grammar Pattern -->
+                ${currentCard.pattern ? `
+                  <div class="p-2.5 bg-indigo-50/70 dark:bg-indigo-950/40 rounded-xl border border-indigo-100 dark:border-indigo-900/40 text-xs space-y-0.5">
+                    <div class="text-[10px] font-bold text-indigo-500 uppercase">💡 โครงสร้างไวยากรณ์ (Grammar Blueprint)</div>
+                    <div class="font-mono text-slate-800 dark:text-indigo-200 font-semibold">${currentCard.pattern}</div>
+                  </div>
+                ` : ''}
+
+                <!-- Key Vocabulary Chips -->
+                ${currentCard.keyVocab && currentCard.keyVocab.length > 0 ? `
+                  <div class="space-y-1">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase">🔑 คำศัพท์สำคัญในประโยค</div>
+                    <div class="flex flex-wrap gap-1.5">
+                      ${currentCard.keyVocab.map(v => `
+                        <span class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700">
+                          <strong class="text-indigo-600 dark:text-indigo-400 font-bold">${v.word}</strong>: ${v.th}
+                        </span>
+                      `).join("")}
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- Usage Tip -->
+                ${currentCard.tips ? `
+                  <div class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 text-[11px] text-amber-800 dark:text-amber-300">
+                    <span class="font-bold mr-1">📌 ข้อสังเกต:</span>${currentCard.tips}
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
+                <span class="text-[11px] text-slate-400">แตะเพื่อพลิกกลับไปหน้าการ์ด</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation & Action Controls -->
+        <div class="grid grid-cols-4 gap-2 pt-2">
+          <button onclick="window.app.prevSentence()"
+            class="py-2.5 px-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95">
+            <span>◀ ก่อนหน้า</span>
+          </button>
+
+          <button onclick="window.app.toggleSentenceFlip()"
+            class="py-2.5 px-3 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/60 rounded-2xl text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95">
+            <span>🔄 พลิกการ์ด</span>
+          </button>
+
+          <button onclick="window.app.randomSentence()"
+            class="py-2.5 px-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95">
+            <span>🎲 สุ่มใหม่</span>
+          </button>
+
+          <button onclick="window.app.nextSentence()"
+            class="py-2.5 px-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95">
+            <span>ถัดไป ▶</span>
+          </button>
+        </div>
+
+        <!-- Mark as Mastered Button -->
+        <div class="pt-2">
+          ${isMastered ? `
+            <div class="w-full py-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center justify-between px-4">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                <span>คุณจำประโยคนี้ได้แล้ว ✨ (ได้รับ +10 XP แล้ว)</span>
+              </div>
+              <button onclick="window.app.toggleMasterSentence('${currentCard.id}')" class="text-[11px] underline opacity-75 hover:opacity-100">
+                ยกเลิก
+              </button>
+            </div>
+          ` : `
+            <button onclick="window.app.toggleMasterSentence('${currentCard.id}')"
+              class="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-[0.99]">
+              <span>✅ ฉันจำประโยคนี้ได้แล้ว (+10 XP)</span>
+            </button>
+          `}
+        </div>
+      </div>
+    `;
   }
 
   getReadingList() {
@@ -9399,7 +10059,7 @@ class EngMasteryApp {
     }
 
     // 2. Never trigger word lookup on Flashcards (card flips instead of double popups)
-    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "srs")) {
+    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "sentence-flashcard" || this.vocabMode === "srs")) {
       return;
     }
     if (e.target && e.target.closest && e.target.closest('.card-inner, .perspective-1000, .card-front, .card-back, .no-instant-vocab, .flashcard')) {
@@ -9435,7 +10095,7 @@ class EngMasteryApp {
     }
 
     // 2. Never show selection tooltip on Flashcards
-    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "srs")) {
+    if (this.currentView === "vocabulary" && (this.vocabMode === "flashcard" || this.vocabMode === "sentence-flashcard" || this.vocabMode === "srs")) {
       this.hideSelectionTranslateTooltip();
       return;
     }
