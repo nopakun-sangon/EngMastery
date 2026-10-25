@@ -7806,7 +7806,7 @@ class EngMasteryApp {
               </div>
               <div class="space-y-2 text-center md:text-left flex-1">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-400/30">
-                  <span>📖 ซีรีส์นิยายสายเทค 7 ตอนจบ</span>
+                  <span>📖 ซีรีส์นิยายสายเทค 20 ตอน (Season 1 จบบริบูรณ์)</span>
                   <span>•</span>
                   <span>CEFR B1 Accessible English</span>
                 </div>
@@ -7814,7 +7814,7 @@ class EngMasteryApp {
                   Zero Downtime: คุณพ่อวัย 30 กับภารกิจกู้ชีพ (การงาน)
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-                  ติดตามเส้นทางของ ‘อาร์เทอร์’ อดีตโปรแกรมเมอร์ยุคเก่าที่ต้องก้าวเข้าสู่แผนก DevOps ของบริษัทข้ามชาติ เผชิญหน้ากับความกลัวภาษาอังกฤษ สำเนียงออสซี่ และเทคโนโลยีคลาวด์ระดับโลก เพื่ออนาคตของครอบครัวและลูกชายวัย 6 ขวบ
+                  ติดตามเส้นทางของ ‘อาร์เทอร์’ อดีตโปรแกรมเมอร์ยุคเก่าที่ต้องก้าวเข้าสู่แผนก DevOps ของบริษัทข้ามชาติ เผชิญหน้ากับความกลัวภาษาอังกฤษ สำเนียงออสซี่ และเทคโนโลยีคลาวด์ระดับโลก เพื่ออนาคตของครอบครัวและลูกชายวัย 6 ขวบ (ครบ 4 องก์: ตั้งแต่ก้าวแรก สู่ AWS SAA, CKA และมหาศึก Black Friday)
                 </p>
               </div>
             </div>
@@ -8030,21 +8030,25 @@ class EngMasteryApp {
             <div class="flex items-center gap-3">
               <span class="text-3xl">🚀</span>
               <div>
-                <div class="font-bold text-indigo-300 text-sm">ซีรีส์นิยาย Zero Downtime: ตอนที่ ${article.chapterNumber || 1} จาก 7</div>
+                <div class="font-bold text-indigo-300 text-sm">ซีรีส์นิยาย Zero Downtime: ตอนที่ ${article.chapterNumber || 1} จาก ${navArticles.length} (Season 1)</div>
                 <div class="text-[11px] text-slate-400">คุณพ่อวัย 30 กับภารกิจกู้ชีพ (การงาน) • Graded Workplace Reader</div>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto pb-1 sm:pb-0">
-              ${[1, 2, 3, 4, 5, 6, 7].map(chNum => `
-                <button onclick="window.app.navigateTo('reading-lab', { articleId: 'zd-ch-0${chNum}' })"
-                  class="w-7 h-7 rounded-xl font-bold text-xs flex items-center justify-center transition-all ${
-                    (article.chapterNumber || 1) === chNum
-                      ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-400 scale-105'
-                      : 'bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white'
-                  }" title="บทที่ ${chNum}">
-                  ${chNum}
-                </button>
-              `).join('')}
+            <div class="flex items-center gap-1 shrink-0 overflow-x-auto pb-1 sm:pb-0 max-w-full">
+              ${navArticles.map((navArt, idx) => {
+                const chNum = navArt.chapterNumber || (idx + 1);
+                const isActive = (article.chapterNumber || 1) === chNum;
+                return `
+                  <button onclick="window.app.navigateTo('reading-lab', { articleId: '${navArt.id}' })"
+                    class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs flex items-center justify-center transition-all ${
+                      isActive
+                        ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-400 scale-105'
+                        : 'bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white'
+                    }" title="บทที่ ${chNum}: ${navArt.title}">
+                    ${chNum}
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
         ` : ''}

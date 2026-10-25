@@ -111,9 +111,10 @@ chapter7 = {
     ],
     "quiz": [
         {
+            "id": "zd7-q1",
             "question": "What error caused Phop's HPA to multiply pods into a runaway clone army?",
             "options": [
-                "(Recommended) The cpu requests were set to an absurdly tiny 10m, making 200m usage look like 2,000% load",
+                "The cpu requests were set to an absurdly tiny 10m, making 200m usage look like 2,000% load",
                 "Phop deleted the Kubernetes cluster master node",
                 "Argo CD was corrupted by a computer virus",
                 "Australian shoppers bought 100,000 items in 1 second"
@@ -122,9 +123,10 @@ chapter7 = {
             "explanation": "ภพตั้งค่า cpu requests ไว้ต่ำเกินจริงเพียง 10m เมื่อพอดเริ่มทำงานกิน 200m ระบบ HPA จึงคำนวณว่าพอดทำงานหนักถึง 2,000% และสั่งปั๊มพอดไม่หยุด"
         },
         {
+            "id": "zd7-q2",
             "question": "Why did Arthur disable Argo CD's Auto-Sync before deleting the HPA and scaling down?",
             "options": [
-                "(Recommended) To prevent Argo CD from immediately reconciling and resurrecting the broken HPA and pods",
+                "To prevent Argo CD from immediately reconciling and resurrecting the broken HPA and pods",
                 "Because Argo CD was frozen and unresponsive",
                 "Because Liam ordered him to uninstall Argo CD permanently",
                 "To speed up the network internet speed"
@@ -133,9 +135,10 @@ chapter7 = {
             "explanation": "หากไม่ปิด Auto-Sync ชั่วคราว เมื่อลบ HPA หรือลดขนาดพอด Argo CD จะดึงค่าเดิมจาก Git กลับมาทับทันที ทำให้พอดถูกปั๊มขึ้นมาใหม่ไม่รู้จบ"
         },
         {
+            "id": "zd7-q3",
             "question": "What does Liam mean by \"a textbook SRE response\"?",
             "options": [
-                "(Recommended) An incident handled perfectly by the book according to Site Reliability Engineering standards",
+                "An incident handled perfectly by the book according to Site Reliability Engineering standards",
                 "An engineer reading a school textbook during an outage",
                 "An essay written for homework",
                 "A slow, outdated response"
@@ -145,3 +148,4 @@ chapter7 = {
         }
     ]
 }
+

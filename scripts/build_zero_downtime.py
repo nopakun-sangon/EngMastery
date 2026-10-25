@@ -1,7 +1,7 @@
 # scripts/build_zero_downtime.py
 """
 Build script to generate data/zeroDowntimeData.js
-Combines chapters 1 to 7 into window.zeroDowntimeData
+Combines chapters 1 to 20 into window.zeroDowntimeData
 """
 
 import json
@@ -18,6 +18,19 @@ from ch4 import chapter4
 from ch5 import chapter5
 from ch6 import chapter6
 from ch7 import chapter7
+from ch8 import chapter8
+from ch9 import chapter9
+from ch10 import chapter10
+from ch11 import chapter11
+from ch12 import chapter12
+from ch13 import chapter13
+from ch14 import chapter14
+from ch15 import chapter15
+from ch16 import chapter16
+from ch17 import chapter17
+from ch18 import chapter18
+from ch19 import chapter19
+from ch20 import chapter20
 
 all_chapters = [
     chapter1,
@@ -26,17 +39,30 @@ all_chapters = [
     chapter4,
     chapter5,
     chapter6,
-    chapter7
+    chapter7,
+    chapter8,
+    chapter9,
+    chapter10,
+    chapter11,
+    chapter12,
+    chapter13,
+    chapter14,
+    chapter15,
+    chapter16,
+    chapter17,
+    chapter18,
+    chapter19,
+    chapter20
 ]
 
 output_path = os.path.join(os.path.dirname(__file__), "..", "data", "zeroDowntimeData.js")
 
 header = """/**
  * EngMastery: Zero to Pro - Zero Downtime Novel Database
- * "Zero Downtime: คุณพ่อวัย 30 กับภารกิจกู้ชีพการงาน"
+ * "Zero Downtime: คุณพ่อวัย 30 กับภารกิจกู้ชีพการงาน" (Season 1 จบบริบูรณ์ 20 ตอน)
  * 
  * Features:
- * - 7 Complete Unabridged Chapters in accessible CEFR A2-B1 English
+ * - Complete 20 Unabridged Chapters in accessible CEFR A2-B1 English
  * - Bilingual parallel paragraphs (EN & TH)
  * - Curated workplace & tech idioms, IPA phonetics, and sample sentences
  * - Comprehension quizzes with +30 XP per chapter
@@ -53,5 +79,8 @@ with open(output_path, "w", encoding="utf-8") as f:
     f.write(content)
 
 print(f"Successfully generated {output_path} with {len(all_chapters)} chapters!")
+total_words = sum(ch.get("wordCount", 0) for ch in all_chapters)
+total_paras = sum(len(ch.get("paragraphs", [])) for ch in all_chapters)
+print(f"Total words: {total_words}, Total bilingual paragraphs: {total_paras}")
 for ch in all_chapters:
     print(f" - {ch['id']}: {ch['title']} ({len(ch['paragraphs'])} paragraphs, {ch['wordCount']} words)")

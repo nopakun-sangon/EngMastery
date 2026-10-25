@@ -121,9 +121,10 @@ chapter2 = {
     ],
     "quiz": [
         {
+            "id": "zd2-q1",
             "question": "What caused the payment-service pod to enter CrashLoopBackOff?",
             "options": [
-                "(Recommended) A required environment variable was missing in the deployment config",
+                "A required environment variable was missing in the deployment config",
                 "Arthur clicked the wrong button in Jenkins",
                 "The AWS EKS server in Sydney lost power",
                 "Phop spilled milk tea on the production server"
@@ -132,9 +133,10 @@ chapter2 = {
             "explanation": "Log ฟ้องว่า 'Missing required environment variable SYDNEY_TAX_RATE_V2' เนื่องจากโคลอี้เพิ่มตัวแปรในโค้ดแต่ลืมเพิ่มในไฟล์ Deployment"
         },
         {
+            "id": "zd2-q2",
             "question": "What advice did Karn give Arthur regarding communicating in English with overseas colleagues?",
             "options": [
-                "(Recommended) Foreign technical peers care about direct communication and log evidence, not perfect grammar",
+                "Foreign technical peers care about direct communication and log evidence, not perfect grammar",
                 "He must take an IELTS exam before sending any Slack messages",
                 "He should always ask junior colleagues to write messages for him",
                 "He should only speak Thai in the company"
@@ -143,9 +145,10 @@ chapter2 = {
             "explanation": "พี่กานต์บอกว่าคนทำงานสายเทคนิคต่างชาติไม่มาจับผิดแกรมม่า ขอแค่สื่อสารตรงประเด็นและมีหลักฐานคือ Log แนบไป"
         },
         {
+            "id": "zd2-q3",
             "question": "What does the Australian slang \"Thanks heaps!\" mean?",
             "options": [
-                "(Recommended) Thank you very much",
+                "Thank you very much",
                 "Thank you for nothing",
                 "Please do it again",
                 "No problem at all"
@@ -155,3 +158,4 @@ chapter2 = {
         }
     ]
 }
+

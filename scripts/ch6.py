@@ -106,9 +106,10 @@ chapter6 = {
     ],
     "quiz": [
         {
+            "id": "zd6-q1",
             "question": "What does GitOps mean by \"Git is the Single Source of Truth\"?",
             "options": [
-                "(Recommended) The code in Git is the definitive standard; direct manual server changes are forbidden",
+                "The code in Git is the definitive standard; direct manual server changes are forbidden",
                 "Git is the only website engineers are allowed to browse",
                 "Developers do not need any testing tools if they use Git",
                 "All server passwords must be printed on paper"
@@ -117,9 +118,10 @@ chapter6 = {
             "explanation": "หลักการ GitOps ถือว่าโค้ดและการตั้งค่าใน Git คือแหล่งความจริงสูงสุด ห้ามใครแอบเข้าไปแก้ค่าบนเซิร์ฟเวอร์โดยตรงเพราะจะเกิด Configuration Drift"
         },
         {
+            "id": "zd6-q2",
             "question": "What critical typo did Arthur discover in Marcus's manual changes?",
             "options": [
-                "(Recommended) Marcus typed PROD_DB_SYDENY instead of PROD_DB_SYDNEY",
+                "Marcus typed PROD_DB_SYDENY instead of PROD_DB_SYDNEY",
                 "Marcus deleted the entire database table",
                 "Marcus forgot to add his username to the commit",
                 "Marcus wrote SQL instead of Python"
@@ -128,9 +130,10 @@ chapter6 = {
             "explanation": "อาร์เทอร์ดู Log และพบว่ามาร์คัสพิมพ์ชื่อโฮสต์ของฐานข้อมูลผิด สลับตัวอักษรเป็น SYDENY ทำให้โปรแกรมหาเซิร์ฟเวอร์ไม่เจอ"
         },
         {
+            "id": "zd6-q3",
             "question": "What action did Elena take against Marcus after Arthur revealed the truth?",
             "options": [
-                "(Recommended) She revoked his direct kubectl edit permissions on production immediately",
+                "She revoked his direct kubectl edit permissions on production immediately",
                 "She ordered him to fly to Bangkok for an interview",
                 "She doubled his salary as an apology",
                 "She shut down the entire Green Team"
@@ -140,3 +143,4 @@ chapter6 = {
         }
     ]
 }
+

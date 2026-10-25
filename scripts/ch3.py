@@ -116,9 +116,10 @@ chapter3 = {
     ],
     "quiz": [
         {
+            "id": "zd3-q1",
             "question": "What caused the Jenkins server to throw a 504 Gateway Time-out error?",
             "options": [
-                "(Recommended) The server disk reached 100% capacity due to accumulated build artifacts",
+                "The server disk reached 100% capacity due to accumulated build artifacts",
                 "Arthur deleted the payment-service repository",
                 "The Australian network cable was disconnected",
                 "Chloe pushed 1,000 commits at once"
@@ -127,9 +128,10 @@ chapter3 = {
             "explanation": "ภพตรวจสอบพบว่าดิสก์เต็ม 100% และ RAM พุ่งชนเพดานเพราะมีคิวงานค้างอยู่และไฟล์ขยะจากการ Build สะสม"
         },
         {
+            "id": "zd3-q2",
             "question": "What is the key advantage of GitHub Actions compared to self-hosted Jenkins according to Karn?",
             "options": [
-                "(Recommended) It creates temporary runners on demand and destroys them, eliminating manual server maintenance",
+                "It creates temporary runners on demand and destroys them, eliminating manual server maintenance",
                 "It has a prettier web dashboard with colorful buttons",
                 "It requires no configuration files or code",
                 "It is completely free with no usage limits"
@@ -138,9 +140,10 @@ chapter3 = {
             "explanation": "พี่กานต์อธิบายว่า GitHub Actions จะเสกเครื่องเซิร์ฟเวอร์ชั่วคราวขึ้นมาทำงานเสร็จแล้วทำลายทิ้งทันที ไม่ต้องมีเซิร์ฟเวอร์เปิดค้างและดิสก์ไม่มีวันเต็ม"
         },
         {
+            "id": "zd3-q3",
             "question": "What does the expression \"That's the spirit!\" mean?",
             "options": [
-                "(Recommended) An expression of encouragement praising a positive, willing attitude",
+                "An expression of encouragement praising a positive, willing attitude",
                 "A warning to beware of ghosts or bad luck",
                 "A polite way of saying goodbye",
                 "A statement of disappointment"
@@ -150,3 +153,4 @@ chapter3 = {
         }
     ]
 }
+

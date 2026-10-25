@@ -131,9 +131,10 @@ chapter1 = {
     ],
     "quiz": [
         {
+            "id": "zd1-q1",
             "question": "Why was Arthur transferred to the DevOps team?",
             "options": [
-                "(Recommended) His old department was closed after a corporate takeover, and he needed income for his family",
+                "His old department was closed after a corporate takeover, and he needed income for his family",
                 "He applied for a promotion with a higher salary in Australia",
                 "He had seven years of Kubernetes and Jenkins experience",
                 "He wanted to practice speaking English with colleagues"
@@ -142,9 +143,10 @@ chapter1 = {
             "explanation": "บริษัทเก่าของอาร์เทอร์ถูกกลุ่มทุนข้ามชาติเทคโอเวอร์ แผนกเดิมถูกยุบ เขาจึงต้องย้ายมา DevOps เพื่อหารายได้ผ่อนบ้านและส่งลูกเรียน"
         },
         {
+            "id": "zd1-q2",
             "question": "What does Liam mean by \"smashing weekend\" in Australian slang?",
             "options": [
-                "(Recommended) A fantastic and great weekend",
+                "A fantastic and great weekend",
                 "A destructive and dangerous weekend",
                 "A boring weekend at home",
                 "A short weekend working overtime"
@@ -153,9 +155,10 @@ chapter1 = {
             "explanation": "คำว่า 'smashing' ในสแลงออสเตรเลียและอังกฤษแปลว่า ยอดเยี่ยมมาก (fantastic, wonderful)"
         },
         {
+            "id": "zd1-q3",
             "question": "According to Karn, what is the role of Argo CD?",
             "options": [
-                "(Recommended) To pull the newly built Docker container and deploy it to AWS EKS",
+                "To pull the newly built Docker container and deploy it to AWS EKS",
                 "To build code into a container box like Jenkins",
                 "To design the UI for the website in Sydney",
                 "To replace human programmers with artificial intelligence"
@@ -165,3 +168,4 @@ chapter1 = {
         }
     ]
 }
+

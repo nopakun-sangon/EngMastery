@@ -111,9 +111,10 @@ chapter4 = {
     ],
     "quiz": [
         {
+            "id": "zd4-q1",
             "question": "Why does Elena strictly forbid using static AWS Access Keys in GitHub?",
             "options": [
-                "(Recommended) If GitHub is compromised, hackers gain perpetual access to company cloud resources",
+                "If GitHub is compromised, hackers gain perpetual access to company cloud resources",
                 "Static keys cost more money per month than temporary tokens",
                 "Static keys make the build run 10 times slower",
                 "Elena personally dislikes Amazon Web Services"
@@ -122,9 +123,10 @@ chapter4 = {
             "explanation": "เอเลน่าอธิบายว่าการใส่ Access Key แบบถาวรใน GitHub หากถูกแฮก คนร้ายจะได้กุญแจเข้าถึงระบบตลอดไป จึงต้องใช้ OIDC เพื่อออกบัตรชั่วคราวแทน"
         },
         {
+            "id": "zd4-q2",
             "question": "How does Karn explain OIDC using a real-world analogy?",
             "options": [
-                "(Recommended) Like obtaining a 15-minute temporary visitor badge instead of leaving a permanent house key at the guardhouse",
+                "Like obtaining a 15-minute temporary visitor badge instead of leaving a permanent house key at the guardhouse",
                 "Like opening a bank account with a debit card",
                 "Like hiring a bodyguard to watch the computer screen",
                 "Like changing the WiFi password every morning"
@@ -133,9 +135,10 @@ chapter4 = {
             "explanation": "พี่กานต์เปรียบเทียบว่า OIDC คือการขอ 'บัตรผ่านชั่วคราวอายุ 15 นาที' แทนการปั๊ม 'กุญแจบ้านตัวจริง' ไปฝากไว้ที่ป้อมยาม"
         },
         {
+            "id": "zd4-q3",
             "question": "What is crucial when structuring YAML files in DevOps?",
             "options": [
-                "(Recommended) Strict whitespace indentation using the spacebar",
+                "Strict whitespace indentation using the spacebar",
                 "Using semicolons at the end of every line",
                 "Wrapping all commands in parentheses and brackets",
                 "Capitalizing every word in the document"
@@ -145,3 +148,4 @@ chapter4 = {
         }
     ]
 }
+

@@ -111,9 +111,10 @@ chapter5 = {
     ],
     "quiz": [
         {
+            "id": "zd5-q1",
             "question": "What was the real cause behind the payment service outage during the Flash Sale?",
             "options": [
-                "(Recommended) High traffic caused the pods to run out of memory, triggering OOMKilled",
+                "High traffic caused the pods to run out of memory, triggering OOMKilled",
                 "Arthur's new GitHub Actions pipeline contained a syntax bug",
                 "Chloe pushed broken payment code to production",
                 "The Australian cloud provider went bankrupt"
@@ -122,9 +123,10 @@ chapter5 = {
             "explanation": "พอดไม่ได้พังเพราะโค้ด แต่พังเพราะคนเข้าใช้งานแคมเปญ Flash Sale มากกว่าปกติ 5 เท่า จนเกิดสถานะ OOMKilled เมมโมรี่เต็ม"
         },
         {
+            "id": "zd5-q2",
             "question": "How did Arthur solve the incident within one minute?",
             "options": [
-                "(Recommended) Scaled replicas from 3 to 10 and doubled memory limit to 1024Mi via GitHub Actions",
+                "Scaled replicas from 3 to 10 and doubled memory limit to 1024Mi via GitHub Actions",
                 "Rolled back Chloe's code to the previous version",
                 "Restarted the database server in Melbourne",
                 "Shut down the entire company website for the weekend"
@@ -133,9 +135,10 @@ chapter5 = {
             "explanation": "อาร์เทอร์แก้ไฟล์ deployment.yaml ขยายพอดเป็น 10 ตัวและเพิ่มเมมโมรี่เป็น 1024Mi แล้วส่งผ่าน GitHub Actions ให้ Argo CD ซิงค์ทันที"
         },
         {
+            "id": "zd5-q3",
             "question": "What does the phrase \"Absolute legend!\" convey in Australian English?",
             "options": [
-                "(Recommended) High praise recognizing someone as an extraordinary hero or top performer",
+                "High praise recognizing someone as an extraordinary hero or top performer",
                 "A mythical story from ancient history",
                 "A warning that someone made a serious mistake",
                 "A nickname for someone who is very old"
@@ -145,3 +148,4 @@ chapter5 = {
         }
     ]
 }
+
