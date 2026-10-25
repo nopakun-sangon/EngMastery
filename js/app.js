@@ -8117,7 +8117,7 @@ class EngMasteryApp {
                 <p class="${fontClasses} text-slate-800 dark:text-slate-100 leading-relaxed">
                   ${this.formatClickableReadingText(p.en, p.th)}
                 </p>
-                <button onclick="window.app.playReadingParagraphTts('${p.id}', '${p.en.replace(/'/g, "\\'")}')"
+                <button onclick="window.app.playReadingParagraphTts('${article.id}', '${p.id}')"
                   class="p-2 rounded-xl text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-all shrink-0 active:scale-95"
                   title="ฟังเสียงอ่านย่อหน้านี้">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
@@ -8342,8 +8342,23 @@ class EngMasteryApp {
     playNextParagraph();
   }
 
-  playReadingParagraphTts(paraId, text) {
+  playReadingParagraphTts(arg1, arg2) {
     this.stopReadingTts();
+    let paraId = arg2;
+    let text = "";
+
+    // Support both signatures: (articleId, paraId) and legacy (paraId, text)
+    const articles = this.getReadingList ? this.getReadingList() : [];
+    const article = articles.find(a => a.id === arg1);
+    if (article) {
+      paraId = arg2;
+      const para = article.paragraphs?.find(p => String(p.id) === String(paraId));
+      text = para ? para.en : "";
+    } else {
+      paraId = arg1;
+      text = arg2 || "";
+    }
+
     document.querySelectorAll(".reading-paragraph-card").forEach(el => {
       el.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
     });
@@ -8352,11 +8367,13 @@ class EngMasteryApp {
       currentEl.classList.add("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
     }
 
-    window.speechEngine.speak(text, null, () => {
-      if (currentEl) {
-        currentEl.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
-      }
-    });
+    if (text && window.speechEngine) {
+      window.speechEngine.speak(text, null, () => {
+        if (currentEl) {
+          currentEl.classList.remove("ring-2", "ring-emerald-500", "bg-emerald-50/40", "dark:bg-emerald-950/30");
+        }
+      });
+    }
   }
 
   stopReadingTts() {
@@ -9582,21 +9599,41 @@ class EngMasteryApp {
 
   formatClickableReadingText(enText, thText = "") {
     if (!enText) return "";
-    const safeTh = (thText || "").replace(/['"\\`]/g, " ").trim();
+    const cleanTh = (thText || "").replace(/[\r\n]+/g, " ").trim();
     const sentences = enText.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [enText];
 
     return sentences.map(sent => {
-      const safeSent = sent.replace(/['"\\`]/g, " ").trim();
+      const cleanSent = sent.replace(/[\r\n]+/g, " ").trim();
       const tokens = sent.split(/([a-zA-Z0-9]+(?:['’][a-zA-Z0-9]+)?)/g);
       return tokens.map(token => {
         if (/[a-zA-Z0-9]/.test(token)) {
           const clean = token.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
-          const escapedClean = clean.replace(/'/g, "\\'");
-          return `<span class="reading-word-token" onclick="window.app.handleReadingWordTokenClick(event, '${escapedClean}', '${safeSent.replace(/'/g, "\\'")}', '${safeTh.replace(/'/g, "\\'")}')" title="กดเพื่อดูคำแปล">${token}</span>`;
+          const escapedClean = clean.replace(/"/g, '&quot;');
+          const encSent = encodeURIComponent(cleanSent);
+          const encTh = encodeURIComponent(cleanTh);
+          return `<span class="reading-word-token" data-word="${escapedClean}" data-sent="${encSent}" data-th="${encTh}" onclick="window.app.handleReadingTokenElementClick(event, this)" title="กดเพื่อดูคำแปล">${token}</span>`;
         }
         return token;
       }).join("");
     }).join("");
+  }
+
+  handleReadingTokenElementClick(event, el) {
+    if (event) {
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    }
+    const word = el?.getAttribute('data-word') || '';
+    let sent = '';
+    let th = '';
+    try {
+      sent = decodeURIComponent(el?.getAttribute('data-sent') || '');
+      th = decodeURIComponent(el?.getAttribute('data-th') || '');
+    } catch (_) {
+      sent = el?.getAttribute('data-sent') || '';
+      th = el?.getAttribute('data-th') || '';
+    }
+    this.handleReadingWordTokenClick(event, word, sent, th);
   }
 
   handleReadingWordTokenClick(event, word, sentenceEn = "", sentenceTh = "") {
@@ -10176,7 +10213,12 @@ class EngMasteryApp {
       if (Date.now() - (this._lastWordTooltipTime || 0) < 350) {
         return;
       }
-      if (e && e.target && !e.target.closest('#selection-translate-tooltip')) {
+      const targetEl = e?.target ? (e.target.nodeType === 1 ? e.target : e.target.parentElement) : null;
+      if (targetEl && typeof targetEl.closest === 'function') {
+        if (!targetEl.closest('#selection-translate-tooltip')) {
+          this.hideSelectionTranslateTooltip();
+        }
+      } else {
         this.hideSelectionTranslateTooltip();
       }
       return;
@@ -12374,7 +12416,7 @@ class EngMasteryApp {
           </p>
 
           <div class="flex items-center gap-3">
-            <button onclick="window.speechEngine.speak('${topic.summary.replace(/'/g, "\\'")}', 'th-TH')"
+            <button onclick="window.speechEngine.speak('${topic.summary.replace(/'/g, "\\'").replace(/[\r\n]+/g, " ")}', 'th-TH')"
                     class="px-4 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold flex items-center gap-2 border border-indigo-200 dark:border-indigo-800 transition-all">
               <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a.75.75 0 00-1.28-.53l-3.97 3.97H2.75A1.75 1.75 0 001 8.69v2.62c0 .966.784 1.75 1.75 1.75h2l3.97 3.97a.75.75 0 001.28-.53V3.5zM14.5 10a4.5 4.5 0 00-1.32-3.18.75.75 0 111.06-1.06A6 6 0 0116 10a6 6 0 01-1.76 4.24.75.75 0 01-1.06-1.06A4.5 4.5 0 0014.5 10z"/></svg>
               <span>ฟังคำอธิบายภาพรวม (AI Voice)</span>
